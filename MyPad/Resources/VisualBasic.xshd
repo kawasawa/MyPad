@@ -1,0 +1,286 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="Visual Basic" extensions=".vb" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+  <Color name="XmlComment"       foreground="SeaGreen"/>
+  <Color name="XmlString"        foreground="Wheat"/>
+  <Color name="XmlTag"           foreground="DarkSeaGreen"/>
+  <Color name="Keywords"         foreground="SkyBlue"/>
+  <Color name="TypeKeywords"     foreground="DeepSkyBlue"/>
+  <Color name="FunctionKeywords" foreground="LightGreen"/>
+  <Color name="DateLiteral"      foreground="LightCyan"/>
+  <Color name="Directive"        foreground="DarkGray"/>
+  <Color name="Comment"          foreground="YellowGreen"/>
+  <Color name="String"           foreground="SandyBrown"/>
+
+  <Property name="DocCommentMarker" value="'''"/>
+
+  <RuleSet name="XmlCommentSet">
+    <Span color="XmlComment">
+      <Begin>&lt;</Begin>
+      <End>&gt;</End>
+      <RuleSet>
+        <Span color="XmlString">
+          <Begin>"</Begin>
+          <End>"</End>
+        </Span>
+        <Keywords color="XmlTag">
+          <Word>c</Word>
+          <Word>code</Word>
+          <Word>cref</Word>
+          <Word>description</Word>
+          <Word>example</Word>
+          <Word>exception</Word>
+          <Word>item</Word>
+          <Word>list</Word>
+          <Word>listheader</Word>
+          <Word>name</Word>
+          <Word>para</Word>
+          <Word>param</Word>
+          <Word>paramref</Word>
+          <Word>permission</Word>
+          <Word>remarks</Word>
+          <Word>returns</Word>
+          <Word>see</Word>
+          <Word>seealso</Word>
+          <Word>summary</Word>
+          <Word>term</Word>
+          <Word>type</Word>
+          <Word>typeparam</Word>
+          <Word>typeparamref</Word>
+          <Word>value</Word>
+        </Keywords>
+      </RuleSet>
+    </Span>
+  </RuleSet>
+
+  <RuleSet name="PreprocessorSet" ignoreCase="true">
+    <Keywords fontWeight="bold">
+      <Word>Const</Word>
+      <Word>Else</Word>
+      <Word>ElseIf</Word>
+      <Word>End</Word>
+      <Word>ExternalChecksum</Word>
+      <Word>ExternalSource</Word>
+      <Word>If</Word>
+      <Word>Region</Word>
+    </Keywords>
+  </RuleSet>
+
+  <RuleSet ignoreCase="true">
+    <Keywords color="Keywords">
+      <Word>AddHandler</Word>
+      <Word>AddressOf</Word>
+      <Word>Aggregate</Word>
+      <Word>Alias</Word>
+      <Word>And</Word>
+      <Word>AndAlso</Word>
+      <Word>Ansi</Word>
+      <Word>As</Word>
+      <Word>Ascending</Word>
+      <Word>Async</Word>
+      <Word>Auto</Word>
+      <Word>Await</Word>
+      <Word>Binary</Word>
+      <Word>By</Word>
+      <Word>ByRef</Word>
+      <Word>ByVal</Word>
+      <Word>Call</Word>
+      <Word>Case</Word>
+      <Word>Catch</Word>
+      <Word>Class</Word>
+      <Word>Compare</Word>
+      <Word>Const</Word>
+      <Word>Continue</Word>
+      <Word>Custom</Word>
+      <Word>Declare</Word>
+      <Word>Default</Word>
+      <Word>Delegate</Word>
+      <Word>Descending</Word>
+      <Word>Dim</Word>
+      <Word>Distinct</Word>
+      <Word>Do</Word>
+      <Word>Each</Word>
+      <Word>Else</Word>
+      <Word>ElseIf</Word>
+      <Word>End</Word>
+      <Word>EndIf</Word>
+      <Word>Enum</Word>
+      <Word>Equals</Word>
+      <Word>Erase</Word>
+      <Word>Error</Word>
+      <Word>Event</Word>
+      <Word>Exit</Word>
+      <Word>Explicit</Word>
+      <Word>False</Word>
+      <Word>Finally</Word>
+      <Word>For</Word>
+      <Word>Friend</Word>
+      <Word>From</Word>
+      <Word>Function</Word>
+      <Word>Get</Word>
+      <Word>Global</Word>
+      <Word>GoSub</Word>
+      <Word>GoTo</Word>
+      <Word>Group</Word>
+      <Word>Handles</Word>
+      <Word>If</Word>
+      <Word>Implements</Word>
+      <Word>Imports</Word>
+      <Word>In</Word>
+      <Word>Infer</Word>
+      <Word>Inherits</Word>
+      <Word>Interface</Word>
+      <Word>Into</Word>
+      <Word>Is</Word>
+      <Word>IsNot</Word>
+      <Word>Iterator</Word>
+      <Word>Join</Word>
+      <Word>Key</Word>
+      <Word>Let</Word>
+      <Word>Lib</Word>
+      <Word>Like</Word>
+      <Word>Loop</Word>
+      <Word>Me</Word>
+      <Word>Mod</Word>
+      <Word>Module</Word>
+      <Word>MustInherit</Word>
+      <Word>MustOverride</Word>
+      <Word>MyBase</Word>
+      <Word>MyClass</Word>
+      <Word>Namespace</Word>
+      <Word>Narrowing</Word>
+      <Word>New</Word>
+      <Word>New</Word>
+      <Word>Next</Word>
+      <Word>Not</Word>
+      <Word>NotInheritable</Word>
+      <Word>NotOverridable</Word>
+      <Word>Nothing</Word>
+      <Word>Of</Word>
+      <Word>Off</Word>
+      <Word>On</Word>
+      <Word>Operator</Word>
+      <Word>Option</Word>
+      <Word>Optional</Word>
+      <Word>Or</Word>
+      <Word>OrElse</Word>
+      <Word>Overloads</Word>
+      <Word>Overridable</Word>
+      <Word>Overrides</Word>
+      <Word>ParamArray</Word>
+      <Word>Partial</Word>
+      <Word>Preserve</Word>
+      <Word>Private</Word>
+      <Word>Property</Word>
+      <Word>Protected</Word>
+      <Word>Public</Word>
+      <Word>RaiseEvent</Word>
+      <Word>ReDim</Word>
+      <Word>ReadOnly</Word>
+      <Word>RemoveHandler</Word>
+      <Word>Resume</Word>
+      <Word>Return</Word>
+      <Word>Select</Word>
+      <Word>Set</Word>
+      <Word>Shadows</Word>
+      <Word>Shared</Word>
+      <Word>Skip</Word>
+      <Word>Static</Word>
+      <Word>Step</Word>
+      <Word>Stop</Word>
+      <Word>Strict</Word>
+      <Word>Structure</Word>
+      <Word>Sub</Word>
+      <Word>SyncLock</Word>
+      <Word>Take</Word>
+      <Word>Text</Word>
+      <Word>Then</Word>
+      <Word>Throw</Word>
+      <Word>To</Word>
+      <Word>True</Word>
+      <Word>Try</Word>
+      <Word>Unicode</Word>
+      <Word>Until</Word>
+      <Word>Using</Word>
+      <Word>Wend</Word>
+      <Word>When</Word>
+      <Word>Where</Word>
+      <Word>While</Word>
+      <Word>Widening</Word>
+      <Word>With</Word>
+      <Word>WithEvents</Word>
+      <Word>WriteOnly</Word>
+      <Word>Xor</Word>
+      <Word>Yield</Word>
+    </Keywords>
+    <Keywords color="TypeKeywords">
+      <Word>Boolean</Word>
+      <Word>Byte</Word>
+      <Word>Char</Word>
+      <Word>Date</Word>
+      <Word>Decimal</Word>
+      <Word>Double</Word>
+      <Word>Integer</Word>
+      <Word>Long</Word>
+      <Word>Object</Word>
+      <Word>SByte</Word>
+      <Word>Short</Word>
+      <Word>Single</Word>
+      <Word>String</Word>
+      <Word>UInteger</Word>
+      <Word>ULong</Word>
+      <Word>UShort</Word>
+      <Word>Variant</Word>
+    </Keywords>
+    <Keywords color="FunctionKeywords">
+      <Word>CBool</Word>
+      <Word>CByte</Word>
+      <Word>CChar</Word>
+      <Word>CDate</Word>
+      <Word>CDbl</Word>
+      <Word>CDec</Word>
+      <Word>CInt</Word>
+      <Word>CLng</Word>
+      <Word>CObj</Word>
+      <Word>CSByte</Word>
+      <Word>CShort</Word>
+      <Word>CSng</Word>
+      <Word>CStr</Word>
+      <Word>CType</Word>
+      <Word>CUInt</Word>
+      <Word>CULng</Word>
+      <Word>CUShort</Word>
+      <Word>DirectCast</Word>
+      <Word>GetType</Word>
+      <Word>GetXmlNamespace</Word>
+      <Word>IIf</Word>
+      <Word>TryCast</Word>
+      <Word>TypeOf</Word>
+    </Keywords>
+    
+    <Span color="DateLiteral">
+      <Begin>(?&lt;!(^\s*))\#</Begin>
+      <End>\#</End>
+    </Span>
+    <Span color="Directive" ruleSet="PreprocessorSet">
+      <Begin>(?&lt;=(^\s*))\#</Begin>
+    </Span>
+    <Span color="Comment" ruleSet="XmlCommentSet">
+      <Begin color="XmlComment">'''</Begin>
+    </Span>
+    <Span color="Comment">
+      <Begin>'</Begin>
+    </Span>
+    <Span color="Comment">
+      <Begin>\bREM\b</Begin>
+    </Span>
+    <Span color="String">
+      <Begin>"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <Span begin="&quot;&quot;" end=""/>
+      </RuleSet>
+    </Span>
+  </RuleSet>
+
+</SyntaxDefinition>

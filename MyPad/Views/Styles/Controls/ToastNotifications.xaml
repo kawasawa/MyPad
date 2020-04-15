@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
+
+    <SolidColorBrush x:Key="InformationColorBrush" Color="{StaticResource PurpleColorKey}" o:Freeze="True"/>
+    <SolidColorBrush x:Key="WarningColorBrush"     Color="{StaticResource RedColorKey}"    o:Freeze="True"/>
+
+</ResourceDictionary>

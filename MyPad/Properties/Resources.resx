@@ -1,0 +1,675 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Command_About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Command_CaseSensitive" xml:space="preserve">
+    <value>Case sensitive</value>
+  </data>
+  <data name="Command_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Command_CloseAll" xml:space="preserve">
+    <value>Close all</value>
+  </data>
+  <data name="Command_CloseOther" xml:space="preserve">
+    <value>Close other</value>
+  </data>
+  <data name="Command_Completion" xml:space="preserve">
+    <value>Completion</value>
+  </data>
+  <data name="Command_ConvertSpacesToTabs" xml:space="preserve">
+    <value>Convert spaces to tabs</value>
+  </data>
+  <data name="Command_ConvertTabsToSpaces" xml:space="preserve">
+    <value>Convert tabs to spaces</value>
+  </data>
+  <data name="Command_ConvertToLowerCase" xml:space="preserve">
+    <value>Convert to lower case</value>
+  </data>
+  <data name="Command_ConvertToNarrow" xml:space="preserve">
+    <value>Convert to narrow</value>
+  </data>
+  <data name="Command_ConvertToTitleCase" xml:space="preserve">
+    <value>Convert to title case</value>
+  </data>
+  <data name="Command_ConvertToUpperCase" xml:space="preserve">
+    <value>Convert to upper case</value>
+  </data>
+  <data name="Command_ConvertToWide" xml:space="preserve">
+    <value>Convert to wide</value>
+  </data>
+  <data name="Command_Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="Command_Cut" xml:space="preserve">
+    <value>Cut</value>
+  </data>
+  <data name="Command_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Command_Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Command_Execute" xml:space="preserve">
+    <value>Execute</value>
+  </data>
+  <data name="Command_Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="Command_ExportLog" xml:space="preserve">
+    <value>Export log</value>
+  </data>
+  <data name="Command_File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="Command_Find" xml:space="preserve">
+    <value>Find</value>
+  </data>
+  <data name="Command_FindNext" xml:space="preserve">
+    <value>Find next</value>
+  </data>
+  <data name="Command_FindPrev" xml:space="preserve">
+    <value>Find previous</value>
+  </data>
+  <data name="Command_Formatting" xml:space="preserve">
+    <value>Formatting</value>
+  </data>
+  <data name="Command_GoToLine" xml:space="preserve">
+    <value>Go to line</value>
+  </data>
+  <data name="Command_Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="Command_Initialize" xml:space="preserve">
+    <value>Initialize</value>
+  </data>
+  <data name="Command_MergeWindows" xml:space="preserve">
+    <value>Merge windows</value>
+  </data>
+  <data name="Command_MoveDownByPage" xml:space="preserve">
+    <value>Move down by page</value>
+  </data>
+  <data name="Command_MoveLeftByWord" xml:space="preserve">
+    <value>Move left by word</value>
+  </data>
+  <data name="Command_Movement" xml:space="preserve">
+    <value>Movement</value>
+  </data>
+  <data name="Command_MoveRightByWord" xml:space="preserve">
+    <value>Move right by word</value>
+  </data>
+  <data name="Command_MoveToDocumentEnd" xml:space="preserve">
+    <value>Move to document end</value>
+  </data>
+  <data name="Command_MoveToDocumentStart" xml:space="preserve">
+    <value>Move to document start</value>
+  </data>
+  <data name="Command_MoveToLineEnd" xml:space="preserve">
+    <value>Move to line end</value>
+  </data>
+  <data name="Command_MoveToLineStart" xml:space="preserve">
+    <value>Move to line start</value>
+  </data>
+  <data name="Command_MoveUpByPage" xml:space="preserve">
+    <value>Move up by page</value>
+  </data>
+  <data name="Command_New" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="Command_NewWindow" xml:space="preserve">
+    <value>New window</value>
+  </data>
+  <data name="Command_Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="Command_OpenParentDirectory" xml:space="preserve">
+    <value>Open parent directory</value>
+  </data>
+  <data name="Command_Option" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="Command_Paste" xml:space="preserve">
+    <value>Paste</value>
+  </data>
+  <data name="Command_Print" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="Command_Redo" xml:space="preserve">
+    <value>Redo</value>
+  </data>
+  <data name="Command_Replace" xml:space="preserve">
+    <value>Replace</value>
+  </data>
+  <data name="Command_ReplaceAll" xml:space="preserve">
+    <value>Replace all</value>
+  </data>
+  <data name="Command_ReplaceNext" xml:space="preserve">
+    <value>Replace next</value>
+  </data>
+  <data name="Command_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Command_SaveAll" xml:space="preserve">
+    <value>Save all</value>
+  </data>
+  <data name="Command_SaveAs" xml:space="preserve">
+    <value>Save as</value>
+  </data>
+  <data name="Command_SelectAll" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="Command_SelectDownByPage" xml:space="preserve">
+    <value>Select down by page</value>
+  </data>
+  <data name="Command_Selection" xml:space="preserve">
+    <value>Selection</value>
+  </data>
+  <data name="Command_SelectLeftByWord" xml:space="preserve">
+    <value>Select left by word</value>
+  </data>
+  <data name="Command_SelectRightByWord" xml:space="preserve">
+    <value>Select right by word</value>
+  </data>
+  <data name="Command_SelectToDocumentEnd" xml:space="preserve">
+    <value>Select to document end</value>
+  </data>
+  <data name="Command_SelectToDocumentStart" xml:space="preserve">
+    <value>Select to document start</value>
+  </data>
+  <data name="Command_SelectToLineEnd" xml:space="preserve">
+    <value>Select to line end</value>
+  </data>
+  <data name="Command_SelectToLineStart" xml:space="preserve">
+    <value>Select to line start</value>
+  </data>
+  <data name="Command_SelectUpByPage" xml:space="preserve">
+    <value>Select up by page</value>
+  </data>
+  <data name="Command_Show" xml:space="preserve">
+    <value>Show</value>
+  </data>
+  <data name="Command_ShowMenuBar" xml:space="preserve">
+    <value>MenuBar</value>
+  </data>
+  <data name="Command_ShowStatusBar" xml:space="preserve">
+    <value>StatusBar</value>
+  </data>
+  <data name="Command_ShowToolBar" xml:space="preserve">
+    <value>ToolBar</value>
+  </data>
+  <data name="Command_SwitchFindMode" xml:space="preserve">
+    <value>Switching between find mode and replace mode.</value>
+  </data>
+  <data name="Command_ChangeEncoding" xml:space="preserve">
+    <value>Change encoding</value>
+  </data>
+  <data name="Command_Tools" xml:space="preserve">
+    <value>Tools</value>
+  </data>
+  <data name="Command_Topmost" xml:space="preserve">
+    <value>Topmost</value>
+  </data>
+  <data name="Command_Undo" xml:space="preserve">
+    <value>Undo</value>
+  </data>
+  <data name="Command_UseRegex" xml:space="preserve">
+    <value>Use regex</value>
+  </data>
+  <data name="Command_WindowList" xml:space="preserve">
+    <value>List of windows</value>
+  </data>
+  <data name="Command_Zoom" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="Command_ZoomIn" xml:space="preserve">
+    <value>Zoom In</value>
+  </data>
+  <data name="Command_ZoomOut" xml:space="preserve">
+    <value>Zoom Out</value>
+  </data>
+  <data name="Command_ZoomReset" xml:space="preserve">
+    <value>Zoom Reset</value>
+  </data>
+  <data name="Label_AllFiles" xml:space="preserve">
+    <value>All Files</value>
+  </data>
+  <data name="Label_AutoDetect" xml:space="preserve">
+    <value>Auto detect</value>
+  </data>
+  <data name="Label_AutoSaveInterval" xml:space="preserve">
+    <value>Auto save interval in minutes</value>
+  </data>
+  <data name="Command_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Label_Command" xml:space="preserve">
+    <value>Command</value>
+  </data>
+  <data name="Label_Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Label_CreationDate" xml:space="preserve">
+    <value>Creation date</value>
+  </data>
+  <data name="Label_Culture" xml:space="preserve">
+    <value>Culture</value>
+  </data>
+  <data name="Label_Directory" xml:space="preserve">
+    <value>Directory</value>
+  </data>
+  <data name="Label_Encoding" xml:space="preserve">
+    <value>Encoding</value>
+  </data>
+  <data name="Label_Warn" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="Label_ExecutionDirectory" xml:space="preserve">
+    <value>Execution</value>
+  </data>
+  <data name="Label_ExecutionFile" xml:space="preserve">
+    <value>Execution file</value>
+  </data>
+  <data name="Label_Font" xml:space="preserve">
+    <value>Font</value>
+  </data>
+  <data name="Label_Format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Label_Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Label_LogDirectory" xml:space="preserve">
+    <value>Log</value>
+  </data>
+  <data name="Label_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Command_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Label_Notify" xml:space="preserve">
+    <value>Notify</value>
+  </data>
+  <data name="Command_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Label_Owner" xml:space="preserve">
+    <value>Owner</value>
+  </data>
+  <data name="Label_ConfigFile" xml:space="preserve">
+    <value>Config file</value>
+  </data>
+  <data name="Label_RoamingDirectory" xml:space="preserve">
+    <value>Roaming</value>
+  </data>
+  <data name="Label_SearchPattern" xml:space="preserve">
+    <value>File masks</value>
+  </data>
+  <data name="Label_SearchText" xml:space="preserve">
+    <value>Text to find</value>
+  </data>
+  <data name="Label_SettingFile" xml:space="preserve">
+    <value>Settings file</value>
+  </data>
+  <data name="Label_Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="Label_Syntax" xml:space="preserve">
+    <value>Syntax</value>
+  </data>
+  <data name="Label_System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Label_TempDirectory" xml:space="preserve">
+    <value>Temporary</value>
+  </data>
+  <data name="Label_TextEditor" xml:space="preserve">
+    <value>Text editor</value>
+  </data>
+  <data name="Label_Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Label_XshdDirectory" xml:space="preserve">
+    <value>Syntax definitions</value>
+  </data>
+  <data name="Command_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="Message_ConfirmCleanUpLog" xml:space="preserve">
+    <value>Do you want to remove log files?</value>
+  </data>
+  <data name="Message_ConfirmDiscardChanges" xml:space="preserve">
+    <value>Are you sure you want to discard your changes?</value>
+  </data>
+  <data name="Message_ConfirmInitializeSyntax" xml:space="preserve">
+    <value>Initialize the syntax definitions.
+Definition files in the folder will be replaced with the default files.
+These changes will be applied on restart. Do you want to continue?</value>
+  </data>
+  <data name="Message_ConfirmOpenLargeFile" xml:space="preserve">
+    <value>Open a large file may take a long time. Do you want to continue?</value>
+  </data>
+  <data name="Message_ConfirmSaveChanges" xml:space="preserve">
+    <value>Do you want to save the changes?</value>
+  </data>
+  <data name="Message_NotifyAutoSaved" xml:space="preserve">
+    <value>Auto saved to a temporary.</value>
+  </data>
+  <data name="Message_NotifyDirectoryNotFound" xml:space="preserve">
+    <value>Directory not found.</value>
+  </data>
+  <data name="Text_EmptyDocument" xml:space="preserve">
+    <value>Document is empty.</value>
+  </data>
+  <data name="Message_NotifyErrorText" xml:space="preserve">
+    <value>Contains Error.</value>
+  </data>
+  <data name="Message_NotifyFileLocked" xml:space="preserve">
+    <value>This file is currently locked.</value>
+  </data>
+  <data name="Message_NotifyNoMatchesText" xml:space="preserve">
+    <value>No matches found.</value>
+  </data>
+  <data name="Text_RequiredField" xml:space="preserve">
+    <value>Required field.</value>
+  </data>
+  <data name="Text_Working" xml:space="preserve">
+    <value>Please wait a moment.</value>
+  </data>
+  <data name="LabelText_AllowScrollBelowDocument" xml:space="preserve">
+    <value>Allow scroll below document.</value>
+  </data>
+  <data name="LabelText_AllowsTransparency" xml:space="preserve">
+    <value>Allows transparency.</value>
+  </data>
+  <data name="LabelText_AllowToggleOverstrikeMode" xml:space="preserve">
+    <value>Allow toggle overstrike mode.</value>
+  </data>
+  <data name="LabelText_AutoDetectByDefault" xml:space="preserve">
+    <value>Auto detect by default.</value>
+  </data>
+  <data name="LabelText_ConvertTabsToSpaces" xml:space="preserve">
+    <value>Convert tabs to spaces.</value>
+  </data>
+  <data name="LabelText_EnableAutoCompletion" xml:space="preserve">
+    <value>Enable auto completion.</value>
+  </data>
+  <data name="LabelText_EnableAutoSave" xml:space="preserve">
+    <value>Enable auto save draft file to a temporary.</value>
+  </data>
+  <data name="LabelText_EnableCutCopyWholeLine" xml:space="preserve">
+    <value>Enable cut and copy whole line.</value>
+  </data>
+  <data name="LabelText_EnableEmailHyperlinks" xml:space="preserve">
+    <value>Enable e-mail hyperlinks.</value>
+  </data>
+  <data name="LabelText_EnableHyperlinks" xml:space="preserve">
+    <value>Enable hyperlinks.</value>
+  </data>
+  <data name="LabelText_EnableImeSupport" xml:space="preserve">
+    <value>Enable IME support.</value>
+  </data>
+  <data name="LabelText_EnableNotificationIcon" xml:space="preserve">
+    <value>Enable notification icon.</value>
+  </data>
+  <data name="LabelText_EnableRectangularSelection" xml:space="preserve">
+    <value>Enable rectangular selection.</value>
+  </data>
+  <data name="LabelText_EnableResident" xml:space="preserve">
+    <value>Enable residents in notification area.</value>
+  </data>
+  <data name="LabelText_EnableTextDragDrop" xml:space="preserve">
+    <value>Enable text drag and drop.</value>
+  </data>
+  <data name="LabelText_EnableVirtualSpace" xml:space="preserve">
+    <value>Enable virtual space.</value>
+  </data>
+  <data name="LabelText_EnableWordWrap" xml:space="preserve">
+    <value>Enable word wrap.</value>
+  </data>
+  <data name="LabelText_HideCursorWhileTyping" xml:space="preserve">
+    <value>Hide cursor while typing.</value>
+  </data>
+  <data name="LabelText_HighlightCurrentLine" xml:space="preserve">
+    <value>Highlight current line.</value>
+  </data>
+  <data name="LabelText_RequireControlModifierForHyperlinkClick" xml:space="preserve">
+    <value>Require control modifier for hyperlink click.</value>
+  </data>
+  <data name="LabelText_SaveWindowPlacement" xml:space="preserve">
+    <value>Save window placement.</value>
+  </data>
+  <data name="LabelText_ShowBoxForControlCharacters" xml:space="preserve">
+    <value>Show box for control characters,</value>
+  </data>
+  <data name="LabelText_ShowEndOfLine" xml:space="preserve">
+    <value>Show end of line.</value>
+  </data>
+  <data name="LabelText_ShowFullName" xml:space="preserve">
+    <value>Show full file name.</value>
+  </data>
+  <data name="LabelText_ShowLineNumbers" xml:space="preserve">
+    <value>Show line numbers.</value>
+  </data>
+  <data name="LabelText_ShowMenuBar" xml:space="preserve">
+    <value>Show menu bar.</value>
+  </data>
+  <data name="LabelText_ShowSingleTab" xml:space="preserve">
+    <value>Show single tab.</value>
+  </data>
+  <data name="LabelText_ShowSpaces" xml:space="preserve">
+    <value>Show spaces.</value>
+  </data>
+  <data name="LabelText_ShowStatusBar" xml:space="preserve">
+    <value>Show status bar.</value>
+  </data>
+  <data name="LabelText_ShowTabs" xml:space="preserve">
+    <value>Show tabs.</value>
+  </data>
+  <data name="LabelText_ShowToolBar" xml:space="preserve">
+    <value>Show tool bar.</value>
+  </data>
+  <data name="Command_Repository" xml:space="preserve">
+    <value>Repository</value>
+  </data>
+  <data name="Label_Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="Label_Dark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="Label_Light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="CPP" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CPP.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="CSharp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CSharp.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Java" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Java.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="JavaScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\JavaScript.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="JSON" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\JSON.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="MarkDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MarkDown.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="PHP" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PHP.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="PLSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PLSQL.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Python" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Python.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="TransactSQL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TransactSQL.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="VisualBasic" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\VisualBasic.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="XML" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\XML.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Message_NotifyFileInAnother" xml:space="preserve">
+    <value>This file is open in another tab.</value>
+  </data>
+  <data name="Command_PrintPreview" xml:space="preserve">
+    <value>Print preview</value>
+  </data>
+  <data name="app" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\app.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Label_LineMumber" xml:space="preserve">
+    <value>Line number</value>
+  </data>
+  <data name="LabelText_ShowFileIcon" xml:space="preserve">
+    <value>Show file icon.</value>
+  </data>
+  <data name="Command_ExitApplication" xml:space="preserve">
+    <value>Exit application</value>
+  </data>
+  <data name="Command_ChangeSyntax" xml:space="preserve">
+    <value>Change syntax</value>
+  </data>
+  <data name="LabelText_UseOverlayDialog" xml:space="preserve">
+    <value>Use overlay dialog.</value>
+  </data>
+  <data name="Message_NotifyWelcome" xml:space="preserve">
+    <value>Welcome to ver. {1} of {0}.</value>
+  </data>
+  <data name="Command_SwitchFullScreenMode" xml:space="preserve">
+    <value>Switching between full screen mode and window mode.</value>
+  </data>
+  <data name="Message_NotifyFullScreenMode" xml:space="preserve">
+    <value>Press F11 to exit full screen mode.</value>
+  </data>
+  <data name="Message_NotifySaved" xml:space="preserve">
+    <value>Text saved.</value>
+  </data>
+</root>

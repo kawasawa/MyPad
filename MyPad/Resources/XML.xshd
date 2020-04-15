@@ -1,0 +1,38 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="XML" extensions=".xml;.xsd;.xsl;.xaml" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+  <Color name="Comment" foreground="YellowGreen"/>
+  <Color name="CData"   foreground="LightCyan"/>
+  <Color name="Tag"     foreground="DeepSkyBlue"/>
+  <Color name="Name"    foreground="SkyBlue"/>
+  <Color name="Value"   foreground="SandyBrown"/>
+
+  <RuleSet>
+    <Span color="Comment" multiline="true">
+      <Begin>&lt;!--</Begin>
+      <End>--&gt;</End>
+    </Span>
+    <Span color="CData" multiline="true">
+      <Begin>&lt;!\[CDATA\[</Begin>
+      <End>]]&gt;</End>
+    </Span>
+    <Span color="Tag" multiline="true">
+      <Begin>&lt;</Begin>
+      <End>&gt;</End>
+      <RuleSet>
+        <Span color="Value" multiline="true">
+          <Begin>"</Begin>
+          <End>"|(?=&lt;)</End>
+        </Span>
+        <Span color="Value" multiline="true">
+          <Begin>'</Begin>
+          <End>'|(?=&lt;)</End>
+        </Span>
+        <Rule color="Name">
+          [\d\w_\-\.]+(?=(\s*=))
+        </Rule>
+      </RuleSet>
+    </Span>
+  </RuleSet>
+  
+</SyntaxDefinition>

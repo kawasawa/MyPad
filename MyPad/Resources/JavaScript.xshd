@@ -1,0 +1,132 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="JavaScript" extensions=".js" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  
+  <Color name="Keywords"          foreground="SkyBlue"/>
+  <Color name="IntrinsicKeywords" foreground="DeepSkyBlue"/>
+  <Color name="FunctionKeywords"  foreground="LightGreen"/>
+  <Color name="Comment"           foreground="YellowGreen"/>
+  <Color name="String"            foreground="SandyBrown"/>
+  <Color name="Regex"             foreground="Wheat"/>
+  <Color name="NumericLiteral"    foreground="LightCyan"/>
+
+  <RuleSet ignoreCase="false">
+    <Keywords color="Keywords">
+      <Word>Infinity</Word>
+      <Word>NaN</Word>
+      <Word>abstract</Word>
+      <Word>boolean</Word>
+      <Word>break</Word>
+      <Word>byte</Word>
+      <Word>case</Word>
+      <Word>catch</Word>
+      <Word>char</Word>
+      <Word>class</Word>
+      <Word>const</Word>
+      <Word>continue</Word>
+      <Word>debugger</Word>
+      <Word>default</Word>
+      <Word>delete</Word>
+      <Word>do</Word>
+      <Word>double</Word>
+      <Word>else</Word>
+      <Word>enum</Word>
+      <Word>export</Word>
+      <Word>extends</Word>
+      <Word>false</Word>
+      <Word>final</Word>
+      <Word>finally</Word>
+      <Word>float</Word>
+      <Word>for</Word>
+      <Word>function</Word>
+      <Word>goto</Word>
+      <Word>if</Word>
+      <Word>implements</Word>
+      <Word>import</Word>
+      <Word>in</Word>
+      <Word>instanceof</Word>
+      <Word>int</Word>
+      <Word>interface</Word>
+      <Word>long</Word>
+      <Word>native</Word>
+      <Word>new</Word>
+      <Word>null</Word>
+      <Word>package</Word>
+      <Word>private</Word>
+      <Word>protected</Word>
+      <Word>public</Word>
+      <Word>return</Word>
+      <Word>short</Word>
+      <Word>static</Word>
+      <Word>super</Word>
+      <Word>switch</Word>
+      <Word>synchronized</Word>
+      <Word>this</Word>
+      <Word>throw</Word>
+      <Word>throws</Word>
+      <Word>transient</Word>
+      <Word>true</Word>
+      <Word>try</Word>
+      <Word>typeof</Word>
+      <Word>var</Word>
+      <Word>void</Word>
+      <Word>volatile</Word>
+      <Word>while</Word>
+      <Word>with</Word>
+    </Keywords>
+    <Keywords color="IntrinsicKeywords">
+      <Word>Array</Word>
+      <Word>Boolean</Word>
+      <Word>Date</Word>
+      <Word>Function</Word>
+      <Word>Global</Word>
+      <Word>Math</Word>
+      <Word>Number</Word>
+      <Word>Object</Word>
+      <Word>RegExp</Word>
+      <Word>String</Word>
+    </Keywords>
+    <Keywords color="FunctionKeywords">
+      <Word>eval</Word>
+      <Word>parseInt</Word>
+      <Word>parseFloat</Word>
+      <Word>escape</Word>
+      <Word>unescape</Word>
+      <Word>isNaN</Word>
+      <Word>isFinite</Word>
+    </Keywords>
+    
+    <Span color="Comment">
+      <Begin>//</Begin>
+    </Span>
+    <Span color="Comment" multiline="true">
+      <Begin>/\*</Begin>
+      <End>\*/</End>
+    </Span>
+    <Span color="String" multiline="true">
+      <Begin>"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <Span begin="\\" end="."/>
+      </RuleSet>
+    </Span>
+    <Span color="String">
+      <Begin>'</Begin>
+      <End>'</End>
+      <RuleSet>
+        <Span begin="\\" end="."/>
+      </RuleSet>
+    </Span>
+    <Span color="Regex">
+      <Begin>/</Begin>
+      <End>/</End>
+      <RuleSet>
+        <Span begin="\\/" end="."/>
+      </RuleSet>
+    </Span>
+    
+    <Rule color="NumericLiteral">
+      \b0[xX][0-9a-fA-F]+|(\b\d+(\.[0-9]+)?|\.[0-9]+)([eE][+-]?[0-9]+)?
+    </Rule>
+  </RuleSet>
+  
+</SyntaxDefinition>

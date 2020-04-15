@@ -1,0 +1,153 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="PHP" extensions=".php" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+  <Color name="Keywords"       foreground="SkyBlue"/>
+  <Color name="TypeKeywords"   foreground="DeepSkyBlue"/>
+  <Color name="Directive"      foreground="DarkGray"/>
+  <Color name="MethodCall"     foreground="LightGreen"/>
+  <Color name="NumericLiteral" foreground="LightCyan"/>
+  <Color name="Comment"        foreground="YellowGreen"/>
+  <Color name="String"         foreground="SandyBrown"/>
+  
+  <RuleSet>
+    <Keywords color="Keywords">
+      <Word>__halt_compiler</Word>
+      <Word>abstract</Word>
+      <Word>and</Word>
+      <Word>as</Word>
+      <Word>break</Word>
+      <Word>callable</Word>
+      <Word>case</Word>
+      <Word>catch</Word>
+      <Word>class</Word>
+      <Word>clone</Word>
+      <Word>const</Word>
+      <Word>continue</Word>
+      <Word>declare</Word>
+      <Word>default</Word>
+      <Word>die</Word>
+      <Word>do</Word>
+      <Word>echo</Word>
+      <Word>else</Word>
+      <Word>elseif</Word>
+      <Word>empty</Word>
+      <Word>enddeclare</Word>
+      <Word>endfor</Word>
+      <Word>endforeach</Word>
+      <Word>endif</Word>
+      <Word>endswitch</Word>
+      <Word>endwhile</Word>
+      <Word>eval</Word>
+      <Word>exit</Word>
+      <Word>extends</Word>
+      <Word>false</Word>
+      <Word>final</Word>
+      <Word>finally</Word>
+      <Word>for</Word>
+      <Word>foreach</Word>
+      <Word>function</Word>
+      <Word>global</Word>
+      <Word>goto</Word>
+      <Word>if</Word>
+      <Word>implements</Word>
+      <Word>include</Word>
+      <Word>include_once</Word>
+      <Word>instanceof</Word>
+      <Word>insteadof</Word>
+      <Word>interface</Word>
+      <Word>isset</Word>
+      <Word>list</Word>
+      <Word>my</Word>
+      <Word>namespace</Word>
+      <Word>new</Word>
+      <Word>null</Word>
+      <Word>or</Word>
+      <Word>print</Word>
+      <Word>private</Word>
+      <Word>protected</Word>
+      <Word>public</Word>
+      <Word>require</Word>
+      <Word>require_once</Word>
+      <Word>return</Word>
+      <Word>static</Word>
+      <Word>switch</Word>
+      <Word>throw</Word>
+      <Word>trait</Word>
+      <Word>try</Word>
+      <Word>true</Word>
+      <Word>unset</Word>
+      <Word>use</Word>
+      <Word>while</Word>
+      <Word>xor</Word>
+      <Word>yield</Word>
+    </Keywords>
+    <Keywords color="TypeKeywords">
+      <Word>array</Word>
+      <Word>boolean</Word>
+      <Word>double</Word>
+      <Word>float</Word>
+      <Word>int</Word>
+      <Word>integer</Word>
+      <Word>object</Word>
+      <Word>real</Word>
+      <Word>string</Word>
+      <Word>var</Word>
+      <Word>void</Word>
+    </Keywords>
+    <Keywords color="Directive">
+      <Word>__CLASS__</Word>
+      <Word>__DIR__</Word>
+      <Word>__FILE__</Word>
+      <Word>__FUNCTION__</Word>
+      <Word>__LINE</Word>
+      <Word>__METHOD__</Word>
+      <Word>__NAMESPACE__</Word>
+      <Word>__TRAIT__</Word>
+    </Keywords>
+
+    <Rule color="MethodCall">
+      \b
+      [\d\w_]+  # an identifier
+      (?=\s*\() # followed by (
+    </Rule>
+    <Rule color="NumericLiteral">
+      \b0[xX][0-9a-fA-F]+ |         # hex number
+      \b0[0-9]+ |                   # octal number
+      (\b\d+(\.[0-9]+)? | \.[0-9]+) # number with optional floating point or just starting with floating point
+      ([eE][+-]?[0-9]+)?            # optional exponent
+    </Rule>
+
+    <Span color="Comment">
+      <Begin>//</Begin>
+    </Span>
+    <Span color="Comment">
+      <Begin>\#</Begin>
+    </Span>
+    <Span color="Comment" multiline="true">
+      <Begin>/\*</Begin>
+      <End>\*/</End>
+    </Span>
+    <Span color="String" multiline="true">
+      <Begin>'</Begin>
+      <End>'</End>
+      <RuleSet>
+        <Span begin="\\" end="."/>
+      </RuleSet>
+    </Span>
+    <Span color="String" multiline="true">
+      <Begin>"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <Span begin="\\" end="."/>
+      </RuleSet>
+    </Span>
+    <Span color="String" multiline="true">
+      <Begin>&lt;&lt;&lt;\"?[\d\w_]+\"?$</Begin>
+      <End>^[\d\w_]+;</End>
+    </Span>
+    <Span color="String" multiline="true">
+      <Begin>&lt;&lt;&lt;\'[\d\w_]+\'$</Begin>
+      <End>^[\d\w_]+;</End>
+    </Span>
+  </RuleSet>
+</SyntaxDefinition>

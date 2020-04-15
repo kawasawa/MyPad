@@ -1,0 +1,254 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="C#" extensions=".cs" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+  <Color name="XmlComment"          foreground="SeaGreen"/>
+  <Color name="XmlString"           foreground="Wheat"/>
+  <Color name="XmlTag"              foreground="DarkSeaGreen"/>
+  <Color name="Keywords"            foreground="SkyBlue"/>
+  <Color name="TypeKeywords"        foreground="DeepSkyBlue"/>
+  <Color name="MethodCall"          foreground="LightGreen"/>
+  <Color name="NumericLiteral"      foreground="LightCyan"/>
+  <Color name="Directive"           foreground="DarkGray"/>
+  <Color name="Comment"             foreground="YellowGreen"/>
+  <Color name="String"              foreground="SandyBrown"/>
+  <Color name="StringInterpolation" foreground="Wheat"/>
+
+  <Property name="DocCommentMarker" value="///"/>
+
+  <RuleSet name="XmlCommentSet">
+    <Span color="XmlComment">
+      <Begin>&lt;</Begin>
+      <End>&gt;</End>
+      <RuleSet>
+        <Span color="XmlString">
+          <Begin>"</Begin>
+          <End>"</End>
+        </Span>
+        <Keywords color="XmlTag">
+          <Word>c</Word>
+          <Word>code</Word>
+          <Word>cref</Word>
+          <Word>description</Word>
+          <Word>example</Word>
+          <Word>exception</Word>
+          <Word>item</Word>
+          <Word>list</Word>
+          <Word>listheader</Word>
+          <Word>name</Word>
+          <Word>para</Word>
+          <Word>param</Word>
+          <Word>paramref</Word>
+          <Word>permission</Word>
+          <Word>remarks</Word>
+          <Word>returns</Word>
+          <Word>see</Word>
+          <Word>seealso</Word>
+          <Word>summary</Word>
+          <Word>term</Word>
+          <Word>type</Word>
+          <Word>typeparam</Word>
+          <Word>typeparamref</Word>
+          <Word>value</Word>
+        </Keywords>
+      </RuleSet>
+    </Span>
+  </RuleSet>
+
+  <RuleSet name="TaskComment" ignoreCase="true">
+    <Keywords fontWeight="bold" foreground="Crimson">
+      <Word>TODO</Word>
+    </Keywords>
+    <Keywords fontWeight="bold" foreground="Yellow">
+      <Word>HACK</Word>
+      <Word>UNDONE</Word>
+    </Keywords>
+    <Keywords fontWeight="bold" foreground="Khaki">
+      <Word>NOTE</Word>
+    </Keywords>
+  </RuleSet>
+
+  <RuleSet>
+    <Keywords color="Keywords">
+      <Word>abstract</Word>
+      <Word>add</Word>
+      <Word>as</Word>
+      <Word>ascending</Word>
+      <Word>async</Word>
+      <Word>await</Word>
+      <Word>base</Word>
+      <Word>break</Word>
+      <Word>by</Word>
+      <Word>case</Word>
+      <Word>catch</Word>
+      <Word>checked</Word>
+      <Word>class</Word>
+      <Word>const</Word>
+      <Word>continue</Word>
+      <Word>default</Word>
+      <Word>delegate</Word>
+      <Word>descending</Word>
+      <Word>do</Word>
+      <Word>dynamic</Word>
+      <Word>else</Word>
+      <Word>enum</Word>
+      <Word>equals</Word>
+      <Word>event</Word>
+      <Word>explicit</Word>
+      <Word>extern</Word>
+      <Word>false</Word>
+      <Word>finally</Word>
+      <Word>fixed</Word>
+      <Word>for</Word>
+      <Word>foreach</Word>
+      <Word>from</Word>
+      <Word>get</Word>
+      <Word>global</Word>
+      <Word>goto</Word>
+      <Word>group</Word>
+      <Word>if</Word>
+      <Word>implicit</Word>
+      <Word>in</Word>
+      <Word>interface</Word>
+      <Word>internal</Word>
+      <Word>into</Word>
+      <Word>is</Word>
+      <Word>join</Word>
+      <Word>let</Word>
+      <Word>lock</Word>
+      <Word>nameof</Word>
+      <Word>namespace</Word>
+      <Word>new</Word>
+      <Word>null</Word>
+      <Word>on</Word>
+      <Word>operator</Word>
+      <Word>orderby</Word>
+      <Word>out</Word>
+      <Word>override</Word>
+      <Word>params</Word>
+      <Word>partial</Word>
+      <Word>private</Word>
+      <Word>protected</Word>
+      <Word>public</Word>
+      <Word>readonly</Word>
+      <Word>ref</Word>
+      <Word>remove</Word>
+      <Word>return</Word>
+      <Word>sealed</Word>
+      <Word>select</Word>
+      <Word>set</Word>
+      <Word>sizeof</Word>
+      <Word>stackalloc</Word>
+      <Word>static</Word>
+      <Word>struct</Word>
+      <Word>switch</Word>
+      <Word>this</Word>
+      <Word>throw</Word>
+      <Word>true</Word>
+      <Word>try</Word>
+      <Word>typeof</Word>
+      <Word>unchecked</Word>
+      <Word>unsafe</Word>
+      <Word>using</Word>
+      <Word>value</Word>
+      <Word>virtual</Word>
+      <Word>volatile</Word>
+      <Word>where</Word>
+      <Word>while</Word>
+      <Word>yield</Word>
+    </Keywords>
+    <Keywords color="TypeKeywords">
+      <Word>bool</Word>
+      <Word>char</Word>
+      <Word>sbyte</Word>
+      <Word>byte</Word>
+      <Word>short</Word>
+      <Word>ushort</Word>
+      <Word>int</Word>
+      <Word>uint</Word>
+      <Word>long</Word>
+      <Word>ulong</Word>
+      <Word>float</Word>
+      <Word>double</Word>
+      <Word>decimal</Word>
+      <Word>string</Word>
+      <Word>object</Word>
+      <Word>var</Word>
+      <Word>void</Word>
+    </Keywords>
+
+    <Rule>
+      @[\w\d_]+
+    </Rule>
+    <Rule color="MethodCall">
+      \b
+      [\d\w_]+  # an identifier
+      (?=\s*\() # followed by (
+    </Rule>
+    <Rule color="NumericLiteral">
+      \b0[xX][0-9a-fA-F]+ |         # hex number
+      (\b\d+(\.[0-9]+)? | \.[0-9]+) # number with optional floating point or just starting with floating point
+      ([eE][+-]?[0-9]+)?            # optional exponent
+    </Rule>
+
+    <Span color="Directive">
+      <Begin>\#</Begin>
+      <RuleSet>
+        <Span>
+          <Begin fontWeight="bold">(define|undef|if|elif|else|endif|line)\b</Begin>
+          <RuleSet>
+            <Span color="Comment" ruleSet="TaskComment">
+              <Begin>//</Begin>
+            </Span>
+          </RuleSet>
+        </Span>
+        <Span>
+          <Begin fontWeight="bold">(region|endregion|error|warning|pragma)\b</Begin>
+        </Span>
+      </RuleSet>
+    </Span>
+    <Span color="Comment">
+      <Begin color="XmlComment">///(?!/)</Begin>
+      <RuleSet>
+        <Import ruleSet="XmlCommentSet"/>
+        <Import ruleSet="TaskComment"/>
+      </RuleSet>
+    </Span>
+    <Span color="Comment" ruleSet="TaskComment">
+      <Begin>//</Begin>
+    </Span>
+    <Span color="Comment" ruleSet="TaskComment" multiline="true">
+      <Begin>/\*</Begin>
+      <End>\*/</End>
+    </Span>
+    <Span color="String">
+      <Begin>"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <Span begin="\\" end="."/>
+      </RuleSet>
+    </Span>
+    <Span color="String">
+      <Begin>'</Begin>
+      <End>'</End>
+      <RuleSet>
+        <Span begin="\\" end="."/>
+      </RuleSet>
+    </Span>
+    <Span color="String" multiline="true">
+      <Begin>@"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <Span begin='""' end=""/>
+      </RuleSet>
+    </Span>
+    <Span color="String">
+      <Begin>\$"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <Span begin="\\" end="."/>
+        <Span begin="\{\{" end=""/>
+        <Span begin="{" end="}" color="StringInterpolation"/>
+      </RuleSet>
+    </Span>
+  </RuleSet>
+</SyntaxDefinition>

@@ -1,0 +1,160 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="C++" extensions=".c;.h;.cc;.cpp;.hpp" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+  <Color name="Keywords"       foreground="SkyBlue"/>
+  <Color name="TypeKeywords"   foreground="DeepSkyBlue"/>
+  <Color name="MethodCall"     foreground="LightGreen"/>
+  <Color name="NumericLiteral" foreground="LightCyan"/>
+  <Color name="Directive"      foreground="DarkGray"/>
+  <Color name="Comment"        foreground="YellowGreen"/>
+  <Color name="String"         foreground="SandyBrown"/>
+  
+  <RuleSet>
+    <Keywords color="Keywords">
+      <Word>__abstract</Word>
+      <Word>__box</Word>
+      <Word>__delegate</Word>
+      <Word>__event</Word>
+      <Word>__gc</Word>
+      <Word>__hook</Word>
+      <Word>__identifier</Word>
+      <Word>__interface</Word>
+      <Word>__nogc</Word>
+      <Word>__pin</Word>
+      <Word>__property</Word>
+      <Word>__raise</Word>
+      <Word>__sealed</Word>
+      <Word>__try_cast</Word>
+      <Word>__typeof</Word>
+      <Word>__unhook</Word>
+      <Word>__value</Word>
+      <Word>abstract</Word>
+      <Word>and</Word>
+      <Word>and_eq</Word>
+      <Word>asm</Word>
+      <Word>auto</Word>
+      <Word>bitand</Word>
+      <Word>bitor</Word>
+      <Word>break</Word>
+      <Word>case</Word>
+      <Word>catch</Word>
+      <Word>class</Word>
+      <Word>compl</Word>
+      <Word>const</Word>
+      <Word>const_cast</Word>
+      <Word>continue</Word>
+      <Word>default</Word>
+      <Word>delegate</Word>
+      <Word>delete</Word>
+      <Word>do</Word>
+      <Word>dynamic_cast</Word>
+      <Word>else</Word>
+      <Word>enum class</Word>
+      <Word>enum struct</Word>
+      <Word>enum</Word>
+      <Word>event</Word>
+      <Word>explicit</Word>
+      <Word>export</Word>
+      <Word>extern</Word>
+      <Word>false</Word>
+      <Word>finally</Word>
+      <Word>for each</Word>
+      <Word>for</Word>
+      <Word>friend</Word>
+      <Word>gcnew</Word>
+      <Word>generic</Word>
+      <Word>goto</Word>
+      <Word>if</Word>
+      <Word>in</Word>
+      <Word>initonly</Word>
+      <Word>inline</Word>
+      <Word>interface</Word>
+      <Word>literal</Word>
+      <Word>mutable</Word>
+      <Word>namespace</Word>
+      <Word>new</Word>
+      <Word>not</Word>
+      <Word>not_eq</Word>
+      <Word>nullptr</Word>
+      <Word>operator</Word>
+      <Word>or</Word>
+      <Word>or_eq</Word>
+      <Word>override</Word>
+      <Word>private</Word>
+      <Word>property</Word>
+      <Word>protected</Word>
+      <Word>public</Word>
+      <Word>ref</Word>
+      <Word>register</Word>
+      <Word>reinterpret_cast</Word>
+      <Word>return</Word>
+      <Word>sealed</Word>
+      <Word>signed</Word>
+      <Word>sizeof</Word>
+      <Word>static</Word>
+      <Word>static_cast</Word>
+      <Word>struct</Word>
+      <Word>switch</Word>
+      <Word>template</Word>
+      <Word>this</Word>
+      <Word>throw</Word>
+      <Word>true</Word>
+      <Word>try</Word>
+      <Word>typedef</Word>
+      <Word>typeid</Word>
+      <Word>typename</Word>
+      <Word>union</Word>
+      <Word>unsigned</Word>
+      <Word>using</Word>
+      <Word>value</Word>
+      <Word>virtual</Word>
+      <Word>volatile</Word>
+      <Word>where</Word>
+      <Word>while</Word>
+      <Word>xor</Word>
+      <Word>xor_eq</Word>
+    </Keywords>
+    <Keywords color="TypeKeywords">
+      <Word>bool</Word>
+      <Word>char</Word>
+      <Word>short</Word>
+      <Word>int</Word>
+      <Word>long</Word>
+      <Word>float</Word>
+      <Word>double</Word>
+      <Word>void</Word>
+    </Keywords>
+
+    <Rule color="MethodCall">
+      [\d\w_]+(?=(\s*\())
+    </Rule>
+    <Rule color="NumericLiteral">
+      \b0[xX][0-9a-fA-F]+|(\b\d+(\.[0-9]+)?|\.[0-9]+)([eE][+-]?[0-9]+)?
+    </Rule>
+    
+    <Span color="Directive">
+      <Begin>\#</Begin>
+    </Span>
+    <Span color="Comment">
+      <Begin>//</Begin>
+    </Span>
+    <Span color="Comment" multiline="true">
+      <Begin>/\*</Begin>
+      <End>\*/</End>
+    </Span>
+    <Span color="String">
+      <Begin>"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <Span begin="\\" end="."/>
+      </RuleSet>
+    </Span>
+    <Span color="String">
+      <Begin>'</Begin>
+      <End>'</End>
+      <RuleSet>
+        <Span begin="\\" end="."/>
+      </RuleSet>
+    </Span>
+  </RuleSet>
+</SyntaxDefinition>

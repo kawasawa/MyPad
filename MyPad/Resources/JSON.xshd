@@ -1,0 +1,27 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="Json" extensions=".json" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+  <Color name="Name"  foreground="SkyBlue"/>
+  <Color name="Value" foreground="SandyBrown"/>
+
+  <RuleSet ignoreCase="false">
+    <Span color="Name">
+      <Begin>"</Begin>
+      <End>(?=:)</End>
+    </Span>
+    <Keywords color="Value">
+      <Word>true</Word>
+      <Word>false</Word>
+    </Keywords>
+
+    <Rule color="Value">
+      \b0[xX][0-9a-fA-F]+|(\b\d+(\.[0-9]+)?|\.[0-9]+)([eE][+-]?[0-9]+)?
+    </Rule>
+
+    <Span color="Value" multiline="true">
+      <Begin>(?&lt;=:)\040"[^"]*</Begin>
+      <End>"</End>
+    </Span>
+  </RuleSet>
+
+</SyntaxDefinition>

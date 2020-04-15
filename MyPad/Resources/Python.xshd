@@ -1,0 +1,103 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="Python" extensions=".py;.pyw" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+  <Color name="Keywords"       foreground="SkyBlue"/>
+  <Color name="MethodCall"     foreground="LightGreen"/>
+  <Color name="NumericLiteral" foreground="LightCyan"/>
+  <Color name="Comment"        foreground="YellowGreen"/>
+  <Color name="String"         foreground="SandyBrown"/>
+
+  <Property name="DocCommentMarker" value="///"/>
+
+  <RuleSet name="TaskComment" ignoreCase="true">
+    <Keywords fontWeight="bold" foreground="Crimson">
+      <Word>TODO</Word>
+    </Keywords>
+    <Keywords fontWeight="bold" foreground="Yellow">
+      <Word>HACK</Word>
+      <Word>UNDONE</Word>
+    </Keywords>
+    <Keywords fontWeight="bold" foreground="Khaki">
+      <Word>NOTE</Word>
+    </Keywords>
+  </RuleSet>
+
+  <RuleSet>
+    <Keywords color="Keywords">
+      <Word>and</Word>
+      <Word>as</Word>
+      <Word>assert</Word>
+      <Word>async</Word>
+      <Word>await</Word>
+      <Word>break</Word>
+      <Word>class</Word>
+      <Word>continue</Word>
+      <Word>def</Word>
+      <Word>del</Word>
+      <Word>elif</Word>
+      <Word>else</Word>
+      <Word>except</Word>
+      <Word>exec</Word>
+      <Word>finally</Word>
+      <Word>for</Word>
+      <Word>from</Word>
+      <Word>global</Word>
+      <Word>if</Word>
+      <Word>import</Word>
+      <Word>in</Word>
+      <Word>is</Word>
+      <Word>lambda</Word>
+      <Word>nonlocal</Word>
+      <Word>not</Word>
+      <Word>or</Word>
+      <Word>pass</Word>
+      <Word>print</Word>
+      <Word>raise</Word>
+      <Word>return</Word>
+      <Word>try</Word>
+      <Word>while</Word>
+      <Word>with</Word>
+      <Word>yield</Word>
+      <Word>None</Word>
+      <Word>True</Word>
+      <Word>False</Word>
+    </Keywords>
+
+    <Rule color="MethodCall">
+      \b
+      [\d\w_]+  # an identifier
+      (?=\s*\() # followed by (
+    </Rule>
+    <Rule color="NumericLiteral">
+      \b0[xX][0-9a-fA-F]+ |         # hex number
+      (\b\d+(\.[0-9]+)? | \.[0-9]+) # number with optional floating point or just starting with floating point
+      ([eE][+-]?[0-9]+)?            # optional exponent
+    </Rule>
+
+    <Span color="Comment" ruleSet="TaskComment">
+      <Begin>\#</Begin>
+    </Span>
+    <Span color="String" multiline="true">
+      <Begin>'''</Begin>
+      <End>'''</End>
+    </Span>
+    <Span color="String" multiline="true">
+      <Begin>"""</Begin>
+      <End>"""</End>
+    </Span>
+    <Span color="String">
+      <Begin>"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <Span begin="\\" end="."/>
+      </RuleSet>
+    </Span>
+    <Span color="String">
+      <Begin>'</Begin>
+      <End>'</End>
+      <RuleSet>
+        <Span begin="\\" end="."/>
+      </RuleSet>
+    </Span>
+  </RuleSet>
+</SyntaxDefinition>

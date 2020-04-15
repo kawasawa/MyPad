@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="Java" extensions=".java;.jav" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+  <Color name="JavaDoc"        foreground="DarkSeaGreen" fontWeight="bold" fontStyle="italic"/>
+  <Color name="Keywords"       foreground="SkyBlue"/>
+  <Color name="MethodCall"     foreground="LightGreen"/>
+  <Color name="NumericLiteral" foreground="LightCyan"/>
+  <Color name="Comment"        foreground="YellowGreen"/>
+  <Color name="String"         foreground="SandyBrown"/>
+
+  <RuleSet name="TaskComment" ignoreCase="true">
+    <Keywords fontWeight="bold" foreground="Crimson">
+      <Word>TODO</Word>
+    </Keywords>
+    <Keywords color="JavaDoc">
+      <Word>@author</Word>
+      <Word>@deprecated</Word>
+      <Word>@exception</Word>
+      <Word>@param</Word>
+      <Word>@return</Word>
+      <Word>@see</Word>
+      <Word>@serial</Word>
+      <Word>@serialData</Word>
+      <Word>@serialField</Word>
+      <Word>@since</Word>
+      <Word>@throws</Word>
+      <Word>@version</Word>
+    </Keywords>
+    <Rule color="NumericLiteral">
+      \b0[xX][0-9a-fA-F]+ |
+      (\b\d+(\.[0-9]+)? | \.[0-9]+)
+      ([eE][+-]?[0-9]+)?
+    </Rule>
+  </RuleSet>
+
+  <RuleSet ignoreCase="false">
+    <Keywords color="Keywords">
+      <Word>abstract</Word>
+      <Word>boolean</Word>
+      <Word>break</Word>
+      <Word>byte</Word>
+      <Word>case</Word>
+      <Word>catch</Word>
+      <Word>char</Word>
+      <Word>class</Word>
+      <Word>const</Word>
+      <Word>continue</Word>
+      <Word>default</Word>
+      <Word>do</Word>
+      <Word>double</Word>
+      <Word>else</Word>
+      <Word>extends</Word>
+      <Word>false</Word>
+      <Word>final</Word>
+      <Word>finally</Word>
+      <Word>float</Word>
+      <Word>for</Word>
+      <Word>goto</Word>
+      <Word>if</Word>
+      <Word>implements</Word>
+      <Word>import</Word>
+      <Word>instanceof</Word>
+      <Word>int</Word>
+      <Word>interface</Word>
+      <Word>long</Word>
+      <Word>native</Word>
+      <Word>new</Word>
+      <Word>null</Word>
+      <Word>object</Word>
+      <Word>package</Word>
+      <Word>private</Word>
+      <Word>protected</Word>
+      <Word>public</Word>
+      <Word>return</Word>
+      <Word>short</Word>
+      <Word>static</Word>
+      <Word>strictfp</Word>
+      <Word>super</Word>
+      <Word>switch</Word>
+      <Word>synchronized</Word>
+      <Word>this</Word>
+      <Word>throw</Word>
+      <Word>throws</Word>
+      <Word>transient</Word>
+      <Word>true</Word>
+      <Word>try</Word>
+      <Word>void</Word>
+      <Word>volatile</Word>
+      <Word>while</Word>
+    </Keywords>
+    
+    <Rule color="MethodCall">
+      [\d\w_]+
+      (?=(\s*\())
+    </Rule>
+    <Rule color="NumericLiteral">
+      \b0[xX][0-9a-fA-F]+ |
+      (\b\d+(\.[0-9]+)? | \.[0-9]+)
+      ([eE][+-]?[0-9]+)?
+    </Rule>
+
+    <Span color="Comment" ruleSet="TaskComment">
+      <Begin>//</Begin>
+    </Span>
+    <Span color="Comment" ruleSet="TaskComment" multiline="true">
+      <Begin>/\*</Begin>
+      <End>\*/</End>
+    </Span>
+    <Span color="String">
+      <Begin>"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <Span begin="\\" end="."/>
+      </RuleSet>
+    </Span>
+    <Span color="String">
+      <Begin>'</Begin>
+      <End>'</End>
+      <RuleSet>
+        <Span begin="\\" end="."/>
+      </RuleSet>
+    </Span>
+  </RuleSet>
+  
+</SyntaxDefinition>
