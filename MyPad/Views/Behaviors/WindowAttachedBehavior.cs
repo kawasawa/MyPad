@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Plow.Wpf;
+using System.Windows;
 using System.Windows.Input;
 
 namespace MyPad.Views.Behaviors
@@ -8,7 +9,7 @@ namespace MyPad.Views.Behaviors
         #region CloseByEsc
 
         public static readonly DependencyProperty CloseByEscProperty
-            = DependencyPropertyExtensions.RegisterAttachedDependencyProperty(new PropertyMetadata(OnCloseByEscChanged));
+            = DependencyPropertyExtensions.RegisterAttached(new PropertyMetadata(OnCloseByEscChanged));
         public static bool GetCloseByEsc(DependencyObject obj)
             => (bool)obj.GetValue(CloseByEscProperty);
         public static void SetCloseByEsc(DependencyObject obj, bool value)
@@ -41,7 +42,7 @@ namespace MyPad.Views.Behaviors
         #region DraggableAnywhere
 
         public static readonly DependencyProperty DraggableAnywhereProperty
-            = DependencyPropertyExtensions.RegisterAttachedDependencyProperty(new PropertyMetadata(OnDraggableAnywhereChanged));
+            = DependencyPropertyExtensions.RegisterAttached(new PropertyMetadata(OnDraggableAnywhereChanged));
         public static bool GetDraggableAnywhere(DependencyObject obj)
             => (bool)obj.GetValue(DraggableAnywhereProperty);
         public static void SetDraggableAnywhere(DependencyObject obj, bool value)

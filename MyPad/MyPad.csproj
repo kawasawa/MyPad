@@ -33,8 +33,8 @@
     <PackageReference Include="MahApps.Metro.IconPacks.Modern" Version="3.7.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.3" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Plow" Version="1.0.0-beta" />
-    <PackageReference Include="Plow.Wpf" Version="1.0.0-beta" />
+    <PackageReference Include="Plow" Version="1.0.0-beta1" />
+    <PackageReference Include="Plow.Wpf" Version="1.0.0-beta1" />
     <PackageReference Include="Prism.Unity" Version="7.2.0.1422" />
     <PackageReference Include="QuickConverter" Version="1.2.5" />
     <PackageReference Include="ReactiveProperty" Version="6.2.0" />

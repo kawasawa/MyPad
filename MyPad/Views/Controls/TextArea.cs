@@ -2,6 +2,7 @@
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Search;
+using Plow.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +19,8 @@ namespace MyPad.Views.Controls
         private const double MIN_FONT_SIZE = 2;
         private const double MAX_FONT_SIZE = 99;
 
-        public static readonly DependencyProperty ReplaceAreaExpandedProperty = DependencyPropertyExtensions.RegisterAttachedDependencyProperty();
-        public static readonly DependencyProperty ReplacePatternProperty = DependencyPropertyExtensions.RegisterAttachedDependencyProperty();
+        public static readonly DependencyProperty ReplaceAreaExpandedProperty = DependencyPropertyExtensions.RegisterAttached();
+        public static readonly DependencyProperty ReplacePatternProperty = DependencyPropertyExtensions.RegisterAttached();
 
         [AttachedPropertyBrowsableForType(typeof(SearchPanel))]
         public static bool GetReplaceAreaExpanded(DependencyObject obj) => (bool)obj.GetValue(ReplaceAreaExpandedProperty);
@@ -32,19 +33,19 @@ namespace MyPad.Views.Controls
         public static void SetReplacePattern(DependencyObject obj, string value) => obj.SetValue(ReplacePatternProperty, value);
 
         public new static readonly DependencyProperty FontSizeProperty
-            = DependencyPropertyExtensions.RegisterDependencyProperty(
+            = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(13D),
                 value => double.TryParse(value.ToString(), out var i) ? MIN_FONT_SIZE <= i && i <= MAX_FONT_SIZE : false);
         public static readonly DependencyProperty ActualFontSizeProperty
-            = DependencyPropertyExtensions.RegisterDependencyProperty(
+            = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(FontSizeProperty.DefaultMetadata.DefaultValue),
                 FontSizeProperty.IsValidValue);
         public static readonly DependencyProperty ZoomIncrementProperty
-            = DependencyPropertyExtensions.RegisterDependencyProperty(
+            = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(2),
                 value => int.TryParse(value.ToString(), out var i) ? 1 <= i && i <= 16 : false);
         public static readonly DependencyProperty EnableAutoCompletionProperty
-            = DependencyPropertyExtensions.RegisterDependencyProperty(new PropertyMetadata(true));
+            = DependencyPropertyExtensions.Register(new PropertyMetadata(true));
 
         private readonly Lazy<Func<SearchPanel, IEnumerable<TextSegment>>> _searchedTextSegments
             = new Lazy<Func<SearchPanel, IEnumerable<TextSegment>>>(() =>
