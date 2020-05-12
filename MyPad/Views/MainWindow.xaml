@@ -79,11 +79,9 @@
     <m:MetroWindow.RightWindowCommands>
         <m:WindowCommands>
             <ToggleButton IsChecked="{Binding Topmost, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}" ToolTip="{le:Loc Command_Topmost}" Focusable="False">
-                <mi:PackIconModern>
+                <mi:PackIconModern Kind="Pin" Foreground="{DynamicResource MahApps.Brushes.Black}">
                     <mi:PackIconModern.Resources>
                         <Style TargetType="{x:Type mi:PackIconModern}">
-                            <Setter Property="Kind" Value="Pin"/>
-                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Black}"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Topmost, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}" Value="True">
                                     <Setter Property="RenderTransform">
@@ -98,7 +96,7 @@
                 </mi:PackIconModern>
             </ToggleButton>
             <Button Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}">
-                <mi:Modern Kind="Fullscreen"/>
+                <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.Black}"/>
             </Button>
         </m:WindowCommands>
     </m:MetroWindow.RightWindowCommands>
