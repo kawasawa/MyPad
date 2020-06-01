@@ -3,6 +3,7 @@ using MyPad.Models;
 using MyPad.ViewModels;
 using MyPad.Views.Controls;
 using MyPad.Views.Regions;
+using Plow.Wpf;
 using Prism.Commands;
 using Prism.Ioc;
 using Prism.Regions;

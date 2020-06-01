@@ -2,6 +2,7 @@
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Utils;
+using Plow.Wpf;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -13,24 +14,24 @@ namespace MyPad.Views.Controls
     {
         #region プロパティ
 
-        private static readonly DependencyPropertyKey VisualLengthPropertyKey = DependencyPropertyExtensions.RegisterReadOnlyDependencyProperty();
-        private static readonly DependencyPropertyKey TextLengthPropertyKey = DependencyPropertyExtensions.RegisterReadOnlyDependencyProperty();
-        private static readonly DependencyPropertyKey SelectionLengthPropertyKey = DependencyPropertyExtensions.RegisterReadOnlyDependencyProperty();
-        private static readonly DependencyPropertyKey SelectionStartPropertyKey = DependencyPropertyExtensions.RegisterReadOnlyDependencyProperty();
-        private static readonly DependencyPropertyKey SelectionEndPropertyKey = DependencyPropertyExtensions.RegisterReadOnlyDependencyProperty();
-        private static readonly DependencyPropertyKey SelectionStartLinePropertyKey = DependencyPropertyExtensions.RegisterReadOnlyDependencyProperty();
-        private static readonly DependencyPropertyKey SelectionEndLinePropertyKey = DependencyPropertyExtensions.RegisterReadOnlyDependencyProperty();
-        private static readonly DependencyPropertyKey SelectionLineCountPropertyKey = DependencyPropertyExtensions.RegisterReadOnlyDependencyProperty();
-        private static readonly DependencyPropertyKey SelectedTextPropertyKey = DependencyPropertyExtensions.RegisterReadOnlyDependencyProperty();
-        private static readonly DependencyPropertyKey CharNamePropertyKey = DependencyPropertyExtensions.RegisterReadOnlyDependencyProperty(new PropertyMetadata(TextUtilities.GetControlCharacterName(char.MinValue)));
-        private static readonly DependencyPropertyKey IsAtEndOfLinePropertyKey = DependencyPropertyExtensions.RegisterReadOnlyDependencyProperty();
-        private static readonly DependencyPropertyKey IsInVirtualSpacePropertyKey = DependencyPropertyExtensions.RegisterReadOnlyDependencyProperty();
+        private static readonly DependencyPropertyKey VisualLengthPropertyKey = DependencyPropertyExtensions.RegisterReadOnly();
+        private static readonly DependencyPropertyKey TextLengthPropertyKey = DependencyPropertyExtensions.RegisterReadOnly();
+        private static readonly DependencyPropertyKey SelectionLengthPropertyKey = DependencyPropertyExtensions.RegisterReadOnly();
+        private static readonly DependencyPropertyKey SelectionStartPropertyKey = DependencyPropertyExtensions.RegisterReadOnly();
+        private static readonly DependencyPropertyKey SelectionEndPropertyKey = DependencyPropertyExtensions.RegisterReadOnly();
+        private static readonly DependencyPropertyKey SelectionStartLinePropertyKey = DependencyPropertyExtensions.RegisterReadOnly();
+        private static readonly DependencyPropertyKey SelectionEndLinePropertyKey = DependencyPropertyExtensions.RegisterReadOnly();
+        private static readonly DependencyPropertyKey SelectionLineCountPropertyKey = DependencyPropertyExtensions.RegisterReadOnly();
+        private static readonly DependencyPropertyKey SelectedTextPropertyKey = DependencyPropertyExtensions.RegisterReadOnly();
+        private static readonly DependencyPropertyKey CharNamePropertyKey = DependencyPropertyExtensions.RegisterReadOnly(new PropertyMetadata(TextUtilities.GetControlCharacterName(char.MinValue)));
+        private static readonly DependencyPropertyKey IsAtEndOfLinePropertyKey = DependencyPropertyExtensions.RegisterReadOnly();
+        private static readonly DependencyPropertyKey IsInVirtualSpacePropertyKey = DependencyPropertyExtensions.RegisterReadOnly();
 
         public static readonly DependencyProperty SettingsProperty
-            = DependencyPropertyExtensions.RegisterDependencyProperty(
+            = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(null, (obj, e) => ((TextEditor)obj).PopulateSettings((INotifyPropertyChanged)e.NewValue)));
         public static readonly DependencyProperty SyntaxDefinitionProperty 
-            = DependencyPropertyExtensions.RegisterDependencyProperty(
+            = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(null, (obj, e) =>
                 {
                     var textEditor = (TextEditor)obj;
@@ -39,15 +40,15 @@ namespace MyPad.Views.Controls
                     textEditor.TextArea.ApplySyntaxDefinition(syntaxDefinition);
                 }));
         public static readonly DependencyProperty ActualFontSizeProperty
-            = DependencyPropertyExtensions.RegisterDependencyProperty(
+            = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(TextArea.ActualFontSizeProperty.DefaultMetadata.DefaultValue),
                 TextArea.ActualFontSizeProperty.IsValidValue);
         public static readonly DependencyProperty ZoomIncrementProperty
-            = DependencyPropertyExtensions.RegisterDependencyProperty(
+            = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(TextArea.ZoomIncrementProperty.DefaultMetadata.DefaultValue),
                 TextArea.ZoomIncrementProperty.IsValidValue);
         public static readonly DependencyProperty LineProperty
-            = DependencyPropertyExtensions.RegisterDependencyProperty(
+            = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(1, (obj, e) =>
                 {
                     var self = (TextEditor)obj;
@@ -55,7 +56,7 @@ namespace MyPad.Views.Controls
                         self.TextArea.Caret.Line = (int)e.NewValue;
                 }));
         public static readonly DependencyProperty ColumnProperty
-            = DependencyPropertyExtensions.RegisterDependencyProperty(
+            = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(1, (obj, e) =>
                 {
                     var self = (TextEditor)obj;
@@ -63,7 +64,7 @@ namespace MyPad.Views.Controls
                         self.TextArea.Caret.Column = (int)e.NewValue;
                 }));
         public static readonly DependencyProperty VisualColumnProperty
-            = DependencyPropertyExtensions.RegisterDependencyProperty(
+            = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(1, (obj, e) =>
                 {
                     var self = (TextEditor)obj;
@@ -83,11 +84,11 @@ namespace MyPad.Views.Controls
         public static readonly DependencyProperty IsAtEndOfLineProperty = IsAtEndOfLinePropertyKey.DependencyProperty;
         public static readonly DependencyProperty IsInVirtualSpaceProperty = IsInVirtualSpacePropertyKey.DependencyProperty;
         public static readonly DependencyProperty OverstrikeModeProperty
-            = DependencyPropertyExtensions.RegisterDependencyProperty(
+            = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(TextArea.OverstrikeModeProperty.DefaultMetadata.DefaultValue),
                 TextArea.OverstrikeModeProperty.IsValidValue);
         public static readonly DependencyProperty EnableAutoCompletionProperty
-            = DependencyPropertyExtensions.RegisterDependencyProperty(
+            = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(TextArea.EnableAutoCompletionProperty.DefaultMetadata.DefaultValue),
                 TextArea.EnableAutoCompletionProperty.IsValidValue);
 

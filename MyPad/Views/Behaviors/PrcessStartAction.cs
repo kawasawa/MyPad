@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xaml.Behaviors;
+using Plow.Wpf;
 using System.Diagnostics;
 using System.Windows;
 
@@ -6,10 +7,10 @@ namespace MyPad.Views.Behaviors
 {
     public class ProcessStartAction : TriggerAction<DependencyObject>
     {
-        public static readonly DependencyProperty FileNameProperty = DependencyPropertyExtensions.RegisterDependencyProperty();
-        public static readonly DependencyProperty ArgumentsProperty = DependencyPropertyExtensions.RegisterDependencyProperty();
-        public static readonly DependencyProperty CreateNoWindowProperty = DependencyPropertyExtensions.RegisterDependencyProperty();
-        public static readonly DependencyProperty ThrowExceptionProperty = DependencyPropertyExtensions.RegisterDependencyProperty(new PropertyMetadata(true));
+        public static readonly DependencyProperty FileNameProperty = DependencyPropertyExtensions.Register();
+        public static readonly DependencyProperty ArgumentsProperty = DependencyPropertyExtensions.Register();
+        public static readonly DependencyProperty CreateNoWindowProperty = DependencyPropertyExtensions.Register();
+        public static readonly DependencyProperty ThrowExceptionProperty = DependencyPropertyExtensions.Register(new PropertyMetadata(true));
 
         public string FileName
         {

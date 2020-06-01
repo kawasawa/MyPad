@@ -182,7 +182,11 @@ namespace MyPad.ViewModels
                 .AddTo(this.CompositeDisposable);
 
             this.OpenCommand = new ReactiveCommand()
-                .WithSubscribe(() => _ = this.LoadTextEditor())
+                .WithSubscribe(async () =>
+                {
+                    var results = await this.LoadTextEditor();
+                    this.WakeUpTextEditor(results.LastOrDefault(tuple => tuple.textEditor != null).textEditor);
+                })
                 .AddTo(this.CompositeDisposable);
 
             this.SaveCommand = new ReactiveCommand()
