@@ -142,10 +142,11 @@ namespace MyPad.Views
             // リージョンにビューを設定する
             void addToRegion<T>()
                 => this.RegionManager.AddToRegion(
-                    PrismNamingConverter.ConvertToRegionName(typeof(T)), this.ContainerExtension.Resolve<T>());
+                    PrismNamingConverter.ConvertToRegionName<T>(), this.ContainerExtension.Resolve<T>());
             addToRegion<MenuBarView>();
             addToRegion<ToolBarView>();
             addToRegion<StatusBarView>();
+            addToRegion<DiffContentView>(); 
             addToRegion<PrintPreviewContentView>();
             addToRegion<OptionContentView>();
             addToRegion<AboutContentView>();

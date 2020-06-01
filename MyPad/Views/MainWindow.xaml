@@ -68,10 +68,11 @@
         <KeyBinding Command="{Binding CloseCommand,                Mode=OneTime}" Key="F4"       Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding PrintCommand,                Mode=OneTime}" Key="P"        Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding PrintPreviewCommand,         Mode=OneTime}" Key="P"        Modifiers="Ctrl+Shift"/>
-        <KeyBinding Command="{Binding OptionCommand,               Mode=OneTime}" Key="OemComma" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding GoToLineCommand,             Mode=OneTime}" Key="G"        Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding OptionCommand,               Mode=OneTime}" Key="OemComma" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding ChangeEncodingCommand,       Mode=OneTime}" Key="M"        Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding ChangeSyntaxCommand,         Mode=OneTime}" Key="M"        Modifiers="Ctrl+Shift"/>
+        <KeyBinding Command="{Binding DiffCommand,                 Mode=OneTime}" Key="D"        Modifiers="Ctrl+Shift"/>
         <KeyBinding Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Key="F11"/>
     </Window.InputBindings>
 
@@ -112,6 +113,9 @@
     <!-- フライアウト -->
     <m:MetroWindow.Flyouts>
         <m:FlyoutsControl>
+            <m:Flyout Header="{le:Loc Command_Diff}" IsOpen="{Binding IsOpenDiffContent.Value, Mode=TwoWay}">
+                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="DiffContentRegion"/>
+            </m:Flyout>
             <m:Flyout Header="{le:Loc Command_Print}" IsOpen="{Binding IsOpenPrintPreviewContent.Value, Mode=TwoWay}">
                 <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="PrintPreviewContentRegion"/>
             </m:Flyout>

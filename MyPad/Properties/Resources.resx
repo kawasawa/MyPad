@@ -672,4 +672,22 @@ These changes will be applied on restart. Do you want to continue?</value>
   <data name="Message_NotifySaved" xml:space="preserve">
     <value>Text saved.</value>
   </data>
+  <data name="Command_Diff" xml:space="preserve">
+    <value>Diff</value>
+  </data>
+  <data name="Command_DiffUnmodified" xml:space="preserve">
+    <value>Compare with unmodified</value>
+  </data>
+  <data name="LabelText_ShowInlineDiffViewer" xml:space="preserve">
+    <value>Show inline diff viewer.</value>
+  </data>
+  <data name="Label_DiffDestination" xml:space="preserve">
+    <value>Destination for compartion</value>
+  </data>
+  <data name="Label_DiffSource" xml:space="preserve">
+    <value>Source for comparsion</value>
+  </data>
+  <data name="Command_View" xml:space="preserve">
+    <value>View</value>
+  </data>
 </root>

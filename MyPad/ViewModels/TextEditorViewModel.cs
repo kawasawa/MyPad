@@ -24,6 +24,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Unity;
 using Vanara.PInvoke;
+using Prism.Ioc;
 
 namespace MyPad.ViewModels
 {
@@ -33,6 +34,8 @@ namespace MyPad.ViewModels
 
         [Dependency]
         public IEventAggregator EventAggregator { get; set; }
+        [Dependency]
+        public IContainerExtension ContainerExtension { get; set; }
         [Dependency]
         public ILoggerFacade Logger { get; set; }
         [Dependency]
@@ -49,10 +52,7 @@ namespace MyPad.ViewModels
         public const string TEXT_EXTENSION = ".txt";
 
         private static int GlobalSequence = 0;
-
-        private int? _sequense;
-        public int Sequense
-            => this._sequense ??= ++GlobalSequence;
+        private bool _isInitialized;
 
         private DispatcherTimer AutoSaveTimer { get; }
         private (string path, ITextSourceVersion version) Temporary { get; set; }
@@ -90,6 +90,13 @@ namespace MyPad.ViewModels
                     this.RaisePropertyChanged(nameof(this.FileOwner));
                 }
             }
+        }
+
+        private int? _sequense;
+        public int Sequense
+        {
+            get => this._isInitialized && this.IsNewFile ? this._sequense ??= ++GlobalSequence : -1;
+            private set => this._sequense = value;
         }
 
         public bool IsNewFile
@@ -315,6 +322,7 @@ namespace MyPad.ViewModels
             this.AutoSaveTimer = new DispatcherTimer();
             this.AutoSaveTimer.Tick += this.AutoSaveTimer_Tick;
             this.Clear();
+            this._isInitialized = true;
         }
 
         protected override void Dispose(bool disposing)
@@ -367,6 +375,21 @@ namespace MyPad.ViewModels
                 // 一時ファイルを削除する
                 await Task.Run(() => this.DeleteTemporary());
             });
+        }
+
+        public async Task<TextEditorViewModel> CloneUnmodified()
+        {
+            var clone = this.ContainerExtension.Resolve<TextEditorViewModel>();
+            if (this.IsNewFile)
+            {
+                clone.Sequense = this.Sequense;
+            }
+            else
+            {
+                var stream = File.Open(this.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                await clone.Load(stream, this.Encoding);
+            }
+            return clone;
         }
 
         private void DeleteTemporary()

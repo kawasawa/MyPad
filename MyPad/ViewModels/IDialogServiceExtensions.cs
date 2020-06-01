@@ -7,6 +7,7 @@ using MyPad.Views.Dialogs;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -318,6 +319,55 @@ namespace MyPad.ViewModels
 				{
 					if (ConvertToTernary(r.Result) == true)
 						result = (true, r.Parameters.GetValue<string>(nameof(ChangeSyntaxDialogViewModel.Syntax)));
+				});
+				return result;
+			}
+		}
+
+		public async static Task<(bool result, string diffSourcePath, string diffDestinationPath)> SelectDiffFiles(this IDialogService self, IEnumerable<string> fileNames)
+		{
+			var parameters = new DialogParameters {
+				{ nameof(SelectDiffFilesDialogViewModel.Title), Resources.Command_Diff },
+				{ nameof(SelectDiffFilesDialogViewModel.FileNames), fileNames },
+			};
+
+			if (UseOverlayDialog(self, out var window))
+			{
+				var settings = CreateMetroDialogSettings();
+				var dialog = new CustomDialog(window, settings)
+				{
+					Title = Resources.Command_Diff,
+					Content = new SelectDiffFilesDialog(),
+				};
+				var isOpened = true;
+				var result = (false, string.Empty, string.Empty);
+				if (((FrameworkElement)dialog.Content).DataContext is SelectDiffFilesDialogViewModel viewModel)
+				{
+					viewModel.OnDialogOpened(parameters);
+					viewModel.RequestClose += async r =>
+					{
+						if (ConvertToTernary(r.Result) == true)
+							result = (true,
+								r.Parameters.GetValue<string>(nameof(SelectDiffFilesDialogViewModel.DiffSourcePath)),
+								r.Parameters.GetValue<string>(nameof(SelectDiffFilesDialogViewModel.DiffDestinationPath)));
+						try { await window.HideMetroDialogAsync(dialog, settings); } catch { }
+						isOpened = false;
+					};
+				}
+				await window.ShowMetroDialogAsync(dialog);
+				while (isOpened)
+					await Task.Delay(100);
+				return result;
+			}
+			else
+			{
+				var result = (false, string.Empty, string.Empty);
+				self.ShowDialog(GetDialogName(), parameters, r =>
+				{
+					if (ConvertToTernary(r.Result) == true)
+						result = (true, 
+							r.Parameters.GetValue<string>(nameof(SelectDiffFilesDialogViewModel.DiffSourcePath)),
+							r.Parameters.GetValue<string>(nameof(SelectDiffFilesDialogViewModel.DiffDestinationPath)));
 				});
 				return result;
 			}

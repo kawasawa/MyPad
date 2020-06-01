@@ -632,4 +632,22 @@
   <data name="Message_NotifySaved" xml:space="preserve">
     <value>テキストが保存されました。</value>
   </data>
+  <data name="Command_Diff" xml:space="preserve">
+    <value>差分表示</value>
+  </data>
+  <data name="Command_DiffUnmodified" xml:space="preserve">
+    <value>未変更のものと比較</value>
+  </data>
+  <data name="LabelText_ShowInlineDiffViewer" xml:space="preserve">
+    <value>Diff ビューアーをインラインで表示する。</value>
+  </data>
+  <data name="Label_DiffDestination" xml:space="preserve">
+    <value>比較先</value>
+  </data>
+  <data name="Label_DiffSource" xml:space="preserve">
+    <value>比較元</value>
+  </data>
+  <data name="Command_View" xml:space="preserve">
+    <value>表示</value>
+  </data>
 </root>

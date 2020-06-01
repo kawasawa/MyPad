@@ -2,11 +2,11 @@
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.WindowsAPICodePack.Dialogs.Controls;
-using Plow;
-using Plow.Wpf.CommonDialogs;
 using MyPad.Models;
 using MyPad.Properties;
 using MyPad.ViewModels.Events;
+using Plow;
+using Plow.Wpf.CommonDialogs;
 using Prism.Events;
 using Prism.Ioc;
 using Prism.Logging;
@@ -79,6 +79,9 @@ namespace MyPad.ViewModels
         public ReactiveCollection<TextEditorViewModel> TextEditors { get; }
         public ReactiveProperty<TextEditorViewModel> ActiveTextEditor { get; }
         public ReactiveProperty<FlowDocument> FlowDocument { get; }
+        public ReactiveProperty<TextEditorViewModel> DiffSource { get; }
+        public ReactiveProperty<TextEditorViewModel> DiffDestination { get; }
+        public ReactiveProperty<bool> IsOpenDiffContent { get; }
         public ReactiveProperty<bool> IsOpenPrintPreviewContent { get; }
         public ReactiveProperty<bool> IsOpenOptionContent { get; }
         public ReactiveProperty<bool> IsOpenAboutContent { get; }
@@ -95,6 +98,8 @@ namespace MyPad.ViewModels
         public ReactiveCommand CloseCommand { get; }
         public ReactiveCommand CloseAllCommand { get; }
         public ReactiveCommand CloseOtherCommand { get; }
+        public ReactiveCommand DiffCommand { get; }
+        public ReactiveCommand DiffUnmodifiedCommand { get; }
         public ReactiveCommand PrintCommand { get; }
         public ReactiveCommand PrintPreviewCommand { get; }
         public ReactiveCommand OptionCommand { get; }
@@ -137,12 +142,30 @@ namespace MyPad.ViewModels
             BindingOperations.EnableCollectionSynchronization(this.TextEditors, new object());
             this.ActiveTextEditor = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
             this.FlowDocument = new ReactiveProperty<FlowDocument>().AddTo(this.CompositeDisposable);
+            this.DiffSource = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
+            this.DiffDestination = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
+            this.IsOpenDiffContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             this.IsOpenPrintPreviewContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             this.IsOpenOptionContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             this.IsOpenAboutContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
-            var compositeFlyout = new[] { this.IsOpenPrintPreviewContent, this.IsOpenOptionContent, this.IsOpenAboutContent };
+            var compositeFlyout = new[] { this.IsOpenDiffContent, this.IsOpenPrintPreviewContent, this.IsOpenOptionContent, this.IsOpenAboutContent };
 
             // ----- 変更通知の購読 ------------------------------
+
+            this.IsOpenDiffContent
+                .Inverse()
+                .Where(isClose => isClose)
+                .Subscribe(_ =>
+                {
+                    this.DiffSource.Value = null;
+                    this.DiffDestination.Value = null;
+                })
+                .AddTo(this.CompositeDisposable);
+
+            this.IsOpenDiffContent
+                .Where(isOpen => isOpen)
+                .Subscribe(_ => compositeFlyout.Except(new[] { this.IsOpenDiffContent }).ForEach(p => p.Value = false))
+                .AddTo(this.CompositeDisposable);
 
             this.IsOpenPrintPreviewContent
                 .Subscribe(async isOpen => this.FlowDocument.Value = isOpen ? await this.ActiveTextEditor.Value.CreateFlowDocument() : null)
@@ -257,6 +280,49 @@ namespace MyPad.ViewModels
                             return;
                     }
                     this.WakeUpTextEditor(current);
+                })
+                .AddTo(this.CompositeDisposable);
+
+            this.DiffCommand = new ReactiveCommand()
+                .WithSubscribe(async () =>
+                {
+                    IEnumerable<(TextEditorViewModel textEditors, Views.MainWindow window)> getTextEditors()
+                    {
+                        foreach (var v in this.GetViews())
+                            foreach (var e in ((MainWindowViewModel)v.DataContext).TextEditors)
+                                yield return (e, v);
+                    }
+
+                    var textEditors = getTextEditors().Select(tuple => tuple.textEditors);
+                    var (result, diffSourcePath, diffDestinationPath) = await this.DialogService.SelectDiffFiles(textEditors.Select(e => e.FileName));
+                    if (result == false)
+                        return;
+
+                    try
+                    {
+                        this.DiffSource.Value = textEditors.First(e => e.FileName == diffSourcePath);
+                        this.DiffDestination.Value = textEditors.First(e => e.FileName == diffDestinationPath);
+                    }
+                    catch (Exception e)
+                    {
+                        this.DiffSource.Value = null;
+                        this.DiffDestination.Value = null;
+
+                        this.Logger.Log($"ファイルの読み込みに失敗しました。: SourcePath={diffSourcePath}, DestinationPath={diffDestinationPath}", Category.Warn, e);
+                        this.DialogService.Warn(e.Message);
+                        return;
+                    }
+
+                    this.IsOpenDiffContent.Value = true;
+                })
+                .AddTo(this.CompositeDisposable);
+
+            this.DiffUnmodifiedCommand = new ReactiveCommand()
+                .WithSubscribe(async () =>
+                {
+                    this.DiffSource.Value = await this.ActiveTextEditor.Value.CloneUnmodified();
+                    this.DiffDestination.Value = this.ActiveTextEditor.Value;
+                    this.IsOpenDiffContent.Value = true;
                 })
                 .AddTo(this.CompositeDisposable);
 
@@ -436,7 +502,7 @@ namespace MyPad.ViewModels
                     new OpenFileDialogParameters()
                     {
                         InitialDirectory = root,
-                        Filter = this.CreateDialogFileFilter(),
+                        Filter = CommonDialogHelper.CreateFileFilter(this.SyntaxService),
                         DefaultExtension = TextEditorViewModel.TEXT_EXTENSION,
                         Multiselect = true,
                     },
@@ -444,8 +510,8 @@ namespace MyPad.ViewModels
                     {
                         // 文字コードの選択欄を追加する
                         var d = (CommonFileDialog)dialog;
-                        var encodingComboBox = this.ConvertToComboBox(this.SettingsService.System.AutoDetectEncoding ? null : this.SettingsService.System.Encoding);
-                        encodingComboBox.Items.Insert(0, new EncodingComboBoxItem(null, Resources.Label_AutoDetect));
+                        var encodingComboBox = CommonDialogHelper.ConvertToComboBox(this.SettingsService.System.AutoDetectEncoding ? null : this.SettingsService.System.Encoding);
+                        encodingComboBox.Items.Insert(0, new CommonDialogHelper.EncodingComboBoxItem(null, Resources.Label_AutoDetect));
                         encodingComboBox.SelectedIndex++;
                         var encodingGroupBox = new CommonFileDialogGroupBox($"{Resources.Label_Encoding}(&E):");
                         encodingGroupBox.Items.Add(encodingComboBox);
@@ -464,7 +530,7 @@ namespace MyPad.ViewModels
                         // 選択された文字コードを取得する
                         var encodingGroupBox = (CommonFileDialogGroupBox)d.Controls.First();
                         var encodingComboBox = (CommonFileDialogComboBox)encodingGroupBox.Items.First();
-                        encoding = ((EncodingComboBoxItem)encodingComboBox.Items[encodingComboBox.SelectedIndex]).Encoding;
+                        encoding = ((CommonDialogHelper.EncodingComboBoxItem)encodingComboBox.Items[encodingComboBox.SelectedIndex]).Encoding;
                     });
                 return (ready, fileNames, filter, encoding, isReadOnly);
             }
@@ -534,14 +600,14 @@ namespace MyPad.ViewModels
                 {
                     InitialDirectory = textEditor.IsNewFile == false ? Path.GetDirectoryName(path) : null,
                     DefaultFileName = Path.GetFileName(path),
-                    Filter = this.CreateDialogFileFilter(),
+                    Filter = CommonDialogHelper.CreateFileFilter(this.SyntaxService),
                     DefaultExtension = TextEditorViewModel.TEXT_EXTENSION,
                 },
                 (dialog, parameters) =>
                 {
                     // 文字コードの選択欄を追加する
                     var d = (CommonFileDialog)dialog;
-                    var encodingComboBox = this.ConvertToComboBox(encoding);
+                    var encodingComboBox = CommonDialogHelper.ConvertToComboBox(encoding);
                     var encodingGroupBox = new CommonFileDialogGroupBox($"{Resources.Label_Encoding}(&E):");
                     encodingGroupBox.Items.Add(encodingComboBox);
                     d.Controls.Add(encodingGroupBox);
@@ -559,7 +625,7 @@ namespace MyPad.ViewModels
                     // 選択された文字コードを取得する
                     var encodingGroupBox = (CommonFileDialogGroupBox)d.Controls.First();
                     var encodingComboBox = (CommonFileDialogComboBox)encodingGroupBox.Items.First();
-                    encoding = ((EncodingComboBoxItem)encodingComboBox.Items[encodingComboBox.SelectedIndex]).Encoding;
+                    encoding = ((CommonDialogHelper.EncodingComboBoxItem)encodingComboBox.Items[encodingComboBox.SelectedIndex]).Encoding;
                 });
             if (ready == false)
                 return (false, textEditor);
@@ -577,7 +643,7 @@ namespace MyPad.ViewModels
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentException("空のパスが指定されています。", nameof(path));
 
-            var sameTextEditor = this.TextEditors.FirstOrDefault(m => m.FileName == path);
+            var sameTextEditor = this.TextEditors.Where(m => m.IsNewFile == false).FirstOrDefault(m => m.FileName == path);
             if (sameTextEditor != null)
             {
                 // 文字コードが異なる場合はリロードする
@@ -628,7 +694,6 @@ namespace MyPad.ViewModels
                     if (existTextEditor == null)
                         continue;
 
-                    await viewModel.LoadTextEditor(new[] { existTextEditor.FileName });
                     viewModel.WakeUpTextEditor(existTextEditor);
                     view.SetForegroundWindow();
                     return (false, null);
@@ -701,7 +766,7 @@ namespace MyPad.ViewModels
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentException("空のパスが渡されました。", nameof(path));
 
-            var sameTextEditor = this.TextEditors.FirstOrDefault(m => m.FileName == path);
+            var sameTextEditor = this.TextEditors.Where(m => m.IsNewFile == false).FirstOrDefault(m => m.FileName == path);
             if (sameTextEditor != null)
             {
                 // 他のコンテンツが同一のパスからなるコンテンツを占有している場合は、保存せずに終了する
@@ -779,46 +844,6 @@ namespace MyPad.ViewModels
 
                 this.DialogService.ToastNotify($"{Resources.Message_NotifySaved}{Environment.NewLine}{path}");
                 return (true, textEditor);
-            }
-        }
-
-        #endregion
-
-        #region コモンダイアログ
-
-        private string CreateDialogFileFilter()
-        {
-            return string.Join("|",
-                new[] { $"{Resources.Label_AllFiles}|*.*" }
-                .Concat(this.SyntaxService.Definitions.Values.Select(d => $"{d.Name}|{string.Join(";", d.Extensions)}")));
-        }
-
-        private CommonFileDialogComboBox ConvertToComboBox(Encoding defaultEncoding)
-        {
-            var comboBox = new CommonFileDialogComboBox();
-            var encodings = Constants.ENCODINGS;
-            for (var i = 0; i < encodings.Count(); i++)
-            {
-                comboBox.Items.Add(new EncodingComboBoxItem(encodings.ElementAt(i)));
-                if (encodings.ElementAt(i) == defaultEncoding)
-                    comboBox.SelectedIndex = i;
-            }
-            return comboBox;
-        }
-
-        private class EncodingComboBoxItem : CommonFileDialogComboBoxItem
-        {
-            public Encoding Encoding { get; }
-
-            public EncodingComboBoxItem(Encoding encoding)
-                : this(encoding, encoding?.EncodingName)
-            {
-            }
-
-            public EncodingComboBoxItem(Encoding encoding, string text)
-                : base(text)
-            {
-                this.Encoding = encoding;
             }
         }
 
