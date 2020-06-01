@@ -246,6 +246,38 @@
                 </MenuItem.Icon>
             </MenuItem>
         </MenuItem>
+        <MenuItem Header="{le:Loc Command_View}">
+            <MenuItem Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                      Header="{le:Loc Command_SwitchFullScreenMode}"
+                      InputGestureText="F11">
+                <MenuItem.Icon>
+                    <mi:Modern Kind="Fullscreen"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem IsCheckable="True" IsChecked="{Binding Topmost, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}" Header="{le:Loc Command_Topmost}"/>
+            <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowMenuBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowMenuBar}"/>
+            <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowToolBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowToolBar}"/>
+            <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowStatusBar, Mode=TwoWay}" Header="{le:Loc Command_ShowStatusBar}"/>
+            <MenuItem Header="{le:Loc Command_Zoom}">
+                <MenuItem Command="controls:TextEditorCommands.ZoomIn"
+                          Header="{le:Loc Command_ZoomIn}"
+                          InputGestureText="Ctrl+Plus">
+                    <MenuItem.Icon>
+                        <mi:Material Kind="MagnifyPlusOutline"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="controls:TextEditorCommands.ZoomOut"
+                          Header="{le:Loc Command_ZoomOut}"
+                          InputGestureText="Ctrl+Minus">
+                    <MenuItem.Icon>
+                        <mi:Material Kind="MagnifyMinusOutline"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="controls:TextEditorCommands.ZoomReset"
+                          Header="{le:Loc Command_ZoomReset}"
+                          InputGestureText="Ctrl+0"/>
+            </MenuItem>
+        </MenuItem>
         <MenuItem Header="{le:Loc Command_Tools}">
             <MenuItem Command="{Binding OptionCommand, Mode=OneTime}"
                       Header="{le:Loc Command_Option}"
@@ -277,24 +309,18 @@
                     <mi:Material Kind="AutoFix"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="{le:Loc Command_Zoom}">
-                <MenuItem Command="controls:TextEditorCommands.ZoomIn"
-                          Header="{le:Loc Command_ZoomIn}"
-                          InputGestureText="Ctrl+Plus">
-                    <MenuItem.Icon>
-                        <mi:Material Kind="MagnifyPlusOutline"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="controls:TextEditorCommands.ZoomOut"
-                          Header="{le:Loc Command_ZoomOut}"
-                          InputGestureText="Ctrl+Minus">
-                    <MenuItem.Icon>
-                        <mi:Material Kind="MagnifyMinusOutline"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="controls:TextEditorCommands.ZoomReset"
-                          Header="{le:Loc Command_ZoomReset}"
-                          InputGestureText="Ctrl+0"/>
+            <Separator/>
+            <MenuItem Command="{Binding DiffCommand, Mode=OneTime}"
+                      Header="{le:Loc Command_Diff}"
+                      HeaderStringFormat="{}{0}..."
+                      InputGestureText="Ctrl+Shift+D">
+                <MenuItem.Icon>
+                    <mi:Material Kind="FileCompare"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Command="{Binding DiffUnmodifiedCommand, Mode=OneTime}"
+                      Header="{le:Loc Command_DiffUnmodified}"
+                      HeaderStringFormat="{}{0}...">
             </MenuItem>
         </MenuItem>
         <MenuItem Header="{le:Loc Command_Help}">

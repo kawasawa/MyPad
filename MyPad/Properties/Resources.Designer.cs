@@ -242,6 +242,24 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Diff に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Diff {
+            get {
+                return ResourceManager.GetString("Command_Diff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Compare with unmodified に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_DiffUnmodified {
+            get {
+                return ResourceManager.GetString("Command_DiffUnmodified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Edit に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Edit {
@@ -791,6 +809,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   View に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_View {
+            get {
+                return ResourceManager.GetString("Command_View", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   List of windows に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_WindowList {
@@ -972,6 +999,24 @@ namespace MyPad.Properties {
         public static string Label_Dark {
             get {
                 return ResourceManager.GetString("Label_Dark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Destination for compartion に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_DiffDestination {
+            get {
+                return ResourceManager.GetString("Label_DiffDestination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Source for comparsion に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_DiffSource {
+            get {
+                return ResourceManager.GetString("Label_DiffSource", resourceCulture);
             }
         }
         
@@ -1431,6 +1476,15 @@ namespace MyPad.Properties {
         public static string LabelText_ShowFullName {
             get {
                 return ResourceManager.GetString("LabelText_ShowFullName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Show inline diff viewer. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string LabelText_ShowInlineDiffViewer {
+            get {
+                return ResourceManager.GetString("LabelText_ShowInlineDiffViewer", resourceCulture);
             }
         }
         
