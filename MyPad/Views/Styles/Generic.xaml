@@ -50,7 +50,7 @@
         <Setter Property="NonActiveWindowTitleBrush" Value="{x:Null}"/>
         <Setter Property="NonActiveBorderBrush" Value="{DynamicResource DarkBlueColorBrush}"/>
         <Setter Property="NonActiveGlowBrush" Value="{DynamicResource DarkBlueColorBrush}"/>
-        <Setter Property="TitleForeground" Value="{DynamicResource MahApps.Brushes.Black}"/>
+        <Setter Property="TitleForeground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
         <Setter Property="TitleCharacterCasing" Value="Normal"/>
         <Setter Property="LeftWindowCommandsOverlayBehavior" Value="Never"/>
         <Setter Property="RightWindowCommandsOverlayBehavior" Value="Never"/>
@@ -91,7 +91,7 @@
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.GrayNormal}"/>
         <Style.Resources>
             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
-                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Black}"/>
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
                 <Setter Property="FontSize" Value="{StaticResource App.Font.Size.Overlay.Message}"/>
             </Style>
         </Style.Resources>

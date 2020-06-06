@@ -13,8 +13,14 @@
              mc:Ignorable="d"
              p:ViewModelLocator.AutoWireViewModel="True"
              d:DesignHeight="450" d:DesignWidth="800">
-    
+
     <ToolBar>
+        <ToolBar.Resources>
+            <Style x:Key="{x:Static ToolBar.ButtonStyleKey}" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.ToolBar}">
+                <Setter Property="Padding" Value="3"/>
+            </Style>
+        </ToolBar.Resources>
+        
         <Button Command="{Binding NewCommand, Mode=OneTime}" 
                 ToolTip="{le:Loc Command_New}">
             <mi:Modern Kind="PageNew"/>

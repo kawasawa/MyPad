@@ -1183,6 +1183,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Sync with system に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_SyncAppTheme {
+            get {
+                return ResourceManager.GetString("Label_SyncAppTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Syntax に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Syntax {

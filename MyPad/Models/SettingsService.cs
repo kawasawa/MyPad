@@ -37,15 +37,15 @@ namespace MyPad.Models
 
         public void Load()
         {
-            if (File.Exists(this.FilePath) == false)
-            {
-                this.System = new SystemSettings { Culture = CultureInfo.CurrentCulture.Name };
-                this.TextEditor = new TextEditorSettings();
-                return;
-            }
-
             try
             {
+                if (File.Exists(this.FilePath) == false)
+                {
+                    this.System = new SystemSettings { Culture = CultureInfo.CurrentCulture.Name };
+                    this.TextEditor = new TextEditorSettings();
+                    return;
+                }
+
                 var json = string.Empty;
                 using (var reader = new StreamReader(this.FilePath, FILE_ENCODING))
                 {
@@ -57,6 +57,10 @@ namespace MyPad.Models
             catch (Exception e)
             {
                 this.Logger.Log($"設定ファイルの読み込みに失敗しました。: Path={this.FilePath}", Category.Warn, e);
+            }
+            finally
+            {
+                this.System.ApplyTheme();
             }
         }
 

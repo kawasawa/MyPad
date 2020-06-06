@@ -650,4 +650,7 @@
   <data name="Command_View" xml:space="preserve">
     <value>表示</value>
   </data>
+  <data name="Label_SyncAppTheme" xml:space="preserve">
+    <value>システムに連動</value>
+  </data>
 </root>
