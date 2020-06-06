@@ -7,7 +7,6 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>
-        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml"/>
         <ResourceDictionary Source="./Colors.xaml"/>
     </ResourceDictionary.MergedDictionaries>
@@ -248,8 +247,7 @@
     </Style>
 
     <!-- タブコントロール -->
-    <!-- MEMO: AnimatedSingleRowTabControl を適用するため MahApps.Styles.TabControl ではなく型を指定して継承する -->
-    <Style x:Key="Default.TabControl" TargetType="{x:Type TabControl}" BasedOn="{StaticResource {x:Type TabControl}}">
+    <Style x:Key="Default.TabControl" TargetType="{x:Type TabControl}" BasedOn="{StaticResource MahApps.Styles.TabControl.Animated}">
         <Setter Property="m:TabControlHelper.Underlined" Value="SelectedTabItem"/>
     </Style>
 
@@ -276,7 +274,7 @@
     </Style>
 
     <!-- ツールバー -->
-    <Style x:Key="Default.ToolBar" TargetType="{x:Type ToolBar}" BasedOn="{StaticResource {x:Type ToolBar}}">
+    <Style x:Key="Default.ToolBar" TargetType="{x:Type ToolBar}" BasedOn="{StaticResource MahApps.Styles.ToolBar}">
         <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
         <Setter Property="ToolBarTray.IsLocked" Value="True"/>
     </Style>
@@ -298,9 +296,9 @@
 
     <!-- ハンバーガーメニュー -->
     <Style x:Key="Default.HamburgerMenu" TargetType="{x:Type m:HamburgerMenu}" BasedOn="{StaticResource MahApps.Styles.HamburgerMenu}">
-        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Black}"/>
-        <Setter Property="PaneForeground" Value="{DynamicResource MahApps.Brushes.Black}"/>
-        <Setter Property="PaneBackground" Value="{DynamicResource MahApps.Brushes.White}"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+        <Setter Property="PaneForeground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+        <Setter Property="PaneBackground" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
     </Style>
 
     <!-- フライアウト -->

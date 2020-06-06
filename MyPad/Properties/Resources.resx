@@ -690,4 +690,7 @@ These changes will be applied on restart. Do you want to continue?</value>
   <data name="Command_View" xml:space="preserve">
     <value>View</value>
   </data>
+  <data name="Label_SyncAppTheme" xml:space="preserve">
+    <value>Sync with system</value>
+  </data>
 </root>

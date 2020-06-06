@@ -59,8 +59,9 @@
                     <Grid ge:GridEx.ColumnDefinition="Auto, *" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto">
                         <Label      Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_Theme}"/>
                         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-                            <RadioButton Content="{le:Loc Label_Dark}"  IsChecked="{qc:Binding Convert='(int)$P != 1', ConvertBack='$value ? 2 : 1', P={Binding Theme, Mode=TwoWay}}"/>
-                            <RadioButton Content="{le:Loc Label_Light}" IsChecked="{qc:Binding Convert='(int)$P == 1', ConvertBack='$value ? 1 : 2', P={Binding Theme, Mode=TwoWay}}"/>
+                            <RadioButton Content="{le:Loc Label_SyncAppTheme}" IsChecked="{qc:Binding Convert='(int)$P == 0', ConvertBack='$value ? 0 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
+                            <RadioButton Content="{le:Loc Label_Dark}"         IsChecked="{qc:Binding Convert='(int)$P == 1', ConvertBack='$value ? 1 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
+                            <RadioButton Content="{le:Loc Label_Light}"        IsChecked="{qc:Binding Convert='(int)$P == 2', ConvertBack='$value ? 2 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
                         </StackPanel>
 
                         <Label    Grid.Row="1" Grid.Column="0" Content="{le:Loc Label_Language}"/>

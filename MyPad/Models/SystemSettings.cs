@@ -1,5 +1,7 @@
-﻿using MahApps.Metro;
+﻿using ControlzEx.Theming;
 using Newtonsoft.Json;
+using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
@@ -28,21 +30,14 @@ namespace MyPad.Models
             set => this.SetProperty(ref this._saveWindowPlacement, value);
         }
 
-        private ThemeType _theme = ThemeType.Dark;
+        private ThemeType _theme = ThemeType.Sync;
         public ThemeType Theme
         {
             get => this._theme;
             set
             {
                 if (this.SetProperty(ref this._theme, value))
-                {
-                    var theme = ThemeManager.GetTheme(value switch {
-                        ThemeType.Light => $"{ThemeManager.BaseColorLight}.Blue",
-                        _ => $"{ThemeManager.BaseColorDark}.Blue",
-                    });
-                    ThemeManager.ChangeTheme(Application.Current, theme);
-                    Application.Current?.Windows.OfType<System.Windows.Window>().ForEach(w => ThemeManager.ChangeTheme(w, theme));
-                }
+                    this.ApplyTheme();
             }
         }
 
@@ -172,6 +167,36 @@ namespace MyPad.Models
         {
             get => this._showStatusBar;
             set => this.SetProperty(ref this._showStatusBar, value);
+        }
+
+        public void ApplyTheme()
+        {
+            if (this.Theme == ThemeType.Sync)
+            {
+                ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
+                ThemeManager.Current.SyncTheme();
+            }
+            else
+            {
+                ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.DoNotSync;
+                ThemeManager.Current.SyncTheme();
+
+                var theme = ThemeManager.Current.GetTheme(this.Theme switch
+                {
+                    ThemeType.Dark => $"{ThemeManager.BaseColorDark}.Blue",
+                    ThemeType.Light => $"{ThemeManager.BaseColorLight}.Blue",
+                    _ => throw new InvalidEnumArgumentException(nameof(this.Theme), (int)this.Theme, typeof(ThemeType))
+                });
+                ThemeManager.Current.ChangeTheme(Application.Current, theme);
+                Application.Current?.Windows.OfType<Window>().ForEach(w => ThemeManager.Current.ChangeTheme(w, theme));
+            }
+        }
+
+        public enum ThemeType
+        {
+            Sync,
+            Dark,
+            Light,
         }
     }
 }

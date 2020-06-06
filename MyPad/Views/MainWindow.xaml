@@ -80,7 +80,7 @@
     <m:MetroWindow.RightWindowCommands>
         <m:WindowCommands>
             <ToggleButton IsChecked="{Binding Topmost, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}" ToolTip="{le:Loc Command_Topmost}" Focusable="False">
-                <mi:PackIconModern Kind="Pin" Foreground="{DynamicResource MahApps.Brushes.Black}">
+                <mi:PackIconModern Kind="Pin" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                     <mi:PackIconModern.Resources>
                         <Style TargetType="{x:Type mi:PackIconModern}">
                             <Style.Triggers>
@@ -97,7 +97,7 @@
                 </mi:PackIconModern>
             </ToggleButton>
             <Button Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}">
-                <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.Black}"/>
+                <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
             </Button>
         </m:WindowCommands>
     </m:MetroWindow.RightWindowCommands>

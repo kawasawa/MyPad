@@ -30,7 +30,7 @@
                         <behaviors:ProcessStartAction FileName="cmd.exe" Arguments="{qc:Binding '\'/c start \' + $P', P={Binding Source={x:Static root:AppSettings.ProjectSite}, Mode=OneWay}}" CreateNoWindow="True" ThrowException="False"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
-                <mi:Material Kind="GithubCircle"/>
+                <mi:Material Kind="Github"/>
             </Button>
         </Grid>
 
