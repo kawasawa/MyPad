@@ -1,6 +1,13 @@
 # MyPad (.NET Core)
 
-![](https://img.shields.io/github/license/kawasawa/MyPad.NetCore.svg?style=flat-square)
+<div>
+  <a href="https://www.microsoft.com/ja-jp/p/mypad-%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%82%A8%E3%83%87%E3%82%A3%E3%82%BF/9pp2600zm2jd">
+    <img src="https://img.shields.io/badge/-Microsoft Store-017ACC.svg?logo=microsoft&style=flat-square">
+  </a>
+  <a href="https://github.com/kawasawa/MyPad.NetCore/blob/master/LICENSE.txt">
+    <img src="https://img.shields.io/github/license/kawasawa/MyPad.NetCore.svg?style=flat-square">
+  </a>
+</div>
 
 ## 概要
 
@@ -31,5 +38,5 @@ MyPad.NetCore は .NET Framework 製のメモ帳アプリケーション MyPad �
 | プログラミング言語   | C#                        | 8.0    |
 | フレームワーク       | .NET Core                 | 3.1    |
 | MVVM インフラ        | Prism                     | 7.2    |
-| デザインテンプレート | MahApps.Metro             | 2.0-α |
+| デザインテンプレート | MahApps.Metro             | 2.0   |
 | コンポーネント       | ICSharpCode.AvalonEdit    | 6.0    |
