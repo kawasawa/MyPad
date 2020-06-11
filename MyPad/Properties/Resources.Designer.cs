@@ -260,6 +260,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Donate に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Donate {
+            get {
+                return ResourceManager.GetString("Command_Donate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Edit に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Edit {
@@ -1623,6 +1632,15 @@ namespace MyPad.Properties {
         public static string Message_ConfirmSaveChanges {
             get {
                 return ResourceManager.GetString("Message_ConfirmSaveChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   I&apos;m pleased with a donation, if you like MyPad and you want to support the further development. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_Donate {
+            get {
+                return ResourceManager.GetString("Message_Donate", resourceCulture);
             }
         }
         

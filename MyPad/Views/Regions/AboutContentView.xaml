@@ -17,7 +17,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
     <Grid Margin="20 0 20 20" ge:GridEx.RowDefinition="Auto, 15, Auto, 15, *">
-        <Grid Grid.Row="0" Margin="20 0" ge:GridEx.ColumnDefinition="Auto, 20, Auto, 20, Auto">
+        <Grid Grid.Row="0" Margin="20 0" ge:GridEx.ColumnDefinition="Auto, 20, Auto, 20, Auto, 10, Auto">
             <TextBlock Grid.Column="0" Text="{Binding ProductInfo.Product, Mode=OneWay}" FontWeight="Bold" FontSize="32" VerticalAlignment="Center"/>
             <TextBlock Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center">
                 <Run Text="{qc:MultiBinding '\'Version \' + $P0 + ($P1 ? \' - Debug Build\' : null)', P0={Binding ProductInfo.Version, Mode=OneWay}, P1={Binding ProductInfo.IsDebugBuild, Mode=OneWay}}"/>
@@ -31,6 +31,21 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <mi:Material Kind="Github"/>
+            </Button>
+            <Button Grid.Column="6" Style="{StaticResource Common.CircleButton}" ToolTipService.ShowDuration="10000" VerticalAlignment="Center">
+                <Button.ToolTip>
+                    <StackPanel>
+                        <TextBlock Text="{le:Loc Command_Donate}" FontSize="14"/>
+                        <Border Height="5"/>
+                        <TextBlock Text="{le:Loc Message_Donate}" Margin="5 0"/>
+                    </StackPanel>
+                </Button.ToolTip>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <behaviors:ProcessStartAction FileName="cmd.exe" Arguments="{qc:MultiBinding '\'/c start \' + $P0 + \'/\' + $P1', P0={Binding Source={x:Static root:AppSettings.DonationSite}, Mode=OneWay}, P1={Binding Source={x:Static root:AppSettings.DonationAmount}, Mode=OneWay}}" CreateNoWindow="True" ThrowException="False"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <mi:FontAwesome Kind="SmileRegular"/>
             </Button>
         </Grid>
 
