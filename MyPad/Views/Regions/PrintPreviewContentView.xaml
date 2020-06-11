@@ -16,21 +16,22 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
     <Grid Margin="20 0 20 20">
-        <controls:FlowDocumentViewer Document="{Binding FlowDocument.Value, Mode=OneWay}" ContextMenu="{x:Null}" Focusable="False"/>
+        <Grid Visibility="{qc:Binding '$P != 0 ? Visibility.Visible : Visibility.Collapsed', P={Binding ActiveTextEditor.Value.TextLength, Mode=OneWay}}">
+            <controls:FlowDocumentViewer Document="{Binding FlowDocument.Value, Mode=OneWay}" ContextMenu="{x:Null}" Focusable="False"/>
+        </Grid>
+        <Grid Visibility="{qc:Binding '$P == 0 ? Visibility.Visible : Visibility.Collapsed', P={Binding ActiveTextEditor.Value.TextLength, Mode=OneWay}}">
+            <Border d:IsHidden="True" Style="{StaticResource App.Overlay}">
+                <StackPanel Margin="5 0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <TextBlock Text="{le:Loc Text_EmptyDocument}" HorizontalAlignment="Center" TextAlignment="Center"/>
+                </StackPanel>
+            </Border>
+        </Grid>
         <StackPanel Margin="10" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-            <Button Command="{Binding PrintCommand, Mode=OneTime}"
-                    ToolTip="{le:Loc Command_Print}"
-                    Focusable="{qc:Binding '$P == 0 ? false : true', P={Binding ActiveTextEditor.Value.TextLength, Mode=OneWay}}"
-                    Style="{StaticResource Common.CircleAccentButton}">
+            <Button Command="{Binding PrintCommand, Mode=OneTime}" ToolTip="{le:Loc Command_Print}" Style="{StaticResource Common.CircleAccentButton}">
                 <mi:Modern Kind="PrinterText"/>
             </Button>
             <Border Width="{x:Static SystemParameters.VerticalScrollBarWidth}"/>
         </StackPanel>
-        <Border d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P == 0 ? Visibility.Visible : Visibility.Collapsed', P={Binding ActiveTextEditor.Value.TextLength, Mode=OneWay}}">
-            <StackPanel Margin="5 0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                <TextBlock Text="{le:Loc Text_EmptyDocument}" HorizontalAlignment="Center" TextAlignment="Center"/>
-            </StackPanel>
-        </Border>
     </Grid>
     
 </UserControl>
