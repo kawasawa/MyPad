@@ -699,4 +699,7 @@ These changes will be applied on restart. Do you want to continue?</value>
   <data name="Message_Donate" xml:space="preserve">
     <value>I'm pleased with a donation, if you like MyPad and you want to support the further development.</value>
   </data>
+  <data name="Command_Disclaimer" xml:space="preserve">
+    <value>Disclaimer</value>
+  </data>
 </root>

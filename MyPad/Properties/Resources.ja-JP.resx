@@ -659,4 +659,7 @@
   <data name="Message_Donate" xml:space="preserve">
     <value>気に入って頂けましたら、継続開発のためのご寄付も歓迎いたします。</value>
   </data>
+  <data name="Command_Disclaimer" xml:space="preserve">
+    <value>免責事項</value>
+  </data>
 </root>
