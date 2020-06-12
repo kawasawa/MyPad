@@ -137,6 +137,11 @@ namespace MyPad.Views
             });
         }
 
+        public void ScrollToCaret()
+        {
+            this.ActiveTextEditor?.ScrollToCaret();
+        }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             // リージョンにビューを設定する
