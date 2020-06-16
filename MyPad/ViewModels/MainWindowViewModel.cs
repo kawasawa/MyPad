@@ -1,5 +1,6 @@
 ﻿using Dragablz;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using Livet.Messaging;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.WindowsAPICodePack.Dialogs.Controls;
 using MyPad.Models;
@@ -75,6 +76,8 @@ namespace MyPad.ViewModels
 
         #region プロパティ
 
+        public InteractionMessenger Messenger { get; }
+
         public ReactiveProperty<bool> IsWorking { get; }
         public ReactiveCollection<TextEditorViewModel> TextEditors { get; }
         public ReactiveProperty<TextEditorViewModel> ActiveTextEditor { get; }
@@ -137,6 +140,7 @@ namespace MyPad.ViewModels
 
             // ----- プロパティの定義 ------------------------------
 
+            this.Messenger = new InteractionMessenger();
             this.IsWorking = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             this.TextEditors = new ReactiveCollection<TextEditorViewModel>().AddTo(this.CompositeDisposable);
             BindingOperations.EnableCollectionSynchronization(this.TextEditors, new object());
@@ -355,7 +359,10 @@ namespace MyPad.ViewModels
                 {
                     var target = this.ActiveTextEditor.Value;
                     if (await this.DialogService.ChangeLine(target) is (true, var line))
+                    {
                         target.Line = line;
+                        await this.Messenger.RaiseAsync(new InteractionMessage(nameof(Views.MainWindow.ScrollToCaret)));
+                    }
                 })
                 .AddTo(this.CompositeDisposable);
 

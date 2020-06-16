@@ -5,6 +5,7 @@
                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                xmlns:p="http://prismlibrary.com/"
+               xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
                xmlns:m="http://metro.mahapps.com/winfx/xaml/controls"
                xmlns:mi="http://metro.mahapps.com/winfx/xaml/iconpacks"
                xmlns:le="http://wpflocalizeextension.codeplex.com"
@@ -47,6 +48,9 @@
 
     <!-- イベントトリガー -->
     <i:Interaction.Triggers>
+        <l:InteractionMessageTrigger MessageKey="ScrollToCaret" Messenger="{Binding Messenger, Mode=OneWay}">
+            <i:CallMethodAction MethodName="ScrollToCaret" TargetObject="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
+        </l:InteractionMessageTrigger>
         <i:EventTrigger EventName="Drop">
             <behaviors:WindowActivateAction/>
             <i:InvokeCommandAction Command="{Binding DropHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>

@@ -29,5 +29,11 @@ namespace MyPad
 
         public static string ProjectSite
             => _lazyConfiguration.Value[nameof(ProjectSite).ToSnakeCase()];
+
+        public static string DonationSite
+           => _lazyConfiguration.Value[nameof(DonationSite).ToSnakeCase()];
+
+        public static int DonationAmount
+           => int.TryParse(_lazyConfiguration.Value[nameof(DonationAmount).ToSnakeCase()], out var value) && 100 <= value ? value : 100;
     }
 }
