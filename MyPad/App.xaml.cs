@@ -3,6 +3,7 @@ using Plow.Wpf.CommonDialogs;
 using Prism.Ioc;
 using Prism.Logging;
 using Prism.Mvvm;
+using Prism.Regions;
 using Prism.Services.Dialogs;
 using Prism.Unity;
 using QuickConverter;
@@ -190,6 +191,14 @@ namespace MyPad
         {
             this.Container.Resolve<Models.SettingsService>().Load();
             this.Container.Resolve<Models.SyntaxService>().Initialize();
+            this.Container.Resolve<IRegionManager>().Regions.CollectionChanged += (sender, e) =>
+            {
+                for (var i = 0; i < (e.NewItems?.Count ?? 0); i++)
+                {
+                    if (e.NewItems[i] is IRegion region)
+                        this.Logger.Log($"Region が追加されました。: 領域名 {region.Name}", Category.Debug);
+                }
+            };
             var shell = this.Container.Resolve<Views.Workspace>();
             shell.Title = this.Identifier;
             shell.Closed += (sender, e) => this.Container?.Resolve<Models.SettingsService>()?.Save();

@@ -144,19 +144,6 @@ namespace MyPad.Views
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            // リージョンにビューを設定する
-            void addToRegion<T>(string suffix = null)
-                => this.RegionManager.AddToRegion(
-                    $"{PrismNamingConverter.ConvertToRegionName<T>()}{suffix}", this.ContainerExtension.Resolve<T>());
-            addToRegion<MenuBarView>("1");
-            addToRegion<MenuBarView>("2");
-            addToRegion<ToolBarView>();
-            addToRegion<StatusBarView>();
-            addToRegion<DiffContentView>(); 
-            addToRegion<PrintPreviewContentView>();
-            addToRegion<OptionContentView>();
-            addToRegion<AboutContentView>();
-
             // フックメソッドを登録する
             this._handleSource = (HwndSource)PresentationSource.FromVisual(this);
             this._handleSource.AddHook(this.WndProc);
@@ -189,6 +176,7 @@ namespace MyPad.Views
             User32.InsertMenuItem(hMenu, (uint)SystemMenuIndex.ShowStatusBar, true, ref this._lpmiiShowStatusBar);
             User32.InsertMenuItem(hMenu, (uint)SystemMenuIndex.__Separater__, true, ref lpmiiSeparater);
 
+            // 初期ウィンドウ向けの処理を行う
             if (this.IsNewTabHost == false)
             {
                 // 表示位置を復元する
@@ -206,6 +194,19 @@ namespace MyPad.Views
                     TabablzControl.AddItemCommand.Execute(null, this.DraggableTabControl);
                 }
             }
+
+            // リージョンにビューを設定する
+            void addToRegion<T>(string suffix = null)
+                => this.RegionManager.AddToRegion(
+                    $"{PrismNamingConverter.ConvertToRegionName<T>()}{suffix}", this.ContainerExtension.Resolve<T>());
+            addToRegion<MenuBarView>("1");
+            addToRegion<MenuBarView>("2");
+            addToRegion<ToolBarView>();
+            addToRegion<StatusBarView>();
+            addToRegion<DiffContentView>();
+            addToRegion<PrintPreviewContentView>();
+            addToRegion<OptionContentView>();
+            addToRegion<AboutContentView>();
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)

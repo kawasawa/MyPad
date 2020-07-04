@@ -62,13 +62,23 @@ namespace MyPad.Views
             this._handleSource.AddHook(this.WndProc);
             this.Hide();
 
-            var args = ((App)Application.Current).CommandLineArgs;
+            // 初期ウィンドウを生成する
             var view = this.ContainerExtension.Resolve<MainWindow>();
+            void view_ContentRendered(object sender, EventArgs e)
+            {
+                view.ContentRendered -= view_ContentRendered;
+                if (view.ViewModel.SettingsService.IsDifferentVersion())
+                    view.ViewModel.DialogService.ToastNotify(string.Format(Properties.Resources.Message_NotifyWelcome, view.ViewModel.ProductInfo.Product, view.ViewModel.ProductInfo.Version));
+            }
+            view.ContentRendered += view_ContentRendered;
+
+            // コマンドライン引数を渡す
+            var args = ((App)Application.Current).CommandLineArgs;
             if (args.Any())
                 view.ViewModel.LoadCommand.Execute(args);
+
+            // 初期ウィンドウを表示する
             view.Show();
-            if (view.ViewModel.SettingsService.IsDifferentVersion())
-                view.ViewModel.DialogService.ToastNotify(string.Format(Properties.Resources.Message_NotifyWelcome, view.ViewModel.ProductInfo.Product, view.ViewModel.ProductInfo.Version));
         }
 
         private void Window_Closed(object sender, EventArgs e)
