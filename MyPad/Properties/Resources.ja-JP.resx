@@ -662,4 +662,7 @@
   <data name="Command_Disclaimer" xml:space="preserve">
     <value>免責事項</value>
   </data>
+  <data name="Text_SameTexts" xml:space="preserve">
+    <value>同一のテキストです。</value>
+  </data>
 </root>

@@ -702,4 +702,7 @@ These changes will be applied on restart. Do you want to continue?</value>
   <data name="Command_Disclaimer" xml:space="preserve">
     <value>Disclaimer</value>
   </data>
+  <data name="Text_SameTexts" xml:space="preserve">
+    <value>These are same texts.</value>
+  </data>
 </root>
