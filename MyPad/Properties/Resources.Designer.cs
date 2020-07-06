@@ -1783,6 +1783,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   These are same texts. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Text_SameTexts {
+            get {
+                return ResourceManager.GetString("Text_SameTexts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Please wait a moment. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Text_Working {

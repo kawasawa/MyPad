@@ -21,7 +21,15 @@
                        OldText="{Binding DiffSource.Value.Document.Text, Mode=OneWay}"
                        NewText="{Binding DiffDestination.Value.Document.Text, Mode=OneWay}"
                        OldTextHeader="{qc:MultiBinding 'Path.GetDirectoryName($P0) == Path.GetDirectoryName($P1) ? Path.GetFileName($P0) : $P0', P0={Binding DiffSource.Value.FileName, Mode=OneWay}, P1={Binding DiffDestination.Value.FileName, Mode=OneWay}}"
-                       NewTextHeader="{qc:MultiBinding 'Path.GetDirectoryName($P0) == Path.GetDirectoryName($P1) ? Path.GetFileName($P1) : $P1', P0={Binding DiffSource.Value.FileName, Mode=OneWay}, P1={Binding DiffDestination.Value.FileName, Mode=OneWay}}"/>
+                       NewTextHeader="{qc:MultiBinding 'Path.GetDirectoryName($P0) == Path.GetDirectoryName($P1) ? Path.GetFileName($P1) : $P1', P0={Binding DiffSource.Value.FileName, Mode=OneWay}, P1={Binding DiffDestination.Value.FileName, Mode=OneWay}}"
+                       Opacity="{qc:MultiBinding '$P0 == $P1 ? 0.2 : 1.0', P0={Binding DiffSource.Value.Document.Text, Mode=OneWay}, P1={Binding DiffDestination.Value.Document.Text, Mode=OneWay}}"/>
+        <Grid Visibility="{qc:MultiBinding '$P0 == $P1 ? Visibility.Visible : Visibility.Collapsed', P0={Binding DiffSource.Value.Document.Text, Mode=OneWay}, P1={Binding DiffDestination.Value.Document.Text, Mode=OneWay}}">
+            <Border d:IsHidden="True" Style="{StaticResource App.Overlay}">
+                <StackPanel Margin="5 0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <TextBlock Text="{le:Loc Text_SameTexts}" HorizontalAlignment="Center" TextAlignment="Center"/>
+                </StackPanel>
+            </Border>
+        </Grid>
     </Grid>
     
 </UserControl>

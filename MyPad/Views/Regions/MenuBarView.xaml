@@ -320,7 +320,11 @@
             </MenuItem>
             <MenuItem Command="{Binding DiffUnmodifiedCommand, Mode=OneTime}"
                       Header="{le:Loc Command_DiffUnmodified}"
-                      HeaderStringFormat="{}{0}...">
+                      HeaderStringFormat="{}{0}..."
+                      InputGestureText="Ctrl+Alt+D">
+                <MenuItem.Icon>
+                    <mi:Modern Kind="ListAdd"/>
+                </MenuItem.Icon>
             </MenuItem>
         </MenuItem>
         <MenuItem Header="{le:Loc Command_Help}">
