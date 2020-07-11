@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Prism.Logging;
+using System;
 using System.Linq;
 
-namespace Prism.Logging
+namespace MyPad
 {
     public static class ILoggerFacadeExtension
     {

@@ -2,11 +2,12 @@
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Utils;
-using Plow;
 using MyPad.Models;
 using MyPad.Properties;
 using MyPad.ViewModels.Events;
+using Plow;
 using Prism.Events;
+using Prism.Ioc;
 using Prism.Logging;
 using System;
 using System.IO;
@@ -24,7 +25,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Unity;
 using Vanara.PInvoke;
-using Prism.Ioc;
 
 namespace MyPad.ViewModels
 {
