@@ -342,6 +342,7 @@ namespace MyPad.ViewModels
                         });
                     if (result)
                         this.Logger.Log($"ファイルを印刷しました。(OSやハードウェアの要因でキャンセルされた可能性もあります)", Category.Info);
+                    this.IsOpenPrintPreviewContent.Value = false;
                 })
                 .AddTo(this.CompositeDisposable);
 
