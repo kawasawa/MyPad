@@ -386,11 +386,11 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Initialize に類似しているローカライズされた文字列を検索します。
+        ///   Initialize the syntax definitions に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string Command_Initialize {
+        public static string Command_InitializeSyntax {
             get {
-                return ResourceManager.GetString("Command_Initialize", resourceCulture);
+                return ResourceManager.GetString("Command_InitializeSyntax", resourceCulture);
             }
         }
         
@@ -949,6 +949,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Data に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_AppDataDirectory {
+            get {
+                return ResourceManager.GetString("Label_AppDataDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Auto detect に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_AutoDetect {
@@ -1120,15 +1129,6 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Log に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_LogDirectory {
-            get {
-                return ResourceManager.GetString("Label_LogDirectory", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Name に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Name {
@@ -1152,15 +1152,6 @@ namespace MyPad.Properties {
         public static string Label_Owner {
             get {
                 return ResourceManager.GetString("Label_Owner", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Roaming に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_RoamingDirectory {
-            get {
-                return ResourceManager.GetString("Label_RoamingDirectory", resourceCulture);
             }
         }
         
@@ -1269,15 +1260,6 @@ namespace MyPad.Properties {
         public static string Label_Warn {
             get {
                 return ResourceManager.GetString("Label_Warn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Syntax definitions に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_XshdDirectory {
-            get {
-                return ResourceManager.GetString("Label_XshdDirectory", resourceCulture);
             }
         }
         

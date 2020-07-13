@@ -110,7 +110,6 @@ namespace MyPad.ViewModels
         public ReactiveCommand GoToLineCommand { get; }
         public ReactiveCommand ChangeEncodingCommand { get; }
         public ReactiveCommand ChangeSyntaxCommand { get; }
-        public ReactiveCommand InitializeSyntaxCommand { get; }
 
         public ReactiveCommand<DragEventArgs> DropHandler { get; }
         public ReactiveCommand<CancelEventArgs> ClosingHandler { get; }
@@ -399,14 +398,6 @@ namespace MyPad.ViewModels
                         target.SyntaxDefinition = definition;
                     else
                         await this.ReadFile(target.FileName, target.Encoding, definition, target.IsReadOnly);
-                })
-                .AddTo(this.CompositeDisposable);
-
-            this.InitializeSyntaxCommand = new ReactiveCommand()
-                .WithSubscribe(() =>
-                {
-                    if (this.DialogService.Confirm(Resources.Message_ConfirmInitializeSyntax))
-                        this.SyntaxService.Initialize(true);
                 })
                 .AddTo(this.CompositeDisposable);
 

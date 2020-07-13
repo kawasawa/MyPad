@@ -198,8 +198,8 @@
   <data name="Command_Help" xml:space="preserve">
     <value>Help</value>
   </data>
-  <data name="Command_Initialize" xml:space="preserve">
-    <value>Initialize</value>
+  <data name="Command_InitializeSyntax" xml:space="preserve">
+    <value>Initialize the syntax definitions</value>
   </data>
   <data name="Command_MergeWindows" xml:space="preserve">
     <value>Merge windows</value>
@@ -396,9 +396,6 @@
   <data name="Label_Language" xml:space="preserve">
     <value>Language</value>
   </data>
-  <data name="Label_LogDirectory" xml:space="preserve">
-    <value>Log</value>
-  </data>
   <data name="Label_Name" xml:space="preserve">
     <value>Name</value>
   </data>
@@ -417,8 +414,8 @@
   <data name="Label_ConfigFile" xml:space="preserve">
     <value>Config file</value>
   </data>
-  <data name="Label_RoamingDirectory" xml:space="preserve">
-    <value>Roaming</value>
+  <data name="Label_AppDataDirectory" xml:space="preserve">
+    <value>Data</value>
   </data>
   <data name="Label_SearchPattern" xml:space="preserve">
     <value>File masks</value>
@@ -446,9 +443,6 @@
   </data>
   <data name="Label_Type" xml:space="preserve">
     <value>Type</value>
-  </data>
-  <data name="Label_XshdDirectory" xml:space="preserve">
-    <value>Syntax definitions</value>
   </data>
   <data name="Command_Yes" xml:space="preserve">
     <value>Yes</value>
