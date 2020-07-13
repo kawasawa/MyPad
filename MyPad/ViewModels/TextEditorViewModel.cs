@@ -316,6 +316,7 @@ namespace MyPad.ViewModels
 
         #endregion
 
+        [LogInterceptor]
         public TextEditorViewModel()
         {
             this.Document = new TextDocument();
@@ -325,6 +326,7 @@ namespace MyPad.ViewModels
             this._isInitialized = true;
         }
 
+        [LogInterceptor]
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -349,6 +351,7 @@ namespace MyPad.ViewModels
             base.Dispose(disposing);
         }
 
+        [LogInterceptor]
         public async void Clear()
         {
             await this.Interrupt(async () =>
@@ -377,6 +380,7 @@ namespace MyPad.ViewModels
             });
         }
 
+        [LogInterceptor]
         public async Task<TextEditorViewModel> CloneUnmodified()
         {
             var clone = this.ContainerExtension.Resolve<TextEditorViewModel>();
@@ -392,6 +396,7 @@ namespace MyPad.ViewModels
             return clone;
         }
 
+        [LogInterceptor]
         private void DeleteTemporary()
         {
             try
@@ -405,6 +410,7 @@ namespace MyPad.ViewModels
             }
         }
 
+        [LogInterceptor]
         public async Task Load(FileStream stream, Encoding encoding = null)
         {
             if (this.FileStream != stream)
@@ -415,6 +421,7 @@ namespace MyPad.ViewModels
             await this.Reload(encoding);
         }
 
+        [LogInterceptor]
         public async Task Reload(Encoding encoding = null)
         {
             if (this.FileStream == null)
@@ -457,6 +464,7 @@ namespace MyPad.ViewModels
             });
         }
 
+        [LogInterceptor]
         public async Task Save(Encoding encoding)
         {
             if (this.FileStream == null)
@@ -483,6 +491,7 @@ namespace MyPad.ViewModels
             });
         }
 
+        [LogInterceptor]
         public async Task SaveAs(FileStream stream, Encoding encoding)
         {
             if (this.FileStream != stream)
@@ -493,6 +502,7 @@ namespace MyPad.ViewModels
             await this.Save(encoding);
         }
 
+        [LogInterceptor]
         public async Task<FlowDocument> CreateFlowDocument()
         {
             FlowDocument flowDocument = null;
@@ -521,6 +531,7 @@ namespace MyPad.ViewModels
             return flowDocument;
         }
 
+        [LogInterceptor]
         private async void AutoSaveTimer_Tick(object sender, EventArgs e)
         {
             if (this.SettingsService.System.EnableAutoSave == false)
@@ -536,10 +547,11 @@ namespace MyPad.ViewModels
                     Directory.CreateDirectory(Path.GetDirectoryName(path));
                     var bytes = await Application.Current.Dispatcher.InvokeAsync(() => this.Encoding.GetBytes(this.Document.Text));
                     await File.WriteAllBytesAsync(path, bytes);
+                    this.Logger.Log($"ファイルを自動保存しました。: Path={path}", Category.Info);
                 }
                 catch (Exception ex)
                 {
-                    this.Logger.Log($"自動保存に失敗しました。: Path={path}", Category.Warn, ex);
+                    this.Logger.Log($"ファイルの自動保存に失敗しました。: Path={path}", Category.Warn, ex);
                     return;
                 }
                 this.Temporary = (path, this.Document.Version);
@@ -547,6 +559,7 @@ namespace MyPad.ViewModels
             });
         }
 
+        [LogInterceptor]
         private async Task Interrupt(Func<Task> func)
         {
             this.AutoSaveTimer.Stop();

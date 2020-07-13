@@ -43,6 +43,7 @@ namespace MyPad.ViewModels
         #endregion
 
         [InjectionConstructor]
+        [LogInterceptor]
         public WorkspaceViewModel(IEventAggregator eventAggregator)
         {
             this.EventAggregator = eventAggregator;
@@ -55,6 +56,7 @@ namespace MyPad.ViewModels
                 .AddTo(this.CompositeDisposable);
         }
 
+        [LogInterceptor]
         private async Task ExitApplication()
         {
             // すべての ViewModel の破棄に成功した場合はアプリケーションを終了する

@@ -132,6 +132,7 @@ namespace MyPad.ViewModels
         #endregion
 
         [InjectionConstructor]
+        [LogInterceptor]
         public MainWindowViewModel(IEventAggregator eventAggregator)
         {
             // ----- インジェクション ------------------------------
@@ -306,6 +307,7 @@ namespace MyPad.ViewModels
                     {
                         this.DiffSource.Value = textEditors.First(e => e.FileName == diffSourcePath);
                         this.DiffDestination.Value = textEditors.First(e => e.FileName == diffDestinationPath);
+                        this.Logger.Log($"ファイルを読み込みました。: SourcePath={diffSourcePath}, DestinationPath={diffDestinationPath}", Category.Info);
                     }
                     catch (Exception e)
                     {
@@ -333,12 +335,14 @@ namespace MyPad.ViewModels
             this.PrintCommand = this.FlowDocument.IsEmpty().Inverse().ToReactiveCommand()
                 .WithSubscribe(async () =>
                 {
-                    this.CommonDialogService.ShowDialog(
+                    var result = this.CommonDialogService.ShowDialog(
                         new PrintDialogParameters()
                         {
                             Title = this.ProductInfo.Description,
                             FlowDocument = this.FlowDocument.Value ?? await this.ActiveTextEditor.Value.CreateFlowDocument()
                         });
+                    if (result)
+                        this.Logger.Log($"ファイルを印刷しました。(OSやハードウェアの要因でキャンセルされた可能性もあります)", Category.Info);
                 })
                 .AddTo(this.CompositeDisposable);
 
@@ -430,6 +434,7 @@ namespace MyPad.ViewModels
                 .AddTo(this.CompositeDisposable);
         }
 
+        [LogInterceptor]
         public async Task<bool> InvokeExit()
         {
             for (var i = this.TextEditors.Count - 1; 0 <= i; i--)
@@ -445,6 +450,7 @@ namespace MyPad.ViewModels
 
         #region テキストエディターの制御
 
+        [LogInterceptor]
         private TextEditorViewModel AddTextEditor()
         {
             var textEditor = this.TextEditorFactory.Invoke();
@@ -452,6 +458,7 @@ namespace MyPad.ViewModels
             return textEditor;
         }
 
+        [LogInterceptor]
         private void RemoveTextEditor(TextEditorViewModel textEditor)
         {
             if (this.TextEditors.Contains(textEditor) == false)
@@ -461,6 +468,7 @@ namespace MyPad.ViewModels
             textEditor.Dispose();
         }
 
+        [LogInterceptor]
         private async Task<bool> TryCloseTextEditor(TextEditorViewModel textEditor)
         {
             if (textEditor.IsModified)
@@ -483,12 +491,14 @@ namespace MyPad.ViewModels
             return true;
         }
 
+        [LogInterceptor]
         private void WakeUpTextEditor(TextEditorViewModel textEditor)
         {
             if (textEditor != null)
                 this.ActiveTextEditor.Value = textEditor;
         }
 
+        [LogInterceptor]
         private async Task<IEnumerable<(bool result, TextEditorViewModel textEditor)>> LoadTextEditor(IEnumerable<string> paths = null)
         {
             (bool result, IEnumerable<string> fileNames, string filter, Encoding encoding, bool isReadOnly) decideConditions(string root)
@@ -588,6 +598,7 @@ namespace MyPad.ViewModels
             }
         }
 
+        [LogInterceptor]
         private async Task<(bool result, TextEditorViewModel textEditor)> SaveTextEditor(TextEditorViewModel textEditor)
         {
             if (textEditor.IsNewFile || textEditor.IsReadOnly)
@@ -596,6 +607,7 @@ namespace MyPad.ViewModels
                 return await this.WriteFile(textEditor, textEditor.FileName, textEditor.Encoding, textEditor.SyntaxDefinition);
         }
 
+        [LogInterceptor]
         private async Task<(bool result, TextEditorViewModel textEditor)> SaveAsTextEditor(TextEditorViewModel textEditor)
         {
             var path = textEditor.FileName;
@@ -645,6 +657,7 @@ namespace MyPad.ViewModels
 
         #region ファイル入出力
 
+        [LogInterceptor]
         private async Task<(bool result, TextEditorViewModel textEditor)> ReadFile(string path, Encoding encoding, XshdSyntaxDefinition definition, bool isReadOnly = false)
         {
             if (string.IsNullOrEmpty(path))
@@ -671,6 +684,7 @@ namespace MyPad.ViewModels
                     {
                         this.IsWorking.Value = true;
                         await sameTextEditor.Reload(encoding);
+                        this.Logger.Log($"ファイルを再読み込みしました。: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Info);
                     }
                     catch (Exception e)
                     {
@@ -722,9 +736,10 @@ namespace MyPad.ViewModels
                     {
                         stream = info.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
                     }
-                    catch
+                    catch (Exception e)
                     {
                         // ここでのエラーは無視する
+                        this.Logger.Log($"ファイルの書き込み権限の取得に失敗しました。: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Warn, e);
                     }
                 }
 
@@ -750,6 +765,7 @@ namespace MyPad.ViewModels
                 {
                     this.IsWorking.Value = true;
                     await textEditor.Load(stream, encoding);
+                    this.Logger.Log($"ファイルを読み込みました。: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Info);
                 }
                 catch (Exception e)
                 {
@@ -768,6 +784,7 @@ namespace MyPad.ViewModels
             }
         }
 
+        [LogInterceptor]
         private async Task<(bool result, TextEditorViewModel textEditor)> WriteFile(TextEditorViewModel textEditor, string path, Encoding encoding, XshdSyntaxDefinition definition)
         {
             if (string.IsNullOrEmpty(path))
@@ -789,6 +806,7 @@ namespace MyPad.ViewModels
                 {
                     this.IsWorking.Value = true;
                     await sameTextEditor.Save(encoding);
+                    this.Logger.Log($"ファイルを上書き保存しました。: Path={path}, Encoding={encoding.EncodingName}", Category.Info);
                 }
                 catch (Exception e)
                 {
@@ -834,6 +852,7 @@ namespace MyPad.ViewModels
                     Directory.CreateDirectory(Path.GetDirectoryName(path));
                     stream = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.Read);
                     await textEditor.SaveAs(stream, encoding);
+                    this.Logger.Log($"ファイルを新規保存しました。: Path={path}, Encoding={encoding.EncodingName}", Category.Info);
                 }
                 catch (Exception e)
                 {

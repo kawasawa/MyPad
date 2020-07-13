@@ -96,7 +96,10 @@ namespace MyPad.Views
 
         #endregion
 
+        #region メソッド
+
         [InjectionConstructor]
+        [LogInterceptor]
         public MainWindow(IContainerExtension containerExtension)
         {
             this.InitializeComponent();
@@ -137,11 +140,13 @@ namespace MyPad.Views
             });
         }
 
+        [LogInterceptor]
         public void ScrollToCaret()
         {
             this.ActiveTextEditor?.ScrollToCaret();
         }
 
+        [LogInterceptor]
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             // フックメソッドを登録する
@@ -209,12 +214,14 @@ namespace MyPad.Views
             addToRegion<AboutContentView>();
         }
 
+        [LogInterceptor]
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             // MEMO: ダイアログの表示に備えてフォアグラウンドへ移動
             this.SetForegroundWindow();
         }
 
+        [LogInterceptor]
         private void Window_Closed(object sender, EventArgs e)
         {
             // 表示位置を退避する
@@ -240,6 +247,7 @@ namespace MyPad.Views
             }
         }
 
+        [LogInterceptor]
         private void Window_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             void viewModel_Disposed(object sender, EventArgs e)
@@ -256,6 +264,7 @@ namespace MyPad.Views
                 newViewModel.Disposed += viewModel_Disposed;
         }
 
+        [LogInterceptor]
         private void DraggableTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.Handled || e.Source != e.OriginalSource)
@@ -265,6 +274,7 @@ namespace MyPad.Views
             e.Handled = true;
         }
 
+        [LogInterceptor]
         private void DragablzItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.Handled)
@@ -275,6 +285,7 @@ namespace MyPad.Views
             e.Handled = true;
         }
 
+        [LogInterceptor]
         private void TextEditor_Loaded(object sender, RoutedEventArgs e)
         {
             var textEditor = (TextEditor)sender;
@@ -317,6 +328,10 @@ namespace MyPad.Views
             }
             return IntPtr.Zero;
         }
+
+        #endregion
+
+        #region 内部クラス
 
         private enum SystemMenuIndex
         {
@@ -381,5 +396,7 @@ namespace MyPad.Views
             public string ReplaceAllText => Properties.Resources.Command_ReplaceAll;
             public string CloseText => Properties.Resources.Command_Close;
         }
+
+        #endregion
     }
 }

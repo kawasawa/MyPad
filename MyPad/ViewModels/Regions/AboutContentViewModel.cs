@@ -17,6 +17,7 @@ namespace MyPad.ViewModels.Regions
         public ReactiveCommand DisclaimerCommand { get; }
 
         [InjectionConstructor]
+        [LogInterceptor]
         public AboutContentViewModel()
         {
             this.DisclaimerCommand = new ReactiveCommand()

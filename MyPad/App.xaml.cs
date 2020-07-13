@@ -27,9 +27,20 @@ namespace MyPad
     /// </summary>
     public partial class App : PrismApplication
     {
-        private ILoggerFacade Logger { get; }
-        private IProductInfo ProductInfo { get; }
-        private Process CurrentProcess { get; }
+        /// <summary>
+        /// ロガーを取得します。
+        /// </summary>
+        public ILoggerFacade Logger { get; }
+
+        /// <summary>
+        /// プロダクト情報を取得します。
+        /// </summary>
+        public IProductInfo ProductInfo { get; }
+
+        /// <summary>
+        /// プロセス情報を取得します。
+        /// </summary>
+        public Process CurrentProcess { get; }
 
         /// <summary>
         /// コマンドライン引数を取得します。
@@ -40,6 +51,11 @@ namespace MyPad
         /// アプリケーションの識別子を取得します。
         /// </summary>
         public string Identifier => $"__{this.ProductInfo.Company}:{this.ProductInfo.Product}:{this.ProductInfo.Version}__";
+
+        /// <summary>
+        /// ログファイルが出力されるディレクトリのパスを取得します。
+        /// </summary>
+        public string LogDirectoryPath => Path.Combine(this.ProductInfo.Local, "log");
 
         /// <summary>
         /// このクラスの新しいインスタンスを生成します。
@@ -85,7 +101,7 @@ namespace MyPad
                             Category.Exception => nameof(NLog.LogLevel.Error),
                             _ => nameof(NLog.LogLevel.Debug),
                         };
-                        logger.Factory.Configuration.Variables.Add("DIR", Path.Combine(this.ProductInfo.Local, "log"));
+                        logger.Factory.Configuration.Variables.Add("DIR", this.LogDirectoryPath);
                         logger.Factory.Configuration.Variables.Add("CTG", categoryName);
                         logger.Factory.ReconfigExistingLoggers();
                     },
@@ -101,10 +117,11 @@ namespace MyPad
         /// アプリケーションの開始直後に行う処理を定義します。
         /// </summary>
         /// <param name="e">イベントの情報</param>
+        [LogInterceptor]
         protected override void OnStartup(StartupEventArgs e)
         {
             this.CommandLineArgs = e.Args;
-            this.Logger.Log($"アプリケーションを開始しました。: Process={this.CurrentProcess.Id}, Args=[{string.Join(", ", e.Args)}]", Category.Debug);
+            this.Logger.Log($"アプリケーションを開始しました。: Process={this.CurrentProcess.Id}, Args=[{string.Join(", ", e.Args)}]", Category.Info);
 
             var handle = this.GetOtherProcessHandle(this.CurrentProcess);
             if (handle.IsNull == false)
@@ -127,6 +144,7 @@ namespace MyPad
                     info.EnumerateFiles()
                         .Where(i => i.LastWriteTime < basis)
                         .ForEach(i => File.Delete(i.FullName));
+                    this.Logger.Log("一時ファイルを削除しました。(システム開始時)", Category.Debug);
                 }
                 catch (Exception ex)
                 {
@@ -140,6 +158,7 @@ namespace MyPad
         /// <summary>
         /// View から ViewModel を生成するための規則を定義します。
         /// </summary>
+        [LogInterceptor]
         protected override void ConfigureViewModelLocator()
         {
             ViewModelLocationProvider.SetDefaultViewModelFactory((view, viewModelType) => {
@@ -149,7 +168,7 @@ namespace MyPad
 
                 // ViewModel のインスタンスを生成する
                 var viewModel = this.Container.Resolve(viewModelType);
-                this.Logger.Log($"ViewModel のインスタンスが生成されました。: 型 {viewModelType.FullName}", Category.Debug);
+                this.Logger.Log($"ViewModel のインスタンスが生成されました。: Type={viewModelType.FullName}", Category.Debug);
                 return viewModel;
             });
         }
@@ -158,6 +177,7 @@ namespace MyPad
         /// DI コンテナに登録されるオブジェクトを定義します。
         /// </summary>
         /// <param name="containerRegistry">DI コンテナ</param>
+        [LogInterceptor]
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // シングルトン
@@ -187,6 +207,7 @@ namespace MyPad
         /// アプリケーションの起動時に表示されるメインウィンドウを生成します。
         /// </summary>
         /// <returns>ウィンドウのインスタンス</returns>
+        [LogInterceptor]
         protected override Window CreateShell()
         {
             this.Container.Resolve<Models.SettingsService>().Load();
@@ -196,7 +217,7 @@ namespace MyPad
                 for (var i = 0; i < (e.NewItems?.Count ?? 0); i++)
                 {
                     if (e.NewItems[i] is IRegion region)
-                        this.Logger.Log($"Region が追加されました。: 領域名 {region.Name}", Category.Debug);
+                        this.Logger.Log($"Region が追加されました。: Name={region.Name}", Category.Debug);
                 }
             };
             var shell = this.Container.Resolve<Views.Workspace>();
@@ -209,10 +230,11 @@ namespace MyPad
         /// アプリケーションの終了時に行う処理を定義します。
         /// </summary>
         /// <param name="e">イベントの情報</param>
+        [LogInterceptor]
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
-            this.Logger.Log($"アプリケーションを終了しました。: Process={this.CurrentProcess.Id}, ExitCode={e.ApplicationExitCode}", Category.Debug);
+            this.Logger.Log($"アプリケーションを終了しました。: Process={this.CurrentProcess.Id}, ExitCode={e.ApplicationExitCode}", Category.Info);
         }
 
         /// <summary>
@@ -220,6 +242,7 @@ namespace MyPad
         /// </summary>
         /// <param name="sourceProcess">比較元のプロセス</param>
         /// <returns>ウィンドウハンドル</returns>
+        [LogInterceptor]
         private HWND GetOtherProcessHandle(Process sourceProcess)
         {
             // 本アプリはタスクバー上の通知アイコンを内包した仮ウィンドウが MainWindow に指定されている。
@@ -266,6 +289,7 @@ namespace MyPad
         /// <param name="values">送信されるデータ</param>
         /// <param name="separator">データの区切りを示す文字</param>
         /// <returns>ウィンドウプロシージャの戻り値</returns>
+        [LogInterceptor]
         private IntPtr SendValues(Process sourceProcess, HWND destinationHandle, IEnumerable<string> values, char separator = '\t')
         {
             var data = values.Any() ? string.Join(separator, values) : string.Empty;
