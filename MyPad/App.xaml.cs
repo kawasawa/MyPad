@@ -354,7 +354,7 @@ namespace MyPad
         /// <summary>
         /// Prism によって表示されるダイアログウィンドウの基底クラスを置き換えます。
         /// </summary>
-        public class PrismDialogWindowWrapper : MahApps.Metro.Controls.MetroWindow, IDialogWindow
+        private class PrismDialogWindowWrapper : MahApps.Metro.Controls.MetroWindow, IDialogWindow
         {
             IDialogResult IDialogWindow.Result { get; set; }
 

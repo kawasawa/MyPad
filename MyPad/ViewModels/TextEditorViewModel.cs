@@ -316,6 +316,7 @@ namespace MyPad.ViewModels
 
         #endregion
 
+        [InjectionConstructor]
         [LogInterceptor]
         public TextEditorViewModel()
         {
