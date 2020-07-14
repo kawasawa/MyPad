@@ -1,4 +1,5 @@
-﻿using MyPad.Models;
+﻿using Microsoft.VisualBasic.FileIO;
+using MyPad.Models;
 using MyPad.Properties;
 using Plow;
 using Plow.Wpf.CommonDialogs;
@@ -8,6 +9,7 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
 using System.Windows;
@@ -46,7 +48,7 @@ namespace MyPad.ViewModels.Regions
                 .WithSubscribe(() => this.OpenAppDataDirectory())
                 .AddTo(this.CompositeDisposable);
 
-            this.ExportLogArchiveCommand = new ReactiveCommand()
+            this.ExportLogArchiveCommand = this.IsWorking.Inverse().ToReactiveCommand()
                 .WithSubscribe(async () =>
                 {
                     var parameters = new SaveFileDialogParameters()
@@ -63,7 +65,7 @@ namespace MyPad.ViewModels.Regions
                 })
                 .AddTo(this.CompositeDisposable);
 
-            this.InitializeSyntaxCommand = new ReactiveCommand()
+            this.InitializeSyntaxCommand = this.IsWorking.Inverse().ToReactiveCommand()
                 .WithSubscribe(() =>
                 {
                     if (this.DialogService.Confirm(Resources.Message_ConfirmInitializeSyntax))
@@ -99,16 +101,31 @@ namespace MyPad.ViewModels.Regions
         [LogInterceptor]
         private async Task<bool> ExportLogArchive(string path)
         {
+            var sourcePath = ((App)Application.Current).LogDirectoryPath;
+            var tempPath = Path.Combine(this.ProductInfo.Temporary, Path.GetFileNameWithoutExtension(path));
+
             try
             {
                 this.IsWorking.Value = true;
-                await Task.Run(() => ZipFile.CreateFromDirectory(((App)Application.Current).LogDirectoryPath, path, CompressionLevel.Optimal, false));
+
+                await Task.Run(() =>
+                {
+                    FileSystem.CopyDirectory(sourcePath, tempPath, UIOption.AllDialogs, UICancelOption.ThrowException);
+                    ZipFile.CreateFromDirectory(tempPath, path, CompressionLevel.Optimal, false);
+                });
+                _ = Task.Run(() => Directory.Delete(tempPath, true));
+
                 Process.Start("explorer.exe", $"/select, {path}");
-                this.Logger.Log($"ログファイルを出力しました。: Path={path}", Category.Info);
+                this.Logger.Log($"ログファイルを出力しました。: Path={path}, Temp={tempPath}", Category.Info);
+            }
+            catch (OperationCanceledException e)
+            {
+                this.DialogService.Notify(e.Message);
+                return false;
             }
             catch (Exception e)
             {
-                this.Logger.Log($"ログファイルの出力に失敗しました。: Path={path}", Category.Warn, e);
+                this.Logger.Log($"ログファイルの出力に失敗しました。: Path={path}, Temp={tempPath}", Category.Warn, e);
                 this.DialogService.Warn(e.Message);
                 return false;
             }
