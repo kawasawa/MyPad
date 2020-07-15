@@ -659,4 +659,7 @@
   <data name="Text_SameTexts" xml:space="preserve">
     <value>同一のテキストです。</value>
   </data>
+  <data name="Message_NotifyTryAgainLater" xml:space="preserve">
+    <value>一時的に利用できません。時間を置いて再度お試しください。</value>
+  </data>
 </root>

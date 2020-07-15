@@ -1708,6 +1708,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   This feature is temporarily unavailable. Please try again later. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_NotifyTryAgainLater {
+            get {
+                return ResourceManager.GetString("Message_NotifyTryAgainLater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Welcome to ver. {1} of {0}. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_NotifyWelcome {

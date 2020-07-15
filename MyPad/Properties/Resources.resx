@@ -699,4 +699,7 @@ These changes will be applied on restart. Do you want to continue?</value>
   <data name="Text_SameTexts" xml:space="preserve">
     <value>These are same texts.</value>
   </data>
+  <data name="Message_NotifyTryAgainLater" xml:space="preserve">
+    <value>This feature is temporarily unavailable. Please try again later.</value>
+  </data>
 </root>
