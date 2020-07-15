@@ -39,6 +39,7 @@ namespace MyPad.Views
         #endregion
 
         [InjectionConstructor]
+        [LogInterceptor]
         public Workspace(IEventAggregator eventAggregator)
         {
             this.InitializeComponent();
@@ -50,12 +51,15 @@ namespace MyPad.Views
             this.EventAggregator.GetEvent<RaiseBalloonEvent>().Subscribe(showBalloon);
         }
 
+        [LogInterceptor]
         private MainWindow CreateWindow()
             => this.ContainerExtension.Resolve<MainWindow>((typeof(IRegionManager), this.RegionManager.CreateRegionManager()));
 
+        [LogInterceptor]
         private IEnumerable<MainWindow> GetWindows()
             => Application.Current?.Windows.OfType<MainWindow>() ?? Enumerable.Empty<MainWindow>();
 
+        [LogInterceptor]
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             this._handleSource = (HwndSource)PresentationSource.FromVisual(this);
@@ -81,12 +85,14 @@ namespace MyPad.Views
             view.Show();
         }
 
+        [LogInterceptor]
         private void Window_Closed(object sender, EventArgs e)
         {
             this._handleSource.RemoveHook(this.WndProc);
             this.Descendants().OfType<TaskbarIcon>().ForEach(t => t.Dispose());
         }
 
+        [LogInterceptor]
         private void Window_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             void viewModel_Disposed(object sender, EventArgs e)
@@ -101,6 +107,7 @@ namespace MyPad.Views
                 newViewModel.Disposed += viewModel_Disposed;
         }
 
+        [LogInterceptor]
         private void TaskbarIcon_TrayContextMenuOpen(object sender, RoutedEventArgs e)
         {
             this.WindowListItem.Items.Clear();
@@ -109,6 +116,7 @@ namespace MyPad.Views
                 this.WindowListItem.Items.Add(new MenuItem { DataContext = windows.ElementAt(i) });
         }
 
+        [LogInterceptor]
         private void TaskbarIcon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
         {
             // ウィンドウが存在する場合はそれらをフォアグラウンドに移動する
@@ -120,11 +128,13 @@ namespace MyPad.Views
                 this.CreateWindow().Show();
         }
 
+        [LogInterceptor]
         private void NewWindowCommand_Click(object sender, RoutedEventArgs e)
         {
             this.CreateWindow().Show();
         }
 
+        [LogInterceptor]
         private void WindowItem_Click(object sender, RoutedEventArgs e)
         {
             ((sender as FrameworkElement)?.DataContext as Window)?.SetForegroundWindow();
@@ -136,7 +146,7 @@ namespace MyPad.Views
             {
                 case User32.WindowMessage.WM_COPYDATA:
                 {
-                    var structure = Marshal.PtrToStructure<App.COPYDATASTRUCT>(lParam);
+                    var structure = Marshal.PtrToStructure<COPYDATASTRUCT>(lParam);
                     if (string.IsNullOrEmpty(structure.lpData) == false)
                     {
                         var paths = structure.lpData.Split('\t');

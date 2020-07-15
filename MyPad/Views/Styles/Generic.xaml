@@ -66,8 +66,8 @@
         <Setter Property="Width" Value="300"/>
         <Setter Property="MaxWidth" Value="500"/>
         <Setter Property="MinHeight" Value="170"/>
-        <Setter Property="NonActiveBorderBrush" Value="{DynamicResource MahApps.Brushes.GrayNormal}"/>
-        <Setter Property="NonActiveGlowBrush" Value="{DynamicResource MahApps.Brushes.GrayNormal}"/>
+        <Setter Property="NonActiveBorderBrush" Value="{DynamicResource MahApps.Brushes.Gray}"/>
+        <Setter Property="NonActiveGlowBrush" Value="{DynamicResource MahApps.Brushes.Gray}"/>
         <Setter Property="ShowSystemMenu" Value="False"/>
         <Setter Property="ShowSystemMenuOnRightClick" Value="False"/>
         <Setter Property="ShowInTaskbar" Value="False"/>
@@ -88,7 +88,7 @@
 
     <Style x:Key="App.Overlay" TargetType="{x:Type Border}">
         <Setter Property="Opacity" Value="0.9"/>
-        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.GrayNormal}"/>
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray.SemiTransparent}"/>
         <Style.Resources>
             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
                 <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>

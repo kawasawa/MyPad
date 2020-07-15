@@ -1,7 +1,8 @@
-﻿using System.Windows.Interop;
+﻿using System.Windows;
+using System.Windows.Interop;
 using Vanara.PInvoke;
 
-namespace System.Windows
+namespace MyPad
 {
     public static class WindowExtensions
     {

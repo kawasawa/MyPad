@@ -1,12 +1,11 @@
-﻿using Plow;
-using MyPad.Models;
+﻿using MyPad.Models;
 using MyPad.ViewModels.Events;
+using Plow;
 using Prism.Events;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using Unity;
 
 namespace MyPad.ViewModels
@@ -44,6 +43,7 @@ namespace MyPad.ViewModels
         #endregion
 
         [InjectionConstructor]
+        [LogInterceptor]
         public WorkspaceViewModel(IEventAggregator eventAggregator)
         {
             this.EventAggregator = eventAggregator;
@@ -56,6 +56,7 @@ namespace MyPad.ViewModels
                 .AddTo(this.CompositeDisposable);
         }
 
+        [LogInterceptor]
         private async Task ExitApplication()
         {
             // すべての ViewModel の破棄に成功した場合はアプリケーションを終了する

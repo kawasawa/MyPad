@@ -1,6 +1,6 @@
 ﻿using ICSharpCode.AvalonEdit.Highlighting.Xshd;
-using Plow;
 using MyPad.Properties;
+using Plow;
 using Prism.Logging;
 using System;
 using System.Collections.Generic;
@@ -50,6 +50,8 @@ namespace MyPad.Models
                         using var writer = new BinaryWriter(stream, FILE_ENCODING);
                         writer.Write((byte[])p.GetValue(null));
                     });
+
+                this.Logger.Log($"シンタックス定義ファイルを初期化しました。: Path={this.DirectoryPath}", Category.Debug);
                 return true;
             }
             catch (Exception e)
