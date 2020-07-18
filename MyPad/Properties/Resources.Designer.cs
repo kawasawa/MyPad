@@ -1629,9 +1629,9 @@ namespace MyPad.Properties {
         /// <summary>
         ///   I&apos;m pleased with a donation, if you like MyPad and you want to support the further development. に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string Message_Donate {
+        public static string Message_NotifyDonate {
             get {
-                return ResourceManager.GetString("Message_Donate", resourceCulture);
+                return ResourceManager.GetString("Message_NotifyDonate", resourceCulture);
             }
         }
         

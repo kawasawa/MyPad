@@ -40,7 +40,7 @@
                     <StackPanel>
                         <TextBlock Text="{le:Loc Command_Donate}" FontSize="14"/>
                         <Border Height="5"/>
-                        <TextBlock Text="{le:Loc Message_Donate}" Margin="5 0"/>
+                        <TextBlock Text="{le:Loc Message_NotifyDonate}" Margin="5 0"/>
                     </StackPanel>
                 </Button.ToolTip>
                 <i:Interaction.Triggers>

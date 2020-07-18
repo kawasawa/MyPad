@@ -218,7 +218,7 @@
 
     <!-- グリッドスプリッター -->
     <Style x:Key="Default.GridSplitter" TargetType="{x:Type GridSplitter}" BasedOn="{StaticResource MahApps.Styles.GridSplitter}">
-        <Setter Property="Background" Value="{DynamicResource GrayBrush10}"/>
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="Focusable" Value="False"/>
     </Style>
