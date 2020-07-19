@@ -49,6 +49,7 @@
     <Style TargetType="{x:Type ScrollViewer}"            BasedOn="{StaticResource Default.ScrollViewer}"/>
     <Style TargetType="{x:Type TabItem}"                 BasedOn="{StaticResource Default.TabItem}"/>
     <Style TargetType="{x:Type TabControl}"              BasedOn="{StaticResource Default.TabControl}"/>
+    <Style TargetType="{x:Type Button}"                  BasedOn="{StaticResource Default.FlipView.Navigation}" x:Key="MahApps.Styles.Button.FlipView.Navigation"/>
     <Style TargetType="{x:Type MenuItem}"                BasedOn="{StaticResource Default.MenuItem}"/>
     <Style TargetType="{x:Type Menu}"                    BasedOn="{StaticResource Default.Menu}"/>
     <Style TargetType="{x:Type ContextMenu}"             BasedOn="{StaticResource Default.ContextMenu}"/>

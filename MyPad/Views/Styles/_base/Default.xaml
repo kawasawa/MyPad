@@ -251,6 +251,11 @@
         <Setter Property="m:TabControlHelper.Underlined" Value="SelectedTabItem"/>
     </Style>
 
+    <!-- フリップビュー ナビゲーションボタン -->
+    <Style x:Key="Default.FlipView.Navigation" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.FlipView.Navigation}">
+        <Setter Property="Height" Value="50"/>
+    </Style>
+    
     <!-- メニューアイテム -->
     <Style x:Key="Default.MenuItem" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MahApps.Styles.MenuItem}">
     </Style>

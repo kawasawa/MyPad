@@ -12,12 +12,19 @@
              xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
              xmlns:root="clr-namespace:MyPad"
              xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
+             xmlns:controls="clr-namespace:MyPad.Views.Controls"
              mc:Ignorable="d" 
              p:ViewModelLocator.AutoWireViewModel="True"
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <Grid Margin="20 0 20 20" ge:GridEx.RowDefinition="Auto, 15, Auto, 15, *">
-        <Grid Grid.Row="0" Margin="20 0" ge:GridEx.ColumnDefinition="Auto, 20, Auto, 20, Auto, 15, Auto, 15, Auto">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedHandler, Mode=OneTime}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid ge:GridEx.RowDefinition="Auto, 15, Auto, 15, *">
+        <Grid Grid.Row="0" Margin="40 0" ge:GridEx.ColumnDefinition="Auto, 20, Auto, 20, Auto, 15, Auto, 15, Auto">
             <TextBlock Grid.Column="0" Text="{Binding ProductInfo.Product, Mode=OneWay}" FontWeight="Bold" FontSize="32" VerticalAlignment="Center"/>
             <TextBlock Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center">
                 <Run Text="{qc:MultiBinding '\'Version \' + $P0 + ($P1 ? \' - Debug Build\' : null)', P0={Binding ProductInfo.Version, Mode=OneWay}, P1={Binding ProductInfo.IsDebugBuild, Mode=OneWay}}"/>
@@ -52,15 +59,18 @@
             </Button>
         </Grid>
 
-        <Border Grid.Row="2" Height="1" Background="{DynamicResource MahApps.Brushes.Gray2}"/>
+        <Border Grid.Row="2" Height="1" Margin="20 0" Background="{DynamicResource MahApps.Brushes.Gray2}"/>
 
-        <ListBox Grid.Row="4" Margin="20 0 10 0" ItemsSource="{qc:Binding '$P.OrderBy(((AssemblyName)x) => (string)($x.Name))', P={Binding ProductInfo.ReferencedAssemblies, Mode=OneWay}}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{qc:Binding '$P.Name + \' - \' + $P.Version', P={Binding Mode=OneWay}}" ToolTip="{Binding FullName, Mode=OneWay}"/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <m:FlipView Grid.Row="4" Margin="0 0 0 20" CircularNavigation="True" NavigationButtonsPosition="Outside" IsBannerEnabled="False" MouseHoverBorderEnabled="False">
+            <controls:MarkdownViewer Markdown="{Binding ChangeHistory.Value, Mode=OneWay}"/>
+            <ListBox ItemsSource="{qc:Binding '$P.OrderBy(((AssemblyName)x) => (string)($x.Name))', P={Binding ProductInfo.ReferencedAssemblies, Mode=OneWay}}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{qc:Binding '$P.Name + \' - \' + $P.Version', P={Binding Mode=OneWay}}" ToolTip="{Binding FullName, Mode=OneWay}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </m:FlipView>
     </Grid>
     
 </UserControl>
