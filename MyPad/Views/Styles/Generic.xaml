@@ -9,6 +9,7 @@
         <ResourceDictionary Source="./Controls/AvalonEdit.xaml"/>
         <ResourceDictionary Source="./Controls/DiffViewer.xaml"/>
         <ResourceDictionary Source="./Controls/Dragablz.xaml"/>
+        <ResourceDictionary Source="./Controls/MarkDig.xaml"/>
         <ResourceDictionary Source="./Controls/ToastNotifications.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
