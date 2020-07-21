@@ -24,17 +24,14 @@
     </i:Interaction.Triggers>
 
     <Grid ge:GridEx.RowDefinition="Auto, 15, Auto, 15, *">
-        <Grid Grid.Row="0" Margin="40 0" ge:GridEx.ColumnDefinition="Auto, 20, Auto, 20, Auto, 15, Auto, 15, Auto">
+        <Grid Grid.Row="0" Margin="40 0" ge:GridEx.ColumnDefinition="Auto, 20, Auto, 20, Auto, 15, Auto">
             <TextBlock Grid.Column="0" Text="{Binding ProductInfo.Product, Mode=OneWay}" FontWeight="Bold" FontSize="32" VerticalAlignment="Center"/>
             <TextBlock Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center">
                 <Run Text="{qc:MultiBinding '\'Version \' + $P0 + ($P1 ? \' - Debug Build\' : null)', P0={Binding ProductInfo.Version, Mode=OneWay}, P1={Binding ProductInfo.IsDebugBuild, Mode=OneWay}}"/>
                 <LineBreak/>
                 <Run Text="{Binding ProductInfo.Copyright, Mode=OneWay}"/>
             </TextBlock>
-            <Button Grid.Column="4" Command="{Binding DisclaimerCommand, Mode=OneTime}"  Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_Disclaimer}" VerticalAlignment="Center">
-                <mi:FontAwesome Kind="FileContractSolid"/>
-            </Button>
-            <Button Grid.Column="6" Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_Repository}" VerticalAlignment="Center">
+            <Button Grid.Column="4" Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_Repository}" VerticalAlignment="Center">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <behaviors:ProcessStartAction FileName="cmd.exe" Arguments="{qc:Binding '\'/c start \' + $P', P={Binding Source={x:Static root:AppSettings.ProjectSite}, Mode=OneWay}}" CreateNoWindow="True" ThrowException="False"/>
@@ -42,7 +39,7 @@
                 </i:Interaction.Triggers>
                 <mi:Material Kind="Github"/>
             </Button>
-            <Button Grid.Column="8" Style="{StaticResource Common.CircleButton}" ToolTipService.ShowDuration="10000" VerticalAlignment="Center">
+            <Button Grid.Column="6" Style="{StaticResource Common.CircleButton}" ToolTipService.ShowDuration="10000" VerticalAlignment="Center">
                 <Button.ToolTip>
                     <StackPanel>
                         <TextBlock Text="{le:Loc Command_Donate}" FontSize="14"/>
@@ -70,6 +67,16 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <TextBlock TextWrapping="Wrap">
+                    <Run Text="THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT."/>
+                    <Run Text="IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."/>
+                    <LineBreak/>
+                    <LineBreak/>
+                    <Run Text="ソフトウェアは「現状のまま」で、明示であるか暗黙であるかを問わず、何らの保証もなく提供されます。ここでいう保証とは、商品性、特定の目的への適合性、および権利非侵害についての保証も含みますが、それに限定されるものではありません。"/>
+                    <Run Text="作者または著作権者は、契約行為、不法行為、またはそれ以外であろうと、ソフトウェアに起因または関連し、あるいはソフトウェアの使用またはその他の扱いによって生じる一切の請求、損害、その他の義務について何らの責任も負わないものとします。"/>
+                </TextBlock>
+            </ScrollViewer>
         </m:FlipView>
     </Grid>
     

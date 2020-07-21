@@ -260,15 +260,6 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Disclaimer に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Command_Disclaimer {
-            get {
-                return ResourceManager.GetString("Command_Disclaimer", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Donate に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Donate {
@@ -1627,15 +1618,6 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   I&apos;m pleased with a donation, if you like MyPad and you want to support the further development. に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Message_NotifyDonate {
-            get {
-                return ResourceManager.GetString("Message_NotifyDonate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Auto saved to a temporary. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_NotifyAutoSaved {
@@ -1650,6 +1632,15 @@ namespace MyPad.Properties {
         public static string Message_NotifyDirectoryNotFound {
             get {
                 return ResourceManager.GetString("Message_NotifyDirectoryNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   I&apos;m pleased with a donation, if you like MyPad and you want to support the further development. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_NotifyDonate {
+            get {
+                return ResourceManager.GetString("Message_NotifyDonate", resourceCulture);
             }
         }
         
