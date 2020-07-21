@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0"?>
 <SyntaxDefinition name="XML" extensions=".xml;.xsd;.xsl;.xaml" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 
-  <Color name="Comment" foreground="YellowGreen"/>
-  <Color name="CData"   foreground="LightCyan"/>
-  <Color name="Tag"     foreground="DeepSkyBlue"/>
-  <Color name="Name"    foreground="SkyBlue"/>
+  <Color name="Comment" foreground="MediumSeaGreen"/>
+  <Color name="CData"   foreground="DeepSkyBlue"/>
+  <Color name="Tag"     foreground="DarkSeaGreen"/>
+  <Color name="Name"    foreground="DodgerBlue"/>
   <Color name="Value"   foreground="SandyBrown"/>
 
   <RuleSet>

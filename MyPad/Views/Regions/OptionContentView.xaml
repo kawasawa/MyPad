@@ -242,11 +242,6 @@
                                         <mi:Material Kind="Archive"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Command="{Binding InitializeSyntaxCommand, Mode=OneTime}" Header="{le:Loc Command_InitializeSyntax}">
-                                    <MenuItem.Icon>
-                                        <mi:Modern Kind="New"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
                             </m:DropDownButton.Items>
                         </m:DropDownButton>
                     </Grid>

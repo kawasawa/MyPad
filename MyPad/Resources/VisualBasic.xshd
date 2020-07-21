@@ -4,12 +4,12 @@
   <Color name="XmlComment"       foreground="SeaGreen"/>
   <Color name="XmlString"        foreground="Wheat"/>
   <Color name="XmlTag"           foreground="DarkSeaGreen"/>
-  <Color name="Keywords"         foreground="SkyBlue"/>
-  <Color name="TypeKeywords"     foreground="DeepSkyBlue"/>
-  <Color name="FunctionKeywords" foreground="LightGreen"/>
-  <Color name="DateLiteral"      foreground="LightCyan"/>
+  <Color name="Keywords"         foreground="DodgerBlue"/>
+  <Color name="TypeKeywords"     foreground="DeepPink"/>
+  <Color name="FunctionKeywords" foreground="MediumSeaGreen"/>
+  <Color name="DateLiteral"      foreground="DeepSkyBlue"/>
   <Color name="Directive"        foreground="DarkGray"/>
-  <Color name="Comment"          foreground="YellowGreen"/>
+  <Color name="Comment"          foreground="MediumPurple"/>
   <Color name="String"           foreground="SandyBrown"/>
 
   <Property name="DocCommentMarker" value="'''"/>

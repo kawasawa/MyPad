@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0"?>
 <SyntaxDefinition name="Markdown" extensions=".md" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 
-  <Color name="Header"    foreground="DeepSkyBlue" fontWeight="bold"/>
-  <Color name="SubHeader" foreground="SkyBlue"     fontWeight="bold"/>
+  <Color name="Header"    foreground="DodgerBlue"  fontWeight="bold"/>
+  <Color name="SubHeader" foreground="DeepSkyBlue" fontWeight="bold"/>
   <Color name="Strong"                             fontWeight="bold"/>
   <Color name="Italic"                             fontStyle="italic"/>
   <Color name="Code"/>

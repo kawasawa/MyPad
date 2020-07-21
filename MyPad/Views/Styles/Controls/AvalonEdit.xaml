@@ -16,13 +16,13 @@
         <Setter Property="CurrentLineBackground" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
         <Setter Property="CurrentLineBorder">
             <Setter.Value>
-                <Pen Brush="{DynamicResource MahApps.Brushes.Accent3}" o:Freeze="True"/>
+                <Pen Brush="{DynamicResource MahApps.Brushes.Accent2}" o:Freeze="True"/>
             </Setter.Value>
         </Setter>
     </Style>
 
     <Style x:Key="Default.TextArea" TargetType="{x:Type ae:TextArea}" BasedOn="{StaticResource {x:Type ae:TextArea}}">
-        <Setter Property="SelectionBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+        <Setter Property="SelectionBrush" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
         <Setter Property="SelectionBorder" Value="{x:Null}"/>
         <Setter Property="SelectionForeground" Value="{x:Null}"/>
         <Setter Property="SelectionCornerRadius" Value="0"/>

@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0"?>
 <SyntaxDefinition name="JavaScript" extensions=".js" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
   
-  <Color name="Keywords"          foreground="SkyBlue"/>
-  <Color name="IntrinsicKeywords" foreground="DeepSkyBlue"/>
-  <Color name="FunctionKeywords"  foreground="LightGreen"/>
-  <Color name="Comment"           foreground="YellowGreen"/>
+  <Color name="Keywords"          foreground="DodgerBlue"/>
+  <Color name="IntrinsicKeywords" foreground="DeepPink"/>
+  <Color name="FunctionKeywords"  foreground="MediumSeaGreen"/>
+  <Color name="NumericLiteral"    foreground="DeepSkyBlue"/>
+  <Color name="Comment"           foreground="MediumPurple"/>
   <Color name="String"            foreground="SandyBrown"/>
   <Color name="Regex"             foreground="Wheat"/>
-  <Color name="NumericLiteral"    foreground="LightCyan"/>
 
   <RuleSet ignoreCase="false">
     <Keywords color="Keywords">

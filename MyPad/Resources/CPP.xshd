@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0"?>
 <SyntaxDefinition name="C++" extensions=".c;.h;.cc;.cpp;.hpp" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 
-  <Color name="Keywords"       foreground="SkyBlue"/>
-  <Color name="TypeKeywords"   foreground="DeepSkyBlue"/>
-  <Color name="MethodCall"     foreground="LightGreen"/>
-  <Color name="NumericLiteral" foreground="LightCyan"/>
+  <Color name="Keywords"       foreground="DodgerBlue"/>
+  <Color name="TypeKeywords"   foreground="DeepPink"/>
+  <Color name="MethodCall"     foreground="MediumSeaGreen"/>
+  <Color name="NumericLiteral" foreground="DeepSkyBlue"/>
   <Color name="Directive"      foreground="DarkGray"/>
-  <Color name="Comment"        foreground="YellowGreen"/>
+  <Color name="Comment"        foreground="MediumPurple"/>
   <Color name="String"         foreground="SandyBrown"/>
   
   <RuleSet>
