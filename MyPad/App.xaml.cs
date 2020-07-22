@@ -211,7 +211,7 @@ namespace MyPad
         protected override Window CreateShell()
         {
             this.Container.Resolve<Models.SettingsService>().Load();
-            this.Container.Resolve<Models.SyntaxService>().Initialize();
+            this.Container.Resolve<Models.SyntaxService>().Initialize(this.Container.Resolve<Models.SettingsService>().IsDifferentVersion());
             this.Container.Resolve<IRegionManager>().Regions.CollectionChanged += (sender, e) =>
             {
                 for (var i = 0; i < (e.NewItems?.Count ?? 0); i++)

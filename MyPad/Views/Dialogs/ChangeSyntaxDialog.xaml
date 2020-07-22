@@ -12,7 +12,8 @@
              xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
              xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
              mc:Ignorable="d"
-             p:ViewModelLocator.AutoWireViewModel="True">
+             p:ViewModelLocator.AutoWireViewModel="True"
+             Loaded="Dialog_Loaded">
 
     <p:Dialog.WindowStyle>
         <Style TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource App.Dialog}">
@@ -21,6 +22,9 @@
     </p:Dialog.WindowStyle>
 
     <i:Interaction.Triggers>
+        <i:KeyTrigger Key="Enter">
+            <i:InvokeCommandAction Command="{Binding OKCommand, Mode=OneTime}"/>
+        </i:KeyTrigger>
         <i:KeyTrigger Key="Esc">
             <i:InvokeCommandAction Command="{Binding CancelCommand, Mode=OneTime}"/>
         </i:KeyTrigger>
@@ -28,7 +32,7 @@
 
     <Grid Margin="20 10 20 15" ge:GridEx.RowDefinition="*, 10, Auto">
         <Grid Grid.Row="0" VerticalAlignment="Center">
-            <ComboBox ItemsSource="{qc:Binding 'new string[] { string.Empty }.Concat($P.Keys)', P={Binding SyntaxService.Definitions, Mode=OneWay}}" SelectedValue="{qc:Binding Convert='$P ?? string.Empty', ConvertBack='string.IsNullOrEmpty($value) ? null : $value', P={Binding Syntax.Value, Mode=TwoWay}}" m:TextBoxHelper.Watermark="{le:Loc Label_Syntax}" m:TextBoxHelper.UseFloatingWatermark="True">
+            <ComboBox x:Name="Syntax" ItemsSource="{qc:Binding 'new string[] { string.Empty }.Concat($P.Keys)', P={Binding SyntaxService.Definitions, Mode=OneWay}}" SelectedValue="{qc:Binding Convert='$P ?? string.Empty', ConvertBack='string.IsNullOrEmpty($value) ? null : $value', P={Binding Syntax.Value, Mode=TwoWay}}" m:TextBoxHelper.Watermark="{le:Loc Label_Syntax}" m:TextBoxHelper.UseFloatingWatermark="True">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{qc:Binding 'string.IsNullOrEmpty($P) ? \'Plain Text\' : $P', P={Binding Mode=OneWay}}"/>

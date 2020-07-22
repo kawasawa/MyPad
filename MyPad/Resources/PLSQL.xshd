@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0"?>
 <SyntaxDefinition name ="PL/SQL" extensions = ".sql;.plsql" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 
-  <Color name="Keywords" foreground="SkyBlue" fontWeight="bold"/>
-  <Color name="Comment"  foreground="YellowGreen"/>
+  <Color name="Keywords" foreground="DodgerBlue" fontWeight="bold"/>
+  <Color name="Comment"  foreground="MediumSeaGreen"/>
   <Color name="String"   foreground="SandyBrown"/>
   
   <RuleSet>

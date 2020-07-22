@@ -22,5 +22,10 @@ namespace MyPad.Views.Dialogs
         {
             InitializeComponent();
         }
+
+        private void Dialog_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.DiffSourcePath.Focus();
+        }
     }
 }

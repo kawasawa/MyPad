@@ -4,12 +4,12 @@
   <Color name="XmlComment"          foreground="SeaGreen"/>
   <Color name="XmlString"           foreground="Wheat"/>
   <Color name="XmlTag"              foreground="DarkSeaGreen"/>
-  <Color name="Keywords"            foreground="SkyBlue"/>
-  <Color name="TypeKeywords"        foreground="DeepSkyBlue"/>
-  <Color name="MethodCall"          foreground="LightGreen"/>
-  <Color name="NumericLiteral"      foreground="LightCyan"/>
+  <Color name="Keywords"            foreground="DodgerBlue"/>
+  <Color name="TypeKeywords"        foreground="DeepPink"/>
+  <Color name="MethodCall"          foreground="MediumSeaGreen"/>
+  <Color name="NumericLiteral"      foreground="DeepSkyBlue"/>
   <Color name="Directive"           foreground="DarkGray"/>
-  <Color name="Comment"             foreground="YellowGreen"/>
+  <Color name="Comment"             foreground="MediumPurple"/>
   <Color name="String"              foreground="SandyBrown"/>
   <Color name="StringInterpolation" foreground="Wheat"/>
 

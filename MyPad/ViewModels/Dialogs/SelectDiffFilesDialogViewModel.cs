@@ -6,6 +6,7 @@ using Reactive.Bindings.Extensions;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Reactive.Linq;
 using Unity;
 
 namespace MyPad.ViewModels.Dialogs
@@ -38,7 +39,10 @@ namespace MyPad.ViewModels.Dialogs
                 .SetValidateAttribute(() => this.DiffDestinationPath)
                 .AddTo(this.CompositeDisposable);
 
-            this.OKCommand = new ReactiveCommand()
+            this.OKCommand = Observable.Merge<object>(this.DiffSourcePath, this.DiffDestinationPath)
+                .Select(_ => string.IsNullOrEmpty(this.DiffSourcePath.Value) == false &&
+                             string.IsNullOrEmpty(this.DiffDestinationPath.Value) == false)
+                .ToReactiveCommand()
                 .WithSubscribe(() => this.OnRequestClose(
                     new DialogResult(ButtonResult.OK, new DialogParameters {
                         { nameof(this.DiffSourcePath), this.DiffSourcePath.Value },

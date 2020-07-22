@@ -19,6 +19,8 @@ namespace MyPad.Views.Controls
         private const double MIN_FONT_SIZE = 2;
         private const double MAX_FONT_SIZE = 99;
 
+        private static readonly SolidColorBrush SEARCH_RESULTS_MARKER_BRUSH = new SolidColorBrush(Colors.RosyBrown);
+
         public static readonly DependencyProperty ReplaceAreaExpandedProperty = DependencyPropertyExtensions.RegisterAttached();
         public static readonly DependencyProperty ReplacePatternProperty = DependencyPropertyExtensions.RegisterAttached();
 
@@ -171,7 +173,7 @@ namespace MyPad.Views.Controls
             // SearchResultBackgroundRenderer のインスタンスを作成して内部に保持している。
             // MarkerBrush の実体は上記レンダラであり、スタイルで上書きすると例外になる。
             this.SearchPanel = SearchPanel.Install(this);
-            this.SearchPanel.MarkerBrush = new SolidColorBrush(Color.FromArgb(255, 98, 57, 22));
+            this.SearchPanel.MarkerBrush = SEARCH_RESULTS_MARKER_BRUSH;
             this.SearchPanel.CommandBindings.Add(new CommandBinding(
                 ApplicationCommands.Find,
                 (sender, e) => this.OpenSearchPanel()));
