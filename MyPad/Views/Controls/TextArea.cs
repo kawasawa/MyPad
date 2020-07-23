@@ -189,6 +189,7 @@ namespace MyPad.Views.Controls
                 (sender, e) => this.ReplaceAll(),
                 (sender, e) => e.CanExecute = this.CanReplaceAll()));
 
+            this.SearchPanel.Loaded += this.SearchPanel_Loaded;
             this.Unloaded += this.TextArea_Unloaded;
         }
 
@@ -408,9 +409,15 @@ namespace MyPad.Views.Controls
             this.Caret.Column = 1;
         }
 
+        private void SearchPanel_Loaded(object sender, RoutedEventArgs e)
+        {
+            (sender as SearchPanel)?.Reactivate();
+        }
+
         private void TextArea_Unloaded(object sender, RoutedEventArgs e)
         {
             this.Unloaded -= this.TextArea_Unloaded;
+            this.SearchPanel.Loaded -= this.SearchPanel_Loaded;
             this.SearchPanel.Uninstall();
             this.SearchPanel = null;
         }
