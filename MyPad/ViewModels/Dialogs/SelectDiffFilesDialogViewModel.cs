@@ -60,6 +60,10 @@ namespace MyPad.ViewModels.Dialogs
             base.OnDialogOpened(parameters);
             if (parameters.GetValue<IEnumerable<string>>(nameof(this.FileNames)) is IEnumerable<string> fileNames)
                 this.FileNames.AddRange(fileNames);
+            if (parameters.GetValue<string>(nameof(this.DiffSourcePath)) is string diffSourcePath)
+                this.DiffSourcePath.Value = diffSourcePath;
+            if (parameters.GetValue<string>(nameof(this.DiffDestinationPath)) is string diffDestinationPath)
+                this.DiffDestinationPath.Value = diffDestinationPath;
         }
     }
 }

@@ -25,7 +25,12 @@ namespace MyPad.Views.Dialogs
 
         private void Dialog_Loaded(object sender, RoutedEventArgs e)
         {
-            this.DiffSourcePath.Focus();
+            if (this.DiffSourcePath.SelectedValue == null)
+                this.DiffSourcePath.Focus();
+            if (this.DiffDestinationPath.SelectedValue == null)
+                this.DiffDestinationPath.Focus();
+            else
+                this.DiffSourcePath.Focus();
         }
     }
 }

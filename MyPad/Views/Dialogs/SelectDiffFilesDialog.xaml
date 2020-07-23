@@ -31,7 +31,7 @@
     </i:Interaction.Triggers>
 
     <Grid Margin="20 10 20 15" ge:GridEx.RowDefinition="*, 10, Auto">
-        <Grid Grid.Row="0" ge:GridEx.ColumnDefinition="*, 15, *" VerticalAlignment="Center">
+        <Grid Grid.Row="0" ge:GridEx.ColumnDefinition="*, 15, Auto, 15, *" VerticalAlignment="Center">
             <ComboBox Grid.Column="0" x:Name="DiffSourcePath" ItemsSource="{Binding FileNames, Mode=OneWay}" SelectedValue="{Binding DiffSourcePath.Value, Mode=TwoWay}" m:TextBoxHelper.Watermark="{le:Loc Label_DiffSource}" m:TextBoxHelper.UseFloatingWatermark="True">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
@@ -39,7 +39,10 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            <ComboBox Grid.Column="2" ItemsSource="{Binding FileNames, Mode=OneWay}" SelectedValue="{Binding DiffDestinationPath.Value, Mode=TwoWay}" m:TextBoxHelper.Watermark="{le:Loc Label_DiffDestination}" m:TextBoxHelper.UseFloatingWatermark="True">
+            <Border Grid.Column="2" VerticalAlignment="Center">
+                <mi:FontAwesome Kind="ExchangeAltSolid"/>
+            </Border>
+            <ComboBox Grid.Column="4" x:Name="DiffDestinationPath" ItemsSource="{Binding FileNames, Mode=OneWay}" SelectedValue="{Binding DiffDestinationPath.Value, Mode=TwoWay}" m:TextBoxHelper.Watermark="{le:Loc Label_DiffDestination}" m:TextBoxHelper.UseFloatingWatermark="True">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{qc:Binding 'Path.GetFileName($P)', P={Binding Mode=OneWay}}"/>

@@ -298,7 +298,7 @@ namespace MyPad.ViewModels
                     }
 
                     var textEditors = getTextEditors().Select(tuple => tuple.textEditors);
-                    var (result, diffSourcePath, diffDestinationPath) = await this.DialogService.SelectDiffFiles(textEditors.Select(e => e.FileName));
+                    var (result, diffSourcePath, diffDestinationPath) = await this.DialogService.SelectDiffFiles(textEditors.Select(e => e.FileName), this.ActiveTextEditor.Value.FileName);
                     if (result == false)
                         return;
 
