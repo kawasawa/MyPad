@@ -42,5 +42,16 @@ namespace MyPad.Views.Regions
                     this.DiffViewer.ShowSideBySide();
             }
         }
+
+        private void ShowInlineDiffViewer_Checked(object sender, RoutedEventArgs e)
+        {
+            this.DiffViewer.ShowInline();
+
+        }
+
+        private void ShowInlineDiffViewer_Unchecked(object sender, RoutedEventArgs e)
+        {
+            this.DiffViewer.ShowSideBySide();
+        }
     }
 }

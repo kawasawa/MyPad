@@ -324,11 +324,13 @@ namespace MyPad.ViewModels
 			}
 		}
 
-		public async static Task<(bool result, string diffSourcePath, string diffDestinationPath)> SelectDiffFiles(this IDialogService self, IEnumerable<string> fileNames)
+		public async static Task<(bool result, string diffSourcePath, string diffDestinationPath)> SelectDiffFiles(this IDialogService self, IEnumerable<string> fileNames, string diffSourcePath = null, string diffDestinationPath = null)
 		{
 			var parameters = new DialogParameters {
 				{ nameof(SelectDiffFilesDialogViewModel.Title), Resources.Command_Diff },
 				{ nameof(SelectDiffFilesDialogViewModel.FileNames), fileNames },
+				{ nameof(SelectDiffFilesDialogViewModel.DiffSourcePath), diffSourcePath },
+				{ nameof(SelectDiffFilesDialogViewModel.DiffDestinationPath), diffDestinationPath },
 			};
 
 			if (UseOverlayDialog(self, out var window))

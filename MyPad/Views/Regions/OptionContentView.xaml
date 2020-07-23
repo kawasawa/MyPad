@@ -117,7 +117,6 @@
                                     <CheckBox IsChecked="{Binding ShowFullName, Mode=TwoWay}"           Content="{le:Loc LabelText_ShowFullName}"/>
                                     <CheckBox IsChecked="{Binding ShowFileIcon, Mode=TwoWay}"           Content="{le:Loc LabelText_ShowFileIcon}"/>
                                     <CheckBox IsChecked="{Binding ShowSingleTab, Mode=TwoWay}"          Content="{le:Loc LabelText_ShowSingleTab}"/>
-                                    <CheckBox IsChecked="{Binding ShowInlineDiffViewer, Mode=TwoWay}"   Content="{le:Loc LabelText_ShowInlineDiffViewer}"/>
                                 </StackPanel>
                             </StackPanel>
 
