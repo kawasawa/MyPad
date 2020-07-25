@@ -55,14 +55,14 @@
   </RuleSet>
 
   <RuleSet name="TaskComment" ignoreCase="true">
-    <Keywords fontWeight="bold" foreground="Crimson">
+    <Keywords fontWeight="bold" foreground="OrangeRed">
       <Word>TODO</Word>
     </Keywords>
-    <Keywords fontWeight="bold" foreground="Yellow">
+    <Keywords fontWeight="bold" foreground="DarkOrange">
       <Word>HACK</Word>
       <Word>UNDONE</Word>
     </Keywords>
-    <Keywords fontWeight="bold" foreground="Khaki">
+    <Keywords fontWeight="bold" foreground="LimeGreen">
       <Word>NOTE</Word>
     </Keywords>
   </RuleSet>
