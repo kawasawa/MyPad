@@ -566,6 +566,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Property に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Property {
+            get {
+                return ResourceManager.GetString("Command_Property", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Redo に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Redo {
@@ -931,6 +940,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Access date に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_AccessDate {
+            get {
+                return ResourceManager.GetString("Label_AccessDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   All Files に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_AllFiles {
@@ -945,6 +963,15 @@ namespace MyPad.Properties {
         public static string Label_AppDataDirectory {
             get {
                 return ResourceManager.GetString("Label_AppDataDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Attributes に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_Attributes {
+            get {
+                return ResourceManager.GetString("Label_Attributes", resourceCulture);
             }
         }
         
@@ -1039,15 +1066,6 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Directory に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_Directory {
-            get {
-                return ResourceManager.GetString("Label_Directory", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Encoding に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Encoding {
@@ -1116,6 +1134,24 @@ namespace MyPad.Properties {
         public static string Label_LineMumber {
             get {
                 return ResourceManager.GetString("Label_LineMumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Location に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_Location {
+            get {
+                return ResourceManager.GetString("Label_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Modifired date に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_ModifiredDate {
+            get {
+                return ResourceManager.GetString("Label_ModifiredDate", resourceCulture);
             }
         }
         

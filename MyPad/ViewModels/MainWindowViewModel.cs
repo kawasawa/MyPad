@@ -85,6 +85,7 @@ namespace MyPad.ViewModels
         public ReactiveProperty<TextEditorViewModel> DiffSource { get; }
         public ReactiveProperty<TextEditorViewModel> DiffDestination { get; }
         public ReactiveProperty<bool> IsOpenDiffContent { get; }
+        public ReactiveProperty<bool> IsOpenPropertyContent { get; }
         public ReactiveProperty<bool> IsOpenPrintPreviewContent { get; }
         public ReactiveProperty<bool> IsOpenOptionContent { get; }
         public ReactiveProperty<bool> IsOpenAboutContent { get; }
@@ -103,6 +104,7 @@ namespace MyPad.ViewModels
         public ReactiveCommand CloseOtherCommand { get; }
         public ReactiveCommand DiffCommand { get; }
         public ReactiveCommand DiffUnmodifiedCommand { get; }
+        public ReactiveCommand PropertyCommand { get; }
         public ReactiveCommand PrintCommand { get; }
         public ReactiveCommand PrintPreviewCommand { get; }
         public ReactiveCommand OptionCommand { get; }
@@ -149,10 +151,17 @@ namespace MyPad.ViewModels
             this.DiffSource = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
             this.DiffDestination = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
             this.IsOpenDiffContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
+            this.IsOpenPropertyContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             this.IsOpenPrintPreviewContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             this.IsOpenOptionContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             this.IsOpenAboutContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
-            var compositeFlyout = new[] { this.IsOpenDiffContent, this.IsOpenPrintPreviewContent, this.IsOpenOptionContent, this.IsOpenAboutContent };
+            var compositeFlyout = new[] {
+                this.IsOpenDiffContent,
+                this.IsOpenPropertyContent,
+                this.IsOpenPrintPreviewContent,
+                this.IsOpenOptionContent,
+                this.IsOpenAboutContent
+            };
 
             // ----- 変更通知の購読 ------------------------------
 
@@ -169,6 +178,11 @@ namespace MyPad.ViewModels
             this.IsOpenDiffContent
                 .Where(isOpen => isOpen)
                 .Subscribe(_ => compositeFlyout.Except(new[] { this.IsOpenDiffContent }).ForEach(p => p.Value = false))
+                .AddTo(this.CompositeDisposable);
+
+            this.IsOpenPropertyContent
+                .Where(isOpen => isOpen)
+                .Subscribe(_ => compositeFlyout.Except(new[] { this.IsOpenPropertyContent }).ForEach(p => p.Value = false))
                 .AddTo(this.CompositeDisposable);
 
             this.IsOpenPrintPreviewContent
@@ -344,6 +358,10 @@ namespace MyPad.ViewModels
                         this.Logger.Log($"ファイルを印刷しました。(OSやハードウェアの要因でキャンセルされた可能性もあります)", Category.Info);
                     this.IsOpenPrintPreviewContent.Value = false;
                 })
+                .AddTo(this.CompositeDisposable);
+
+            this.PropertyCommand = new ReactiveCommand()
+                .WithSubscribe(() => this.IsOpenPropertyContent.Value = true)
                 .AddTo(this.CompositeDisposable);
 
             this.PrintPreviewCommand = new ReactiveCommand()

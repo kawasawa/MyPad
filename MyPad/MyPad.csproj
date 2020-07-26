@@ -84,6 +84,9 @@
     <Compile Update="Views\Dialogs\NotifyDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Regions\PropertyContentView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -120,6 +123,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Dialogs\NotifyDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Regions\PropertyContentView.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
