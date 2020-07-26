@@ -56,7 +56,7 @@
             </TabControl.Resources>
 
             <TabItem DataContext="{Binding SettingsService.System, Mode=OneWay}" Header="{le:Loc Label_System}">
-                <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                <ScrollViewer>
                     <StackPanel>
                         <Grid ge:GridEx.ColumnDefinition="Auto, *" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto, Auto">
                             <Label      Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_Theme}"/>
@@ -140,7 +140,7 @@
             </TabItem>
 
             <TabItem DataContext="{Binding SettingsService.TextEditor, Mode=OneWay}" Header="{le:Loc Label_TextEditor}">
-                <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                <ScrollViewer>
                     <StackPanel>
                         <ge:ResponsiveGrid>
                             <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
@@ -205,7 +205,7 @@
                         <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
                     </Style>
                 </TabItem.Resources>
-                <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                <ScrollViewer>
                     <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto">
                         <Label   Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_ExecutionDirectory}"/>
                         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ProductInfo.Working, Mode=OneWay}" IsReadOnly="True"/>

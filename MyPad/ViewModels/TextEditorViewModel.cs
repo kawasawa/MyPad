@@ -52,7 +52,7 @@ namespace MyPad.ViewModels
         public const string TEXT_EXTENSION = ".txt";
 
         private static int GlobalSequence = 0;
-        private bool _isInitialized;
+        private readonly bool _isInitialized;
 
         private DispatcherTimer AutoSaveTimer { get; }
         private (string path, ITextSourceVersion version) Temporary { get; set; }
