@@ -37,7 +37,7 @@ namespace MyPad.Views.Controls
         public new static readonly DependencyProperty FontSizeProperty
             = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(13D),
-                value => double.TryParse(value.ToString(), out var i) ? MIN_FONT_SIZE <= i && i <= MAX_FONT_SIZE : false);
+                value => double.TryParse(value.ToString(), out var i) && MIN_FONT_SIZE <= i && i <= MAX_FONT_SIZE);
         public static readonly DependencyProperty ActualFontSizeProperty
             = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(FontSizeProperty.DefaultMetadata.DefaultValue),
@@ -45,7 +45,7 @@ namespace MyPad.Views.Controls
         public static readonly DependencyProperty ZoomIncrementProperty
             = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(2),
-                value => int.TryParse(value.ToString(), out var i) ? 1 <= i && i <= 16 : false);
+                value => int.TryParse(value.ToString(), out var i) && 1 <= i && i <= 16);
         public static readonly DependencyProperty EnableAutoCompletionProperty
             = DependencyPropertyExtensions.Register(new PropertyMetadata(true));
 

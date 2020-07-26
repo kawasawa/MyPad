@@ -9,7 +9,7 @@
     <Authors>Kazuki Awasawa</Authors>
     <Copyright>© Kazuki Awasawa All Rights Reserved.</Copyright>
     <Description></Description>
-    <Version>1.2.2</Version>
+    <Version>1.3.0</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
@@ -84,6 +84,9 @@
     <Compile Update="Views\Dialogs\NotifyDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Regions\PropertyContentView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -120,6 +123,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Dialogs\NotifyDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Regions\PropertyContentView.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

@@ -372,8 +372,8 @@
   <data name="Label_Culture" xml:space="preserve">
     <value>言語情報</value>
   </data>
-  <data name="Label_Directory" xml:space="preserve">
-    <value>フォルダ</value>
+  <data name="Label_Location" xml:space="preserve">
+    <value>場所</value>
   </data>
   <data name="Label_Encoding" xml:space="preserve">
     <value>文字コード</value>
@@ -658,5 +658,17 @@
   </data>
   <data name="Message_NotifyTryAgainLater" xml:space="preserve">
     <value>一時的に利用できません。時間を置いて再度お試しください。</value>
+  </data>
+  <data name="Command_Property" xml:space="preserve">
+    <value>プロパティ</value>
+  </data>
+  <data name="Label_AccessDate" xml:space="preserve">
+    <value>アクセス日時</value>
+  </data>
+  <data name="Label_ModifiredDate" xml:space="preserve">
+    <value>更新日時</value>
+  </data>
+  <data name="Label_Attributes" xml:space="preserve">
+    <value>属性</value>
   </data>
 </root>

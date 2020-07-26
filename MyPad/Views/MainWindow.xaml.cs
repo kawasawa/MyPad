@@ -209,6 +209,7 @@ namespace MyPad.Views
             addToRegion<ToolBarView>();
             addToRegion<StatusBarView>();
             addToRegion<DiffContentView>();
+            addToRegion<PropertyContentView>();
             addToRegion<PrintPreviewContentView>();
             addToRegion<OptionContentView>();
             addToRegion<AboutContentView>();

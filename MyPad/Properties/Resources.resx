@@ -372,8 +372,8 @@
   <data name="Label_Culture" xml:space="preserve">
     <value>Culture</value>
   </data>
-  <data name="Label_Directory" xml:space="preserve">
-    <value>Directory</value>
+  <data name="Label_Location" xml:space="preserve">
+    <value>Location</value>
   </data>
   <data name="Label_Encoding" xml:space="preserve">
     <value>Encoding</value>
@@ -698,5 +698,17 @@ These changes will be applied on restart. Do you want to continue?</value>
   </data>
   <data name="Message_NotifyTryAgainLater" xml:space="preserve">
     <value>This feature is temporarily unavailable. Please try again later.</value>
+  </data>
+  <data name="Command_Property" xml:space="preserve">
+    <value>Property</value>
+  </data>
+  <data name="Label_AccessDate" xml:space="preserve">
+    <value>Access date</value>
+  </data>
+  <data name="Label_ModifiredDate" xml:space="preserve">
+    <value>Modifired date</value>
+  </data>
+  <data name="Label_Attributes" xml:space="preserve">
+    <value>Attributes</value>
   </data>
 </root>

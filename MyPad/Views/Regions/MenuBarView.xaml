@@ -310,6 +310,14 @@
                 </MenuItem.Icon>
             </MenuItem>
             <Separator/>
+            <MenuItem Command="{Binding PropertyCommand, Mode=OneTime}"
+                      Header="{le:Loc Command_Property}"
+                      HeaderStringFormat="{}{0}..."
+                      InputGestureText="Alt+Enter">
+                <MenuItem.Icon>
+                    <mi:Material Kind="FileOutline"/>
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem Command="{Binding DiffCommand, Mode=OneTime}"
                       Header="{le:Loc Command_Diff}"
                       HeaderStringFormat="{}{0}..."
