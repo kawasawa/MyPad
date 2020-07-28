@@ -26,7 +26,7 @@ MyPad.NetCore は .NET Framework 製のメモ帳アプリケーション MyPad �
 - 文字コードとプログラミング言語の自動認識
 - プログラミング言語別のカラー表示とキーワード補完
 
-![mypad](./_images/mypad.png)
+![mypad](./_images/mypad.jpg)
 
 ## 開発情報
 
