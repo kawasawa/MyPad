@@ -63,7 +63,8 @@
                             Padding="3"
                             Opacity="0.9"
                             VerticalAlignment="Top"
-                            HorizontalAlignment="Right">
+                            HorizontalAlignment="Right"
+                            KeyboardNavigation.TabNavigation="Cycle">
                         <Grid ge:GridEx.ColumnDefinition="Auto, 3, *, 3, Auto, Auto, 3, Auto, Auto, 3, Auto">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -73,6 +74,8 @@
 
                             <Grid.Resources>
                                 <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+                                    <Setter Property="Background"  Value="{DynamicResource MahApps.Brushes.Gray10}"/>
+                                    <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
                                     <Setter Property="FontFamily"  Value="{Binding FontFamily, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
                                     <Setter Property="FontSize"    Value="{Binding FontSize, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
                                     <Setter Property="MinWidth"    Value="150"/>
@@ -90,6 +93,10 @@
                                     <Setter Property="Width"       Value="{Binding Heitht, RelativeSource={RelativeSource self}, Mode=OneWay}"/>
                                     <Setter Property="Height"      Value="20"/>
                                     <Setter Property="Padding"     Value="2"/>
+                                    <Style.Resources>
+                                        <!-- チェック状態での BorderBrush を上書きする -->
+                                        <SolidColorBrush x:Key="MahApps.Brushes.Gray5" Color="{DynamicResource MahApps.Colors.Gray2}" o:Freeze="True"/>
+                                    </Style.Resources>
                                 </Style>
                             </Grid.Resources>
 
@@ -102,6 +109,7 @@
                             <TextBox Grid.Row="0" Grid.Column="2" x:Name="PART_searchTextBox"
                                      Text="{Binding SearchPattern, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                      ToolTip="{Binding Localization.FindText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                     m:TextBoxHelper.Watermark="{Binding Localization.FindText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                      m:TextBoxHelper.ClearTextButton="True"/>
                             <Button Grid.Row="0" Grid.Column="4"
                                     Command="ae:SearchCommands.FindPrevious"
@@ -135,15 +143,19 @@
                             <TextBox Grid.Row="2" Grid.Column="2"
                                      Text="{Binding (controls:TextArea.ReplacePattern), UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                      ToolTip="{Binding Localization.ReplaceText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
-                                     m:TextBoxHelper.ClearTextButton="True"/>
+                                     m:TextBoxHelper.Watermark="{Binding Localization.ReplaceText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                     m:TextBoxHelper.ClearTextButton="True"
+                                     Focusable="{Binding (controls:TextArea.ReplaceAreaExpanded), Mode=OneWay}"/>
                             <Button Grid.Row="2" Grid.Column="4"
                                     Command="controls:TextEditorCommands.ReplaceNext"
-                                    ToolTip="{Binding Localization.ReplaceNextText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">
+                                    ToolTip="{Binding Localization.ReplaceNextText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                    Focusable="{Binding (controls:TextArea.ReplaceAreaExpanded), Mode=OneWay}">
                                 <mi:Material Kind="FindReplace"/>
                             </Button>
                             <Button Grid.Row="2" Grid.Column="5"
                                     Command="controls:TextEditorCommands.ReplaceAll"
-                                    ToolTip="{Binding Localization.ReplaceAllText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">
+                                    ToolTip="{Binding Localization.ReplaceAllText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                    Focusable="{Binding (controls:TextArea.ReplaceAreaExpanded), Mode=OneWay}">
                                 <mi:Modern Kind="Refresh"/>
                             </Button>
                         </Grid>
