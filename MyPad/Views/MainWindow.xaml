@@ -35,6 +35,7 @@
             <Setter Property="Focusable" Value="False"/>
         </Style>
         <Style TargetType="{x:Type m:Flyout}" BasedOn="{StaticResource Default.Flyout}">
+            <EventSetter Event="IsOpenChanged" Handler="Flyout_IsOpenChanged"/>
             <Setter Property="Position" Value="Left"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="IsModal" Value="True"/>

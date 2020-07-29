@@ -1,4 +1,5 @@
 ﻿using Dragablz;
+using MahApps.Metro.Controls;
 using MyPad.Models;
 using MyPad.ViewModels;
 using MyPad.Views.Controls;
@@ -264,6 +265,17 @@ namespace MyPad.Views
             if (e.NewValue is ViewModelBase newViewModel)
                 newViewModel.Disposed += viewModel_Disposed;
         }
+
+        [LogInterceptor]
+        private void Flyout_IsOpenChanged(object sender, RoutedEventArgs e)
+        {
+            if ((sender as Flyout)?.IsOpen != false)
+                return;
+
+            this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus());
+            e.Handled = true;
+        }
+
 
         [LogInterceptor]
         private void DraggableTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
