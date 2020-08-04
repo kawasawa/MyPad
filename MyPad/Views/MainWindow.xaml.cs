@@ -52,6 +52,11 @@ namespace MyPad.Views
                 nameof(ActivateFileExplorer),
                 typeof(MainWindow),
                 new InputGestureCollection { new KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Shift) });
+        public static readonly ICommand ActivateProperty
+            = new RoutedCommand(
+                nameof(ActivateProperty),
+                typeof(MainWindow),
+                new InputGestureCollection { new KeyGesture(Key.Enter, ModifierKeys.Alt) });
 
         private HwndSource _handleSource;
         private (uint fByPosition, User32.MENUITEMINFO lpmii) _miiShowMenuBar;
@@ -156,6 +161,10 @@ namespace MyPad.Views
                     ActivateFileExplorer,
                     (sender, e) => this.ActivateHamburgerMenuItem(this.FileExplorerItem)
                 ),
+                new CommandBinding(
+                    ActivateProperty,
+                    (sender, e) => this.ActivateHamburgerMenuItem(this.PropertyItem)
+                ),
             });
 
             var sequence = 0u;
@@ -187,10 +196,9 @@ namespace MyPad.Views
         {
             this.SettingsService.System.ShowSideBar = true;
 
-            if (double.IsNaN(this.HamburgerMenu.Width) == false ||
-                targetItem?.Equals(this.HamburgerMenu.Content) != true)
+            if (double.IsNaN(this.HamburgerMenu.Width) == false)
             {
-                // 閉じた状態 または 非アクティブな項目が選択された 場合
+                // 閉じた状態の場合
                 // ・選択された項目をアクティブにする
                 // ・ハンバーガーメニューを開く
                 this.HamburgerMenu.Content = targetItem;
@@ -199,6 +207,23 @@ namespace MyPad.Views
                 // グリッドの列構成を調整する
                 this.HamburgerMenuColumn.Width = new GridLength(this._columnWidthCache.sideBarWidth, GridUnitType.Star);
                 this.DraggableTabControlColumn.Width = new GridLength(this._columnWidthCache.contentAreaWidth, GridUnitType.Star);
+
+                // フォーカスを設定する
+                if (targetItem.Tag is FrameworkElement element)
+                {
+                    void elementLoaded(object sender, EventArgs e)
+                    {
+                        element.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+                        element.Loaded -= elementLoaded;
+                    }
+                    element.Loaded += elementLoaded;
+                }
+            }
+            else if (targetItem?.Equals(this.HamburgerMenu.Content) != true)
+            {
+                // 非アクティブな項目が選択された場合
+                // ・選択された項目をアクティブにする
+                this.HamburgerMenu.Content = targetItem;
 
                 // フォーカスを設定する
                 if (targetItem.Tag is FrameworkElement element)
@@ -299,7 +324,6 @@ namespace MyPad.Views
             addToRegion<ToolBarView>();
             addToRegion<StatusBarView>();
             addToRegion<DiffContentView>();
-            addToRegion<PropertyContentView>();
             addToRegion<PrintPreviewContentView>();
             addToRegion<OptionContentView>();
             addToRegion<AboutContentView>();
@@ -369,7 +393,13 @@ namespace MyPad.Views
         private void HamburgerMenu_ItemInvoked(object sender, HamburgerMenuItemInvokedEventArgs e)
         {
             if (MouseButtonState.Pressed == Mouse.LeftButton)
-                this.ActivateHamburgerMenuItem((HamburgerMenuItem)e.InvokedItem);
+            {
+                var menuItem = (HamburgerMenuItem)e.InvokedItem;
+                if (e.IsItemOptions)
+                    ((ICommand)menuItem.Tag).Execute(null);
+                else
+                    this.ActivateHamburgerMenuItem(menuItem);
+            }
             e.Handled = true;
         }
 

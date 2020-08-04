@@ -11,7 +11,7 @@
              xmlns:qc="http://QuickConverter.CodePlex.com/"
              xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
              xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
-             xmlns:viewModels="clr-namespace:MyPad.ViewModels"
+             xmlns:views="clr-namespace:MyPad.Views"
              xmlns:controls="clr-namespace:MyPad.Views.Controls"
              mc:Ignorable="d"
              p:ViewModelLocator.AutoWireViewModel="True"
@@ -259,6 +259,22 @@
             <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowToolBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowToolBar}"/>
             <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowSideBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowSideBar}"/>
             <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowStatusBar, Mode=TwoWay}" Header="{le:Loc Command_ShowStatusBar}"/>
+            <MenuItem Header="{le:Loc Command_Panels}">
+                <MenuItem Command="{x:Static views:MainWindow.ActivateFileExplorer}"
+                          Header="{le:Loc Command_Explorer}"
+                          InputGestureText="Ctrl+Shift+E">
+                    <MenuItem.Icon>
+                        <mi:Material Kind="FileTree"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="{x:Static views:MainWindow.ActivateProperty}"
+                          Header="{le:Loc Command_Property}"
+                          InputGestureText="Alt+Enter">
+                    <MenuItem.Icon>
+                        <mi:Material Kind="FileOutline"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
             <MenuItem Header="{le:Loc Command_Zoom}">
                 <MenuItem Command="controls:TextEditorCommands.ZoomIn"
                           Header="{le:Loc Command_ZoomIn}"
@@ -311,14 +327,6 @@
                 </MenuItem.Icon>
             </MenuItem>
             <Separator/>
-            <MenuItem Command="{Binding PropertyCommand, Mode=OneTime}"
-                      Header="{le:Loc Command_Property}"
-                      HeaderStringFormat="{}{0}..."
-                      InputGestureText="Alt+Enter">
-                <MenuItem.Icon>
-                    <mi:Material Kind="FileOutline"/>
-                </MenuItem.Icon>
-            </MenuItem>
             <MenuItem Command="{Binding DiffCommand, Mode=OneTime}"
                       Header="{le:Loc Command_Diff}"
                       HeaderStringFormat="{}{0}..."

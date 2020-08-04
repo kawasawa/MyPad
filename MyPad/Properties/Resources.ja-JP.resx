@@ -677,4 +677,7 @@
   <data name="Command_ShowSideBar" xml:space="preserve">
     <value>サイドバー</value>
   </data>
+  <data name="Command_Panels" xml:space="preserve">
+    <value>パネル</value>
+  </data>
 </root>

@@ -548,6 +548,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Panels に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Panels {
+            get {
+                return ResourceManager.GetString("Command_Panels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Paste に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Paste {

@@ -82,7 +82,6 @@
         <KeyBinding Command="{Binding OptionCommand,               Mode=OneTime}" Key="OemComma" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding ChangeEncodingCommand,       Mode=OneTime}" Key="M"        Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding ChangeSyntaxCommand,         Mode=OneTime}" Key="M"        Modifiers="Ctrl+Shift"/>
-        <KeyBinding Command="{Binding PropertyCommand,             Mode=OneTime}" Key="Enter"    Modifiers="Alt"/>
         <KeyBinding Command="{Binding DiffCommand,                 Mode=OneTime}" Key="D"        Modifiers="Ctrl+Shift"/>
         <KeyBinding Command="{Binding DiffUnmodifiedCommand,       Mode=OneTime}" Key="D"        Modifiers="Ctrl+Alt"/>
         <KeyBinding Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Key="F11"/>
@@ -127,9 +126,6 @@
         <m:FlyoutsControl>
             <m:Flyout Header="{le:Loc Command_Diff}" IsOpen="{Binding IsOpenDiffContent.Value, Mode=TwoWay}">
                 <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="DiffContentRegion"/>
-            </m:Flyout>
-            <m:Flyout Header="{le:Loc Command_Property}" IsOpen="{Binding IsOpenPropertyContent.Value, Mode=TwoWay}">
-                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="PropertyContentRegion"/>
             </m:Flyout>
             <m:Flyout Header="{le:Loc Command_Print}" IsOpen="{Binding IsOpenPrintPreviewContent.Value, Mode=TwoWay}">
                 <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="PrintPreviewContentRegion"/>
@@ -191,7 +187,7 @@
                                 <ColumnDefinition Width="{StaticResource HamburgerColumnWidth}"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Border ToolTip="{Binding Label, Mode=OneWay}" Background="Transparent">
+                            <Border ToolTip="{Binding Label, Mode=OneWay}" Background="{qc:MultiBinding '$P0 == $P1 ? new SolidColorBrush(Color.FromRgb((byte)42, (byte)87, (byte)154)) : Brushes.Transparent', P0={Binding Mode=OneWay}, P1={Binding Content, ElementName=HamburgerMenu, Mode=OneWay}}">
                                 <ContentControl Content="{Binding Icon, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" IsTabStop="False" Focusable="False"/>
                             </Border>
                         </Grid>
@@ -254,8 +250,62 @@
                                 </TreeView>
                             </m:HamburgerMenuIconItem.Tag>
                         </m:HamburgerMenuIconItem>
+                        <m:HamburgerMenuIconItem x:Name="PropertyItem" Label="{le:Loc Command_Property}">
+                            <m:HamburgerMenuIconItem.Icon>
+                                <mi:Material Kind="FileOutline"/>
+                            </m:HamburgerMenuIconItem.Icon>
+                            <m:HamburgerMenuIconItem.Tag>
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <ge:ResponsiveGrid DataContext="{Binding Data.ActiveTextEditor.Value, Source={StaticResource Proxy}, Mode=OneWay}">
+                                        <ge:ResponsiveGrid.Resources>
+                                            <Style TargetType="{x:Type Label}" BasedOn="{StaticResource Default.Label}">
+                                                <Setter Property="FontSize" Value="16"/>
+                                            </Style>
+                                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
+                                                <Setter Property="Margin" Value="20 0 0 5"/>
+                                                <Setter Property="FontSize" Value="14"/>
+                                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                            </Style>
+                                        </ge:ResponsiveGrid.Resources>
+
+                                        <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5 0">
+                                            <Label     Content="{le:Loc Label_Name}"/>
+                                            <TextBlock Text="{qc:Binding 'Path.GetFileName($P)', P={Binding FileName, Mode=OneWay}}"/>
+                                            <Label     Content="{le:Loc Label_Type}"/>
+                                            <TextBlock Text="{Binding FileType, Mode=OneWay}"/>
+                                            <Label     Content="{le:Loc Label_Location}"/>
+                                            <TextBlock Text="{Binding FileInfo.DirectoryName, Mode=OneWay}"/>
+                                            <Label     Content="{le:Loc Label_Size}"/>
+                                            <TextBlock Text="{Binding FileInfo.Length, StringFormat={}{0:N0} bytes, Mode=OneWay}"/>
+                                        </StackPanel>
+
+                                        <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5 0">
+                                            <Label     Content="{le:Loc Label_CreationDate}"/>
+                                            <TextBlock Text="{Binding FileInfo.CreationTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
+                                            <Label     Content="{le:Loc Label_ModifiredDate}"/>
+                                            <TextBlock Text="{Binding FileInfo.LastWriteTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
+                                            <Label     Content="{le:Loc Label_AccessDate}"/>
+                                            <TextBlock Text="{Binding FileInfo.LastAccessTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
+                                            <Label     Content="{le:Loc Label_Attributes}"/>
+                                            <TextBlock Text="{Binding FileInfo.Attributes, Mode=OneWay}"/>
+                                            <Label     Content="{le:Loc Label_Owner}"/>
+                                            <TextBlock Text="{Binding FileOwner, Mode=OneWay}"/>
+                                        </StackPanel>
+                                    </ge:ResponsiveGrid>
+                                </ScrollViewer>
+                            </m:HamburgerMenuIconItem.Tag>
+                        </m:HamburgerMenuIconItem>
                     </m:HamburgerMenuItemCollection>
                 </m:HamburgerMenu.ItemsSource>
+                <m:HamburgerMenu.OptionsItemsSource>
+                    <m:HamburgerMenuItemCollection>
+                        <m:HamburgerMenuIconItem Label="{le:Loc Command_Option}" Tag="{Binding Data.OptionCommand, Source={StaticResource Proxy}, Mode=OneTime}">
+                            <m:HamburgerMenuIconItem.Icon>
+                                <mi:Modern Kind="Cog"/>
+                            </m:HamburgerMenuIconItem.Icon>
+                        </m:HamburgerMenuIconItem>
+                    </m:HamburgerMenuItemCollection>
+                </m:HamburgerMenu.OptionsItemsSource>
             </m:HamburgerMenu>
             
             <GridSplitter Grid.Column="1"
