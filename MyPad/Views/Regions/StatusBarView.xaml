@@ -78,7 +78,7 @@
 
         <Style TargetType="{x:Type StatusBar}" BasedOn="{StaticResource Default.StatusBar}">
             <Setter Property="Background" Value="{DynamicResource CyanColorBrush}"/>
-            <!-- MEMO: WindowTitleBrush に追従する処理を打ち消す -->
+            <!-- NOTE: WindowTitleBrush に追従する処理を打ち消す -->
             <Style.Triggers>
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>

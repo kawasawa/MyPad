@@ -445,7 +445,7 @@ namespace MyPad.ViewModels
             this.ClosingHandler = new ReactiveCommand<CancelEventArgs>()
                 .WithSubscribe(e =>
                 {
-                    // MEMO: Closing イベント内で非同期処理後にイベントをキャンセルできなくなる問題 (ViewModel)
+                    // NOTE: Closing イベント内で非同期処理後にイベントをキャンセルできなくなる問題 (ViewModel)
                     // 最初にイベントはキャンセルしてから非同期処理を行う。
                     // 閉じる条件を満たした場合は Dispose メソッドを実行する。
                     // (ViewModel の Dispose をトリガーに、View が Close メソッドを実行する。)

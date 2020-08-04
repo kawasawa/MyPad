@@ -134,7 +134,7 @@ namespace MyPad.ViewModels.Regions
             }
             catch (OperationCanceledException e)
             {
-                // MEMO: FileSystem.CopyDirectory の処理をキャンセルした場合
+                // NOTE: FileSystem.CopyDirectory の処理をキャンセルした場合
                 this.DialogService.Notify(e.Message);
                 return false;
             }

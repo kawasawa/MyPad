@@ -443,7 +443,7 @@ namespace MyPad.ViewModels
                 var text = await Task.Run(() => encoding.GetString(bytes));
 
                 // テキストを設定する
-                // MEMO: 非同期処理でのテキストの設定
+                // NOTE: 非同期処理でのテキストの設定
                 // TextDocument.Text へ代入後に ClearAll() を実行すると IsModified の変更が通知されなくなる。
                 // 正確には、ClearAll() 時に UndoStack 内の未変更点が更新されていないようだ。
                 // 代入前に UndoStack をクリアしてサスペンド、代入後にレジュームする。

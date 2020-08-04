@@ -78,7 +78,7 @@ namespace MyPad.Views
             {
                 try
                 {
-                    // MEMO: 選択されたタブ内のコントロールを取得
+                    // NOTE: 選択されたタブ内のコントロールを取得
                     // ItemsSource に ViewModel をバインドした場合、その参照が Item プロパティに設定されるため、
                     // 子要素のビジュアルオブジェクトを直接取得する方法が無い。(仕様)
                     // VisualTree をたどり ContentPreseneter を取得し、内包する要素の名前からコントロールを特定する。
@@ -140,7 +140,7 @@ namespace MyPad.Views
                 });
 
             this.CommandBindings.AddRange(new[] {
-                // MEMO: ApplicationCommands.Close の実装
+                // NOTE: ApplicationCommands.Close の実装
                 new CommandBinding( 
                     ApplicationCommands.Close,
                     (sender, e) =>
@@ -332,7 +332,7 @@ namespace MyPad.Views
         [LogInterceptor]
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            // MEMO: ダイアログの表示に備えてフォアグラウンドへ移動
+            // NOTE: ダイアログの表示に備えてフォアグラウンドへ移動
             this.SetForegroundWindow();
         }
 
@@ -367,7 +367,7 @@ namespace MyPad.Views
         {
             void viewModel_Disposed(object sender, EventArgs e)
             {
-                // MEMO: Closing イベント内で非同期処理後にイベントをキャンセルできなくなる問題 (View)
+                // NOTE: Closing イベント内で非同期処理後にイベントをキャンセルできなくなる問題 (View)
                 // ViewModel の Dispose をトリガーに、View の Close メソッドを実行する。
                 ((ViewModelBase)sender).Disposed -= viewModel_Disposed;
                 this.Dispatcher.InvokeAsync(() => this.Close());
@@ -541,7 +541,7 @@ namespace MyPad.Views
                 var view = this.ContainerExtension.Resolve<MainWindow>((typeof(IRegionManager), this.RegionManager.CreateRegionManager()));
                 view.IsNewTabHost = true;
 
-                // MEMO: IsHeaderPanelVisible = false の状態でフローティングを行うと例外が発生する現象への対策
+                // NOTE: IsHeaderPanelVisible = false の状態でフローティングを行うと例外が発生する現象への対策
                 // ドラッグ移動中(マウスの左ボタンが押下されている間)はタブを表示する。
                 // また既存のタブにドッキングされウィンドウが消滅する場合に備え Closed イベントも監視する。
                 //

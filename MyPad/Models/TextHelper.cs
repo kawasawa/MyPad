@@ -186,7 +186,7 @@ namespace MyPad.Models
         {
             try
             {
-                // MEMO: EnumerateFiles による列挙時の例外
+                // NOTE: EnumerateFiles による列挙時の例外
                 // Directory.EnumerateFiles では UnauthorizedAccessException 等が発生すると列挙が中断されてしまう。
                 // 例外を握りつぶして列挙を継続する。
 
