@@ -7,11 +7,13 @@ using MyPad.Views.Regions;
 using Plow.Wpf;
 using Prism.Commands;
 using Prism.Ioc;
+using Prism.Logging;
 using Prism.Regions;
 using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -33,6 +35,8 @@ namespace MyPad.Views
         public IContainerExtension ContainerExtension { get; set; }
 
         // Dependency Injection
+        [Dependency]
+        public ILoggerFacade Logger { get; set; }
         [Dependency]
         public IRegionManager RegionManager { get; set; }
         [Dependency]
@@ -203,8 +207,25 @@ namespace MyPad.Views
 
             // リージョンにビューを設定する
             void addToRegion<T>(string suffix = null)
-                => this.RegionManager.AddToRegion(
-                    $"{PrismNamingConverter.ConvertToRegionName<T>()}{suffix}", this.ContainerExtension.Resolve<T>());
+            {
+                const int MAX_RETRY_COUNT = 5;
+                var retryCount = 0;
+                var regionName = $"{PrismNamingConverter.ConvertToRegionName<T>()}{suffix}";
+                while (true)
+                {
+                    try
+                    {
+                        this.RegionManager.AddToRegion(regionName, this.ContainerExtension.Resolve<T>());
+                        break;
+                    }
+                    catch (Exception e) when (retryCount < MAX_RETRY_COUNT)
+                    {
+                        this.Logger.Log($"リージョンの追加に失敗しました。: RegionName={regionName}, RetryCount={retryCount}", Category.Warn, e);
+                        Thread.Sleep(100);
+                        retryCount++;
+                    }
+                }
+            }
             addToRegion<MenuBarView>("1");
             addToRegion<MenuBarView>("2");
             addToRegion<ToolBarView>();
