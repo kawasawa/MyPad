@@ -305,6 +305,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Explorer に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Explorer {
+            get {
+                return ResourceManager.GetString("Command_Explorer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Export log に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ExportLog {
@@ -751,6 +760,15 @@ namespace MyPad.Properties {
         public static string Command_ShowMenuBar {
             get {
                 return ResourceManager.GetString("Command_ShowMenuBar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   SideBar に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_ShowSideBar {
+            get {
+                return ResourceManager.GetString("Command_ShowSideBar", resourceCulture);
             }
         }
         

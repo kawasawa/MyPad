@@ -257,6 +257,7 @@
             <MenuItem IsCheckable="True" IsChecked="{Binding Topmost, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}" Header="{le:Loc Command_Topmost}"/>
             <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowMenuBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowMenuBar}"/>
             <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowToolBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowToolBar}"/>
+            <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowSideBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowSideBar}"/>
             <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowStatusBar, Mode=TwoWay}" Header="{le:Loc Command_ShowStatusBar}"/>
             <MenuItem Header="{le:Loc Command_Zoom}">
                 <MenuItem Command="controls:TextEditorCommands.ZoomIn"

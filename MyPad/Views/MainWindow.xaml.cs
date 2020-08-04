@@ -11,6 +11,7 @@ using Prism.Logging;
 using Prism.Regions;
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -46,10 +47,19 @@ namespace MyPad.Views
 
         #region プロパティ
 
+        public static readonly ICommand ActivateFileExplorer
+            = new RoutedCommand(
+                nameof(ActivateFileExplorer),
+                typeof(MainWindow),
+                new InputGestureCollection { new KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Shift) });
+
         private HwndSource _handleSource;
-        private User32.MENUITEMINFO _lpmiiShowMenuBar;
-        private User32.MENUITEMINFO _lpmiiShowToolBar;
-        private User32.MENUITEMINFO _lpmiiShowStatusBar;
+        private (uint fByPosition, User32.MENUITEMINFO lpmii) _miiShowMenuBar;
+        private (uint fByPosition, User32.MENUITEMINFO lpmii) _miiShowToolBar;
+        private (uint fByPosition, User32.MENUITEMINFO lpmii) _miiShowSideBar; 
+        private (uint fByPosition, User32.MENUITEMINFO lpmii) _miiShowStatusBar;
+        private (uint fByPosition, User32.MENUITEMINFO lpmii) _miiSeparator;
+        private (double sideBarWidth, double contentAreaWidth) _columnWidthCache = (2, 5);
         private bool _fullScreenMode;
 
         public ICSharpCode.AvalonEdit.Search.Localization Localization { get; }
@@ -124,9 +134,9 @@ namespace MyPad.Views
                     config.DisplayOptions.TopMost = false;
                 });
 
-            // MEMO: ApplicationCommands.Close の実装
             this.CommandBindings.AddRange(new[] {
-                new CommandBinding(
+                // MEMO: ApplicationCommands.Close の実装
+                new CommandBinding( 
                     ApplicationCommands.Close,
                     (sender, e) =>
                     {
@@ -142,30 +152,19 @@ namespace MyPad.Views
                         e.Handled = true;
                     }
                 ),
+                new CommandBinding(
+                    ActivateFileExplorer,
+                    (sender, e) => this.ActivateHamburgerMenuItem(this.FileExplorerItem)
+                ),
             });
-        }
 
-        [LogInterceptor]
-        public void ScrollToCaret()
-        {
-            this.ActiveTextEditor?.ScrollToCaret();
-        }
-
-        [LogInterceptor]
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            // フックメソッドを登録する
-            this._handleSource = (HwndSource)PresentationSource.FromVisual(this);
-            this._handleSource.AddHook(this.WndProc);
-
-            // システムメニューを構築する
             var sequence = 0u;
-            User32.MENUITEMINFO createMenuItem(bool isSeparater = false)
+            User32.MENUITEMINFO createMenuItem(bool isSeparator = false)
                 => new User32.MENUITEMINFO
                 {
                     cbSize = (uint)Marshal.SizeOf(typeof(User32.MENUITEMINFO)),
-                    fMask = isSeparater ? User32.MenuItemInfoMask.MIIM_FTYPE : User32.MenuItemInfoMask.MIIM_STATE | User32.MenuItemInfoMask.MIIM_ID | User32.MenuItemInfoMask.MIIM_STRING,
-                    fType = isSeparater ? User32.MenuItemType.MFT_SEPARATOR : User32.MenuItemType.MFT_MENUBARBREAK,
+                    fMask = isSeparator ? User32.MenuItemInfoMask.MIIM_FTYPE : User32.MenuItemInfoMask.MIIM_STATE | User32.MenuItemInfoMask.MIIM_ID | User32.MenuItemInfoMask.MIIM_STRING,
+                    fType = isSeparator ? User32.MenuItemType.MFT_SEPARATOR : User32.MenuItemType.MFT_MENUBARBREAK,
                     fState = User32.MenuItemState.MFS_ENABLED,
                     wID = ++sequence,
                     hSubMenu = IntPtr.Zero,
@@ -176,15 +175,84 @@ namespace MyPad.Views
                     cch = 0,
                     hbmpItem = IntPtr.Zero
                 };
+            this._miiShowMenuBar = (6, createMenuItem());
+            this._miiShowToolBar = (7, createMenuItem());
+            this._miiShowSideBar = (8, createMenuItem());
+            this._miiShowStatusBar = (9, createMenuItem());
+            this._miiSeparator = (10, createMenuItem(true));
+        }
+
+        [LogInterceptor]
+        private void ActivateHamburgerMenuItem(HamburgerMenuItem targetItem)
+        {
+            this.SettingsService.System.ShowSideBar = true;
+
+            if (double.IsNaN(this.HamburgerMenu.Width) == false ||
+                targetItem?.Equals(this.HamburgerMenu.Content) != true)
+            {
+                // 閉じた状態 または 非アクティブな項目が選択された 場合
+                // ・選択された項目をアクティブにする
+                // ・ハンバーガーメニューを開く
+                this.HamburgerMenu.Content = targetItem;
+                this.HamburgerMenu.Width = double.NaN;
+
+                // グリッドの列構成を調整する
+                this.HamburgerMenuColumn.Width = new GridLength(this._columnWidthCache.sideBarWidth, GridUnitType.Star);
+                this.DraggableTabControlColumn.Width = new GridLength(this._columnWidthCache.contentAreaWidth, GridUnitType.Star);
+
+                // フォーカスを設定する
+                if (targetItem.Tag is FrameworkElement element)
+                {
+                    void elementLoaded(object sender, EventArgs e)
+                    {
+                        element.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+                        element.Loaded -= elementLoaded;
+                    }
+                    element.Loaded += elementLoaded;
+                }
+            }
+            else
+            {
+                // 開いた状態 かつ アクティブな項目が選択された 場合
+                // ・選択された項目の非アクティブにする
+                // ・ハンバーガーメニューを閉じる
+                this.HamburgerMenu.Content = null;
+                this.HamburgerMenu.Width = this.HamburgerMenu.HamburgerWidth;
+
+                // グリッドの列構成を調整する
+                this._columnWidthCache = (this.HamburgerMenuColumn.Width.Value, this.DraggableTabControlColumn.Width.Value);
+                this.HamburgerMenuColumn.Width = GridLength.Auto;
+                this.DraggableTabControlColumn.Width = new GridLength(1, GridUnitType.Star);
+
+                // フォーカスを設定する
+                this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus());
+            }
+        }
+
+        [LogInterceptor]
+        public void ScrollToCaret()
+        {
+            this.ActiveTextEditor?.ScrollToCaret();
+        }
+
+        #endregion
+
+        #region イベントハンドラ
+
+        [LogInterceptor]
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            // フックメソッドを登録する
+            this._handleSource = (HwndSource)PresentationSource.FromVisual(this);
+            this._handleSource.AddHook(this.WndProc);
+
+            // システムメニューを構築する
             var hMenu = User32.GetSystemMenu(this._handleSource.Handle, false);
-            this._lpmiiShowMenuBar = createMenuItem();
-            this._lpmiiShowToolBar = createMenuItem();
-            this._lpmiiShowStatusBar = createMenuItem();
-            var lpmiiSeparater = createMenuItem(true);
-            User32.InsertMenuItem(hMenu, (uint)SystemMenuIndex.ShowMenuBar, true, ref this._lpmiiShowMenuBar);
-            User32.InsertMenuItem(hMenu, (uint)SystemMenuIndex.ShowToolBar, true, ref this._lpmiiShowToolBar);
-            User32.InsertMenuItem(hMenu, (uint)SystemMenuIndex.ShowStatusBar, true, ref this._lpmiiShowStatusBar);
-            User32.InsertMenuItem(hMenu, (uint)SystemMenuIndex.__Separater__, true, ref lpmiiSeparater);
+            User32.InsertMenuItem(hMenu, this._miiShowMenuBar.fByPosition, true, ref this._miiShowMenuBar.lpmii);
+            User32.InsertMenuItem(hMenu, this._miiShowToolBar.fByPosition, true, ref this._miiShowToolBar.lpmii);
+            User32.InsertMenuItem(hMenu, this._miiShowSideBar.fByPosition, true, ref this._miiShowSideBar.lpmii);
+            User32.InsertMenuItem(hMenu, this._miiShowStatusBar.fByPosition, true, ref this._miiShowStatusBar.lpmii);
+            User32.InsertMenuItem(hMenu, this._miiSeparator.fByPosition, true, ref this._miiSeparator.lpmii);
 
             // 初期ウィンドウ向けの処理を行う
             if (this.IsNewTabHost == false)
@@ -297,6 +365,66 @@ namespace MyPad.Views
             e.Handled = true;
         }
 
+        [LogInterceptor]
+        private void HamburgerMenu_ItemInvoked(object sender, HamburgerMenuItemInvokedEventArgs e)
+        {
+            if (MouseButtonState.Pressed == Mouse.LeftButton)
+                this.ActivateHamburgerMenuItem((HamburgerMenuItem)e.InvokedItem);
+            e.Handled = true;
+        }
+
+        [LogInterceptor]
+        private void FileTreeNode_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (e.Handled)
+                return;
+
+            var node = (FileTreeNodeViewModel)((TreeViewItem)sender).DataContext;
+            if (node.IsEmpty)
+            {
+                e.Handled = true;
+                return;
+            }
+            if (File.Exists(node.FileName))
+            {
+                this.ViewModel.LoadCommand.Execute(new[] { node.FileName });
+                e.Handled = true;
+                return;
+            }
+        }
+
+        [LogInterceptor]
+        private void FileTreeNode_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Handled)
+                return;
+
+            switch (e.Key)
+            {
+                case Key.Enter:
+                {
+                    var node = (FileTreeNodeViewModel)((TreeViewItem)sender).DataContext;
+                    if (node.IsEmpty)
+                    {
+                        e.Handled = true;
+                        return;
+                    }
+                    if (File.Exists(node.FileName))
+                    {
+                        this.ViewModel.LoadCommand.Execute(new[] { node.FileName });
+                        e.Handled = true;
+                        return;
+                    }
+                    if (Directory.Exists(node.FileName))
+                    {
+                        node.IsExpanded = !node.IsExpanded;
+                        e.Handled = true;
+                        return;
+                    }
+                    break;
+                }
+            }
+        }
 
         [LogInterceptor]
         private void DraggableTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -333,17 +461,19 @@ namespace MyPad.Views
             {
                 case User32.WindowMessage.WM_INITMENUPOPUP:
                 {
-                    var settings = this.SettingsService.System;
                     var hMenu = User32.GetSystemMenu(this._handleSource.Handle, false);
-                    this._lpmiiShowMenuBar.dwTypeData.Assign(Properties.Resources.Command_ShowMenuBar);
-                    this._lpmiiShowToolBar.dwTypeData.Assign(Properties.Resources.Command_ShowToolBar);
-                    this._lpmiiShowStatusBar.dwTypeData.Assign(Properties.Resources.Command_ShowStatusBar);
-                    this._lpmiiShowMenuBar.fState = settings.ShowMenuBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
-                    this._lpmiiShowToolBar.fState = settings.ShowToolBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
-                    this._lpmiiShowStatusBar.fState = settings.ShowStatusBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
-                    User32.SetMenuItemInfo(hMenu, (uint)SystemMenuIndex.ShowMenuBar, true, in this._lpmiiShowMenuBar);
-                    User32.SetMenuItemInfo(hMenu, (uint)SystemMenuIndex.ShowToolBar, true, in this._lpmiiShowToolBar);
-                    User32.SetMenuItemInfo(hMenu, (uint)SystemMenuIndex.ShowStatusBar, true, in this._lpmiiShowStatusBar);
+                    this._miiShowMenuBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowMenuBar);
+                    this._miiShowToolBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowToolBar);
+                    this._miiShowSideBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowSideBar); 
+                    this._miiShowStatusBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowStatusBar);
+                    this._miiShowMenuBar.lpmii.fState = this.SettingsService.System.ShowMenuBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
+                    this._miiShowToolBar.lpmii.fState = this.SettingsService.System.ShowToolBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
+                    this._miiShowSideBar.lpmii.fState = this.SettingsService.System.ShowSideBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
+                    this._miiShowStatusBar.lpmii.fState = this.SettingsService.System.ShowStatusBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
+                    User32.SetMenuItemInfo(hMenu, this._miiShowMenuBar.fByPosition, true, in this._miiShowMenuBar.lpmii);
+                    User32.SetMenuItemInfo(hMenu, this._miiShowToolBar.fByPosition, true, in this._miiShowToolBar.lpmii);
+                    User32.SetMenuItemInfo(hMenu, this._miiShowSideBar.fByPosition, true, in this._miiShowSideBar.lpmii);
+                    User32.SetMenuItemInfo(hMenu, this._miiShowStatusBar.fByPosition, true, in this._miiShowStatusBar.lpmii);
                     break;
                 }
 
@@ -351,11 +481,13 @@ namespace MyPad.Views
                 {
                     var settings = this.SettingsService.System;
                     var wID = wParam.ToInt32();
-                    if (this._lpmiiShowMenuBar.wID == wID)
+                    if (this._miiShowMenuBar.lpmii.wID == wID)
                         settings.ShowMenuBar = !settings.ShowMenuBar;
-                    if (this._lpmiiShowToolBar.wID == wID)
+                    if (this._miiShowToolBar.lpmii.wID == wID)
                         settings.ShowToolBar = !settings.ShowToolBar;
-                    if (this._lpmiiShowStatusBar.wID == wID)
+                    if (this._miiShowSideBar.lpmii.wID == wID)
+                        settings.ShowSideBar = !settings.ShowSideBar;
+                    if (this._miiShowStatusBar.lpmii.wID == wID)
                         settings.ShowStatusBar = !settings.ShowStatusBar;
                     break;
                 }
@@ -366,14 +498,6 @@ namespace MyPad.Views
         #endregion
 
         #region 内部クラス
-
-        private enum SystemMenuIndex
-        {
-            ShowMenuBar = 6,
-            ShowToolBar = 7,
-            ShowStatusBar = 8,
-            __Separater__ = 9,
-        }
 
         public class InterTabClientWrapper : IInterTabClient
         {

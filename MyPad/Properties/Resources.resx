@@ -711,4 +711,10 @@ These changes will be applied on restart. Do you want to continue?</value>
   <data name="Label_Attributes" xml:space="preserve">
     <value>Attributes</value>
   </data>
+  <data name="Command_Explorer" xml:space="preserve">
+    <value>Explorer</value>
+  </data>
+  <data name="Command_ShowSideBar" xml:space="preserve">
+    <value>SideBar</value>
+  </data>
 </root>

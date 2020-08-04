@@ -671,4 +671,10 @@
   <data name="Label_Attributes" xml:space="preserve">
     <value>属性</value>
   </data>
+  <data name="Command_Explorer" xml:space="preserve">
+    <value>エクスプローラー</value>
+  </data>
+  <data name="Command_ShowSideBar" xml:space="preserve">
+    <value>サイドバー</value>
+  </data>
 </root>
