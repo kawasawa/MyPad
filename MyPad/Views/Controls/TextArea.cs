@@ -168,7 +168,7 @@ namespace MyPad.Views.Controls
                 )
             ));
 
-            // MEMO: SearchPanel の依存関係プロパティ MarkerBrush の設定
+            // NOTE: SearchPanel の依存関係プロパティ MarkerBrush の設定
             // SearchPanel は Install メソッドで自身のインスタンスを作成後、
             // SearchResultBackgroundRenderer のインスタンスを作成して内部に保持している。
             // MarkerBrush の実体は上記レンダラであり、スタイルで上書きすると例外になる。

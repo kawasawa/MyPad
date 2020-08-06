@@ -6,7 +6,7 @@ namespace MyPad.Views.Controls
     {
         public TextView()
         {
-            // MEMO: 依存関係プロパティ ColumnRulerPen の設定
+            // NOTE: 依存関係プロパティ ColumnRulerPen の設定
             // おそらく SearchPanel.MarkerBrush と似たような理由だと思われる。
             this.ColumnRulerPen = new Pen(Brushes.DimGray, 2);
         }

@@ -14,6 +14,9 @@
                xmlns:pb="clr-namespace:PushBindingExtension;assembly=WinCopies.PushBinding"
                xmlns:dr="clr-namespace:Dragablz;assembly=Dragablz"
                xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
+               xmlns:s="clr-namespace:System;assembly=System.Runtime"
+               xmlns:viewModels="clr-namespace:MyPad.ViewModels"
+               xmlns:views="clr-namespace:MyPad.Views"
                xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
                xmlns:controls="clr-namespace:MyPad.Views.Controls"
                mc:Ignorable="d"
@@ -44,6 +47,7 @@
         <ContextMenu x:Key="ContextMenu">
             <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowMenuBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowMenuBar}"/>
             <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowToolBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowToolBar}"/>
+            <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowSideBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowSideBar}"/>
             <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowStatusBar, Mode=TwoWay}" Header="{le:Loc Command_ShowStatusBar}"/>
         </ContextMenu>
     </Window.Resources>
@@ -78,7 +82,6 @@
         <KeyBinding Command="{Binding OptionCommand,               Mode=OneTime}" Key="OemComma" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding ChangeEncodingCommand,       Mode=OneTime}" Key="M"        Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding ChangeSyntaxCommand,         Mode=OneTime}" Key="M"        Modifiers="Ctrl+Shift"/>
-        <KeyBinding Command="{Binding PropertyCommand,             Mode=OneTime}" Key="Enter"    Modifiers="Alt"/>
         <KeyBinding Command="{Binding DiffCommand,                 Mode=OneTime}" Key="D"        Modifiers="Ctrl+Shift"/>
         <KeyBinding Command="{Binding DiffUnmodifiedCommand,       Mode=OneTime}" Key="D"        Modifiers="Ctrl+Alt"/>
         <KeyBinding Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Key="F11"/>
@@ -124,9 +127,6 @@
             <m:Flyout Header="{le:Loc Command_Diff}" IsOpen="{Binding IsOpenDiffContent.Value, Mode=TwoWay}">
                 <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="DiffContentRegion"/>
             </m:Flyout>
-            <m:Flyout Header="{le:Loc Command_Property}" IsOpen="{Binding IsOpenPropertyContent.Value, Mode=TwoWay}">
-                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="PropertyContentRegion"/>
-            </m:Flyout>
             <m:Flyout Header="{le:Loc Command_Print}" IsOpen="{Binding IsOpenPrintPreviewContent.Value, Mode=TwoWay}">
                 <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="PrintPreviewContentRegion"/>
             </m:Flyout>
@@ -153,245 +153,406 @@
                         Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding SettingsService.System.ShowStatusBar, Mode=OneWay}}"
                         ContextMenu="{StaticResource ContextMenu}"/>
 
-        <controls:DraggableTabControl Grid.Row="2" x:Name="DraggableTabControl"
-                                      ItemsSource="{Binding TextEditors, Mode=OneWay}"
-                                      SelectedItem="{Binding ActiveTextEditor.Value, Mode=TwoWay}"
-                                      NewItemFactory="{Binding TextEditorFactory, Mode=OneTime}"
-                                      ClosingItemCallback="{Binding ClosingTextEditorHandler, Mode=OneTime}"
-                                      IsHeaderPanelVisible="{qc:MultiBinding '$P0 || $P1.CompareTo(1) == 1', P0={Binding SettingsService.System.ShowSingleTab, Mode=OneWay}, P1={Binding Items.Count, RelativeSource={RelativeSource Self}, Mode=OneWay}}"
-                                      ShowDefaultAddButton="True"
-                                      ShowDefaultCloseButton="True"
-                                      SelectionChanged="DraggableTabControl_SelectionChanged">
-            <dr:TabablzControl.InterTabController>
-                <dr:InterTabController InterTabClient="{Binding InterTabClient, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
-            </dr:TabablzControl.InterTabController>
-            <dr:TabablzControl.HeaderItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{Binding FileIcon, Mode=OneWay}" Height="15" Margin="0 0 5 0" Visibility="{qc:MultiBinding '$P0 != null ## $P1 ? Visibility.Visible : Visibility.Collapsed', P0={Binding FileIcon, Mode=OneWay}, P1={Binding DataContext.SettingsService.System.ShowFileIcon, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}"/>
-                        <TextBlock DataContext="{Binding Mode=OneWay}" Text="{qc:MultiBinding 'string.Concat(Path.GetFileName($P0), $P1 ? \'*\' : null)', P0={Binding FileName, Mode=OneWay}, P1={Binding IsModified, Mode=OneWay}}" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </DataTemplate>
-            </dr:TabablzControl.HeaderItemTemplate>
-            <dr:TabablzControl.ItemContainerStyle>
-                <Style TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource Default.DragablzItem}">
-                    <EventSetter Event="MouseRightButtonDown" Handler="DragablzItem_MouseRightButtonDown"/>
-                    <Setter Property="ToolTipService.IsEnabled" Value="{qc:Binding '!$P', P={Binding IsNewFile, Mode=OneWay}}"/>
-                    <Setter Property="ToolTip" Value="{Binding FileName, Mode=OneWay}"/>
-                    <Style.Triggers>
-                        <MultiDataTrigger>
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsReadOnly, Mode=OneWay}" Value="True"/>
-                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}, Mode=OneWay}" Value="True"/>
-                            </MultiDataTrigger.Conditions>
-                            <Setter Property="Background" Value="{DynamicResource RedColorBrush}"/>
-                        </MultiDataTrigger>
-                        <MultiDataTrigger>
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsReadOnly, Mode=OneWay}" Value="True"/>
-                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}, Mode=OneWay}" Value="True"/>
-                            </MultiDataTrigger.Conditions>
-                            <Setter Property="Background" Value="{DynamicResource RedColorBrush}"/>
-                        </MultiDataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </dr:TabablzControl.ItemContainerStyle>
-            <dr:TabablzControl.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Command="{Binding CloseCommand, Mode=OneTime}" Header="{le:Loc Command_Close}" InputGestureText="Ctrl+F4">
-                        <MenuItem.Icon>
-                            <mi:Material Kind="Close"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Command="{Binding CloseAllCommand, Mode=OneTime}" Header="{le:Loc Command_CloseAll}">
-                        <MenuItem.Icon>
-                            <mi:Material Kind="LayersOff"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Command="{Binding CloseOtherCommand, Mode=OneTime}" Header="{le:Loc Command_CloseOther}">
-                        <MenuItem.Icon>
-                            <mi:Material Kind="LayersRemove"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Header="{le:Loc Command_OpenParentDirectory}" IsEnabled="{qc:Binding '!$P', P={Binding ActiveTextEditor.Value.IsNewFile, Mode=OneWay}}">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="Click">
-                                <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{qc:Binding '\'/select, \' + $P', P={Binding ActiveTextEditor.Value.FileName, Mode=OneWay}}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                        <MenuItem.Icon>
-                            <mi:Material Kind="FolderOpen"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                </ContextMenu>
-            </dr:TabablzControl.ContextMenu>
-            <dr:TabablzControl.ContentTemplate>
-                <DataTemplate>
-                    <controls:TextEditor x:Name="TextEditor">
-                        <controls:TextEditor.Resources>
-                            <Style TargetType="{x:Type ae:SearchPanel}" BasedOn="{StaticResource Default.SearchPanel}">
-                                <Setter Property="Localization" Value="{Binding Localization, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
-                            </Style>
-                        </controls:TextEditor.Resources>
-                        <controls:TextEditor.Style>
-                            <Style TargetType="{x:Type controls:TextEditor}" BasedOn="{StaticResource Default.TextEditor}">
-                                <EventSetter Event="Loaded" Handler="TextEditor_Loaded"/>
-                                <Setter Property="Settings"         Value="{Binding DataContext.SettingsService.TextEditor, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
-                                <Setter Property="Document"         Value="{Binding Document, Mode=OneWay}"/>
-                                <Setter Property="IsReadOnly"       Value="{Binding IsReadOnly, Mode=TwoWay}"/>
-                                <Setter Property="IsModified"       Value="{Binding IsModified, Mode=TwoWay}"/>
-                                <Setter Property="SyntaxDefinition" Value="{Binding SyntaxDefinition, Mode=TwoWay}"/>
-                                <Setter Property="OverstrikeMode"   Value="{Binding OverstrikeMode, Mode=TwoWay}"/>
-                                <Setter Property="Line"             Value="{Binding Line, Mode=TwoWay}"/>
-                                <Setter Property="Column"           Value="{Binding Column, Mode=TwoWay}"/>
-                                <Setter Property="VisualColumn"     Value="{Binding VisualColumn, Mode=TwoWay}"/>
-                                <Setter Property="pb:PushBindingManager.StylePushBindings">
-                                    <Setter.Value>
-                                        <pb:PushBindingCollection>
-                                            <pb:PushBinding TargetProperty="ActualFontSize"       Path="ActualFontSize"/>
-                                            <pb:PushBinding TargetProperty="ZoomIncrement"        Path="ZoomIncrement"/>
-                                            <pb:PushBinding TargetProperty="VisualLength"         Path="VisualLength"/>
-                                            <pb:PushBinding TargetProperty="TextLength"           Path="TextLength"/>
-                                            <pb:PushBinding TargetProperty="SelectionLength"      Path="SelectionLength"/>
-                                            <pb:PushBinding TargetProperty="SelectionStart"       Path="SelectionStart"/>
-                                            <pb:PushBinding TargetProperty="SelectionEnd"         Path="SelectionEnd"/>
-                                            <pb:PushBinding TargetProperty="SelectionStartLine"   Path="SelectionStartLine"/>
-                                            <pb:PushBinding TargetProperty="SelectionEndLine"     Path="SelectionEndLine"/>
-                                            <pb:PushBinding TargetProperty="SelectionLineCount"   Path="SelectionLineCount"/>
-                                            <pb:PushBinding TargetProperty="SelectedText"         Path="SelectedText"/>
-                                            <pb:PushBinding TargetProperty="CharName"             Path="CharName"/>
-                                            <pb:PushBinding TargetProperty="IsAtEndOfLine"        Path="IsAtEndOfLine"/>
-                                            <pb:PushBinding TargetProperty="IsInVirtualSpace"     Path="IsInVirtualSpace"/>
-                                            <pb:PushBinding TargetProperty="EnableAutoCompletion" Path="EnableAutoCompletion"/>
-                                        </pb:PushBindingCollection>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </controls:TextEditor.Style>
-                        <controls:TextEditor.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Command="Undo"
-                                          Header="{le:Loc Command_Undo}">
-                                    <MenuItem.Icon>
-                                        <mi:Modern Kind="UndoCurve"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Command="Redo"
-                                          Header="{le:Loc Command_Redo}">
-                                    <MenuItem.Icon>
-                                        <mi:Modern Kind="RedoCurve"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                                <Separator/>
-                                <MenuItem Command="Cut"
-                                          Header="{le:Loc Command_Cut}">
-                                    <MenuItem.Icon>
-                                        <mi:Modern Kind="Scissor"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Command="Copy"
-                                          Header="{le:Loc Command_Copy}">
-                                    <MenuItem.Icon>
-                                        <mi:Modern Kind="PageCopy"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Command="Paste"
-                                          Header="{le:Loc Command_Paste}">
-                                    <MenuItem.Icon>
-                                        <mi:Modern Kind="ClipboardPaste"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Command="EditingCommands.Delete"
-                                          Header="{le:Loc Command_Delete}"
-                                          InputGestureText="Del">
-                                    <MenuItem.Icon>
-                                        <mi:Material Kind="Eraser"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Command="SelectAll"
-                                          Header="{le:Loc Command_SelectAll}">
-                                    <MenuItem.Icon>
-                                        <mi:Modern Kind="CursorDefault"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                                <Separator/>
-                                <MenuItem Header="{le:Loc Command_Movement}">
-                                    <MenuItem Command="EditingCommands.MoveLeftByWord"
-                                              Header="{le:Loc Command_MoveLeftByWord}"
-                                              InputGestureText="Ctrl+Left"/>
-                                    <MenuItem Command="EditingCommands.MoveRightByWord"
-                                              Header="{le:Loc Command_MoveRightByWord}"
-                                              InputGestureText="Ctrl+Right"/>
-                                    <MenuItem Command="EditingCommands.MoveToLineStart"
-                                              Header="{le:Loc Command_MoveToLineStart}"
-                                              InputGestureText="Home"/>
-                                    <MenuItem Command="EditingCommands.MoveToLineEnd"
-                                              Header="{le:Loc Command_MoveToLineEnd}"
-                                              InputGestureText="End"/>
-                                    <MenuItem Command="EditingCommands.MoveUpByPage"
-                                              Header="{le:Loc Command_MoveUpByPage}"
-                                              InputGestureText="PageUp"/>
-                                    <MenuItem Command="EditingCommands.MoveDownByPage"
-                                              Header="{le:Loc Command_MoveDownByPage}"
-                                              InputGestureText="PageDown"/>
-                                    <MenuItem Command="EditingCommands.MoveToDocumentStart"
-                                              Header="{le:Loc Command_MoveToDocumentStart}"
-                                              InputGestureText="Ctrl+Home"/>
-                                    <MenuItem Command="EditingCommands.MoveToDocumentEnd"
-                                              Header="{le:Loc Command_MoveToDocumentEnd}"
-                                              InputGestureText="Ctrl+End"/>
-                                </MenuItem>
-                                <MenuItem Header="{le:Loc Command_Selection}">
-                                    <MenuItem Command="EditingCommands.SelectLeftByWord"
-                                              Header="{le:Loc Command_SelectLeftByWord}"
-                                              InputGestureText="Ctrl+Shift+Left"/>
-                                    <MenuItem Command="EditingCommands.SelectRightByWord"
-                                              Header="{le:Loc Command_SelectRightByWord}"
-                                              InputGestureText="Ctrl+Shift+Right"/>
-                                    <MenuItem Command="EditingCommands.SelectToLineStart"
-                                              Header="{le:Loc Command_SelectToLineStart}"
-                                              InputGestureText="Shift+Home"/>
-                                    <MenuItem Command="EditingCommands.SelectToLineEnd"
-                                              Header="{le:Loc Command_SelectToLineEnd}"
-                                              InputGestureText="Shift+End"/>
-                                    <MenuItem Command="EditingCommands.SelectUpByPage"
-                                              Header="{le:Loc Command_SelectUpByPage}"
-                                              InputGestureText="Shift+PageUp"/>
-                                    <MenuItem Command="EditingCommands.SelectDownByPage"
-                                              Header="{le:Loc Command_SelectDownByPage}"
-                                              InputGestureText="Shift+PageDown"/>
-                                    <MenuItem Command="EditingCommands.SelectToDocumentStart"
-                                              Header="{le:Loc Command_SelectToDocumentStart}"
-                                              InputGestureText="Ctrl+Shift+Home"/>
-                                    <MenuItem Command="EditingCommands.SelectToDocumentEnd"
-                                              Header="{le:Loc Command_SelectToDocumentEnd}"
-                                              InputGestureText="Ctrl+Shift+End"/>
-                                </MenuItem>
-                                <MenuItem Header="{le:Loc Command_Formatting}">
-                                    <MenuItem Command="controls:TextEditorCommands.ConvertToNarrow"
-                                              Header="{le:Loc Command_ConvertToNarrow}"/>
-                                    <MenuItem Command="controls:TextEditorCommands.ConvertToWide"
-                                              Header="{le:Loc Command_ConvertToWide}"/>
-                                    <Separator/>
-                                    <MenuItem Command="ae:AvalonEditCommands.ConvertToLowercase"
-                                              Header="{le:Loc Command_ConvertToLowerCase}"/>
-                                    <MenuItem Command="ae:AvalonEditCommands.ConvertToUppercase"
-                                              Header="{le:Loc Command_ConvertToUpperCase}"/>
-                                    <MenuItem Command="ae:AvalonEditCommands.ConvertToTitleCase"
-                                              Header="{le:Loc Command_ConvertToTitleCase}"/>
-                                    <Separator/>
-                                    <MenuItem Command="ae:AvalonEditCommands.ConvertTabsToSpaces"
-                                              Header="{le:Loc Command_ConvertTabsToSpaces}"/>
-                                    <MenuItem Command="ae:AvalonEditCommands.ConvertSpacesToTabs"
-                                              Header="{le:Loc Command_ConvertSpacesToTabs}"/>
-                                </MenuItem>
-                            </ContextMenu>
-                        </controls:TextEditor.ContextMenu>
-                    </controls:TextEditor>
-                </DataTemplate>
-            </dr:TabablzControl.ContentTemplate>
-        </controls:DraggableTabControl>
+        <Grid Grid.Row="2">
+            <Grid.Resources>
+                <s:Double x:Key="HamburgerWidth">48</s:Double>
+                <GridLength x:Key="HamburgerColumnWidth">48</GridLength>
+                <views:BindingProxy x:Key="Proxy" Data="{Binding Mode=OneWay}"/>
+            </Grid.Resources>
 
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" x:Name="HamburgerMenuColumn"
+                                  MinWidth="{qc:MultiBinding '$P0 ? $P1 : 0', P0={Binding SettingsService.System.ShowSideBar, Mode=OneWay}, P1={Binding Source={StaticResource HamburgerWidth}}}"
+                                  MaxWidth="{qc:MultiBinding '$P0 - $P1', P0={Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}, P1={Binding Source={StaticResource HamburgerWidth}}}"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*" x:Name="DraggableTabControlColumn"/>
+            </Grid.ColumnDefinitions>
+
+            <m:HamburgerMenu Grid.Column="0" x:Name="HamburgerMenu"
+                             Width="{StaticResource HamburgerWidth}"
+                             HamburgerWidth="{StaticResource HamburgerWidth}"
+                             HamburgerVisibility="Collapsed"
+                             Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding SettingsService.System.ShowSideBar, Mode=OneWay}}"
+                             ContextMenu="{StaticResource ContextMenu}"
+                             ItemInvoked="HamburgerMenu_ItemInvoked">
+                <i:Interaction.Triggers>
+                    <i:PropertyChangedTrigger Binding="{Binding Visibility, ElementName=HamburgerMenu, Mode=OneWay}">
+                        <i:ChangePropertyAction TargetName="HamburgerMenuColumn" PropertyName="Width" Value="Auto"/>
+                    </i:PropertyChangedTrigger>
+                </i:Interaction.Triggers>
+                <m:HamburgerMenu.ItemTemplate>
+                    <DataTemplate DataType="{x:Type m:HamburgerMenuIconItem}">
+                        <Grid Height="{StaticResource HamburgerWidth}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource HamburgerColumnWidth}"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border ToolTip="{Binding Label, Mode=OneWay}" Background="{qc:MultiBinding '$P0 == $P1 ? new SolidColorBrush(Color.FromRgb((byte)42, (byte)87, (byte)154)) : Brushes.Transparent', P0={Binding Mode=OneWay}, P1={Binding Content, ElementName=HamburgerMenu, Mode=OneWay}}">
+                                <ContentControl Content="{Binding Icon, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" IsTabStop="False" Focusable="False"/>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </m:HamburgerMenu.ItemTemplate>
+                <m:HamburgerMenu.OptionsItemTemplate>
+                    <DataTemplate DataType="{x:Type m:HamburgerMenuIconItem}">
+                        <Grid Height="{StaticResource HamburgerWidth}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource HamburgerColumnWidth}"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border ToolTip="{Binding Label, Mode=OneWay}" Background="Transparent">
+                                <ContentControl Content="{Binding Icon, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" IsTabStop="False" Focusable="False"/>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </m:HamburgerMenu.OptionsItemTemplate>
+                <m:HamburgerMenu.ContentTemplate>
+                    <DataTemplate DataType="{x:Type m:HamburgerMenuIconItem}">
+                        <Grid ge:GridEx.RowDefinition="10, Auto, 10, *" Width="{qc:MultiBinding '$P0 - $P1', P0={Binding ActualWidth, ElementName=HamburgerMenu, Mode=OneWay}, P1={Binding Source={StaticResource HamburgerWidth}}}">
+                            <Grid.ContextMenu>
+                                <ContextMenu/>
+                            </Grid.ContextMenu>
+                            <TextBlock      Grid.Row="1" Margin="3 0" Text="{Binding Label, Mode=OneWay}" FontSize="14"/>
+                            <ContentControl Grid.Row="3" Margin="3 0" Content="{Binding Tag, Mode=OneWay}" IsTabStop="False" Focusable="False"/>
+                        </Grid>
+                    </DataTemplate>
+                </m:HamburgerMenu.ContentTemplate>
+                <m:HamburgerMenu.ItemsSource>
+                    <m:HamburgerMenuItemCollection>
+                        <m:HamburgerMenuIconItem x:Name="FileExplorerItem" Label="{le:Loc Command_Explorer}">
+                            <m:HamburgerMenuIconItem.Icon>
+                                <mi:Material Kind="FileTree"/>
+                            </m:HamburgerMenuIconItem.Icon>
+                            <m:HamburgerMenuIconItem.Tag>
+                                <TreeView ItemsSource="{Binding Data.FileTreeNodes, Source={StaticResource Proxy}, Mode=OneWay}">
+                                    <TreeView.ItemContainerStyle>
+                                        <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource Default.TreeViewItem}">
+                                            <EventSetter Event="MouseDoubleClick" Handler="FileTreeNode_MouseDoubleClick"/>
+                                            <EventSetter Event="KeyDown" Handler="FileTreeNode_KeyDown"/>
+                                            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsEmpty, Mode=OneWay}" Value="True">
+                                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TreeView.ItemContainerStyle>
+                                    <TreeView.ItemTemplate>
+                                        <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="{x:Type viewModels:FileTreeNodeViewModel}">
+                                            <Border Background="Transparent" ToolTip="{Binding FileName, Mode=OneWay}" ToolTipService.IsEnabled="{qc:Binding '!$P', P={Binding IsEmpty, Mode=OneWay}}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image Source="{Binding Image, Mode=OneWay}" Margin="0 0 3 0"/>
+                                                    <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsEmpty, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </HierarchicalDataTemplate>
+                                    </TreeView.ItemTemplate>
+                                </TreeView>
+                            </m:HamburgerMenuIconItem.Tag>
+                        </m:HamburgerMenuIconItem>
+                        <m:HamburgerMenuIconItem x:Name="PropertyItem" Label="{le:Loc Command_Property}">
+                            <m:HamburgerMenuIconItem.Icon>
+                                <mi:Material Kind="FileOutline"/>
+                            </m:HamburgerMenuIconItem.Icon>
+                            <m:HamburgerMenuIconItem.Tag>
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <ge:ResponsiveGrid DataContext="{Binding Data.ActiveTextEditor.Value, Source={StaticResource Proxy}, Mode=OneWay}">
+                                        <ge:ResponsiveGrid.Resources>
+                                            <Style TargetType="{x:Type Label}" BasedOn="{StaticResource Default.Label}">
+                                                <Setter Property="FontSize" Value="16"/>
+                                            </Style>
+                                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
+                                                <Setter Property="Margin" Value="20 0 0 5"/>
+                                                <Setter Property="FontSize" Value="14"/>
+                                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                            </Style>
+                                        </ge:ResponsiveGrid.Resources>
+
+                                        <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5 0">
+                                            <Label     Content="{le:Loc Label_Name}"/>
+                                            <TextBlock Text="{qc:Binding 'Path.GetFileName($P)', P={Binding FileName, Mode=OneWay}}"/>
+                                            <Label     Content="{le:Loc Label_Type}"/>
+                                            <TextBlock Text="{Binding FileType, Mode=OneWay}"/>
+                                            <Label     Content="{le:Loc Label_Location}"/>
+                                            <TextBlock Text="{Binding FileInfo.DirectoryName, Mode=OneWay}"/>
+                                            <Label     Content="{le:Loc Label_Size}"/>
+                                            <TextBlock Text="{Binding FileInfo.Length, StringFormat={}{0:N0} bytes, Mode=OneWay}"/>
+                                        </StackPanel>
+
+                                        <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5 0">
+                                            <Label     Content="{le:Loc Label_CreationDate}"/>
+                                            <TextBlock Text="{Binding FileInfo.CreationTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
+                                            <Label     Content="{le:Loc Label_ModifiredDate}"/>
+                                            <TextBlock Text="{Binding FileInfo.LastWriteTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
+                                            <Label     Content="{le:Loc Label_AccessDate}"/>
+                                            <TextBlock Text="{Binding FileInfo.LastAccessTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
+                                            <Label     Content="{le:Loc Label_Attributes}"/>
+                                            <TextBlock Text="{Binding FileInfo.Attributes, Mode=OneWay}"/>
+                                            <Label     Content="{le:Loc Label_Owner}"/>
+                                            <TextBlock Text="{Binding FileOwner, Mode=OneWay}"/>
+                                        </StackPanel>
+                                    </ge:ResponsiveGrid>
+                                </ScrollViewer>
+                            </m:HamburgerMenuIconItem.Tag>
+                        </m:HamburgerMenuIconItem>
+                    </m:HamburgerMenuItemCollection>
+                </m:HamburgerMenu.ItemsSource>
+                <m:HamburgerMenu.OptionsItemsSource>
+                    <m:HamburgerMenuItemCollection>
+                        <m:HamburgerMenuIconItem Label="{le:Loc Command_Option}" Tag="{Binding Data.OptionCommand, Source={StaticResource Proxy}, Mode=OneTime}">
+                            <m:HamburgerMenuIconItem.Icon>
+                                <mi:Modern Kind="Cog"/>
+                            </m:HamburgerMenuIconItem.Icon>
+                        </m:HamburgerMenuIconItem>
+                    </m:HamburgerMenuItemCollection>
+                </m:HamburgerMenu.OptionsItemsSource>
+            </m:HamburgerMenu>
+            
+            <GridSplitter Grid.Column="1"
+                          Width="{qc:MultiBinding '$P0 == Visibility.Visible ## double.IsNaN($P1) ? 5 : 0',
+                                 P0={Binding Visibility, ElementName=HamburgerMenu, Mode=OneWay},
+                                 P1={Binding Width, ElementName=HamburgerMenu, Mode=OneWay}}"/>
+
+            <controls:DraggableTabControl Grid.Column="2" x:Name="DraggableTabControl"
+                                          ItemsSource="{Binding TextEditors, Mode=OneWay}"
+                                          SelectedItem="{Binding ActiveTextEditor.Value, Mode=TwoWay}"
+                                          NewItemFactory="{Binding TextEditorFactory, Mode=OneTime}"
+                                          ClosingItemCallback="{Binding ClosingTextEditorHandler, Mode=OneTime}"
+                                          IsHeaderPanelVisible="{qc:MultiBinding '$P0 || $P1.CompareTo(1) == 1', P0={Binding SettingsService.System.ShowSingleTab, Mode=OneWay}, P1={Binding Items.Count, RelativeSource={RelativeSource Self}, Mode=OneWay}}"
+                                          ShowDefaultAddButton="True"
+                                          ShowDefaultCloseButton="True"
+                                          SelectionChanged="DraggableTabControl_SelectionChanged">
+                <dr:TabablzControl.InterTabController>
+                    <dr:InterTabController InterTabClient="{Binding InterTabClient, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
+                </dr:TabablzControl.InterTabController>
+                <dr:TabablzControl.HeaderItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{Binding FileIcon, Mode=OneWay}" Height="15" Margin="0 0 5 0" Visibility="{qc:MultiBinding '$P0 != null ## $P1 ? Visibility.Visible : Visibility.Collapsed', P0={Binding FileIcon, Mode=OneWay}, P1={Binding DataContext.SettingsService.System.ShowFileIcon, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}"/>
+                            <TextBlock DataContext="{Binding Mode=OneWay}" Text="{qc:MultiBinding 'string.Concat(Path.GetFileName($P0), $P1 ? \'*\' : null)', P0={Binding FileName, Mode=OneWay}, P1={Binding IsModified, Mode=OneWay}}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </dr:TabablzControl.HeaderItemTemplate>
+                <dr:TabablzControl.ItemContainerStyle>
+                    <Style TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource Default.DragablzItem}">
+                        <EventSetter Event="MouseRightButtonDown" Handler="DragablzItem_MouseRightButtonDown"/>
+                        <Setter Property="ToolTipService.IsEnabled" Value="{qc:Binding '!$P', P={Binding IsNewFile, Mode=OneWay}}"/>
+                        <Setter Property="ToolTip" Value="{Binding FileName, Mode=OneWay}"/>
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsReadOnly, Mode=OneWay}" Value="True"/>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}, Mode=OneWay}" Value="True"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" Value="{DynamicResource RedColorBrush}"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsReadOnly, Mode=OneWay}" Value="True"/>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}, Mode=OneWay}" Value="True"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" Value="{DynamicResource RedColorBrush}"/>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </dr:TabablzControl.ItemContainerStyle>
+                <dr:TabablzControl.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding CloseCommand, Mode=OneTime}" Header="{le:Loc Command_Close}" InputGestureText="Ctrl+F4">
+                            <MenuItem.Icon>
+                                <mi:Material Kind="Close"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Command="{Binding CloseAllCommand, Mode=OneTime}" Header="{le:Loc Command_CloseAll}">
+                            <MenuItem.Icon>
+                                <mi:Material Kind="LayersOff"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Command="{Binding CloseOtherCommand, Mode=OneTime}" Header="{le:Loc Command_CloseOther}">
+                            <MenuItem.Icon>
+                                <mi:Material Kind="LayersRemove"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="{le:Loc Command_OpenParentDirectory}" IsEnabled="{qc:Binding '!$P', P={Binding ActiveTextEditor.Value.IsNewFile, Mode=OneWay}}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{qc:Binding '\'/select, \' + $P', P={Binding ActiveTextEditor.Value.FileName, Mode=OneWay}}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <MenuItem.Icon>
+                                <mi:Material Kind="FolderOpen"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </ContextMenu>
+                </dr:TabablzControl.ContextMenu>
+                <dr:TabablzControl.ContentTemplate>
+                    <DataTemplate>
+                        <controls:TextEditor x:Name="TextEditor">
+                            <controls:TextEditor.Resources>
+                                <Style TargetType="{x:Type ae:SearchPanel}" BasedOn="{StaticResource Default.SearchPanel}">
+                                    <Setter Property="Localization" Value="{Binding Localization, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
+                                </Style>
+                            </controls:TextEditor.Resources>
+                            <controls:TextEditor.Style>
+                                <Style TargetType="{x:Type controls:TextEditor}" BasedOn="{StaticResource Default.TextEditor}">
+                                    <EventSetter Event="Loaded" Handler="TextEditor_Loaded"/>
+                                    <Setter Property="Settings"         Value="{Binding DataContext.SettingsService.TextEditor, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
+                                    <Setter Property="Document"         Value="{Binding Document, Mode=OneWay}"/>
+                                    <Setter Property="IsReadOnly"       Value="{Binding IsReadOnly, Mode=TwoWay}"/>
+                                    <Setter Property="IsModified"       Value="{Binding IsModified, Mode=TwoWay}"/>
+                                    <Setter Property="SyntaxDefinition" Value="{Binding SyntaxDefinition, Mode=TwoWay}"/>
+                                    <Setter Property="OverstrikeMode"   Value="{Binding OverstrikeMode, Mode=TwoWay}"/>
+                                    <Setter Property="Line"             Value="{Binding Line, Mode=TwoWay}"/>
+                                    <Setter Property="Column"           Value="{Binding Column, Mode=TwoWay}"/>
+                                    <Setter Property="VisualColumn"     Value="{Binding VisualColumn, Mode=TwoWay}"/>
+                                    <Setter Property="pb:PushBindingManager.StylePushBindings">
+                                        <Setter.Value>
+                                            <pb:PushBindingCollection>
+                                                <pb:PushBinding TargetProperty="ActualFontSize"       Path="ActualFontSize"/>
+                                                <pb:PushBinding TargetProperty="ZoomIncrement"        Path="ZoomIncrement"/>
+                                                <pb:PushBinding TargetProperty="VisualLength"         Path="VisualLength"/>
+                                                <pb:PushBinding TargetProperty="TextLength"           Path="TextLength"/>
+                                                <pb:PushBinding TargetProperty="SelectionLength"      Path="SelectionLength"/>
+                                                <pb:PushBinding TargetProperty="SelectionStart"       Path="SelectionStart"/>
+                                                <pb:PushBinding TargetProperty="SelectionEnd"         Path="SelectionEnd"/>
+                                                <pb:PushBinding TargetProperty="SelectionStartLine"   Path="SelectionStartLine"/>
+                                                <pb:PushBinding TargetProperty="SelectionEndLine"     Path="SelectionEndLine"/>
+                                                <pb:PushBinding TargetProperty="SelectionLineCount"   Path="SelectionLineCount"/>
+                                                <pb:PushBinding TargetProperty="SelectedText"         Path="SelectedText"/>
+                                                <pb:PushBinding TargetProperty="CharName"             Path="CharName"/>
+                                                <pb:PushBinding TargetProperty="IsAtEndOfLine"        Path="IsAtEndOfLine"/>
+                                                <pb:PushBinding TargetProperty="IsInVirtualSpace"     Path="IsInVirtualSpace"/>
+                                                <pb:PushBinding TargetProperty="EnableAutoCompletion" Path="EnableAutoCompletion"/>
+                                            </pb:PushBindingCollection>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </controls:TextEditor.Style>
+                            <controls:TextEditor.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="Undo"
+                                              Header="{le:Loc Command_Undo}">
+                                        <MenuItem.Icon>
+                                            <mi:Modern Kind="UndoCurve"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Command="Redo"
+                                              Header="{le:Loc Command_Redo}">
+                                        <MenuItem.Icon>
+                                            <mi:Modern Kind="RedoCurve"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <Separator/>
+                                    <MenuItem Command="Cut"
+                                              Header="{le:Loc Command_Cut}">
+                                        <MenuItem.Icon>
+                                            <mi:Modern Kind="Scissor"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Command="Copy"
+                                              Header="{le:Loc Command_Copy}">
+                                        <MenuItem.Icon>
+                                            <mi:Modern Kind="PageCopy"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Command="Paste"
+                                              Header="{le:Loc Command_Paste}">
+                                        <MenuItem.Icon>
+                                            <mi:Modern Kind="ClipboardPaste"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Command="EditingCommands.Delete"
+                                              Header="{le:Loc Command_Delete}"
+                                              InputGestureText="Del">
+                                        <MenuItem.Icon>
+                                            <mi:Material Kind="Eraser"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Command="SelectAll"
+                                              Header="{le:Loc Command_SelectAll}">
+                                        <MenuItem.Icon>
+                                            <mi:Modern Kind="CursorDefault"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <Separator/>
+                                    <MenuItem Header="{le:Loc Command_Movement}">
+                                        <MenuItem Command="EditingCommands.MoveLeftByWord"
+                                                  Header="{le:Loc Command_MoveLeftByWord}"
+                                                  InputGestureText="Ctrl+Left"/>
+                                        <MenuItem Command="EditingCommands.MoveRightByWord"
+                                                  Header="{le:Loc Command_MoveRightByWord}"
+                                                  InputGestureText="Ctrl+Right"/>
+                                        <MenuItem Command="EditingCommands.MoveToLineStart"
+                                                  Header="{le:Loc Command_MoveToLineStart}"
+                                                  InputGestureText="Home"/>
+                                        <MenuItem Command="EditingCommands.MoveToLineEnd"
+                                                  Header="{le:Loc Command_MoveToLineEnd}"
+                                                  InputGestureText="End"/>
+                                        <MenuItem Command="EditingCommands.MoveUpByPage"
+                                                  Header="{le:Loc Command_MoveUpByPage}"
+                                                  InputGestureText="PageUp"/>
+                                        <MenuItem Command="EditingCommands.MoveDownByPage"
+                                                  Header="{le:Loc Command_MoveDownByPage}"
+                                                  InputGestureText="PageDown"/>
+                                        <MenuItem Command="EditingCommands.MoveToDocumentStart"
+                                                  Header="{le:Loc Command_MoveToDocumentStart}"
+                                                  InputGestureText="Ctrl+Home"/>
+                                        <MenuItem Command="EditingCommands.MoveToDocumentEnd"
+                                                  Header="{le:Loc Command_MoveToDocumentEnd}"
+                                                  InputGestureText="Ctrl+End"/>
+                                    </MenuItem>
+                                    <MenuItem Header="{le:Loc Command_Selection}">
+                                        <MenuItem Command="EditingCommands.SelectLeftByWord"
+                                                  Header="{le:Loc Command_SelectLeftByWord}"
+                                                  InputGestureText="Ctrl+Shift+Left"/>
+                                        <MenuItem Command="EditingCommands.SelectRightByWord"
+                                                  Header="{le:Loc Command_SelectRightByWord}"
+                                                  InputGestureText="Ctrl+Shift+Right"/>
+                                        <MenuItem Command="EditingCommands.SelectToLineStart"
+                                                  Header="{le:Loc Command_SelectToLineStart}"
+                                                  InputGestureText="Shift+Home"/>
+                                        <MenuItem Command="EditingCommands.SelectToLineEnd"
+                                                  Header="{le:Loc Command_SelectToLineEnd}"
+                                                  InputGestureText="Shift+End"/>
+                                        <MenuItem Command="EditingCommands.SelectUpByPage"
+                                                  Header="{le:Loc Command_SelectUpByPage}"
+                                                  InputGestureText="Shift+PageUp"/>
+                                        <MenuItem Command="EditingCommands.SelectDownByPage"
+                                                  Header="{le:Loc Command_SelectDownByPage}"
+                                                  InputGestureText="Shift+PageDown"/>
+                                        <MenuItem Command="EditingCommands.SelectToDocumentStart"
+                                                  Header="{le:Loc Command_SelectToDocumentStart}"
+                                                  InputGestureText="Ctrl+Shift+Home"/>
+                                        <MenuItem Command="EditingCommands.SelectToDocumentEnd"
+                                                  Header="{le:Loc Command_SelectToDocumentEnd}"
+                                                  InputGestureText="Ctrl+Shift+End"/>
+                                    </MenuItem>
+                                    <MenuItem Header="{le:Loc Command_Formatting}">
+                                        <MenuItem Command="controls:TextEditorCommands.ConvertToNarrow"
+                                                  Header="{le:Loc Command_ConvertToNarrow}"/>
+                                        <MenuItem Command="controls:TextEditorCommands.ConvertToWide"
+                                                  Header="{le:Loc Command_ConvertToWide}"/>
+                                        <Separator/>
+                                        <MenuItem Command="ae:AvalonEditCommands.ConvertToLowercase"
+                                                  Header="{le:Loc Command_ConvertToLowerCase}"/>
+                                        <MenuItem Command="ae:AvalonEditCommands.ConvertToUppercase"
+                                                  Header="{le:Loc Command_ConvertToUpperCase}"/>
+                                        <MenuItem Command="ae:AvalonEditCommands.ConvertToTitleCase"
+                                                  Header="{le:Loc Command_ConvertToTitleCase}"/>
+                                        <Separator/>
+                                        <MenuItem Command="ae:AvalonEditCommands.ConvertTabsToSpaces"
+                                                  Header="{le:Loc Command_ConvertTabsToSpaces}"/>
+                                        <MenuItem Command="ae:AvalonEditCommands.ConvertSpacesToTabs"
+                                                  Header="{le:Loc Command_ConvertSpacesToTabs}"/>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </controls:TextEditor.ContextMenu>
+                        </controls:TextEditor>
+                    </DataTemplate>
+                </dr:TabablzControl.ContentTemplate>
+            </controls:DraggableTabControl>
+        </Grid>
+        
         <Border Grid.RowSpan="3" d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsWorking.Value, Mode=OneWay}}">
             <StackPanel Margin="5 0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                 <TextBlock Text="{le:Loc Text_Working}" HorizontalAlignment="Center" TextAlignment="Center"/>

@@ -79,7 +79,6 @@ namespace MyPad.ViewModels
         public InteractionMessenger Messenger { get; }
 
         public ReactiveProperty<bool> IsWorking { get; }
-        public ReactiveCollection<TextEditorViewModel> TextEditors { get; }
         public ReactiveProperty<TextEditorViewModel> ActiveTextEditor { get; }
         public ReactiveProperty<FlowDocument> FlowDocument { get; }
         public ReactiveProperty<TextEditorViewModel> DiffSource { get; }
@@ -89,6 +88,9 @@ namespace MyPad.ViewModels
         public ReactiveProperty<bool> IsOpenPrintPreviewContent { get; }
         public ReactiveProperty<bool> IsOpenOptionContent { get; }
         public ReactiveProperty<bool> IsOpenAboutContent { get; }
+
+        public ReactiveCollection<TextEditorViewModel> TextEditors { get; }
+        public ReactiveCollection<FileTreeNodeViewModel> FileTreeNodes { get; }
 
         public ReactiveCommand NewCommand { get; }
         public ReactiveCommand NewWindowCommand { get; }
@@ -143,9 +145,8 @@ namespace MyPad.ViewModels
             // ----- プロパティの定義 ------------------------------
 
             this.Messenger = new InteractionMessenger();
+
             this.IsWorking = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
-            this.TextEditors = new ReactiveCollection<TextEditorViewModel>().AddTo(this.CompositeDisposable);
-            BindingOperations.EnableCollectionSynchronization(this.TextEditors, new object());
             this.ActiveTextEditor = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
             this.FlowDocument = new ReactiveProperty<FlowDocument>().AddTo(this.CompositeDisposable);
             this.DiffSource = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
@@ -162,6 +163,16 @@ namespace MyPad.ViewModels
                 this.IsOpenOptionContent,
                 this.IsOpenAboutContent
             };
+
+            this.TextEditors = new ReactiveCollection<TextEditorViewModel>().AddTo(this.CompositeDisposable);
+            this.FileTreeNodes = new ReactiveCollection<FileTreeNodeViewModel>().AddTo(this.CompositeDisposable);
+            BindingOperations.EnableCollectionSynchronization(this.TextEditors, new object());
+            BindingOperations.EnableCollectionSynchronization(this.FileTreeNodes, new object());
+
+            var rootPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var rootNode = new FileTreeNodeViewModel(rootPath) { IsExpanded = true };
+            this.FileTreeNodes.Clear();
+            this.FileTreeNodes.Add(rootNode);
 
             // ----- 変更通知の購読 ------------------------------
 
@@ -434,7 +445,7 @@ namespace MyPad.ViewModels
             this.ClosingHandler = new ReactiveCommand<CancelEventArgs>()
                 .WithSubscribe(e =>
                 {
-                    // MEMO: Closing イベント内で非同期処理後にイベントをキャンセルできなくなる問題 (ViewModel)
+                    // NOTE: Closing イベント内で非同期処理後にイベントをキャンセルできなくなる問題 (ViewModel)
                     // 最初にイベントはキャンセルしてから非同期処理を行う。
                     // 閉じる条件を満たした場合は Dispose メソッドを実行する。
                     // (ViewModel の Dispose をトリガーに、View が Close メソッドを実行する。)

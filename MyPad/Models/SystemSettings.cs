@@ -169,6 +169,13 @@ namespace MyPad.Models
             set => this.SetProperty(ref this._showStatusBar, value);
         }
 
+        private bool _showSideBar = true;
+        public bool ShowSideBar
+        {
+            get => this._showSideBar;
+            set => this.SetProperty(ref this._showSideBar, value);
+        }
+
         public void ApplyTheme()
         {
             if (this.Theme == ThemeType.Sync)

@@ -66,7 +66,7 @@ namespace MyPad.ViewModels
         private static MessageOptions CreateToastMessageOptions(Action<bool?> callback = null)
             => new MessageOptions
             {
-                // MEMO: ToastNotifications の明示的なクローズ
+                // NOTE: ToastNotifications の明示的なクローズ
                 // Close() を実行すると CloseClickAction が呼び出されるため、DisplayPart.OnClose() を使用する。
                 NotificationClickAction = n => { n.DisplayPart.OnClose(); callback?.Invoke(true); },
                 CloseClickAction = n => callback?.Invoke(false),
