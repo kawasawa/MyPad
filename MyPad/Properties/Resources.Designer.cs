@@ -1744,6 +1744,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Text loaded. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_NotifyLoaded {
+            get {
+                return ResourceManager.GetString("Message_NotifyLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   No matches found. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_NotifyNoMatchesText {
