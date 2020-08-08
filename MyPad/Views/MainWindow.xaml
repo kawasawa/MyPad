@@ -299,7 +299,7 @@
                 </m:HamburgerMenu.ItemsSource>
                 <m:HamburgerMenu.OptionsItemsSource>
                     <m:HamburgerMenuItemCollection>
-                        <m:HamburgerMenuIconItem Label="{le:Loc Command_Option}" Tag="{Binding Data.OptionCommand, Source={StaticResource Proxy}, Mode=OneTime}">
+                        <m:HamburgerMenuIconItem Label="{le:Loc Command_Option}" Command="{Binding Data.OptionCommand, Source={StaticResource Proxy}, Mode=OneTime}">
                             <m:HamburgerMenuIconItem.Icon>
                                 <mi:Modern Kind="Cog"/>
                             </m:HamburgerMenuIconItem.Icon>
