@@ -34,11 +34,12 @@
                     <Setter Property="FontWeight" Value="{DynamicResource {x:Static SystemFonts.StatusFontWeightKey}}"/>
                     <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.StatusBar}"/>
                     <Setter Property="BorderThickness" Value="0"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
-                        </Trigger>
-                    </Style.Triggers>
+                    <Style.Resources>
+                        <!-- HACK: ボタンが押された状態の背景色を上書きする -->
+                        <SolidColorBrush x:Key="MahApps.Brushes.Gray7" Color="{StaticResource DarkBlueColorKey}"/>
+                        <!-- HACK: マウスオーバー時の背景色を上書きする -->
+                        <SolidColorBrush x:Key="MahApps.Brushes.Gray8" Color="{StaticResource DarkBlueColorKey}"/>
+                    </Style.Resources>
                 </Style>
                 <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButton}">
                     <Setter Property="Focusable" Value="False"/>
@@ -50,27 +51,22 @@
                     <Setter Property="FontWeight" Value="{DynamicResource {x:Static SystemFonts.StatusFontWeightKey}}"/>
                     <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.StatusBar}"/>
                     <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="m:ControlsHelper.MouseOverBorderBrush" Value="{StaticResource DarkBlueColorBrush}"/>
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+                            <Setter Property="Background" Value="{StaticResource DarkBlueColorBrush}"/>
                         </Trigger>
                         <Trigger Property="IsChecked" Value="True">
                             <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
                             <Setter Property="BorderBrush" Value="{Binding Background, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
                         </Trigger>
-                    </Style.Triggers>
-                </Style>
-                <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Default.ComboBox}">
-                    <Setter Property="Focusable" Value="False"/>
-                    <Setter Property="Padding" Value="5 0"/>
-                    <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
-                    <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="m:TextBoxHelper.ButtonWidth" Value="0"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
-                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="IsChecked" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" Value="{StaticResource DarkBlueColorBrush}"/>
+                        </MultiTrigger>
                     </Style.Triggers>
                 </Style>
             </Style.Resources>
