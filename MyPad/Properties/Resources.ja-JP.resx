@@ -680,4 +680,7 @@
   <data name="Command_Panels" xml:space="preserve">
     <value>パネル</value>
   </data>
+  <data name="Message_NotifyLoaded" xml:space="preserve">
+    <value>テキストを読み込みました。</value>
+  </data>
 </root>

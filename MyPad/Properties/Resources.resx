@@ -720,4 +720,7 @@ These changes will be applied on restart. Do you want to continue?</value>
   <data name="Command_Panels" xml:space="preserve">
     <value>Panels</value>
   </data>
+  <data name="Message_NotifyLoaded" xml:space="preserve">
+    <value>Text loaded.</value>
+  </data>
 </root>

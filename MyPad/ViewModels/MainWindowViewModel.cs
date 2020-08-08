@@ -721,6 +721,8 @@ namespace MyPad.ViewModels
 
                 // シンタックス定義を設定する
                 sameTextEditor.SyntaxDefinition = definition;
+
+                this.DialogService.ToastNotify($"{Resources.Message_NotifyLoaded}{Environment.NewLine}{path}{Environment.NewLine}[{encoding?.EncodingName ?? "Auto Encoding"}]");
                 return (true, sameTextEditor);
             }
             else
@@ -770,7 +772,7 @@ namespace MyPad.ViewModels
                     try
                     {
                         stream = info.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                        this.DialogService.ToastWarn($"{Resources.Message_NotifyFileLocked}{Environment.NewLine}{path}");
+                        this.DialogService.ToastWarn(Resources.Message_NotifyFileLocked);
                     }
                     catch (Exception e)
                     {
@@ -801,6 +803,8 @@ namespace MyPad.ViewModels
 
                 // シンタックス定義を設定する
                 textEditor.SyntaxDefinition = definition;
+
+                this.DialogService.ToastNotify($"{Resources.Message_NotifyLoaded}{Environment.NewLine}{path}{Environment.NewLine}[{encoding?.EncodingName ?? "Auto Encoding"}]");
                 return (true, textEditor);
             }
         }
@@ -843,7 +847,7 @@ namespace MyPad.ViewModels
                 // シンタックス定義を設定する
                 sameTextEditor.SyntaxDefinition = definition;
 
-                this.DialogService.ToastNotify($"{Resources.Message_NotifySaved}{Environment.NewLine}{path}");
+                this.DialogService.ToastNotify($"{Resources.Message_NotifySaved}{Environment.NewLine}{path}{Environment.NewLine}[{encoding?.EncodingName}]");
                 return (true, sameTextEditor);
             }
             else
@@ -889,7 +893,7 @@ namespace MyPad.ViewModels
                 // シンタックス定義を設定する
                 textEditor.SyntaxDefinition = definition;
 
-                this.DialogService.ToastNotify($"{Resources.Message_NotifySaved}{Environment.NewLine}{path}");
+                this.DialogService.ToastNotify($"{Resources.Message_NotifySaved}{Environment.NewLine}{path}{Environment.NewLine}[{encoding?.EncodingName}]");
                 return (true, textEditor);
             }
         }

@@ -113,12 +113,12 @@
                                      m:TextBoxHelper.ClearTextButton="True"/>
                             <Button Grid.Row="0" Grid.Column="4"
                                     Command="ae:SearchCommands.FindPrevious"
-                                    ToolTip="{Binding Localization.FindNextText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">
+                                    ToolTip="{Binding Localization.FindPreviousText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">
                                 <mi:Modern Kind="MagnifyArrowUp"/>
                             </Button>
                             <Button Grid.Row="0" Grid.Column="5"
                                     Command="ae:SearchCommands.FindNext"
-                                    ToolTip="{Binding Localization.FindPreviousText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">
+                                    ToolTip="{Binding Localization.FindNextText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">
                                 <mi:Modern Kind="MagnifyArrowDown"/>
                             </Button>
                             <ToggleButton Grid.Row="0" Grid.Column="7" 
