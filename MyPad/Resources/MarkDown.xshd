@@ -6,8 +6,8 @@
   <Color name="Strong"                             fontWeight="bold"/>
   <Color name="Italic"                             fontStyle="italic"/>
   <Color name="Code"/>
-  <Color name="Image"     foreground="Wheat"/>
-  <Color name="Link"      foreground="SandyBrown"/>
+  <Color name="Image"     foreground="Goldenrod"/>
+  <Color name="Link"      foreground="DarkGoldenrod"/>
   <Color name="LineBreak" background="LightGray"/>
 
   <RuleSet ignoreCase="true">

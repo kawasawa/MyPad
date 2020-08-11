@@ -3,17 +3,17 @@
 
   <Property name="FoldingStrategy" value="Brace"/>
 
-  <Color name="XmlComment"          foreground="SeaGreen"/>
-  <Color name="XmlString"           foreground="Wheat"/>
-  <Color name="XmlTag"              foreground="DarkSeaGreen"/>
+  <Color name="XmlComment"          foreground="MediumSlateBlue"/>
+  <Color name="XmlTag"              foreground="MediumOrchid"/>
+  <Color name="XmlString"           foreground="RosyBrown"/>
   <Color name="Keywords"            foreground="DodgerBlue"/>
   <Color name="TypeKeywords"        foreground="DeepPink"/>
   <Color name="MethodCall"          foreground="MediumSeaGreen"/>
   <Color name="NumericLiteral"      foreground="DeepSkyBlue"/>
   <Color name="Directive"           foreground="DarkGray"/>
-  <Color name="Comment"             foreground="MediumPurple"/>
-  <Color name="String"              foreground="SandyBrown"/>
-  <Color name="StringInterpolation" foreground="Wheat"/>
+  <Color name="Comment"             foreground="MediumSlateBlue"/>
+  <Color name="String"              foreground="DarkGoldenrod"/>
+  <Color name="StringInterpolation" foreground="Goldenrod"/>
 
   <RuleSet name="XmlCommentSet">
     <Span color="XmlComment">

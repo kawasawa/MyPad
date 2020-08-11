@@ -3,16 +3,16 @@
 
   <Property name="FoldingStrategy" value="Vb"/>
 
-  <Color name="XmlComment"       foreground="SeaGreen"/>
-  <Color name="XmlString"        foreground="Wheat"/>
-  <Color name="XmlTag"           foreground="DarkSeaGreen"/>
+  <Color name="XmlComment"       foreground="MediumSlateBlue"/>
+  <Color name="XmlTag"           foreground="MediumOrchid"/>
+  <Color name="XmlString"        foreground="RosyBrown"/>
   <Color name="Keywords"         foreground="DodgerBlue"/>
   <Color name="TypeKeywords"     foreground="DeepPink"/>
   <Color name="FunctionKeywords" foreground="MediumSeaGreen"/>
   <Color name="DateLiteral"      foreground="DeepSkyBlue"/>
   <Color name="Directive"        foreground="DarkGray"/>
-  <Color name="Comment"          foreground="MediumPurple"/>
-  <Color name="String"           foreground="SandyBrown"/>
+  <Color name="Comment"          foreground="MediumSlateBlue"/>
+  <Color name="String"           foreground="DarkGoldenrod"/>
 
   <RuleSet name="XmlCommentSet">
     <Span color="XmlComment">
