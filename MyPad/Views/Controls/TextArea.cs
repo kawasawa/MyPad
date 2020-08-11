@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -72,13 +73,13 @@ namespace MyPad.Views.Controls
                 return (Func<SearchPanel, IEnumerable<TextSegment>>)lambda.Compile();
             });
 
+        private readonly DispatcherTimer _updateFoldingsTimer;
         private IEnumerable<ICompletionData> _completionData = Enumerable.Empty<ICompletionData>();
-        private CompletionWindow _completionWindow;
-        private DispatcherTimer _updateFoldingsTimer;
 
         public FoldingManager FoldingManager { get; private set; }
         public IFoldingStrategy FoldingStrategy { get; private set; }
         public SearchPanel SearchPanel { get; private set; }
+        public CompletionWindow CompletionWindow { get; private set; }
 
         public new TextView TextView => (TextView)base.TextView;
         public bool IsReadOnly => this.ReadOnlySectionProvider.CanInsert(this.Caret.Offset) == false;
@@ -136,23 +137,23 @@ namespace MyPad.Views.Controls
                 SearchCommands.FindPrevious,
                 (sender, e) => this.FindPrevious()));
             bindings.Add(new CommandBinding(
-                TextEditorCommands.ZoomIn,
+                Commands.ZoomIn,
                 (sender, e) => this.ZoomIn(),
                 (sender, e) => e.CanExecute = this.CanZoomIn()));
             bindings.Add(new CommandBinding(
-                TextEditorCommands.ZoomOut,
+                Commands.ZoomOut,
                 (sender, e) => this.ZoomOut(),
                 (sender, e) => e.CanExecute = this.CanZoomOut()));
             bindings.Add(new CommandBinding(
-                TextEditorCommands.ZoomReset,
+                Commands.ZoomReset,
                 (sender, e) => this.ZoomReset(),
                 (sender, e) => e.CanExecute = this.CanZoomReset()));
             bindings.Add(new CommandBinding(
-                TextEditorCommands.Completion,
+                Commands.Completion,
                 (sender, e) => this.ShowCompletionList(),
                 (sender, e) => e.CanExecute = this.CanShowCompletionList()));
             bindings.Add(new CommandBinding(
-                TextEditorCommands.ConvertToNarrow,
+                Commands.ConvertToNarrow,
                 (sender, e) => this.InvokeTransformSelectedSegments(
                     new[] {
                         (Action<ICSharpCode.AvalonEdit.Editing.TextArea, ISegment>)(
@@ -171,7 +172,7 @@ namespace MyPad.Views.Controls
                 )
             ));
             bindings.Add(new CommandBinding(
-                TextEditorCommands.ConvertToWide,
+                Commands.ConvertToWide,
                 (sender, e) => this.InvokeTransformSelectedSegments(
                     new[] {
                         (Action<ICSharpCode.AvalonEdit.Editing.TextArea, ISegment>)(
@@ -202,11 +203,11 @@ namespace MyPad.Views.Controls
                 ApplicationCommands.Replace,
                 (sender, e) => this.OpenSearchPanel(true)));
             this.SearchPanel.CommandBindings.Add(new CommandBinding(
-                TextEditorCommands.ReplaceNext,
+                Commands.ReplaceNext,
                 (sender, e) => this.ReplaceNext(),
                 (sender, e) => e.CanExecute = this.CanReplaceNext()));
             this.SearchPanel.CommandBindings.Add(new CommandBinding(
-                TextEditorCommands.ReplaceAll,
+                Commands.ReplaceAll,
                 (sender, e) => this.ReplaceAll(),
                 (sender, e) => e.CanExecute = this.CanReplaceAll()));
 
@@ -314,7 +315,7 @@ namespace MyPad.Views.Controls
         {
             if (this.IsReadOnly)
                 return false;
-            if (this._completionWindow != null || this._completionData.Any() == false)
+            if (this.CompletionWindow != null || this._completionData.Any() == false)
                 return false;
             return true;
         }
@@ -324,9 +325,9 @@ namespace MyPad.Views.Controls
             if (this.CanShowCompletionList() == false)
                 return;
 
-            this._completionWindow = new CompletionWindow(this, this._completionData);
-            this._completionWindow.Closed += this.CompletionWindow_Closed;
-            this._completionWindow.Show();
+            this.CompletionWindow = new CompletionWindow(this, this._completionData);
+            this.CompletionWindow.Closed += this.CompletionWindow_Closed;
+            this.CompletionWindow.Show();
         }
 
         public void ApplySyntaxDefinition(XshdSyntaxDefinition syntaxDefinition)
@@ -340,7 +341,7 @@ namespace MyPad.Views.Controls
                         XshdKeywords keywords => keywords.Words,
                         _ => Enumerable.Empty<string>(),
                     }) ?? Enumerable.Empty<string>();
-            this._completionWindow?.Close();
+            this.CompletionWindow?.Close();
             this._completionData =
                 getKeywords(syntaxDefinition?.Elements)
                     .Distinct()
@@ -444,7 +445,7 @@ namespace MyPad.Views.Controls
         protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
         {
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) &&
-                this._completionWindow == null &&
+                this.CompletionWindow == null &&
                 e.Delta != 0)
             {
                 if (0 < e.Delta)
@@ -458,8 +459,8 @@ namespace MyPad.Views.Controls
 
         private void CompletionWindow_Closed(object sender, EventArgs e)
         {
-            this._completionWindow.Closed -= this.CompletionWindow_Closed;
-            this._completionWindow = null;
+            this.CompletionWindow.Closed -= this.CompletionWindow_Closed;
+            this.CompletionWindow = null;
         }
 
         private void TextDocument_FileNameChanged(object sender, EventArgs e)
@@ -508,5 +509,36 @@ namespace MyPad.Views.Controls
             void ICompletionData.Complete(ICSharpCode.AvalonEdit.Editing.TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
                 => textArea.Document.Replace(completionSegment, this.Text);
         }
+
+        public static class Commands
+        {
+            private static ICommand CreateRoutedCommand(InputGestureCollection inputGestures = null, [CallerMemberName] string commandName = "")
+                => new RoutedCommand(commandName, typeof(TextArea), inputGestures);
+
+            public static readonly ICommand ConvertToNarrow
+                = CreateRoutedCommand();
+
+            public static readonly ICommand ConvertToWide
+                = CreateRoutedCommand();
+
+            public static readonly ICommand ZoomIn
+                = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.OemPlus, ModifierKeys.Control) });
+
+            public static readonly ICommand ZoomOut
+                = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.OemMinus, ModifierKeys.Control) });
+
+            public static readonly ICommand ZoomReset
+                = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.D0, ModifierKeys.Control) });
+
+            public static readonly ICommand Completion
+                = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.Space, ModifierKeys.Control) });
+
+            public static readonly ICommand ReplaceNext
+                = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.R, ModifierKeys.Alt) });
+
+            public static readonly ICommand ReplaceAll
+                = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.A, ModifierKeys.Alt) });
+        }
+
     }
 }

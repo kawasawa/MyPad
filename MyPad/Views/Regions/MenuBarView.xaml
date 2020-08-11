@@ -194,9 +194,9 @@
                           InputGestureText="Ctrl+Shift+End"/>
             </MenuItem>
             <MenuItem Header="{le:Loc Command_Formatting}">
-                <MenuItem Command="controls:TextEditorCommands.ConvertToNarrow"
+                <MenuItem Command="controls:TextArea+Commands.ConvertToNarrow"
                           Header="{le:Loc Command_ConvertToNarrow}"/>
-                <MenuItem Command="controls:TextEditorCommands.ConvertToWide"
+                <MenuItem Command="controls:TextArea+Commands.ConvertToWide"
                           Header="{le:Loc Command_ConvertToWide}"/>
                 <Separator/>
                 <MenuItem Command="ae:AvalonEditCommands.ConvertToLowercase"
@@ -276,21 +276,21 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="{le:Loc Command_Zoom}">
-                <MenuItem Command="controls:TextEditorCommands.ZoomIn"
+                <MenuItem Command="controls:TextArea+Commands.ZoomIn"
                           Header="{le:Loc Command_ZoomIn}"
                           InputGestureText="Ctrl+Plus">
                     <MenuItem.Icon>
                         <mi:Material Kind="MagnifyPlusOutline"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Command="controls:TextEditorCommands.ZoomOut"
+                <MenuItem Command="controls:TextArea+Commands.ZoomOut"
                           Header="{le:Loc Command_ZoomOut}"
                           InputGestureText="Ctrl+Minus">
                     <MenuItem.Icon>
                         <mi:Material Kind="MagnifyMinusOutline"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Command="controls:TextEditorCommands.ZoomReset"
+                <MenuItem Command="controls:TextArea+Commands.ZoomReset"
                           Header="{le:Loc Command_ZoomReset}"
                           InputGestureText="Ctrl+0"/>
             </MenuItem>
@@ -320,7 +320,7 @@
                     <mi:Material Kind="LanguageCsharp"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Command="controls:TextEditorCommands.Completion"
+            <MenuItem Command="controls:TextArea+Commands.Completion"
                       Header="{le:Loc Command_Completion}">
                 <MenuItem.Icon>
                     <mi:Material Kind="AutoFix"/>

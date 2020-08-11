@@ -155,13 +155,13 @@
                                      m:TextBoxHelper.ClearTextButton="True"
                                      Focusable="{Binding (controls:TextArea.ReplaceAreaExpanded), Mode=OneWay}"/>
                             <Button Grid.Row="2" Grid.Column="4"
-                                    Command="controls:TextEditorCommands.ReplaceNext"
+                                    Command="controls:TextArea+Commands.ReplaceNext"
                                     ToolTip="{Binding Localization.ReplaceNextText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                     Focusable="{Binding (controls:TextArea.ReplaceAreaExpanded), Mode=OneWay}">
                                 <mi:Material Kind="FindReplace"/>
                             </Button>
                             <Button Grid.Row="2" Grid.Column="5"
-                                    Command="controls:TextEditorCommands.ReplaceAll"
+                                    Command="controls:TextArea+Commands.ReplaceAll"
                                     ToolTip="{Binding Localization.ReplaceAllText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                     Focusable="{Binding (controls:TextArea.ReplaceAreaExpanded), Mode=OneWay}">
                                 <mi:Modern Kind="Refresh"/>
