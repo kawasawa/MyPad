@@ -5,8 +5,6 @@
   <Color name="Comment"  foreground="MediumSeaGreen"/>
   <Color name="String"   foreground="SandyBrown"/>
 
-  <Property name="DocCommentMarker" value="///"/>
-
   <RuleSet name="TaskComment" ignoreCase="true">
     <Keywords fontWeight="bold" foreground="OrangeRed">
       <Word>TODO</Word>

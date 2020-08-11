@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <SyntaxDefinition name="Visual Basic" extensions=".vb" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 
+  <Property name="FoldingStrategy" value="Vb"/>
+
   <Color name="XmlComment"       foreground="SeaGreen"/>
   <Color name="XmlString"        foreground="Wheat"/>
   <Color name="XmlTag"           foreground="DarkSeaGreen"/>
@@ -11,8 +13,6 @@
   <Color name="Directive"        foreground="DarkGray"/>
   <Color name="Comment"          foreground="MediumPurple"/>
   <Color name="String"           foreground="SandyBrown"/>
-
-  <Property name="DocCommentMarker" value="'''"/>
 
   <RuleSet name="XmlCommentSet">
     <Span color="XmlComment">

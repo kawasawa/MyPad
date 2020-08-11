@@ -1399,6 +1399,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Enable foldings. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string LabelText_EnableFoldings {
+            get {
+                return ResourceManager.GetString("LabelText_EnableFoldings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Enable hyperlinks. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableHyperlinks {

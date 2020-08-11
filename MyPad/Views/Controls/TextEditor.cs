@@ -87,6 +87,10 @@ namespace MyPad.Views.Controls
             = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(TextArea.OverstrikeModeProperty.DefaultMetadata.DefaultValue),
                 TextArea.OverstrikeModeProperty.IsValidValue);
+        public static readonly DependencyProperty EnableFoldingsProperty
+            = DependencyPropertyExtensions.Register(
+                new PropertyMetadata(TextArea.EnableFoldingsProperty.DefaultMetadata.DefaultValue),
+                TextArea.EnableFoldingsProperty.IsValidValue);
         public static readonly DependencyProperty EnableAutoCompletionProperty
             = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(TextArea.EnableAutoCompletionProperty.DefaultMetadata.DefaultValue),
@@ -212,6 +216,12 @@ namespace MyPad.Views.Controls
             set => this.SetValue(OverstrikeModeProperty, value);
         }
 
+        public bool EnableFoldings
+        {
+            get => (bool)this.GetValue(EnableFoldingsProperty);
+            set => this.SetValue(EnableFoldingsProperty, value);
+        }
+
         public bool EnableAutoCompletion
         {
             get => (bool)this.GetValue(EnableAutoCompletionProperty);
@@ -303,6 +313,9 @@ namespace MyPad.Views.Controls
                     break;
                 case nameof(this.OverstrikeMode):
                     this.TextArea.OverstrikeMode = (bool)e.NewValue;
+                    break;
+                case nameof(this.EnableFoldings):
+                    this.TextArea.EnableFoldings = (bool)e.NewValue;
                     break;
                 case nameof(this.EnableAutoCompletion):
                     this.TextArea.EnableAutoCompletion = (bool)e.NewValue;

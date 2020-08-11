@@ -150,6 +150,13 @@ namespace MyPad.Models
             set => this.SetProperty(ref this._enableImeSupport, value);
         }
 
+        private bool _enableFoldings = true;
+        public bool EnableFoldings
+        {
+            get => this._enableFoldings;
+            set => this.SetProperty(ref this._enableFoldings, value);
+        }
+
         private bool _enableAutoCompletion = true;
         public bool EnableAutoCompletion
         {

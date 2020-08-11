@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0"?>
 <SyntaxDefinition name="XML" extensions=".xml;.xsd;.xsl;.xaml" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 
+  <Property name="FoldingStrategy" value="Xml"/>
+
   <Color name="Comment" foreground="MediumSeaGreen"/>
   <Color name="CData"   foreground="DeepSkyBlue"/>
   <Color name="Tag"     foreground="DarkSeaGreen"/>

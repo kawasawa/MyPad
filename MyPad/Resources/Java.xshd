@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <SyntaxDefinition name="Java" extensions=".java;.jav" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 
+  <Property name="FoldingStrategy" value="Brace"/>
+
   <Color name="JavaDoc"        foreground="DarkSeaGreen" fontWeight="bold" fontStyle="italic"/>
   <Color name="Keywords"       foreground="DodgerBlue"/>
   <Color name="MethodCall"     foreground="MediumSeaGreen"/>

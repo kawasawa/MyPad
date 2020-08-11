@@ -167,6 +167,7 @@
                             <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
                                 <StackPanel>
                                     <CheckBox IsChecked="{Binding EnableImeSupport, Mode=TwoWay}"           Content="{le:Loc LabelText_EnableImeSupport}"/>
+                                    <CheckBox IsChecked="{Binding EnableFoldings, Mode=TwoWay}"             Content="{le:Loc LabelText_EnableFoldings}"/>
                                     <CheckBox IsChecked="{Binding EnableAutoCompletion, Mode=TwoWay}"       Content="{le:Loc LabelText_EnableAutoCompletion}"/>
                                     <CheckBox IsChecked="{Binding EnableTextDragDrop, Mode=TwoWay}"         Content="{le:Loc LabelText_EnableTextDragDrop}"/>
                                     <CheckBox IsChecked="{Binding EnableRectangularSelection, Mode=TwoWay}" Content="{le:Loc LabelText_EnableRectangularSelection}"/>
