@@ -76,6 +76,7 @@
         <KeyBinding Command="{Binding SaveAllCommand,              Mode=OneTime}" Key="K"        Modifiers="Ctrl+Shift"/>
         <KeyBinding Command="{Binding ExitApplicationCommand,      Mode=OneTime}" Key="F4"       Modifiers="Ctrl+Alt"/>
         <KeyBinding Command="{Binding CloseCommand,                Mode=OneTime}" Key="F4"       Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding CloseAllCommand,             Mode=OneTime}" Key="F4"       Modifiers="Ctrl+Shift"/>
         <KeyBinding Command="{Binding PrintCommand,                Mode=OneTime}" Key="P"        Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding PrintPreviewCommand,         Mode=OneTime}" Key="P"        Modifiers="Ctrl+Shift"/>
         <KeyBinding Command="{Binding GoToLineCommand,             Mode=OneTime}" Key="G"        Modifiers="Ctrl"/>
@@ -318,12 +319,39 @@
                                           NewItemFactory="{Binding TextEditorFactory, Mode=OneTime}"
                                           ClosingItemCallback="{Binding ClosingTextEditorHandler, Mode=OneTime}"
                                           IsHeaderPanelVisible="{qc:MultiBinding '$P0 || $P1.CompareTo(1) == 1', P0={Binding SettingsService.System.ShowSingleTab, Mode=OneWay}, P1={Binding Items.Count, RelativeSource={RelativeSource Self}, Mode=OneWay}}"
-                                          ShowDefaultAddButton="True"
+                                          ShowDefaultAddButton="False"
                                           ShowDefaultCloseButton="True"
                                           SelectionChanged="DraggableTabControl_SelectionChanged">
                 <dr:TabablzControl.InterTabController>
                     <dr:InterTabController InterTabClient="{Binding InterTabClient, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
                 </dr:TabablzControl.InterTabController>
+                <dr:TabablzControl.HeaderSuffixContent>
+                    <Grid ge:GridEx.ColumnDefinition="Auto, *" Margin="5 0 0 0">
+                        <Grid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding NewCommand, Mode=OneTime}" Header="{le:Loc Command_New}" InputGestureText="Ctrl+N">
+                                    <MenuItem.Icon>
+                                        <mi:Modern Kind="PageNew"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Command="{Binding SaveAllCommand, Mode=OneTime}" Header="{le:Loc Command_SaveAll}" InputGestureText="Ctrl+Shift+K">
+                                    <MenuItem.Icon>
+                                        <mi:Material Kind="ContentSaveAll"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Command="{Binding CloseAllCommand, Mode=OneTime}" Header="{le:Loc Command_CloseAll}" InputGestureText="Ctrl+Shift+F4">
+                                    <MenuItem.Icon>
+                                        <mi:Material Kind="LayersOff"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </Grid.ContextMenu>
+                        <Button Grid.Column="0" Command="{x:Static dr:TabablzControl.AddItemCommand}" Height="20" Width="20" Padding="0" Background="Transparent" BorderBrush="Transparent" Focusable="False">
+                            <mi:PackIconMaterial Kind="Plus" Height="12" Width="12" Foreground="{DynamicResource MahApps.Brushes.Gray5}"/>
+                        </Button>
+                        <Border Grid.Column="1" VerticalAlignment="Stretch" Background="Transparent"/>
+                    </Grid>
+                </dr:TabablzControl.HeaderSuffixContent>
                 <dr:TabablzControl.HeaderItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -362,7 +390,7 @@
                                 <mi:Material Kind="Close"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Command="{Binding CloseAllCommand, Mode=OneTime}" Header="{le:Loc Command_CloseAll}">
+                        <MenuItem Command="{Binding CloseAllCommand, Mode=OneTime}" Header="{le:Loc Command_CloseAll}" InputGestureText="Ctrl+Shift+F4">
                             <MenuItem.Icon>
                                 <mi:Material Kind="LayersOff"/>
                             </MenuItem.Icon>
@@ -370,6 +398,23 @@
                         <MenuItem Command="{Binding CloseOtherCommand, Mode=OneTime}" Header="{le:Loc Command_CloseOther}">
                             <MenuItem.Icon>
                                 <mi:Material Kind="LayersRemove"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <Separator/>
+                        <MenuItem Command="{Binding SaveCommand, Mode=OneTime}" Header="{le:Loc Command_Save}" InputGestureText="Ctrl+S">
+                            <MenuItem.Icon>
+                                <mi:Material Kind="ContentSave"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Command="{Binding SaveAsCommand, Mode=OneTime}" Header="{le:Loc Command_SaveAs}" HeaderStringFormat="{}{0}..." InputGestureText="Ctrl+Shift+S">
+                            <MenuItem.Icon>
+                                <mi:Material Kind="ContentSaveSettings"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <Separator/>
+                        <MenuItem Command="{Binding DiffUnmodifiedCommand, Mode=OneTime}" Header="{le:Loc Command_DiffUnmodified}" HeaderStringFormat="{}{0}..." InputGestureText="Ctrl+Alt+D">
+                            <MenuItem.Icon>
+                                <mi:Modern Kind="ListAdd"/>
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="{le:Loc Command_OpenParentDirectory}" IsEnabled="{qc:Binding '!$P', P={Binding ActiveTextEditor.Value.IsNewFile, Mode=OneWay}}">
