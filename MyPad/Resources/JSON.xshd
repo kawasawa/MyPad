@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0"?>
 <SyntaxDefinition name="Json" extensions=".json" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 
+  <Property name="FoldingStrategy" value="Brace"/>
+
   <Color name="Name"  foreground="DodgerBlue"/>
   <Color name="Value" foreground="DarkGoldenrod"/>
 
