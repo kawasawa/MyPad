@@ -5,9 +5,9 @@
   <Color name="IntrinsicKeywords" foreground="DeepPink"/>
   <Color name="FunctionKeywords"  foreground="MediumSeaGreen"/>
   <Color name="NumericLiteral"    foreground="DeepSkyBlue"/>
-  <Color name="Comment"           foreground="MediumPurple"/>
-  <Color name="String"            foreground="SandyBrown"/>
-  <Color name="Regex"             foreground="Wheat"/>
+  <Color name="Comment"           foreground="MediumSlateBlue"/>
+  <Color name="String"            foreground="DarkGoldenrod"/>
+  <Color name="Regex"             foreground="Goldenrod"/>
 
   <RuleSet ignoreCase="false">
     <Keywords color="Keywords">

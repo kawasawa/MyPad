@@ -7,6 +7,7 @@
                     xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
                     xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
                     xmlns:aec="clr-namespace:ICSharpCode.AvalonEdit.CodeCompletion;assembly=ICSharpCode.AvalonEdit"
+                    xmlns:aef="clr-namespace:ICSharpCode.AvalonEdit.Folding;assembly=ICSharpCode.AvalonEdit"
                     xmlns:controls="clr-namespace:MyPad.Views.Controls">
 
     <Style x:Key="Default.TextView" TargetType="{x:Type ae:TextView}">
@@ -50,6 +51,13 @@
                 <Setter Property="BorderThickness" Value="1"/>
             </Style>
         </Style.Resources>
+    </Style>
+
+    <Style x:Key="Default.FoldingMargin" TargetType="{x:Type aef:FoldingMargin}">
+        <Setter Property="FoldingMarkerBrush"                   Value="{DynamicResource MahApps.Brushes.CheckBox}"/>
+        <Setter Property="SelectedFoldingMarkerBrush"           Value="{DynamicResource MahApps.Brushes.CheckBox.MouseOver}"/>
+        <Setter Property="FoldingMarkerBackgroundBrush"         Value="{DynamicResource MahApps.Brushes.Control.Background}"/>
+        <Setter Property="SelectedFoldingMarkerBackgroundBrush" Value="{DynamicResource MahApps.Brushes.Control.Background}"/>
     </Style>
 
     <Style x:Key="Default.SearchPanel" TargetType="{x:Type ae:SearchPanel}">
@@ -147,13 +155,13 @@
                                      m:TextBoxHelper.ClearTextButton="True"
                                      Focusable="{Binding (controls:TextArea.ReplaceAreaExpanded), Mode=OneWay}"/>
                             <Button Grid.Row="2" Grid.Column="4"
-                                    Command="controls:TextEditorCommands.ReplaceNext"
+                                    Command="controls:TextArea+Commands.ReplaceNext"
                                     ToolTip="{Binding Localization.ReplaceNextText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                     Focusable="{Binding (controls:TextArea.ReplaceAreaExpanded), Mode=OneWay}">
                                 <mi:Material Kind="FindReplace"/>
                             </Button>
                             <Button Grid.Row="2" Grid.Column="5"
-                                    Command="controls:TextEditorCommands.ReplaceAll"
+                                    Command="controls:TextArea+Commands.ReplaceAll"
                                     ToolTip="{Binding Localization.ReplaceAllText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                     Focusable="{Binding (controls:TextArea.ReplaceAreaExpanded), Mode=OneWay}">
                                 <mi:Modern Kind="Refresh"/>
@@ -178,6 +186,7 @@
     <Style TargetType="{x:Type controls:TextArea}"         BasedOn="{StaticResource Default.TextArea}"/>
     <Style TargetType="{x:Type controls:TextEditor}"       BasedOn="{StaticResource Default.TextEditor}"/>
     <Style TargetType="{x:Type controls:CompletionWindow}" BasedOn="{StaticResource Default.CompletionWindow}"/>
+    <Style TargetType="{x:Type aef:FoldingMargin}"         BasedOn="{StaticResource Default.FoldingMargin}"/>
     <Style TargetType="{x:Type ae:SearchPanel}"            BasedOn="{StaticResource Default.SearchPanel}"/>
 
 </ResourceDictionary>

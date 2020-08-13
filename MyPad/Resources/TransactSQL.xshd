@@ -2,10 +2,8 @@
 <SyntaxDefinition name="Transact-SQL" extensions=".tsql" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 
   <Color name="Keywords" foreground="DodgerBlue" fontWeight="bold"/>
-  <Color name="Comment"  foreground="MediumSeaGreen"/>
-  <Color name="String"   foreground="SandyBrown"/>
-
-  <Property name="DocCommentMarker" value="///"/>
+  <Color name="Comment"  foreground="MediumSlateBlue"/>
+  <Color name="String"   foreground="DarkGoldenrod"/>
 
   <RuleSet name="TaskComment" ignoreCase="true">
     <Keywords fontWeight="bold" foreground="OrangeRed">

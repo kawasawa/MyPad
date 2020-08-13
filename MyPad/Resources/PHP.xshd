@@ -1,13 +1,15 @@
 ﻿<?xml version="1.0"?>
 <SyntaxDefinition name="PHP" extensions=".php" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 
+  <Property name="FoldingStrategy" value="Brace"/>
+
   <Color name="Keywords"       foreground="DodgerBlue"/>
   <Color name="TypeKeywords"   foreground="DeepPink"/>
   <Color name="MethodCall"     foreground="MediumSeaGreen"/>
   <Color name="NumericLiteral" foreground="DeepSkyBlue"/>
   <Color name="Directive"      foreground="DarkGray"/>
-  <Color name="Comment"        foreground="MediumPurple"/>
-  <Color name="String"         foreground="SandyBrown"/>
+  <Color name="Comment"        foreground="MediumSlateBlue"/>
+  <Color name="String"         foreground="DarkGoldenrod"/>
   
   <RuleSet>
     <Keywords color="Keywords">

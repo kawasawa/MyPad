@@ -2,7 +2,7 @@
 <SyntaxDefinition name="Json" extensions=".json" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 
   <Color name="Name"  foreground="DodgerBlue"/>
-  <Color name="Value" foreground="SandyBrown"/>
+  <Color name="Value" foreground="DarkGoldenrod"/>
 
   <RuleSet ignoreCase="false">
     <Span color="Name">

@@ -326,6 +326,7 @@ namespace MyPad
             /// </summary>
             public static void InitQuickConverter()
             {
+#pragma warning disable IDE0049
                 EquationTokenizer.AddNamespace(typeof(System.Object));                           // System                  : System.Runtime.dll
                 EquationTokenizer.AddNamespace(typeof(System.IO.Path));                          // System.IO               : System.Runtime.dll
                 EquationTokenizer.AddNamespace(typeof(System.Text.Encoding));                    // System.Text             : System.Runtime.dll
@@ -339,6 +340,7 @@ namespace MyPad
                 EquationTokenizer.AddNamespace(typeof(System.Windows.Controls.Control));         // System.Windows.Controls : PresentationFramework.dll
                 EquationTokenizer.AddNamespace(typeof(System.Windows.Media.Brush));              // System.Windows.Media    : PresentationFramework.dll
                 EquationTokenizer.AddExtensionMethods(typeof(System.Linq.Enumerable));           // System.Linq             : System.Linq.dll
+#pragma warning restore IDE0049
             }
 
             /// <summary>

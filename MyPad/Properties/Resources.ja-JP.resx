@@ -683,4 +683,7 @@
   <data name="Message_NotifyLoaded" xml:space="preserve">
     <value>テキストを読み込みました。</value>
   </data>
+  <data name="LabelText_EnableFoldings" xml:space="preserve">
+    <value>コードの折り畳みを有効にする。</value>
+  </data>
 </root>
