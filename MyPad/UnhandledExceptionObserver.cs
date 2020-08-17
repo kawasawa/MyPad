@@ -14,6 +14,7 @@ namespace MyPad
     public static class UnhandledExceptionObserver
     {
         private static bool _isObserved;
+        private static bool _canOpenConfirm = true;
 
         private static ILoggerFacade Logger { get; set; }
         private static IProductInfo ProductInfo { get; set; }
@@ -58,7 +59,7 @@ namespace MyPad
         private static void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
             e.SetObserved();
-            ContinueOrExit(e.Exception?.InnerException as Exception);
+            ContinueOrExit(e.Exception?.InnerException);
         }
 
         /// <summary>
@@ -79,14 +80,27 @@ namespace MyPad
         {
             try
             {
+                Logger?.Log("ハンドルされていない例外が発生しました。", Category.Exception, e);
+            }
+            catch
+            {
+            }
+
+            if (_canOpenConfirm == false)
+                return;
+
+            try
+            {
+                _canOpenConfirm = false;
+
                 var message = new StringBuilder();
                 message.AppendLine($"ハンドルされていない例外が発生しました。");
                 message.AppendLine($"エラーを無視してプログラムを続行しますか？");
                 message.AppendLine();
                 message.AppendLine($"{e?.Message}");
-                if (MessageBox.Show(message.ToString(), ProductInfo?.Product ?? "エラー", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                if (MessageBox.Show(message.ToString(), ProductInfo?.Product ?? "警告", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
-                    Logger?.Log("ハンドルされていない例外が発生しましたが、ユーザの選択によりプログラムを続行します。", Category.Exception, e);
+                    _canOpenConfirm = true;
                     return;
                 }
             }
@@ -105,7 +119,7 @@ namespace MyPad
         {
             try
             {
-                Logger?.Log("ハンドルされていない例外が発生しました。アプリケーションを終了します。", Category.Exception, e);
+                Logger?.Log("アプリケーションを終了します。", Category.Exception, e);
             }
             catch
             {
