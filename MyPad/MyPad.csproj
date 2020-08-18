@@ -9,7 +9,7 @@
     <Authors>Kazuki Awasawa</Authors>
     <Copyright>© Kazuki Awasawa All Rights Reserved.</Copyright>
     <Description></Description>
-    <Version>1.5.0</Version>
+    <Version>1.5.1</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
