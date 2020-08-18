@@ -113,7 +113,7 @@
                 </i:Interaction.Triggers>
                 <Button.Content>
                     <TextBlock DataContext="{Binding ActiveTextEditor.Value, Mode=OneWay}"
-                               Text="{qc:MultiBinding '\'Ln \' + $P0 + \' - Col \' + $P1 + \' (\' + $P2 + \')\'', P0={Binding Line, Mode=OneWay}, P1={Binding Column, Mode=OneWay}, P2={Binding CharName, Mode=OneWay}}"/>
+                               Text="{qc:MultiBinding '\'Ln \' + $P0 + \', Col \' + $P1 + \' (\' + $P2 + \')\'', P0={Binding Line, Mode=OneWay}, P1={Binding Column, Mode=OneWay}, P2={Binding CharName, Mode=OneWay}}"/>
                 </Button.Content>
             </Button>
         </StatusBarItem>
@@ -126,7 +126,7 @@
                 </i:Interaction.Triggers>
                 <Button.Content>
                     <TextBlock DataContext="{Binding ActiveTextEditor.Value, Mode=OneWay}"
-                               Text="{qc:Binding '$P.CodePage + \' - \' + $P.EncodingName', P={Binding Encoding, Mode=OneWay}}"/>
+                               Text="{qc:Binding '$P.EncodingName', P={Binding Encoding, Mode=OneWay}}"/>
                 </Button.Content>
             </Button>
         </StatusBarItem>
