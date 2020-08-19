@@ -67,8 +67,13 @@ namespace MyPad.ViewModels
             => new MessageOptions
             {
                 // NOTE: ToastNotifications の明示的なクローズ
-                // Close() を実行すると CloseClickAction が呼び出されるため、DisplayPart.OnClose() を使用する。
-                NotificationClickAction = n => { n.DisplayPart.OnClose(); callback?.Invoke(true); },
+                // Close() を使用すると、CloseClickAction が呼び出されてしまう
+                // DisplayPart.OnClose() を使用すると、通知は閉じるが実体は残留してしまう
+                NotificationClickAction = n => {
+                    var closeAction = typeof(NotificationBase).GetField("_closeAction", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(n) as Action<INotification>;
+                    closeAction?.Invoke(n);
+                    callback?.Invoke(true); 
+                },
                 CloseClickAction = n => callback?.Invoke(false),
             };
 
