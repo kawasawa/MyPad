@@ -68,13 +68,16 @@ namespace MyPad.Views
 
             // 初期ウィンドウを生成する
             var view = this.ContainerExtension.Resolve<MainWindow>();
-            void view_ContentRendered(object sender, EventArgs e)
+            if (view.ViewModel.SettingsService.IsDifferentVersion())
             {
-                view.ContentRendered -= view_ContentRendered;
-                if (view.ViewModel.SettingsService.IsDifferentVersion())
+                void view_ContentRendered(object sender, EventArgs e)
+                {
+                    view.ContentRendered -= view_ContentRendered;
+                    view.ViewModel.AboutCommand.Execute();
                     view.ViewModel.DialogService.ToastNotify(string.Format(Properties.Resources.Message_NotifyWelcome, view.ViewModel.ProductInfo.Product, view.ViewModel.ProductInfo.Version));
+                }
+                view.ContentRendered += view_ContentRendered;
             }
-            view.ContentRendered += view_ContentRendered;
 
             // コマンドライン引数を渡す
             var args = ((App)Application.Current).CommandLineArgs;
