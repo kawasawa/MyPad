@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0"?>
-<SyntaxDefinition name="Transact-SQL" extensions=".tsql" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+<SyntaxDefinition name="Transact-SQL" extensions="*.tsql" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 
   <Color name="Keywords" foreground="DodgerBlue" fontWeight="bold"/>
   <Color name="Comment"  foreground="MediumSlateBlue"/>
