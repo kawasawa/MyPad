@@ -395,11 +395,11 @@ namespace MyPad.Views.Controls
         {
             switch (e.Property.Name)
             {
-                case nameof(this.Document) when e.OldValue != null:
-                    ((TextDocument)e.OldValue).FileNameChanged -= this.TextDocument_FileNameChanged;
-                    break;
-                case nameof(this.Document) when e.NewValue != null:
-                    ((TextDocument)e.NewValue).FileNameChanged += this.TextDocument_FileNameChanged;
+                case nameof(this.Document):
+                    if (e.OldValue != null)
+                        ((TextDocument)e.OldValue).FileNameChanged -= this.TextDocument_FileNameChanged;
+                    if (e.NewValue != null)
+                        ((TextDocument)e.NewValue).FileNameChanged += this.TextDocument_FileNameChanged;
                     break;
                 case nameof(this.ActualFontSize):
                     this.ZoomReset();

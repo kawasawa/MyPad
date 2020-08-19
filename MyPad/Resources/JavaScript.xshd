@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0"?>
-<SyntaxDefinition name="JavaScript" extensions=".js" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+<SyntaxDefinition name="JavaScript" extensions="*.js" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
   
   <Property name="FoldingStrategy" value="Brace"/>
 
