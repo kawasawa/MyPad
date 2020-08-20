@@ -720,6 +720,8 @@ namespace MyPad.ViewModels
                 }
 
                 // シンタックス定義を設定する
+                // NOTE: フォールディングを更新させるため、意図的に変更を発生させる
+                sameTextEditor.SyntaxDefinition = null;
                 sameTextEditor.SyntaxDefinition = definition;
 
                 this.DialogService.ToastNotify($"{Resources.Message_NotifyLoaded}{Environment.NewLine}{path}{Environment.NewLine}[{encoding?.EncodingName ?? "Auto Encoding"}]");
