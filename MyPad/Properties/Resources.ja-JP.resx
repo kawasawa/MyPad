@@ -624,7 +624,7 @@
     <value>F11 を押して全画面表示を終了します。</value>
   </data>
   <data name="Message_NotifySaved" xml:space="preserve">
-    <value>テキストが保存されました。</value>
+    <value>テキストを保存しました。</value>
   </data>
   <data name="Command_Diff" xml:space="preserve">
     <value>差分表示</value>
