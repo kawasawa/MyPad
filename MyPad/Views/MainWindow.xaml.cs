@@ -28,7 +28,7 @@ using Vanara.PInvoke;
 
 namespace MyPad.Views
 {
-    public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
+    public partial class MainWindow : MetroWindow
     {
         #region インジェクション
 

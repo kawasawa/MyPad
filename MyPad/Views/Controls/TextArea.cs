@@ -53,11 +53,7 @@ namespace MyPad.Views.Controls
                 value => int.TryParse(value.ToString(), out var i) && 1 <= i && i <= 16);
         public static readonly DependencyProperty EnableFoldingsProperty
             = DependencyPropertyExtensions.Register(
-                new PropertyMetadata(true, (obj, e) =>
-                {
-                    var self = (TextArea)obj;
-                    self.UpdateFoldings();
-                })); 
+                new PropertyMetadata(true, (obj, e) => ((TextArea)obj).UpdateFoldings())); 
         public static readonly DependencyProperty EnableAutoCompletionProperty
             = DependencyPropertyExtensions.Register(new PropertyMetadata(true));
 
