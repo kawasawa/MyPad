@@ -94,6 +94,13 @@ namespace MyPad.Models
             set => this.SetProperty(ref this._showLineNumbers, value);
         }
 
+        private bool _showChangeMarker = true;
+        public bool ShowChangeMarker
+        {
+            get => this._showChangeMarker;
+            set => this.SetProperty(ref this._showChangeMarker, value);
+        }
+
         private bool _showColumnRuler;
         public bool ShowColumnRuler
         {

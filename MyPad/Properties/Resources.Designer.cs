@@ -1525,6 +1525,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Show change marker. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string LabelText_ShowChangeMarker {
+            get {
+                return ResourceManager.GetString("LabelText_ShowChangeMarker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Show end of line. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_ShowEndOfLine {
