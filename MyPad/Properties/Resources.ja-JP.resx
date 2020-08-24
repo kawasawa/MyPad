@@ -686,4 +686,7 @@
   <data name="LabelText_EnableFoldings" xml:space="preserve">
     <value>コードの折り畳みを有効にする。</value>
   </data>
+  <data name="Message_NotifyCachedFilesRemain" xml:space="preserve">
+    <value>過去にキャッシュされたファイルが見つかりました。ご確認ください。</value>
+  </data>
 </root>

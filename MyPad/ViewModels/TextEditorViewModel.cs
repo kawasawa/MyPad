@@ -5,7 +5,6 @@ using ICSharpCode.AvalonEdit.Utils;
 using MyPad.Models;
 using MyPad.Properties;
 using MyPad.ViewModels.Events;
-using Plow;
 using Prism.Events;
 using Prism.Ioc;
 using Prism.Logging;
@@ -39,7 +38,7 @@ namespace MyPad.ViewModels
         [Dependency]
         public ILoggerFacade Logger { get; set; }
         [Dependency]
-        public IProductInfo ProductInfo { get; set; }
+        public SharedDataService SharedDataService { get; set; }
         [Dependency]
         public SettingsService SettingsService { get; set; }
         [Dependency]
@@ -542,7 +541,7 @@ namespace MyPad.ViewModels
 
             await this.Interrupt(async () =>
             {
-                var path = Path.Combine(this.ProductInfo.Temporary, TextHelper.ConvertToCompressedBase64(this.IsNewFile ? this.FileName : this.ShortFileName).Replace("/", "-"));
+                var path = Path.Combine(this.SharedDataService.TempDirectoryPath, this.Sequense.ToString());
                 try
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(path));
@@ -556,7 +555,7 @@ namespace MyPad.ViewModels
                     return;
                 }
                 this.Temporary = (path, this.Document.Version);
-                this.EventAggregator.GetEvent<RaiseBalloonEvent>().Publish((Resources.Message_NotifyAutoSaved, $"{Path.GetFileName(this.FileName)}{Environment.NewLine}{Path.GetFileName(path)}"));
+                this.EventAggregator.GetEvent<RaiseBalloonEvent>().Publish((Resources.Message_NotifyAutoSaved, Path.GetFileName(this.FileName)));
             });
         }
 

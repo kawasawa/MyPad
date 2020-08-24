@@ -1699,6 +1699,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   Some previously cached files remain. Please check. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_NotifyCachedFilesRemain {
+            get {
+                return ResourceManager.GetString("Message_NotifyCachedFilesRemain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Directory not found. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_NotifyDirectoryNotFound {
