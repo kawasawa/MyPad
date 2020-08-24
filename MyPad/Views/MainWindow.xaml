@@ -28,7 +28,8 @@
                        P2={Binding ActiveTextEditor.Value.IsModified, Mode=OneWay},
                        P3={Binding ProductInfo.Product, Mode=OneWay}}"
                Cursor="{qc:Binding '$P ? Cursors.Wait : Cursors.Arrow', P={Binding IsWorking.Value, Mode=TwoWay}}"
-               Height="525" Width="850" ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen" AllowDrop="True"
+               ResizeMode="{qc:Binding '$P ? ResizeMode.CanResizeWithGrip : ResizeMode.CanResize', P={Binding SettingsService.System.ShowStatusBar, Mode=TwoWay}}" 
+               Height="525" Width="850" WindowStartupLocation="CenterScreen" AllowDrop="True"
                Loaded="Window_Loaded" Closing="Window_Closing" Closed="Window_Closed" DataContextChanged="Window_DataContextChanged">
 
     <!-- リソース -->
