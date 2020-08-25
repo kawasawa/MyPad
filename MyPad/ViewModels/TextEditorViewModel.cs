@@ -94,7 +94,8 @@ namespace MyPad.ViewModels
         private int? _sequense;
         public int Sequense
         {
-            get => this._isInitialized && this.IsNewFile ? this._sequense ??= ++GlobalSequence : -1;
+            // NOTE: 初期化が完了するまでは採番しない
+            get => this._isInitialized ? this._sequense ??= ++GlobalSequence : -1;
             private set => this._sequense = value;
         }
 
