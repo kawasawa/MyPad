@@ -12,7 +12,6 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
-using System.Windows;
 using Unity;
 
 namespace MyPad.ViewModels.Regions
@@ -27,6 +26,8 @@ namespace MyPad.ViewModels.Regions
         public ILoggerFacade Logger { get; set; }
         [Dependency]
         public IProductInfo ProductInfo { get; set; }
+        [Dependency]
+        public SharedDataService SharedDataService { get; set; }
         [Dependency]
         public SettingsService SettingsService { get; set; }
         [Dependency]
@@ -54,7 +55,7 @@ namespace MyPad.ViewModels.Regions
                     var parameters = new SaveFileDialogParameters()
                     {
                         DefaultFileName = $"{this.ProductInfo.Product}-log ({DateTime.Now:yyyyMMddHHmmss})",
-                        Filter = "ZIP|.zip",
+                        Filter = "ZIP|*.zip",
                         DefaultExtension = ".zip",
                     };
                     var ready = this.CommonDialogService.ShowDialog(parameters);
@@ -104,8 +105,8 @@ namespace MyPad.ViewModels.Regions
             const int MAX_LOOP_COUNT = 10;
             const int LOOP_DELAY = 500;
 
-            var sourcePath = ((App)Application.Current).LogDirectoryPath;
-            var tempPath = Path.Combine(this.ProductInfo.Temporary, Path.GetFileNameWithoutExtension(path));
+            var sourcePath = this.SharedDataService.LogDirectoryPath;
+            var tempPath = Path.Combine(this.SharedDataService.TempDirectoryPath, Path.GetFileNameWithoutExtension(path));
 
             try
             {

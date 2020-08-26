@@ -24,7 +24,7 @@ namespace MyPad
         {
             this._sequence = ++GlobalSequence;
             this._logger = ((App)Application.Current).Logger;
-            this._process = ((App)Application.Current).CurrentProcess;
+            this._process = ((App)Application.Current).SharedDataService.Process;
             this._method = method;
         }
 

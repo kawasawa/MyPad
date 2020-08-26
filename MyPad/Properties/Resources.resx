@@ -726,4 +726,10 @@ These changes will be applied on restart. Do you want to continue?</value>
   <data name="LabelText_EnableFoldings" xml:space="preserve">
     <value>Enable foldings.</value>
   </data>
+  <data name="LabelText_ShowChangeMarker" xml:space="preserve">
+    <value>Show change marker.</value>
+  </data>
+  <data name="Message_NotifyCachedFilesRemain" xml:space="preserve">
+    <value>Some previously cached files remain. Please check.</value>
+  </data>
 </root>

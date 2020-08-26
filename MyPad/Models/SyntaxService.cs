@@ -12,7 +12,7 @@ using Unity;
 
 namespace MyPad.Models
 {
-    public class SyntaxService
+    public sealed class SyntaxService
     {
         #region インジェクション
 

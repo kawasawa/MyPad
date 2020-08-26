@@ -10,11 +10,12 @@ using QuickConverter;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using Vanara.PInvoke;
 using WPFLocalizeExtension.Providers;
@@ -37,24 +38,9 @@ namespace MyPad
         public IProductInfo ProductInfo { get; }
 
         /// <summary>
-        /// プロセス情報を取得します。
+        /// アプリケーションの共有情報を取得します。
         /// </summary>
-        public Process CurrentProcess { get; }
-
-        /// <summary>
-        /// コマンドライン引数を取得します。
-        /// </summary>
-        public IEnumerable<string> CommandLineArgs { get; private set; }
-
-        /// <summary>
-        /// アプリケーションの識別子を取得します。
-        /// </summary>
-        public string Identifier => $"__{this.ProductInfo.Company}:{this.ProductInfo.Product}:{this.ProductInfo.Version}__";
-
-        /// <summary>
-        /// ログファイルが出力されるディレクトリのパスを取得します。
-        /// </summary>
-        public string LogDirectoryPath => Path.Combine(this.ProductInfo.Local, "log");
+        public Models.SharedDataService SharedDataService { get; }
 
         /// <summary>
         /// このクラスの新しいインスタンスを生成します。
@@ -100,13 +86,13 @@ namespace MyPad
                             Category.Exception => nameof(NLog.LogLevel.Error),
                             _ => nameof(NLog.LogLevel.Debug),
                         };
-                        logger.Factory.Configuration.Variables.Add("DIR", this.LogDirectoryPath);
+                        logger.Factory.Configuration.Variables.Add("DIR", this.SharedDataService.LogDirectoryPath);
                         logger.Factory.Configuration.Variables.Add("CTG", categoryName);
                         logger.Factory.ReconfigExistingLoggers();
                     },
                 });
             this.ProductInfo = new ProductInfo();
-            this.CurrentProcess = Process.GetCurrentProcess();
+            this.SharedDataService = new Models.SharedDataService(this.ProductInfo, Process.GetCurrentProcess());
             UnhandledExceptionObserver.Observe(this, this.Logger, this.ProductInfo);
             Initializer.InitEncoding();
             Initializer.InitQuickConverter();
@@ -119,37 +105,60 @@ namespace MyPad
         [LogInterceptor]
         protected override void OnStartup(StartupEventArgs e)
         {
-            this.CommandLineArgs = e.Args;
-            this.Logger.Log($"アプリケーションを開始しました。: Process={this.CurrentProcess.Id}, Args=[{string.Join(", ", e.Args)}]", Category.Info);
+            this.SharedDataService.CommandLineArgs = e.Args;
+            this.Logger.Log($"アプリケーションを開始しました。: Process={this.SharedDataService.Process.Id}, Args=[{string.Join(", ", this.SharedDataService.CommandLineArgs)}]", Category.Info);
 
-            var handle = this.GetOtherProcessHandle(this.CurrentProcess);
+            var handle = this.GetOtherProcessHandle(this.SharedDataService.Process);
             if (handle.IsNull == false)
             {
-                this.SendValues(this.CurrentProcess, handle, e.Args);
+                this.SendValues(this.SharedDataService.Process, handle, this.SharedDataService.CommandLineArgs);
                 this.Shutdown(0);
                 return;
             }
 
-            Task.Run(() =>
+            // このプロセスで使用する一時フォルダを作成し、隠し属性を付与する
+            var currentInfo = new DirectoryInfo(this.SharedDataService.TempDirectoryPath);
+            currentInfo.Create();
+            currentInfo.Attributes |= FileAttributes.Hidden;
+
+            var cachedDirectories = new DirectoryInfo(this.ProductInfo.Temporary)
+                .EnumerateDirectories()
+                .Where(i => i.FullName != currentInfo.FullName)
+                .Select(i =>
+                {
+                    var result = DateTime.TryParseExact(Path.GetFileName(i.FullName), "yyyyMMddHHmmssfff", CultureInfo.CurrentCulture, DateTimeStyles.None, out var value);
+                    return (result, value, info: i);
+                });
+
+            if (cachedDirectories.Any())
             {
+                const int LOOP_DELAY = 500;
+
                 try
                 {
-                    var info = new DirectoryInfo(this.ProductInfo.Temporary);
-                    if (info.Exists == false)
-                        return;
+                    // 残存する一時フォルダの隠し属性を外す
+                    foreach (var info in cachedDirectories.Select(t => t.info))
+                        info.Attributes &= ~FileAttributes.Hidden;
 
-                    // 残存する一時ファイルのうち指定の日数を超えたものを削除する
-                    var basis = DateTime.Now.AddDays(-1 * AppSettings.TempsLifetime);
-                    info.EnumerateFiles()
-                        .Where(i => i.LastWriteTime < basis)
-                        .ForEach(i => File.Delete(i.FullName));
-                    this.Logger.Log("一時ファイルを削除しました。(システム開始時)", Category.Debug);
+                    // 残存する一時フォルダのうち、指定の期間を超えたものを削除する
+                    var basis = this.SharedDataService.Process.StartTime.AddDays(-1 * AppSettings.TempsLifetime);
+                    foreach (var info in cachedDirectories
+                        .Where(t => t.result == false || t.value < basis || t.info.EnumerateFileSystemInfos().Any() == false)
+                        .Select(t => t.info))
+                    {
+                        Directory.Delete(info.FullName, true);
+                        while (Directory.Exists(info.FullName))
+                            Thread.Sleep(LOOP_DELAY);
+                    }
+                    this.Logger.Log("指定の期間を超えた一時フォルダを削除しました。(システム開始時)", Category.Debug);
                 }
                 catch (Exception ex)
                 {
-                    this.Logger.Log("一時ファイルの削除に失敗しました。(システム開始時)", Category.Warn, ex);
+                    this.Logger.Log("指定の期間を超えた一時フォルダの削除に失敗しました。(システム開始時)", Category.Warn, ex);
                 }
-            });
+
+                this.SharedDataService.CachedDirectories = cachedDirectories.Select(t => t.info.FullName).ToList();
+            }
 
             base.OnStartup(e);
         }
@@ -182,6 +191,7 @@ namespace MyPad
             // シングルトン
             containerRegistry.RegisterInstance(this.Logger);
             containerRegistry.RegisterInstance(this.ProductInfo);
+            containerRegistry.RegisterInstance(this.SharedDataService);
             containerRegistry.RegisterSingleton<ICommonDialogService, CommonDialogService>();
             containerRegistry.RegisterSingleton<Models.SettingsService>();
             containerRegistry.RegisterSingleton<Models.SyntaxService>();
@@ -220,7 +230,7 @@ namespace MyPad
                 }
             };
             var shell = this.Container.Resolve<Views.Workspace>();
-            shell.Title = this.Identifier;
+            shell.Title = this.SharedDataService.Identifier;
             shell.Closed += (sender, e) => this.Container?.Resolve<Models.SettingsService>()?.Save();
             return shell;
         }
@@ -232,8 +242,22 @@ namespace MyPad
         [LogInterceptor]
         protected override void OnExit(ExitEventArgs e)
         {
+            const int LOOP_DELAY = 500;
+
+            try
+            {
+                Directory.Delete(this.SharedDataService.TempDirectoryPath, true);
+                while (Directory.Exists(this.SharedDataService.TempDirectoryPath))
+                    Thread.Sleep(LOOP_DELAY);
+                this.Logger.Log("一時フォルダを削除しました。(システム終了時)", Category.Debug);
+            }
+            catch (Exception ex)
+            {
+                this.Logger.Log("一時フォルダの削除に失敗しました。(システム終了時)", Category.Warn, ex);
+            }
+
             base.OnExit(e);
-            this.Logger.Log($"アプリケーションを終了しました。: Process={this.CurrentProcess.Id}, ExitCode={e.ApplicationExitCode}", Category.Info);
+            this.Logger.Log($"アプリケーションを終了しました。: Process={this.SharedDataService.Process.Id}, ExitCode={e.ApplicationExitCode}", Category.Info);
         }
 
         /// <summary>
@@ -265,7 +289,7 @@ namespace MyPad
                     // 本アプリケーションでは実質的に識別子として使用される
                     var lpString = new StringBuilder(256);
                     User32.GetWindowText(hWnd, lpString, lpString.Capacity);
-                    if (lpString.ToString().Contains(this.Identifier) == false)
+                    if (lpString.ToString().Contains(this.SharedDataService.Identifier) == false)
                         return true;
 
                     // ハンドルを保持する

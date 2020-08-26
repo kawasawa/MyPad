@@ -1,12 +1,15 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
+using MyPad.Models;
 using MyPad.ViewModels;
 using MyPad.ViewModels.Events;
+using Plow;
 using Plow.Wpf;
 using Prism.Events;
 using Prism.Ioc;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -29,6 +32,10 @@ namespace MyPad.Views
         public IContainerExtension ContainerExtension { get; set; }
         [Dependency]
         public IRegionManager RegionManager { get; set; }
+        [Dependency]
+        public IProductInfo ProductInfo { get; set; }
+        [Dependency]
+        public SharedDataService SharedDataService { get; set; }
 
         #endregion
 
@@ -79,8 +86,20 @@ namespace MyPad.Views
                 view.ContentRendered += view_ContentRendered;
             }
 
+            // 残存する一時フォルダをチェックする
+            if (this.SharedDataService.CachedDirectories.Any())
+            {
+                void view_ContentRendered(object sender, EventArgs e)
+                {
+                    view.ContentRendered -= view_ContentRendered;
+                    view.ViewModel.DialogService.Notify(Properties.Resources.Message_NotifyCachedFilesRemain);
+                    Process.Start("explorer.exe", this.ProductInfo.Temporary);
+                }
+                view.ContentRendered += view_ContentRendered;
+            }
+
             // コマンドライン引数を渡す
-            var args = ((App)Application.Current).CommandLineArgs;
+            var args = this.SharedDataService.CommandLineArgs;
             if (args.Any())
                 view.ViewModel.LoadCommand.Execute(args);
 

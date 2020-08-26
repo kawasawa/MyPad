@@ -151,6 +151,7 @@
                                     <CheckBox IsChecked="{Binding ShowBoxForControlCharacters, Mode=TwoWay}" Content="{le:Loc LabelText_ShowBoxForControlCharacters}"/>
                                     <CheckBox IsChecked="{Binding ShowEndOfLine, Mode=TwoWay}"               Content="{le:Loc LabelText_ShowEndOfLine}"/>
                                     <CheckBox IsChecked="{Binding ShowLineNumbers, Mode=TwoWay}"             Content="{le:Loc LabelText_ShowLineNumbers}"/>
+                                    <CheckBox IsChecked="{Binding ShowChangeMarker, Mode=TwoWay}"            Content="{le:Loc LabelText_ShowChangeMarker}"/>
                                 </StackPanel>
 
                                 <Border Height="10"/>

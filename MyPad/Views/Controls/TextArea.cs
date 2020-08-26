@@ -3,6 +3,7 @@ using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Search;
+using MyPad.Views.Controls.ChangeMarker;
 using MyPad.Views.Controls.Folding;
 using Plow.Wpf;
 using System;
@@ -51,9 +52,12 @@ namespace MyPad.Views.Controls
             = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(2),
                 value => int.TryParse(value.ToString(), out var i) && 1 <= i && i <= 16);
+        public static readonly DependencyProperty ShowChangeMarkerProperty
+            = DependencyPropertyExtensions.Register(
+                new PropertyMetadata(true, (obj, e) => ((TextArea)obj).ResetChangeMarker()));
         public static readonly DependencyProperty EnableFoldingsProperty
             = DependencyPropertyExtensions.Register(
-                new PropertyMetadata(true, (obj, e) => ((TextArea)obj).UpdateFoldings())); 
+                new PropertyMetadata(true, (obj, e) => ((TextArea)obj).UpdateFoldings()));
         public static readonly DependencyProperty EnableAutoCompletionProperty
             = DependencyPropertyExtensions.Register(new PropertyMetadata(true));
 
@@ -72,6 +76,7 @@ namespace MyPad.Views.Controls
         private readonly DispatcherTimer _updateFoldingsTimer;
         private IEnumerable<ICompletionData> _completionData = Enumerable.Empty<ICompletionData>();
 
+        public ChangeMarkerManager ChangeMarkerManager { get; private set; }
         public FoldingManager FoldingManager { get; private set; }
         public IFoldingStrategy FoldingStrategy { get; private set; }
         public SearchPanel SearchPanel { get; private set; }
@@ -100,6 +105,12 @@ namespace MyPad.Views.Controls
         {
             get => (int)this.GetValue(ZoomIncrementProperty);
             set => this.SetValue(ZoomIncrementProperty, value);
+        }
+
+        public bool ShowChangeMarker
+        {
+            get => (bool)this.GetValue(ShowChangeMarkerProperty);
+            set => this.SetValue(ShowChangeMarkerProperty, value);
         }
 
         public bool EnableFoldings
@@ -208,6 +219,7 @@ namespace MyPad.Views.Controls
                 (sender, e) => e.CanExecute = this.CanReplaceAll()));
 
             this.SearchPanel.Loaded += this.SearchPanel_Loaded;
+            this.Loaded += this.TextArea_Loaded;
             this.Unloaded += this.TextArea_Unloaded;
         }
 
@@ -360,6 +372,21 @@ namespace MyPad.Views.Controls
             this.UpdateFoldings();
         }
 
+        public void ResetChangeMarker()
+        {
+            if (this.ShowChangeMarker == false)
+            {
+                if (this.ChangeMarkerManager != null)
+                {
+                    ChangeMarkerManager.Uninstall(this.ChangeMarkerManager);
+                    this.ChangeMarkerManager = null;
+                }
+                return;
+            }
+
+            this.ChangeMarkerManager ??= ChangeMarkerManager.Install(this);
+        }
+
         public void UpdateFoldings()
         {
             if (this.EnableFoldings == false || this.FoldingStrategy == null)
@@ -476,13 +503,25 @@ namespace MyPad.Views.Controls
             (sender as SearchPanel)?.Reactivate();
         }
 
+        private void TextArea_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.ResetChangeMarker();
+        }
+
         private void TextArea_Unloaded(object sender, RoutedEventArgs e)
         {
-            this.Unloaded -= this.TextArea_Unloaded;
             this.SearchPanel.Loaded -= this.SearchPanel_Loaded;
+            this.Loaded -= this.TextArea_Loaded;
+            this.Unloaded -= this.TextArea_Unloaded;
 
             this._updateFoldingsTimer.Tick -= this.FoldingsTimer_Tick;
             this._updateFoldingsTimer.Stop();
+
+            if (this.ChangeMarkerManager != null)
+            {
+                ChangeMarkerManager.Uninstall(this.ChangeMarkerManager);
+                this.ChangeMarkerManager = null;
+            }
 
             if (this.FoldingManager != null)
             {
@@ -535,6 +574,5 @@ namespace MyPad.Views.Controls
             public static readonly ICommand ReplaceAll
                 = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.A, ModifierKeys.Alt) });
         }
-
     }
 }

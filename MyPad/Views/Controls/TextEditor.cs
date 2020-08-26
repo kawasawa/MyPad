@@ -87,6 +87,10 @@ namespace MyPad.Views.Controls
             = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(TextArea.OverstrikeModeProperty.DefaultMetadata.DefaultValue),
                 TextArea.OverstrikeModeProperty.IsValidValue);
+        public static readonly DependencyProperty ShowChangeMarkerProperty
+            = DependencyPropertyExtensions.Register(
+                new PropertyMetadata(TextArea.ShowChangeMarkerProperty.DefaultMetadata.DefaultValue),
+                TextArea.ShowChangeMarkerProperty.IsValidValue); 
         public static readonly DependencyProperty EnableFoldingsProperty
             = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(TextArea.EnableFoldingsProperty.DefaultMetadata.DefaultValue),
@@ -216,6 +220,12 @@ namespace MyPad.Views.Controls
             set => this.SetValue(OverstrikeModeProperty, value);
         }
 
+        public bool ShowChangeMarker
+        {
+            get => (bool)this.GetValue(ShowChangeMarkerProperty);
+            set => this.SetValue(ShowChangeMarkerProperty, value);
+        }
+
         public bool EnableFoldings
         {
             get => (bool)this.GetValue(EnableFoldingsProperty);
@@ -290,20 +300,24 @@ namespace MyPad.Views.Controls
         {
             switch (e.Property.Name)
             {
-                case nameof(this.Settings) when e.OldValue != null:
-                    PropertyChangedWeakEventManager.RemoveListener((INotifyPropertyChanged)e.OldValue, this);
+                case nameof(this.Settings):
+                    if (e.OldValue != null)
+                        PropertyChangedWeakEventManager.RemoveListener((INotifyPropertyChanged)e.OldValue, this);
+                    if (e.NewValue != null)
+                        PropertyChangedWeakEventManager.AddListener((INotifyPropertyChanged)e.NewValue, this);
                     break;
-                case nameof(this.Settings) when e.NewValue != null:
-                    PropertyChangedWeakEventManager.AddListener((INotifyPropertyChanged)e.NewValue, this);
-                    break;
-                case nameof(this.Document) when e.OldValue != null:
-                    PropertyChangedWeakEventManager.RemoveListener((INotifyPropertyChanged)e.OldValue, this);
-                    break;
-                case nameof(this.Document) when e.NewValue != null:
-                    PropertyChangedWeakEventManager.AddListener((INotifyPropertyChanged)e.NewValue, this);
-                    this._totalDelimiterLength = ((TextDocument)e.NewValue).Lines.Sum(line => line.DelimiterLength);
-                    this.TextLength = ((TextDocument)e.NewValue).TextLength;
-                    this.VisualLength = this.TextLength - this._totalDelimiterLength;
+                case nameof(this.Document):
+                    if (e.OldValue != null)
+                    {
+                        PropertyChangedWeakEventManager.RemoveListener((INotifyPropertyChanged)e.OldValue, this);
+                    }
+                    if (e.NewValue != null)
+                    {
+                        PropertyChangedWeakEventManager.AddListener((INotifyPropertyChanged)e.NewValue, this);
+                        this._totalDelimiterLength = ((TextDocument)e.NewValue).Lines.Sum(line => line.DelimiterLength);
+                        this.TextLength = ((TextDocument)e.NewValue).TextLength;
+                        this.VisualLength = this.TextLength - this._totalDelimiterLength;
+                    }
                     break;
                 case nameof(this.ActualFontSize):
                     this.TextArea.ActualFontSize = (double)e.NewValue;
@@ -313,6 +327,9 @@ namespace MyPad.Views.Controls
                     break;
                 case nameof(this.OverstrikeMode):
                     this.TextArea.OverstrikeMode = (bool)e.NewValue;
+                    break;
+                case nameof(this.ShowChangeMarker):
+                    this.TextArea.ShowChangeMarker = (bool)e.NewValue;
                     break;
                 case nameof(this.EnableFoldings):
                     this.TextArea.EnableFoldings = (bool)e.NewValue;
