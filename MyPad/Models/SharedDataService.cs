@@ -23,5 +23,13 @@ namespace MyPad.Models
             this._productInfo = productInfo;
             this.Process = process;
         }
+
+        public void CreateTempDirectory()
+        {
+            // このプロセスで使用する一時フォルダを作成し、隠し属性を付与する
+            var info = new DirectoryInfo(this.TempDirectoryPath);
+            info.Create();
+            info.Attributes |= FileAttributes.Hidden;
+        }
     }
 }

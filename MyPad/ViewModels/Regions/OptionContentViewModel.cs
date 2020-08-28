@@ -102,32 +102,28 @@ namespace MyPad.ViewModels.Regions
         [LogInterceptor]
         private async Task<bool> ExportLogArchive(string path)
         {
-            const int MAX_LOOP_COUNT = 10;
             const int LOOP_DELAY = 500;
 
-            var sourcePath = this.SharedDataService.LogDirectoryPath;
             var tempPath = Path.Combine(this.SharedDataService.TempDirectoryPath, Path.GetFileNameWithoutExtension(path));
 
             try
             {
                 this.IsWorking.Value = true;
 
+                this.SharedDataService.CreateTempDirectory();
+
                 // 一時フォルダに退避する
                 if (Directory.Exists(tempPath))
                     await Task.Run(() => Directory.Delete(tempPath, true));
-                for (var i = 0; i < MAX_LOOP_COUNT && Directory.Exists(tempPath); i++)
+                while (Directory.Exists(tempPath))
                     await Task.Delay(LOOP_DELAY);
-                if (Directory.Exists(tempPath))
-                    throw new IOException(Resources.Message_NotifyTryAgainLater);
-                await Task.Run(() => FileSystem.CopyDirectory(sourcePath, tempPath, UIOption.AllDialogs, UICancelOption.ThrowException));
+                await Task.Run(() => FileSystem.CopyDirectory(this.SharedDataService.LogDirectoryPath, tempPath, UIOption.AllDialogs, UICancelOption.ThrowException));
 
                 // 退避したファイルを圧縮して出力する
                 if (File.Exists(path))
                     await Task.Run(() => File.Delete(path));
-                for (var i = 0; i < MAX_LOOP_COUNT && File.Exists(path); i++)
+                while (File.Exists(path))
                     await Task.Delay(LOOP_DELAY);
-                if (File.Exists(path))
-                    throw new IOException(Resources.Message_NotifyTryAgainLater);
                 await Task.Run(() => ZipFile.CreateFromDirectory(tempPath, path, CompressionLevel.Optimal, false));
 
                 Process.Start("explorer.exe", $"/select, {path}");
