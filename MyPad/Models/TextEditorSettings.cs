@@ -80,7 +80,7 @@ namespace MyPad.Models
             set => this.SetProperty(ref this._showBoxForControlCharacters, value);
         }
 
-        private bool _showEndOfLine;
+        private bool _showEndOfLine = true;
         public bool ShowEndOfLine
         {
             get => this._showEndOfLine;
