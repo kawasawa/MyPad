@@ -31,7 +31,7 @@
                 <LineBreak/>
                 <Run Text="{Binding ProductInfo.Copyright, Mode=OneWay}"/>
             </TextBlock>
-            <Button Grid.Column="4" Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_Repository}" VerticalAlignment="Center">
+            <Button Grid.Column="4" Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_Repository}" VerticalAlignment="Center" IsTabStop="False">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <behaviors:ProcessStartAction FileName="cmd.exe" Arguments="{qc:Binding '\'/c start \' + $P', P={Binding Source={x:Static root:AppSettings.ProjectSite}, Mode=OneWay}}" CreateNoWindow="True" ThrowException="False"/>
@@ -39,7 +39,7 @@
                 </i:Interaction.Triggers>
                 <mi:Material Kind="Github"/>
             </Button>
-            <Button Grid.Column="6" Style="{StaticResource Common.CircleButton}" ToolTipService.ShowDuration="10000" VerticalAlignment="Center">
+            <Button Grid.Column="6" Style="{StaticResource Common.CircleButton}" ToolTipService.ShowDuration="10000" VerticalAlignment="Center" IsTabStop="False">
                 <Button.ToolTip>
                     <StackPanel>
                         <TextBlock Text="{le:Loc Command_Donate}" FontSize="14"/>
