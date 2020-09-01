@@ -424,10 +424,7 @@ namespace MyPad.ViewModels
 
                     var definition = string.IsNullOrEmpty(syntax) ? null :
                         this.SyntaxService.Definitions.ContainsKey(syntax) ? this.SyntaxService.Definitions[syntax] : null;
-                    if (target.IsNewFile)
-                        target.SyntaxDefinition = definition;
-                    else
-                        await this.ReadFile(target.FileName, target.Encoding, definition, target.IsReadOnly);
+                    target.SyntaxDefinition = definition;
                 })
                 .AddTo(this.CompositeDisposable);
 

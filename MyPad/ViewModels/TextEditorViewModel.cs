@@ -545,7 +545,7 @@ namespace MyPad.ViewModels
                 var path = Path.Combine(this.SharedDataService.TempDirectoryPath, this.Sequense.ToString());
                 try
                 {
-                    Directory.CreateDirectory(Path.GetDirectoryName(path));
+                    this.SharedDataService.CreateTempDirectory();
                     var bytes = await Application.Current.Dispatcher.InvokeAsync(() => this.Encoding.GetBytes(this.Document.Text));
                     await File.WriteAllBytesAsync(path, bytes);
                     this.Logger.Log($"ファイルを自動保存しました。: Path={path}", Category.Info);

@@ -116,14 +116,11 @@ namespace MyPad
                 return;
             }
 
-            // このプロセスで使用する一時フォルダを作成し、隠し属性を付与する
-            var currentInfo = new DirectoryInfo(this.SharedDataService.TempDirectoryPath);
-            currentInfo.Create();
-            currentInfo.Attributes |= FileAttributes.Hidden;
+            this.SharedDataService.CreateTempDirectory();
 
             var cachedDirectories = new DirectoryInfo(this.ProductInfo.Temporary)
                 .EnumerateDirectories()
-                .Where(i => i.FullName != currentInfo.FullName)
+                .Where(i => i.FullName != this.SharedDataService.TempDirectoryPath)
                 .Select(i =>
                 {
                     var result = DateTime.TryParseExact(Path.GetFileName(i.FullName), "yyyyMMddHHmmssfff", CultureInfo.CurrentCulture, DateTimeStyles.None, out var value);

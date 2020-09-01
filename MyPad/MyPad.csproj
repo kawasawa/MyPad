@@ -9,7 +9,7 @@
     <Authors>Kazuki Awasawa</Authors>
     <Copyright>© Kazuki Awasawa All Rights Reserved.</Copyright>
     <Description></Description>
-    <Version>1.6.0</Version>
+    <Version>1.6.1</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
@@ -47,8 +47,8 @@
     <PackageReference Include="System.Interactive" Version="4.1.1" />
     <PackageReference Include="ToastNotifications.Messages" Version="2.5.1" />
     <PackageReference Include="Ude.NetStandard" Version="1.2.0" />
-    <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.2.13" />
-    <PackageReference Include="Vanara.PInvoke.User32" Version="3.2.13" />
+    <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.2.14" />
+    <PackageReference Include="Vanara.PInvoke.User32" Version="3.2.14" />
     <PackageReference Include="WinCopies.PushBinding" Version="1.2.2" />
     <PackageReference Include="WpfLocalizeExtension" Version="3.8.0" />
   </ItemGroup>
