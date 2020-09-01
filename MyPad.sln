@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyPad", "MyPad\MyPad.csproj
 EndProject
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "MyPad.Wap", "MyPad.Wap\MyPad.Wap.wapproj", "{95EDCEA9-CF81-46B3-965A-D54070CA08AD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyPad.Test", "MyPad.Test\MyPad.Test.csproj", "{457D34CB-5644-420E-BFA9-9C4F2A248160}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,25 @@ Global
 		{95EDCEA9-CF81-46B3-965A-D54070CA08AD}.Release|x86.ActiveCfg = Release|x86
 		{95EDCEA9-CF81-46B3-965A-D54070CA08AD}.Release|x86.Build.0 = Release|x86
 		{95EDCEA9-CF81-46B3-965A-D54070CA08AD}.Release|x86.Deploy.0 = Release|x86
+		{457D34CB-5644-420E-BFA9-9C4F2A248160}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{457D34CB-5644-420E-BFA9-9C4F2A248160}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{457D34CB-5644-420E-BFA9-9C4F2A248160}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{457D34CB-5644-420E-BFA9-9C4F2A248160}.Debug|ARM.Build.0 = Debug|Any CPU
+		{457D34CB-5644-420E-BFA9-9C4F2A248160}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{457D34CB-5644-420E-BFA9-9C4F2A248160}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{457D34CB-5644-420E-BFA9-9C4F2A248160}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{457D34CB-5644-420E-BFA9-9C4F2A248160}.Debug|x64.Build.0 = Debug|Any CPU
+		{457D34CB-5644-420E-BFA9-9C4F2A248160}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{457D34CB-5644-420E-BFA9-9C4F2A248160}.Debug|x86.Build.0 = Debug|Any CPU
+		{457D34CB-5644-420E-BFA9-9C4F2A248160}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{457D34CB-5644-420E-BFA9-9C4F2A248160}.Release|ARM.ActiveCfg = Release|Any CPU
+		{457D34CB-5644-420E-BFA9-9C4F2A248160}.Release|ARM.Build.0 = Release|Any CPU
+		{457D34CB-5644-420E-BFA9-9C4F2A248160}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{457D34CB-5644-420E-BFA9-9C4F2A248160}.Release|ARM64.Build.0 = Release|Any CPU
+		{457D34CB-5644-420E-BFA9-9C4F2A248160}.Release|x64.ActiveCfg = Release|Any CPU
+		{457D34CB-5644-420E-BFA9-9C4F2A248160}.Release|x64.Build.0 = Release|Any CPU
+		{457D34CB-5644-420E-BFA9-9C4F2A248160}.Release|x86.ActiveCfg = Release|Any CPU
+		{457D34CB-5644-420E-BFA9-9C4F2A248160}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
