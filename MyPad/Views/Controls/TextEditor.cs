@@ -381,30 +381,33 @@ namespace MyPad.Views.Controls
 
             this._isInCaretPositionChangedHandler = true;
 
-            try
-            {
-                var caret = (ICSharpCode.AvalonEdit.Editing.Caret)sender;
-                this.Line = caret.Line;
-                this.Column = caret.Column;
-                this.VisualColumn = caret.VisualColumn;
-                this.IsAtEndOfLine = caret.Position.IsAtEndOfLine;
-                this.IsInVirtualSpace = caret.IsInVirtualSpace;
+            var caret = (ICSharpCode.AvalonEdit.Editing.Caret)sender;
+            this.Line = caret.Line;
+            this.Column = caret.Column;
+            this.VisualColumn = caret.VisualColumn;
+            this.IsAtEndOfLine = caret.Position.IsAtEndOfLine;
+            this.IsInVirtualSpace = caret.IsInVirtualSpace;
 
-                if (this.Document != null)
-                {
-                    var offset = this.Document.GetOffset(caret.Line, caret.Column);
-                    var character = offset < this.Document.TextLength ? this.Document.GetCharAt(offset) : char.MinValue;
-                    this.CharName = this.IsInVirtualSpace ? "Virtual" : TextUtilities.GetControlCharacterName(character);
-                }
-                else
-                {
-                    this.CharName = this.IsInVirtualSpace ? "Virtual" : TextUtilities.GetControlCharacterName(char.MinValue);
-                }
-            }
-            finally
+            if (this.Document != null)
             {
-                this._isInCaretPositionChangedHandler = false;
+                var offset = this.Document.GetOffset(caret.Line, caret.Column);
+                var character = offset < this.Document.TextLength ? this.Document.GetCharAt(offset) : char.MinValue;
+                this.CharName = this.IsInVirtualSpace ? "Virtual" : TextUtilities.GetControlCharacterName(character);
+
+                // CR+LF の場合はつなげて表記する
+                if (this.CharName == "CR" && offset + 1 < this.Document.TextLength)
+                {
+                    var nextCharName = TextUtilities.GetControlCharacterName(this.Document.GetCharAt(offset + 1));
+                    if (nextCharName == "LF")
+                        this.CharName += nextCharName;
+                }
             }
+            else
+            {
+                this.CharName = TextUtilities.GetControlCharacterName(char.MinValue);
+            }
+
+            this._isInCaretPositionChangedHandler = false;
         }
 
         private void TextArea_SelectionChanged(object sender, EventArgs e)

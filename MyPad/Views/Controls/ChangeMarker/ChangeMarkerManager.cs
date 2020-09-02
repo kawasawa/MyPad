@@ -1,8 +1,10 @@
-﻿using System;
+﻿using ICSharpCode.AvalonEdit.Editing;
+using System;
+using System.Linq;
 
 namespace MyPad.Views.Controls.ChangeMarker
 {
-    // NOTE: FoldingManager と作りを合わせるため用意
+    // FoldingManager と作りを合わせるため用意する
     public class ChangeMarkerManager
     {
         private TextArea _textArea;
@@ -12,7 +14,9 @@ namespace MyPad.Views.Controls.ChangeMarker
         {
             this._textArea = textArea;
             this._margin = new ChangeMarkerMargin();
-            this._textArea.LeftMargins.Add(this._margin);
+            // 行番号と罫線の右隣に描画されるように調整する
+            var index = this._textArea.LeftMargins.FirstOrDefault() is LineNumberMargin ? 2 : 0;
+            this._textArea.LeftMargins.Insert(index, this._margin);
             this._textArea.TextView.Services.AddService(typeof(ChangeMarkerManager), this);
         }
 

@@ -47,6 +47,11 @@ namespace MyPad.Views
 
         #region プロパティ
 
+        public static readonly ICommand SwitchFocus
+            = new RoutedCommand(
+                nameof(SwitchFocus),
+                typeof(MainWindow),
+                new InputGestureCollection { new KeyGesture(Key.F6) });
         public static readonly ICommand ActivateFileExplorer
             = new RoutedCommand(
                 nameof(ActivateFileExplorer),
@@ -158,6 +163,10 @@ namespace MyPad.Views
                     }
                 ),
                 new CommandBinding(
+                    SwitchFocus,
+                    (sender, e) => this.SwitchFocusedElement()
+                ),
+                new CommandBinding(
                     ActivateFileExplorer,
                     (sender, e) => this.ActivateHamburgerMenuItem(this.FileExplorerItem)
                 ),
@@ -251,6 +260,24 @@ namespace MyPad.Views
 
                 // フォーカスを設定する
                 this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus());
+            }
+        }
+
+        [LogInterceptor]
+        private void SwitchFocusedElement()
+        {
+            if (Keyboard.FocusedElement != this.ActiveTextEditor?.TextArea)
+            {
+                this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus());
+                return;
+            }
+            
+            if (this.SettingsService.System.ShowSideBar &&
+                double.IsNaN(this.HamburgerMenu.Width) &&
+                (this.HamburgerMenu.Content as HamburgerMenuIconItem)?.Tag is FrameworkElement element)
+            {
+                element.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+                return;
             }
         }
 
