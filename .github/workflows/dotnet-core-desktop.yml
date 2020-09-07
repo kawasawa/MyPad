@@ -31,7 +31,9 @@ jobs:
         dotnet-version: 3.1.x
 
     - name: Execute unit tests
-      run: dotnet test $env:Test_Project_Path
+      run: dotnet test $env:Test_Project_Path /p:Configuration=$env:Configuration
+      env:
+        Configuration: ${{ matrix.configuration }}
     
     - name: Build the project
       run: dotnet build $env:Project_Path /p:Configuration=$env:Configuration
