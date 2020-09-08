@@ -10,6 +10,8 @@
              xmlns:le="http://wpflocalizeextension.codeplex.com"
              xmlns:qc="http://QuickConverter.CodePlex.com/"
              xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
+             xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
+             xmlns:controls="clr-namespace:MyPad.Views.Controls"
              mc:Ignorable="d"
              p:ViewModelLocator.AutoWireViewModel="True"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -17,6 +19,12 @@
     <ToolBar>
         <ToolBar.Resources>
             <Style x:Key="{x:Static ToolBar.ButtonStyleKey}" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.ToolBar}">
+                <Setter Property="Padding" Value="3"/>
+            </Style>
+            <Style TargetType="{x:Type m:DropDownButton}" BasedOn="{StaticResource Default.DropDownButton}">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Transparent}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Transparent}"/>
+                <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="Padding" Value="3"/>
             </Style>
         </ToolBar.Resources>
@@ -72,6 +80,30 @@
                 ToolTip="{le:Loc Command_Replace}">
             <mi:Material Kind="FindReplace"/>
         </Button>
+        <Separator Margin="5"/>
+        <m:DropDownButton ToolTip="{le:Loc Command_Formatting}">
+            <m:DropDownButton.Icon>
+                <mi:Modern Kind="PageEdit"/>
+            </m:DropDownButton.Icon>
+            <m:DropDownButton.Items>
+                <MenuItem Command="controls:TextArea+Commands.ConvertToNarrow"
+                          Header="{le:Loc Command_ConvertToNarrow}"/>
+                <MenuItem Command="controls:TextArea+Commands.ConvertToWide"
+                          Header="{le:Loc Command_ConvertToWide}"/>
+                <Separator/>
+                <MenuItem Command="ae:AvalonEditCommands.ConvertToLowercase"
+                          Header="{le:Loc Command_ConvertToLowerCase}"/>
+                <MenuItem Command="ae:AvalonEditCommands.ConvertToUppercase"
+                          Header="{le:Loc Command_ConvertToUpperCase}"/>
+                <MenuItem Command="ae:AvalonEditCommands.ConvertToTitleCase"
+                          Header="{le:Loc Command_ConvertToTitleCase}"/>
+                <Separator/>
+                <MenuItem Command="ae:AvalonEditCommands.ConvertTabsToSpaces"
+                          Header="{le:Loc Command_ConvertTabsToSpaces}"/>
+                <MenuItem Command="ae:AvalonEditCommands.ConvertSpacesToTabs"
+                          Header="{le:Loc Command_ConvertSpacesToTabs}"/>
+            </m:DropDownButton.Items>
+        </m:DropDownButton>
     </ToolBar>
     
 </UserControl>

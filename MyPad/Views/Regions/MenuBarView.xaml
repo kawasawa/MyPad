@@ -280,19 +280,23 @@
                           Header="{le:Loc Command_ZoomIn}"
                           InputGestureText="Ctrl+Plus">
                     <MenuItem.Icon>
-                        <mi:Material Kind="MagnifyPlusOutline"/>
+                        <mi:Modern Kind="TextSizePlus"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Command="controls:TextArea+Commands.ZoomOut"
                           Header="{le:Loc Command_ZoomOut}"
                           InputGestureText="Ctrl+Minus">
                     <MenuItem.Icon>
-                        <mi:Material Kind="MagnifyMinusOutline"/>
+                        <mi:Modern Kind="TextSizeMinus"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Command="controls:TextArea+Commands.ZoomReset"
                           Header="{le:Loc Command_ZoomReset}"
-                          InputGestureText="Ctrl+0"/>
+                          InputGestureText="Ctrl+0">
+                    <MenuItem.Icon>
+                        <mi:Modern Kind="TextSize"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
         </MenuItem>
         <MenuItem Header="{le:Loc Command_Tools}">

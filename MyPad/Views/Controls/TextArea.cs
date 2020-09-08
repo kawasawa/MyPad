@@ -556,10 +556,10 @@ namespace MyPad.Views.Controls
                 => new RoutedCommand(commandName, typeof(TextArea), inputGestures);
 
             public static readonly ICommand ConvertToNarrow
-                = CreateRoutedCommand();
+                = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.W, ModifierKeys.Control | ModifierKeys.Shift) });
 
             public static readonly ICommand ConvertToWide
-                = CreateRoutedCommand();
+                = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.W, ModifierKeys.Control) });
 
             public static readonly ICommand ZoomIn
                 = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.OemPlus, ModifierKeys.Control) });
