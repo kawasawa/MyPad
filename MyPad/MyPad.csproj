@@ -48,8 +48,8 @@
     <PackageReference Include="System.Interactive" Version="4.1.1" />
     <PackageReference Include="ToastNotifications.Messages" Version="2.5.1" />
     <PackageReference Include="Ude.NetStandard" Version="1.2.0" />
-    <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.2.14" />
-    <PackageReference Include="Vanara.PInvoke.User32" Version="3.2.14" />
+    <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.2.16" />
+    <PackageReference Include="Vanara.PInvoke.User32" Version="3.2.16" />
     <PackageReference Include="WinCopies.PushBinding" Version="1.2.2" />
     <PackageReference Include="WpfLocalizeExtension" Version="3.8.0" />
   </ItemGroup>
