@@ -71,7 +71,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   About に類似しているローカライズされた文字列を検索します。
+        ///   バージョン情報 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_About {
             get {
@@ -80,7 +80,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Cancel に類似しているローカライズされた文字列を検索します。
+        ///   キャンセル に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Cancel {
             get {
@@ -89,7 +89,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Case sensitive に類似しているローカライズされた文字列を検索します。
+        ///   大文字と小文字を区別 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_CaseSensitive {
             get {
@@ -98,7 +98,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Change encoding に類似しているローカライズされた文字列を検索します。
+        ///   文字コードを変更 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ChangeEncoding {
             get {
@@ -107,7 +107,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Change syntax に類似しているローカライズされた文字列を検索します。
+        ///   シンタックス定義を変更 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ChangeSyntax {
             get {
@@ -116,7 +116,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Close に類似しているローカライズされた文字列を検索します。
+        ///   閉じる に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Close {
             get {
@@ -125,7 +125,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Close all に類似しているローカライズされた文字列を検索します。
+        ///   すべて閉じる に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_CloseAll {
             get {
@@ -134,7 +134,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Close other に類似しているローカライズされた文字列を検索します。
+        ///   他をすべて閉じる に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_CloseOther {
             get {
@@ -143,7 +143,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Completion に類似しているローカライズされた文字列を検索します。
+        ///   キーワード補完 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Completion {
             get {
@@ -152,7 +152,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Convert spaces to tabs に類似しているローカライズされた文字列を検索します。
+        ///   空白をタブに変換 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ConvertSpacesToTabs {
             get {
@@ -161,7 +161,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Convert tabs to spaces に類似しているローカライズされた文字列を検索します。
+        ///   タブを空白に変換 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ConvertTabsToSpaces {
             get {
@@ -170,7 +170,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Convert to lower case に類似しているローカライズされた文字列を検索します。
+        ///   小文字に変換 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ConvertToLowerCase {
             get {
@@ -179,7 +179,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Convert to narrow に類似しているローカライズされた文字列を検索します。
+        ///   半角に変換 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ConvertToNarrow {
             get {
@@ -188,7 +188,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Convert to title case に類似しているローカライズされた文字列を検索します。
+        ///   単語の先頭を大文字に変換 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ConvertToTitleCase {
             get {
@@ -197,7 +197,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Convert to upper case に類似しているローカライズされた文字列を検索します。
+        ///   大文字に変換 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ConvertToUpperCase {
             get {
@@ -206,7 +206,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Convert to wide に類似しているローカライズされた文字列を検索します。
+        ///   全角に変換 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ConvertToWide {
             get {
@@ -215,7 +215,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Copy に類似しているローカライズされた文字列を検索します。
+        ///   コピー に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Copy {
             get {
@@ -224,7 +224,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Cut に類似しているローカライズされた文字列を検索します。
+        ///   切り取り に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Cut {
             get {
@@ -233,7 +233,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Delete に類似しているローカライズされた文字列を検索します。
+        ///   削除 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Delete {
             get {
@@ -242,7 +242,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Diff に類似しているローカライズされた文字列を検索します。
+        ///   差分表示 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Diff {
             get {
@@ -251,7 +251,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Compare with unmodified に類似しているローカライズされた文字列を検索します。
+        ///   未変更のものと比較 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_DiffUnmodified {
             get {
@@ -260,7 +260,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Donate に類似しているローカライズされた文字列を検索します。
+        ///   寄付する に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Donate {
             get {
@@ -269,7 +269,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Edit に類似しているローカライズされた文字列を検索します。
+        ///   編集 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Edit {
             get {
@@ -278,7 +278,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Execute に類似しているローカライズされた文字列を検索します。
+        ///   実行 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Execute {
             get {
@@ -287,7 +287,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Exit に類似しているローカライズされた文字列を検索します。
+        ///   終了 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Exit {
             get {
@@ -296,7 +296,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Exit application に類似しているローカライズされた文字列を検索します。
+        ///   アプリケーションを終了する に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ExitApplication {
             get {
@@ -305,7 +305,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Explorer に類似しているローカライズされた文字列を検索します。
+        ///   エクスプローラー に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Explorer {
             get {
@@ -314,7 +314,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Export log に類似しているローカライズされた文字列を検索します。
+        ///   ログファイルを出力する に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ExportLog {
             get {
@@ -323,7 +323,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   File に類似しているローカライズされた文字列を検索します。
+        ///   ファイル に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_File {
             get {
@@ -332,7 +332,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Find に類似しているローカライズされた文字列を検索します。
+        ///   検索 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Find {
             get {
@@ -341,7 +341,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Find next に類似しているローカライズされた文字列を検索します。
+        ///   次を検索 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_FindNext {
             get {
@@ -350,7 +350,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Find previous に類似しているローカライズされた文字列を検索します。
+        ///   前を検索 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_FindPrev {
             get {
@@ -359,7 +359,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Formatting に類似しているローカライズされた文字列を検索します。
+        ///   整形 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Formatting {
             get {
@@ -368,7 +368,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Go to line に類似しているローカライズされた文字列を検索します。
+        ///   指定行へ移動 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_GoToLine {
             get {
@@ -377,7 +377,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Help に類似しているローカライズされた文字列を検索します。
+        ///   ヘルプ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Help {
             get {
@@ -386,7 +386,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Initialize the syntax definitions に類似しているローカライズされた文字列を検索します。
+        ///   シンタックス定義を初期化する に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_InitializeSyntax {
             get {
@@ -395,7 +395,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Merge windows に類似しているローカライズされた文字列を検索します。
+        ///   ウィンドウを集約 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_MergeWindows {
             get {
@@ -404,7 +404,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Move down by page に類似しているローカライズされた文字列を検索します。
+        ///   次ページへ移動 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_MoveDownByPage {
             get {
@@ -413,7 +413,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Move left by word に類似しているローカライズされた文字列を検索します。
+        ///   単語の先頭へ移動 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_MoveLeftByWord {
             get {
@@ -422,7 +422,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Movement に類似しているローカライズされた文字列を検索します。
+        ///   移動 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Movement {
             get {
@@ -431,7 +431,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Move right by word に類似しているローカライズされた文字列を検索します。
+        ///   単語の末尾へ移動 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_MoveRightByWord {
             get {
@@ -440,7 +440,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Move to document end に類似しているローカライズされた文字列を検索します。
+        ///   ファイルの末尾へ移動 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_MoveToDocumentEnd {
             get {
@@ -449,7 +449,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Move to document start に類似しているローカライズされた文字列を検索します。
+        ///   ファイルの先頭へ移動 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_MoveToDocumentStart {
             get {
@@ -458,7 +458,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Move to line end に類似しているローカライズされた文字列を検索します。
+        ///   行末へ移動 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_MoveToLineEnd {
             get {
@@ -467,7 +467,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Move to line start に類似しているローカライズされた文字列を検索します。
+        ///   行頭へ移動 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_MoveToLineStart {
             get {
@@ -476,7 +476,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Move up by page に類似しているローカライズされた文字列を検索します。
+        ///   前ページへ移動 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_MoveUpByPage {
             get {
@@ -485,7 +485,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   New に類似しているローカライズされた文字列を検索します。
+        ///   新規作成 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_New {
             get {
@@ -494,7 +494,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   New window に類似しているローカライズされた文字列を検索します。
+        ///   新規ウィンドウ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_NewWindow {
             get {
@@ -503,7 +503,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   No に類似しているローカライズされた文字列を検索します。
+        ///   いいえ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_No {
             get {
@@ -521,7 +521,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Open に類似しているローカライズされた文字列を検索します。
+        ///   開く に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Open {
             get {
@@ -530,7 +530,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Open parent directory に類似しているローカライズされた文字列を検索します。
+        ///   親フォルダを開く に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_OpenParentDirectory {
             get {
@@ -539,7 +539,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Options に類似しているローカライズされた文字列を検索します。
+        ///   オプション に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Option {
             get {
@@ -548,7 +548,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Panels に類似しているローカライズされた文字列を検索します。
+        ///   パネル に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Panels {
             get {
@@ -557,7 +557,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Paste に類似しているローカライズされた文字列を検索します。
+        ///   貼り付け に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Paste {
             get {
@@ -566,7 +566,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Print に類似しているローカライズされた文字列を検索します。
+        ///   印刷 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Print {
             get {
@@ -575,7 +575,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Print preview に類似しているローカライズされた文字列を検索します。
+        ///   印刷プレビュー に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_PrintPreview {
             get {
@@ -584,7 +584,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Property に類似しているローカライズされた文字列を検索します。
+        ///   プロパティ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Property {
             get {
@@ -593,7 +593,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Redo に類似しているローカライズされた文字列を検索します。
+        ///   やり直し に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Redo {
             get {
@@ -602,7 +602,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Replace に類似しているローカライズされた文字列を検索します。
+        ///   置換 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Replace {
             get {
@@ -611,7 +611,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Replace all に類似しているローカライズされた文字列を検索します。
+        ///   すべて置換 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ReplaceAll {
             get {
@@ -620,7 +620,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Replace next に類似しているローカライズされた文字列を検索します。
+        ///   次を置換 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ReplaceNext {
             get {
@@ -629,7 +629,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Repository に類似しているローカライズされた文字列を検索します。
+        ///   リポジトリ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Repository {
             get {
@@ -638,7 +638,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Save に類似しているローカライズされた文字列を検索します。
+        ///   保存 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Save {
             get {
@@ -647,7 +647,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Save all に類似しているローカライズされた文字列を検索します。
+        ///   すべて保存 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_SaveAll {
             get {
@@ -656,7 +656,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Save as に類似しているローカライズされた文字列を検索します。
+        ///   名前を付けて保存 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_SaveAs {
             get {
@@ -665,7 +665,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Select all に類似しているローカライズされた文字列を検索します。
+        ///   すべて選択 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_SelectAll {
             get {
@@ -674,7 +674,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Select down by page に類似しているローカライズされた文字列を検索します。
+        ///   次ページまで選択 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_SelectDownByPage {
             get {
@@ -683,7 +683,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Selection に類似しているローカライズされた文字列を検索します。
+        ///   選択 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Selection {
             get {
@@ -692,7 +692,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Select left by word に類似しているローカライズされた文字列を検索します。
+        ///   単語の先頭まで選択 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_SelectLeftByWord {
             get {
@@ -701,7 +701,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Select right by word に類似しているローカライズされた文字列を検索します。
+        ///   単語の末尾まで選択 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_SelectRightByWord {
             get {
@@ -710,7 +710,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Select to document end に類似しているローカライズされた文字列を検索します。
+        ///   ファイルの末尾まで選択 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_SelectToDocumentEnd {
             get {
@@ -719,7 +719,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Select to document start に類似しているローカライズされた文字列を検索します。
+        ///   ファイルの先頭まで選択 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_SelectToDocumentStart {
             get {
@@ -728,7 +728,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Select to line end に類似しているローカライズされた文字列を検索します。
+        ///   行末まで選択 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_SelectToLineEnd {
             get {
@@ -737,7 +737,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Select to line start に類似しているローカライズされた文字列を検索します。
+        ///   行頭まで選択 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_SelectToLineStart {
             get {
@@ -746,7 +746,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Select up by page に類似しているローカライズされた文字列を検索します。
+        ///   前ページまで選択 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_SelectUpByPage {
             get {
@@ -755,7 +755,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Show に類似しているローカライズされた文字列を検索します。
+        ///   表示 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Show {
             get {
@@ -764,7 +764,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   MenuBar に類似しているローカライズされた文字列を検索します。
+        ///   メニューバー に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ShowMenuBar {
             get {
@@ -773,7 +773,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   SideBar に類似しているローカライズされた文字列を検索します。
+        ///   サイドバー に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ShowSideBar {
             get {
@@ -782,7 +782,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   StatusBar に類似しているローカライズされた文字列を検索します。
+        ///   ステータスバー に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ShowStatusBar {
             get {
@@ -791,7 +791,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   ToolBar に類似しているローカライズされた文字列を検索します。
+        ///   ツールバー に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ShowToolBar {
             get {
@@ -800,7 +800,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Switching between find mode and replace mode. に類似しているローカライズされた文字列を検索します。
+        ///   検索モードと置換モードの切り替え に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_SwitchFindMode {
             get {
@@ -809,7 +809,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Switching between full screen mode and window mode. に類似しているローカライズされた文字列を検索します。
+        ///   全画面表示とウィンドウ表示の切り替え に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_SwitchFullScreenMode {
             get {
@@ -818,7 +818,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Tools に類似しているローカライズされた文字列を検索します。
+        ///   ツール に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Tools {
             get {
@@ -827,7 +827,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Topmost に類似しているローカライズされた文字列を検索します。
+        ///   最前面に表示 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Topmost {
             get {
@@ -836,7 +836,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Undo に類似しているローカライズされた文字列を検索します。
+        ///   元に戻す に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Undo {
             get {
@@ -845,7 +845,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Use regex に類似しているローカライズされた文字列を検索します。
+        ///   正規表現を使用 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_UseRegex {
             get {
@@ -854,7 +854,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   View に類似しているローカライズされた文字列を検索します。
+        ///   表示 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_View {
             get {
@@ -863,7 +863,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   List of windows に類似しているローカライズされた文字列を検索します。
+        ///   ウィンドウ一覧 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_WindowList {
             get {
@@ -872,7 +872,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Yes に類似しているローカライズされた文字列を検索します。
+        ///   はい に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Yes {
             get {
@@ -881,7 +881,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Zoom に類似しているローカライズされた文字列を検索します。
+        ///   ズーム に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Zoom {
             get {
@@ -890,7 +890,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Zoom In に類似しているローカライズされた文字列を検索します。
+        ///   拡大 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ZoomIn {
             get {
@@ -899,7 +899,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Zoom Out に類似しているローカライズされた文字列を検索します。
+        ///   縮小 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ZoomOut {
             get {
@@ -908,7 +908,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Zoom Reset に類似しているローカライズされた文字列を検索します。
+        ///   リセット に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ZoomReset {
             get {
@@ -967,7 +967,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Access date に類似しているローカライズされた文字列を検索します。
+        ///   アクセス日時 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_AccessDate {
             get {
@@ -976,7 +976,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   All Files に類似しているローカライズされた文字列を検索します。
+        ///   すべてのファイル に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_AllFiles {
             get {
@@ -985,7 +985,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Data に類似しているローカライズされた文字列を検索します。
+        ///   データフォルダ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_AppDataDirectory {
             get {
@@ -994,7 +994,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Attributes に類似しているローカライズされた文字列を検索します。
+        ///   属性 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Attributes {
             get {
@@ -1003,7 +1003,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Auto detect に類似しているローカライズされた文字列を検索します。
+        ///   自動検出 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_AutoDetect {
             get {
@@ -1012,7 +1012,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Auto save interval in minutes に類似しているローカライズされた文字列を検索します。
+        ///   自動保存の間隔(分) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_AutoSaveInterval {
             get {
@@ -1021,7 +1021,16 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Command に類似しているローカライズされた文字列を検索します。
+        ///   目安線の位置 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_ColumnRulerPosition {
+            get {
+                return ResourceManager.GetString("Label_ColumnRulerPosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   コマンド に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Command {
             get {
@@ -1030,7 +1039,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Config file に類似しているローカライズされた文字列を検索します。
+        ///   構成ファイル に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_ConfigFile {
             get {
@@ -1039,7 +1048,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Confirm に類似しているローカライズされた文字列を検索します。
+        ///   確認 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Confirm {
             get {
@@ -1048,7 +1057,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Creation date に類似しているローカライズされた文字列を検索します。
+        ///   作成日時 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_CreationDate {
             get {
@@ -1057,7 +1066,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Culture に類似しているローカライズされた文字列を検索します。
+        ///   言語情報 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Culture {
             get {
@@ -1066,7 +1075,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Dark に類似しているローカライズされた文字列を検索します。
+        ///   黒 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Dark {
             get {
@@ -1075,7 +1084,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Destination for compartion に類似しているローカライズされた文字列を検索します。
+        ///   比較先 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_DiffDestination {
             get {
@@ -1084,7 +1093,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Source for comparsion に類似しているローカライズされた文字列を検索します。
+        ///   比較元 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_DiffSource {
             get {
@@ -1093,7 +1102,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Encoding に類似しているローカライズされた文字列を検索します。
+        ///   文字コード に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Encoding {
             get {
@@ -1102,7 +1111,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Execution に類似しているローカライズされた文字列を検索します。
+        ///   実行フォルダ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_ExecutionDirectory {
             get {
@@ -1111,7 +1120,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Execution file に類似しているローカライズされた文字列を検索します。
+        ///   実行ファイル に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_ExecutionFile {
             get {
@@ -1120,7 +1129,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Font に類似しているローカライズされた文字列を検索します。
+        ///   フォント に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Font {
             get {
@@ -1129,7 +1138,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Format に類似しているローカライズされた文字列を検索します。
+        ///   形式 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Format {
             get {
@@ -1138,7 +1147,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Language に類似しているローカライズされた文字列を検索します。
+        ///   言語 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Language {
             get {
@@ -1147,7 +1156,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Light に類似しているローカライズされた文字列を検索します。
+        ///   白 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Light {
             get {
@@ -1156,7 +1165,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Line number に類似しているローカライズされた文字列を検索します。
+        ///   行番号 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_LineMumber {
             get {
@@ -1165,7 +1174,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Location に類似しているローカライズされた文字列を検索します。
+        ///   場所 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Location {
             get {
@@ -1174,7 +1183,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Modifired date に類似しているローカライズされた文字列を検索します。
+        ///   更新日時 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_ModifiredDate {
             get {
@@ -1183,7 +1192,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Name に類似しているローカライズされた文字列を検索します。
+        ///   名前 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Name {
             get {
@@ -1192,7 +1201,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Notify に類似しているローカライズされた文字列を検索します。
+        ///   通知 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Notify {
             get {
@@ -1201,7 +1210,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Owner に類似しているローカライズされた文字列を検索します。
+        ///   所有者 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Owner {
             get {
@@ -1210,7 +1219,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   File masks に類似しているローカライズされた文字列を検索します。
+        ///   ファイル種別 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_SearchPattern {
             get {
@@ -1219,7 +1228,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Text to find に類似しているローカライズされた文字列を検索します。
+        ///   検索文字列 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_SearchText {
             get {
@@ -1228,7 +1237,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Settings file に類似しているローカライズされた文字列を検索します。
+        ///   設定ファイル に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_SettingFile {
             get {
@@ -1237,7 +1246,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Size に類似しているローカライズされた文字列を検索します。
+        ///   サイズ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Size {
             get {
@@ -1246,7 +1255,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Sync with system に類似しているローカライズされた文字列を検索します。
+        ///   システムに連動 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_SyncAppTheme {
             get {
@@ -1255,7 +1264,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Syntax に類似しているローカライズされた文字列を検索します。
+        ///   シンタックス に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Syntax {
             get {
@@ -1264,7 +1273,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   System に類似しているローカライズされた文字列を検索します。
+        ///   システム に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_System {
             get {
@@ -1273,7 +1282,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Temporary に類似しているローカライズされた文字列を検索します。
+        ///   一時フォルダ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_TempDirectory {
             get {
@@ -1282,7 +1291,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Text editor に類似しているローカライズされた文字列を検索します。
+        ///   テキストエディター に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_TextEditor {
             get {
@@ -1291,7 +1300,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Theme に類似しているローカライズされた文字列を検索します。
+        ///   テーマ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Theme {
             get {
@@ -1300,7 +1309,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Type に類似しているローカライズされた文字列を検索します。
+        ///   種類 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Type {
             get {
@@ -1309,7 +1318,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Warning に類似しているローカライズされた文字列を検索します。
+        ///   警告 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Warn {
             get {
@@ -1318,7 +1327,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Allow scroll below document. に類似しているローカライズされた文字列を検索します。
+        ///   最終行を超えたスクロールを許可する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_AllowScrollBelowDocument {
             get {
@@ -1327,7 +1336,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Allows transparency. に類似しているローカライズされた文字列を検索します。
+        ///   背景を透過する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_AllowsTransparency {
             get {
@@ -1336,7 +1345,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Allow toggle overstrike mode. に類似しているローカライズされた文字列を検索します。
+        ///   上書きモードへの切り替えを許可する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_AllowToggleOverstrikeMode {
             get {
@@ -1345,7 +1354,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Auto detect by default. に類似しているローカライズされた文字列を検索します。
+        ///   既定で自動検出する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_AutoDetectByDefault {
             get {
@@ -1354,7 +1363,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Convert tabs to spaces. に類似しているローカライズされた文字列を検索します。
+        ///   タブをスペースに変換する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_ConvertTabsToSpaces {
             get {
@@ -1363,7 +1372,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Enable auto completion. に類似しているローカライズされた文字列を検索します。
+        ///   キーワードの自動補完を有効にする。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableAutoCompletion {
             get {
@@ -1372,7 +1381,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Enable auto save draft file to a temporary. に類似しているローカライズされた文字列を検索します。
+        ///   編集中のファイルを一時フォルダに自動保存する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableAutoSave {
             get {
@@ -1381,7 +1390,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Enable cut and copy whole line. に類似しているローカライズされた文字列を検索します。
+        ///   未選択状態でのコピーと切り取りを可能にする。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableCutCopyWholeLine {
             get {
@@ -1390,7 +1399,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Enable e-mail hyperlinks. に類似しているローカライズされた文字列を検索します。
+        ///   メールアドレスのハイパーリンクを有効にする。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableEmailHyperlinks {
             get {
@@ -1399,7 +1408,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Enable foldings. に類似しているローカライズされた文字列を検索します。
+        ///   コードの折り畳みを有効にする。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableFoldings {
             get {
@@ -1408,7 +1417,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Enable hyperlinks. に類似しているローカライズされた文字列を検索します。
+        ///   URLのハイパーリンクを有効にする。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableHyperlinks {
             get {
@@ -1417,7 +1426,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Enable IME support. に類似しているローカライズされた文字列を検索します。
+        ///   IMEサポートを有効にする。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableImeSupport {
             get {
@@ -1426,7 +1435,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Enable notification icon. に類似しているローカライズされた文字列を検索します。
+        ///   通知領域アイコンを有効にする。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableNotificationIcon {
             get {
@@ -1435,7 +1444,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Enable rectangular selection. に類似しているローカライズされた文字列を検索します。
+        ///   矩形選択を有効にする。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableRectangularSelection {
             get {
@@ -1444,7 +1453,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Enable residents in notification area. に類似しているローカライズされた文字列を検索します。
+        ///   通知領域に常駐する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableResident {
             get {
@@ -1453,7 +1462,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Enable text drag and drop. に類似しているローカライズされた文字列を検索します。
+        ///   ドラッグ アンド ドロップ 編集を有効にする。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableTextDragDrop {
             get {
@@ -1462,7 +1471,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Enable virtual space. に類似しているローカライズされた文字列を検索します。
+        ///   フリーカーソルを有効にする。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableVirtualSpace {
             get {
@@ -1471,7 +1480,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Enable word wrap. に類似しているローカライズされた文字列を検索します。
+        ///   折り返し表示を有効にする。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableWordWrap {
             get {
@@ -1480,7 +1489,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Hide cursor while typing. に類似しているローカライズされた文字列を検索します。
+        ///   入力中はカーソルを非表示にする。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_HideCursorWhileTyping {
             get {
@@ -1489,7 +1498,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Highlight current line. に類似しているローカライズされた文字列を検索します。
+        ///   現在の行を強調する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_HighlightCurrentLine {
             get {
@@ -1498,7 +1507,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Require control modifier for hyperlink click. に類似しているローカライズされた文字列を検索します。
+        ///   ハイパーリンクの選択に[Ctrl]キーを要求する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_RequireControlModifierForHyperlinkClick {
             get {
@@ -1507,7 +1516,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Save window placement. に類似しているローカライズされた文字列を検索します。
+        ///   ウィンドウの位置を保存する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_SaveWindowPlacement {
             get {
@@ -1516,7 +1525,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Show box for control characters, に類似しているローカライズされた文字列を検索します。
+        ///   制御文字を表示する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_ShowBoxForControlCharacters {
             get {
@@ -1525,7 +1534,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Show change marker. に類似しているローカライズされた文字列を検索します。
+        ///   変更行を示すマーカーを表示にする。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_ShowChangeMarker {
             get {
@@ -1534,7 +1543,16 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Show end of line. に類似しているローカライズされた文字列を検索します。
+        ///   目安線を表示する。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string LabelText_ShowColumnRuler {
+            get {
+                return ResourceManager.GetString("LabelText_ShowColumnRuler", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   改行を表示する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_ShowEndOfLine {
             get {
@@ -1543,7 +1561,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Show file icon. に類似しているローカライズされた文字列を検索します。
+        ///   ファイルのアイコンを表示する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_ShowFileIcon {
             get {
@@ -1552,7 +1570,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Show full file name. に類似しているローカライズされた文字列を検索します。
+        ///   ファイルの完全パスを表示する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_ShowFullName {
             get {
@@ -1561,7 +1579,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Show inline diff viewer. に類似しているローカライズされた文字列を検索します。
+        ///   Diff ビューアーをインラインで表示する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_ShowInlineDiffViewer {
             get {
@@ -1570,7 +1588,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Show line numbers. に類似しているローカライズされた文字列を検索します。
+        ///   行番号を表示する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_ShowLineNumbers {
             get {
@@ -1579,7 +1597,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Show menu bar. に類似しているローカライズされた文字列を検索します。
+        ///   メニューバーを表示する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_ShowMenuBar {
             get {
@@ -1588,7 +1606,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Show single tab. に類似しているローカライズされた文字列を検索します。
+        ///   単一タブを表示する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_ShowSingleTab {
             get {
@@ -1597,7 +1615,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Show spaces. に類似しているローカライズされた文字列を検索します。
+        ///   スペースを表示する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_ShowSpaces {
             get {
@@ -1606,7 +1624,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Show status bar. に類似しているローカライズされた文字列を検索します。
+        ///   ステータスバーを表示する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_ShowStatusBar {
             get {
@@ -1615,7 +1633,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Show tabs. に類似しているローカライズされた文字列を検索します。
+        ///   タブを表示する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_ShowTabs {
             get {
@@ -1624,7 +1642,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Show tool bar. に類似しているローカライズされた文字列を検索します。
+        ///   ツールバーを表示する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_ShowToolBar {
             get {
@@ -1633,7 +1651,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Use overlay dialog. に類似しているローカライズされた文字列を検索します。
+        ///   オーバーレイダイアログを使用する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_UseOverlayDialog {
             get {
@@ -1652,7 +1670,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Do you want to remove log files? に類似しているローカライズされた文字列を検索します。
+        ///   ログファイルを削除します。よろしいですか？ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_ConfirmCleanUpLog {
             get {
@@ -1661,7 +1679,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Are you sure you want to discard your changes? に類似しているローカライズされた文字列を検索します。
+        ///   変更内容は破棄されます。よろしいですか？ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_ConfirmDiscardChanges {
             get {
@@ -1670,9 +1688,9 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Initialize the syntax definitions.
-        ///Definition files in the folder will be replaced with the default files.
-        ///These changes will be applied on restart. Do you want to continue? に類似しているローカライズされた文字列を検索します。
+        ///   シンタックス定義を初期化します。
+        ///定義ファイルは既定のものに置き換えられます。
+        ///設定は次回起動時に反映されます。よろしいですか？ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_ConfirmInitializeSyntax {
             get {
@@ -1681,7 +1699,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Open a large file may take a long time. Do you want to continue? に類似しているローカライズされた文字列を検索します。
+        ///   大きなファイルは開くまでに長い時間がかかる場合があります。よろしいですか？ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_ConfirmOpenLargeFile {
             get {
@@ -1690,7 +1708,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Do you want to save the changes? に類似しているローカライズされた文字列を検索します。
+        ///   変更内容を保存しますか？ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_ConfirmSaveChanges {
             get {
@@ -1699,7 +1717,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Auto saved to a temporary. に類似しているローカライズされた文字列を検索します。
+        ///   一時ファイルに保存されました。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_NotifyAutoSaved {
             get {
@@ -1708,7 +1726,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Some previously cached files remain. Please check. に類似しているローカライズされた文字列を検索します。
+        ///   過去にキャッシュされたファイルが見つかりました。ご確認ください。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_NotifyCachedFilesRemain {
             get {
@@ -1717,7 +1735,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Directory not found. に類似しているローカライズされた文字列を検索します。
+        ///   指定されたフォルダは見つかりませんでした。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_NotifyDirectoryNotFound {
             get {
@@ -1726,7 +1744,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   I&apos;m pleased with a donation, if you like MyPad and you want to support the further development. に類似しているローカライズされた文字列を検索します。
+        ///   気に入って頂けましたら、継続開発のためのご寄付も歓迎いたします。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_NotifyDonate {
             get {
@@ -1735,7 +1753,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Contains Error. に類似しているローカライズされた文字列を検索します。
+        ///   テキストにエラーが存在します。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_NotifyErrorText {
             get {
@@ -1744,7 +1762,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   This file is open in another tab. に類似しているローカライズされた文字列を検索します。
+        ///   別のタブがこのファイルを開いています。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_NotifyFileInAnother {
             get {
@@ -1753,7 +1771,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   This file is currently locked. に類似しているローカライズされた文字列を検索します。
+        ///   このファイルは書き込みが禁止されています。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_NotifyFileLocked {
             get {
@@ -1762,7 +1780,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Press F11 to exit full screen mode. に類似しているローカライズされた文字列を検索します。
+        ///   F11 を押して全画面表示を終了します。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_NotifyFullScreenMode {
             get {
@@ -1771,7 +1789,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Text loaded. に類似しているローカライズされた文字列を検索します。
+        ///   テキストを読み込みました。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_NotifyLoaded {
             get {
@@ -1780,7 +1798,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   No matches found. に類似しているローカライズされた文字列を検索します。
+        ///   指定された文字列は見つかりませんでした。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_NotifyNoMatchesText {
             get {
@@ -1789,7 +1807,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Text saved. に類似しているローカライズされた文字列を検索します。
+        ///   テキストを保存しました。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_NotifySaved {
             get {
@@ -1798,7 +1816,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   This feature is temporarily unavailable. Please try again later. に類似しているローカライズされた文字列を検索します。
+        ///   一時的に利用できません。時間を置いて再度お試しください。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_NotifyTryAgainLater {
             get {
@@ -1807,7 +1825,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Welcome to ver. {1} of {0}. に類似しているローカライズされた文字列を検索します。
+        ///   {0} ver. {1} へようこそ。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_NotifyWelcome {
             get {
@@ -1846,7 +1864,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Document is empty. に類似しているローカライズされた文字列を検索します。
+        ///   ドキュメントが空です。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Text_EmptyDocument {
             get {
@@ -1855,7 +1873,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Required field. に類似しているローカライズされた文字列を検索します。
+        ///   この項目は必須です。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Text_RequiredField {
             get {
@@ -1864,7 +1882,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   These are same texts. に類似しているローカライズされた文字列を検索します。
+        ///   同一のテキストです。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Text_SameTexts {
             get {
@@ -1873,7 +1891,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   Please wait a moment. に類似しているローカライズされた文字列を検索します。
+        ///   しばらくお待ちください。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Text_Working {
             get {

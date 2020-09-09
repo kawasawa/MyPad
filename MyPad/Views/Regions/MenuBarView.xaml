@@ -53,7 +53,7 @@
                       HeaderStringFormat="{}{0}..."
                       InputGestureText="Ctrl+Shift+S">
                 <MenuItem.Icon>
-                    <mi:Material Kind="ContentSaveSettings"/>
+                    <mi:Material Kind="ContentSaveEdit"/>
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Command="{Binding SaveAllCommand, Mode=OneTime}"
