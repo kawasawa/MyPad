@@ -9,8 +9,8 @@ namespace MyPad
     {
         public static readonly IEnumerable<object> CULTURES
             = new[] {
-                new { Description = "English", Name = "en-US" },
                 new { Description = "日本語", Name = "ja-JP" },
+                new { Description = "English", Name = "en-US" },
             };
 
         private static IEnumerable<Encoding> _ENCODINGS;

@@ -14,8 +14,6 @@ namespace MyPad.Models
 {
     public class SystemSettings : ModelBase
     {
-        private const string DEFAULT_CULTURE_NAME = "en-US";
-
         private User32.WINDOWPLACEMENT? _windowPlacement;
         public User32.WINDOWPLACEMENT? WindowPlacement
         {
@@ -48,7 +46,7 @@ namespace MyPad.Models
             set
             {
                 this.SetProperty(ref this._culture, value);
-                LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(value?.ToLower() != DEFAULT_CULTURE_NAME.ToLower() ? value : string.Empty);
+                LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(value);
             }
         }
 

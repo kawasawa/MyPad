@@ -170,7 +170,8 @@ namespace MyPad.Views.Controls
                                     segment.Length,
                                     Microsoft.VisualBasic.Strings.StrConv(
                                         textArea.Document.GetText(segment),
-                                        Microsoft.VisualBasic.VbStrConv.Narrow
+                                        Microsoft.VisualBasic.VbStrConv.Narrow,
+                                        0x0411 // 日本語ロケールを指定
                                     ),
                                     OffsetChangeMappingType.CharacterReplace)
                         ),
@@ -186,7 +187,11 @@ namespace MyPad.Views.Controls
                             (textArea, segment) => textArea.Document.Replace(
                                 segment.Offset,
                                 segment.Length,
-                                Microsoft.VisualBasic.Strings.StrConv(textArea.Document.GetText(segment), Microsoft.VisualBasic.VbStrConv.Wide),
+                                Microsoft.VisualBasic.Strings.StrConv(
+                                    textArea.Document.GetText(segment),
+                                    Microsoft.VisualBasic.VbStrConv.Wide,
+                                    0x0411 // 日本語ロケールを指定
+                                ),
                                 OffsetChangeMappingType.CharacterReplace)
                         ),
                         sender, e, 1,
@@ -551,10 +556,10 @@ namespace MyPad.Views.Controls
                 => new RoutedCommand(commandName, typeof(TextArea), inputGestures);
 
             public static readonly ICommand ConvertToNarrow
-                = CreateRoutedCommand();
+                = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.W, ModifierKeys.Control | ModifierKeys.Shift) });
 
             public static readonly ICommand ConvertToWide
-                = CreateRoutedCommand();
+                = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.W, ModifierKeys.Control) });
 
             public static readonly ICommand ZoomIn
                 = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.OemPlus, ModifierKeys.Control) });
