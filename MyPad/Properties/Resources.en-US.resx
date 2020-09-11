@@ -692,4 +692,10 @@ These changes will be applied on restart. Do you want to continue?</value>
   <data name="Message_NotifyCachedFilesRemain" xml:space="preserve">
     <value>Some previously cached files remain. Please check.</value>
   </data>
+  <data name="LabelText_ShowColumnRuler" xml:space="preserve">
+    <value>Show column ruler.</value>
+  </data>
+  <data name="Label_ColumnRulerPosition" xml:space="preserve">
+    <value>Column ruler position</value>
+  </data>
 </root>

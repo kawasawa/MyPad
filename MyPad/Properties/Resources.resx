@@ -732,4 +732,10 @@
   <data name="Message_NotifyCachedFilesRemain" xml:space="preserve">
     <value>過去にキャッシュされたファイルが見つかりました。ご確認ください。</value>
   </data>
+  <data name="LabelText_ShowColumnRuler" xml:space="preserve">
+    <value>目安線を表示する。</value>
+  </data>
+  <data name="Label_ColumnRulerPosition" xml:space="preserve">
+    <value>目安線の位置</value>
+  </data>
 </root>
