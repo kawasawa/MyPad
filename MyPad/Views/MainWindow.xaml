@@ -365,7 +365,7 @@
                     <Style TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource Default.DragablzItem}">
                         <EventSetter Event="MouseRightButtonDown" Handler="DragablzItem_MouseRightButtonDown"/>
                         <Setter Property="ToolTipService.IsEnabled" Value="{qc:Binding '!$P', P={Binding IsNewFile, Mode=OneWay}}"/>
-                        <Setter Property="ToolTip" Value="{Binding FileName, Mode=OneWay}"/>
+                        <Setter Property="ToolTip" Value="{qc:MultiBinding '($P0 ? \'[R/O] \' : null) + $P1', P0={Binding IsReadOnly, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}"/>
                         <Style.Triggers>
                             <MultiDataTrigger>
                                 <MultiDataTrigger.Conditions>
