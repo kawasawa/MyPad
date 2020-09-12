@@ -135,7 +135,7 @@ namespace MyPad.Views
                 {
                     const int TOAST_LIFE_TIME = 5000;
                     const int TOAST_MAX_COUNT = 5;
-                    const double TOAST_WIDTH = 250;
+                    const double TOAST_WIDTH = 280;
 
                     config.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromMilliseconds(TOAST_LIFE_TIME), MaximumNotificationCount.FromCount(TOAST_MAX_COUNT));
                     config.PositionProvider = new WindowPositionProvider(this, Corner.BottomRight, 5, 0);
