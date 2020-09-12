@@ -775,7 +775,7 @@ namespace MyPad.ViewModels
                     try
                     {
                         stream = info.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                        this.DialogService.ToastWarn(Resources.Message_NotifyFileLocked);
+                        this.DialogService.ToastWarn($"{Resources.Message_NotifyFileLocked}{Environment.NewLine}{Path.GetFileName(path)}");
                     }
                     catch (Exception e)
                     {
