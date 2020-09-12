@@ -82,6 +82,13 @@ namespace MyPad.Models
             set => this.SetProperty(ref this._syntaxDefinitionName, value);
         }
 
+        private bool _useInAppToastNotifications = true;
+        public bool UseInAppToastNotifications
+        {
+            get => this._useInAppToastNotifications;
+            set => this.SetProperty(ref this._useInAppToastNotifications, value);
+        }
+
         private bool _useOverlayDialog = true;
         public bool UseOverlayDialog
         {

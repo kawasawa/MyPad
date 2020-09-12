@@ -698,4 +698,7 @@ These changes will be applied on restart. Do you want to continue?</value>
   <data name="Label_ColumnRulerPosition" xml:space="preserve">
     <value>Column ruler position</value>
   </data>
+  <data name="LabelText_UseInAppToastNotifications" xml:space="preserve">
+    <value>Use in-app toast notifications.</value>
+  </data>
 </root>

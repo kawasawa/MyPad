@@ -58,16 +58,16 @@
             <TabItem DataContext="{Binding SettingsService.System, Mode=OneWay}" Header="{le:Loc Label_System}">
                 <ScrollViewer>
                     <StackPanel>
-                        <Grid ge:GridEx.ColumnDefinition="Auto, *" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto, Auto">
+                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto">
                             <Label      Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_Theme}"/>
-                            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                            <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
                                 <RadioButton Content="{le:Loc Label_SyncAppTheme}" IsChecked="{qc:Binding Convert='(int)$P == 0', ConvertBack='$value ? 0 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
                                 <RadioButton Content="{le:Loc Label_Dark}"         IsChecked="{qc:Binding Convert='(int)$P == 1', ConvertBack='$value ? 1 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
                                 <RadioButton Content="{le:Loc Label_Light}"        IsChecked="{qc:Binding Convert='(int)$P == 2', ConvertBack='$value ? 2 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
                             </StackPanel>
 
                             <Label    Grid.Row="1" Grid.Column="0" Content="{le:Loc Label_Language}"/>
-                            <ComboBox Grid.Row="1" Grid.Column="1" SelectedValue="{Binding Culture, Mode=TwoWay}" ItemsSource="{x:Static root:Constants.CULTURES}" SelectedValuePath="Name">
+                            <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" SelectedValue="{Binding Culture, Mode=TwoWay}" ItemsSource="{x:Static root:Constants.CULTURES}" SelectedValuePath="Name">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{qc:MultiBinding '$P0 + \' (\' + $P1 + \')\'', P0={Binding Description, Mode=OneWay}, P1={Binding Name, Mode=OneWay}}"/>
@@ -83,10 +83,10 @@
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
-                            <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding AutoDetectEncoding, Mode=TwoWay}" Content="{le:Loc LabelText_AutoDetectByDefault}"/>
+                            <CheckBox Grid.Row="2" Grid.Column="3" IsChecked="{Binding AutoDetectEncoding, Mode=TwoWay}" Content="{le:Loc LabelText_AutoDetectByDefault}"/>
 
-                            <Label    Grid.Row="4" Grid.Column="0" Content="{le:Loc Label_Syntax}"/>
-                            <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{qc:Binding 'new string[] { string.Empty }.Concat($P.Keys)', P={Binding DataContext.SyntaxService.Definitions, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}, Mode=OneWay}}" SelectedValue="{qc:Binding Convert='$P ?? string.Empty', ConvertBack='string.IsNullOrEmpty($value) ? null : $value', P={Binding SyntaxDefinitionName, Mode=TwoWay}}">
+                            <Label    Grid.Row="3" Grid.Column="0" Content="{le:Loc Label_Syntax}"/>
+                            <ComboBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" ItemsSource="{qc:Binding 'new string[] { string.Empty }.Concat($P.Keys)', P={Binding DataContext.SyntaxService.Definitions, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}, Mode=OneWay}}" SelectedValue="{qc:Binding Convert='$P ?? string.Empty', ConvertBack='string.IsNullOrEmpty($value) ? null : $value', P={Binding SyntaxDefinitionName, Mode=TwoWay}}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{qc:Binding 'string.IsNullOrEmpty($P) ? \'Plain Text\' : $P', P={Binding Mode=OneWay}}"/>
@@ -94,8 +94,8 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
 
-                            <Label Grid.Row="5" Grid.Column="0" Content="{le:Loc Label_Font}"/>
-                            <Grid  Grid.Row="5" Grid.Column="1" ge:GridEx.ColumnDefinition="5*, *(50-)" DataContext="{Binding DataContext.SettingsService.TextEditor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Mode=OneWay}">
+                            <Label Grid.Row="4" Grid.Column="0" Content="{le:Loc Label_Font}"/>
+                            <Grid  Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" ge:GridEx.ColumnDefinition="5*, *(50-)" DataContext="{Binding DataContext.SettingsService.TextEditor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Mode=OneWay}">
                                 <ComboBox Grid.Column="0" SelectedValue="{Binding FontFamily, Mode=TwoWay}" ItemsSource="{x:Static root:Constants.FONT_FAMILIES}">
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate>
@@ -112,11 +112,12 @@
                         <ge:ResponsiveGrid>
                             <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
                                 <StackPanel>
-                                    <CheckBox IsChecked="{Binding SaveWindowPlacement, Mode=TwoWay}"    Content="{le:Loc LabelText_SaveWindowPlacement}"/>
-                                    <CheckBox IsChecked="{Binding UseOverlayDialog, Mode=TwoWay}"       Content="{le:Loc LabelText_UseOverlayDialog}"/>
-                                    <CheckBox IsChecked="{Binding ShowFullName, Mode=TwoWay}"           Content="{le:Loc LabelText_ShowFullName}"/>
-                                    <CheckBox IsChecked="{Binding ShowFileIcon, Mode=TwoWay}"           Content="{le:Loc LabelText_ShowFileIcon}"/>
-                                    <CheckBox IsChecked="{Binding ShowSingleTab, Mode=TwoWay}"          Content="{le:Loc LabelText_ShowSingleTab}"/>
+                                    <CheckBox IsChecked="{Binding SaveWindowPlacement, Mode=TwoWay}"        Content="{le:Loc LabelText_SaveWindowPlacement}"/>
+                                    <CheckBox IsChecked="{Binding UseInAppToastNotifications, Mode=TwoWay}" Content="{le:Loc LabelText_UseInAppToastNotifications}"/>
+                                    <CheckBox IsChecked="{Binding UseOverlayDialog, Mode=TwoWay}"           Content="{le:Loc LabelText_UseOverlayDialog}"/>
+                                    <CheckBox IsChecked="{Binding ShowFullName, Mode=TwoWay}"               Content="{le:Loc LabelText_ShowFullName}"/>
+                                    <CheckBox IsChecked="{Binding ShowFileIcon, Mode=TwoWay}"               Content="{le:Loc LabelText_ShowFileIcon}"/>
+                                    <CheckBox IsChecked="{Binding ShowSingleTab, Mode=TwoWay}"              Content="{le:Loc LabelText_ShowSingleTab}"/>
                                 </StackPanel>
                             </StackPanel>
 

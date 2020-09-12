@@ -85,13 +85,30 @@ namespace MyPad.ViewModels
                 DefaultButtonFocus = MessageDialogResult.Affirmative,
             };
 
+        private static IContainerExtension GetContainerExtension(this IDialogService self)
+            => self.GetType().GetField("_containerExtension", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(self) as IContainerExtension;
+
+        private static bool UseInAppToastNotifications(IDialogService dialogService, out MainWindow window)
+        {
+            window = GetActiveWindow<MainWindow>();
+            if (window == null)
+                return false;
+
+            var containerExtension = dialogService.GetContainerExtension();
+            if (containerExtension == null)
+                return false;
+
+            var settingsService = containerExtension.Resolve<SettingsService>();
+            return settingsService?.System?.UseInAppToastNotifications ?? false;
+        }
+
         private static bool UseOverlayDialog(IDialogService dialogService, out MainWindow window)
         {
             window = GetActiveWindow<MainWindow>();
             if (window == null)
                 return false;
 
-            var containerExtension = dialogService.GetType().GetField("_containerExtension", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(dialogService) as IContainerExtension;
+            var containerExtension = dialogService.GetContainerExtension();
             if (containerExtension == null)
                 return false;
 
@@ -99,11 +116,16 @@ namespace MyPad.ViewModels
             return settingsService?.System?.UseOverlayDialog ?? false;
         }
 
-        public static void ToastNotify(this IDialogService self, string message, Action<bool?> callback = null)
-            => GetActiveWindow<MainWindow>()?.Notifier.ShowInformation(message, CreateToastMessageOptions(callback));
+        public static void ToastNotify(this IDialogService self, string message)
+        {
+            if (UseInAppToastNotifications(self, out var window))
+                GetActiveWindow<MainWindow>()?.Notifier.ShowInformation(message, CreateToastMessageOptions());
+        }
 
-        public static void ToastWarn(this IDialogService self, string message, Action<bool?> callback = null)
-            => GetActiveWindow<MainWindow>()?.Notifier.ShowWarning(message, CreateToastMessageOptions(callback));
+        public static void ToastWarn(this IDialogService self, string message)
+        {
+            GetActiveWindow<MainWindow>()?.Notifier.ShowWarning(message, CreateToastMessageOptions());
+        }
 
         public static void Notify(this IDialogService self, string message)
         {
