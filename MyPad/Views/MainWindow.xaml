@@ -82,8 +82,8 @@
         <KeyBinding Command="{Binding PrintPreviewCommand,         Mode=OneTime}" Key="P"        Modifiers="Ctrl+Shift"/>
         <KeyBinding Command="{Binding GoToLineCommand,             Mode=OneTime}" Key="G"        Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding OptionCommand,               Mode=OneTime}" Key="OemComma" Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding ChangeEncodingCommand,       Mode=OneTime}" Key="M"        Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding ChangeSyntaxCommand,         Mode=OneTime}" Key="M"        Modifiers="Ctrl+Shift"/>
+        <KeyBinding Command="{Binding ChangeEncodingCommand,       Mode=OneTime}" Key="E"        Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding ChangeSyntaxCommand,         Mode=OneTime}" Key="M"        Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding DiffCommand,                 Mode=OneTime}" Key="D"        Modifiers="Ctrl+Shift"/>
         <KeyBinding Command="{Binding DiffUnmodifiedCommand,       Mode=OneTime}" Key="D"        Modifiers="Ctrl+Alt"/>
         <KeyBinding Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Key="F11"/>
