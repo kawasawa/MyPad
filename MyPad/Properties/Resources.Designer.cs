@@ -1363,7 +1363,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   タブをスペースに変換する。 に類似しているローカライズされた文字列を検索します。
+        ///   タブをスペースに変換して入力する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_ConvertTabsToSpaces {
             get {
@@ -1480,7 +1480,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   折り返し表示を有効にする。 に類似しているローカライズされた文字列を検索します。
+        ///   右端で折り返して表示する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableWordWrap {
             get {
