@@ -1,4 +1,5 @@
-﻿using ICSharpCode.AvalonEdit.CodeCompletion;
+﻿using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
@@ -126,6 +127,16 @@ namespace MyPad.Views.Controls
         }
 
         public event EventHandler OverstrikeModeChanged;
+
+        static TextArea()
+        {
+            AvalonEditCommands.DeleteLine.InputGestures.Clear();
+            AvalonEditCommands.ConvertToLowercase.InputGestures.Add(new KeyGesture(Key.U, ModifierKeys.Control | ModifierKeys.Shift));
+            AvalonEditCommands.ConvertToUppercase.InputGestures.Add(new KeyGesture(Key.U, ModifierKeys.Control));
+            AvalonEditCommands.ConvertToTitleCase.InputGestures.Add(new KeyGesture(Key.U, ModifierKeys.Control | ModifierKeys.Alt));
+            AvalonEditCommands.ConvertTabsToSpaces.InputGestures.Add(new KeyGesture(Key.T, ModifierKeys.Control | ModifierKeys.Shift));
+            AvalonEditCommands.ConvertSpacesToTabs.InputGestures.Add(new KeyGesture(Key.T, ModifierKeys.Control));
+        }
 
         public TextArea()
             : base(new TextView())
