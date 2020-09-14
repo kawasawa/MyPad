@@ -124,7 +124,7 @@
         </ToggleButton>
         <ToggleButton IsChecked="{Binding SettingsService.TextEditor.WordWrap, Mode=TwoWay}"
                       ToolTip="{le:Loc LabelText_EnableWordWrap}">
-            <mi:Material Kind="Wrap"/>
+            <mi:Material Kind="FormatTextWrappingWrap"/>
         </ToggleButton>
         <ToggleButton IsChecked="{Binding SettingsService.TextEditor.ConvertTabsToSpaces, Mode=TwoWay}"
                       ToolTip="{le:Loc LabelText_ConvertTabsToSpaces}">

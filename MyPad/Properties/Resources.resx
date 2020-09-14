@@ -738,4 +738,7 @@
   <data name="Label_ColumnRulerPosition" xml:space="preserve">
     <value>目安線の位置</value>
   </data>
+  <data name="LabelText_UseInAppToastNotifications" xml:space="preserve">
+    <value>アプリ内のトースト通知を使用にする。</value>
+  </data>
 </root>

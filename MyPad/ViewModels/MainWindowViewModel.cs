@@ -242,7 +242,11 @@ namespace MyPad.ViewModels
                 .AddTo(this.CompositeDisposable);
 
             this.SaveCommand = new ReactiveCommand()
-                .WithSubscribe(async () => await this.SaveTextEditor(this.ActiveTextEditor.Value))
+                .WithSubscribe(async () =>
+                {
+                    if (this.ActiveTextEditor.Value.IsModified)
+                        await this.SaveTextEditor(this.ActiveTextEditor.Value);
+                })
                 .AddTo(this.CompositeDisposable);
 
             this.SaveAsCommand = new ReactiveCommand()
@@ -771,7 +775,7 @@ namespace MyPad.ViewModels
                     try
                     {
                         stream = info.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                        this.DialogService.ToastWarn(Resources.Message_NotifyFileLocked);
+                        this.DialogService.ToastWarn($"{Resources.Message_NotifyFileLocked}{Environment.NewLine}{Path.GetFileName(path)}");
                     }
                     catch (Exception e)
                     {

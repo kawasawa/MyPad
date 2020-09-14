@@ -311,7 +311,7 @@
             <MenuItem Command="{Binding ChangeEncodingCommand, Mode=OneTime}"
                       Header="{le:Loc Command_ChangeEncoding}"
                       HeaderStringFormat="{}{0}..."
-                      InputGestureText="Ctrl+M">
+                      InputGestureText="Ctrl+E">
                 <MenuItem.Icon>
                     <mi:Material Kind="Alphabetical"/>
                 </MenuItem.Icon>
@@ -319,7 +319,7 @@
             <MenuItem Command="{Binding ChangeSyntaxCommand, Mode=OneTime}"
                       Header="{le:Loc Command_ChangeSyntax}"
                       HeaderStringFormat="{}{0}..."
-                      InputGestureText="Ctrl+Shift+M">
+                      InputGestureText="Ctrl+M">
                 <MenuItem.Icon>
                     <mi:Material Kind="LanguageCsharp"/>
                 </MenuItem.Icon>

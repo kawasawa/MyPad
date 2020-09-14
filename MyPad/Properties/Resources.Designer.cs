@@ -1651,6 +1651,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   アプリ内のトースト通知を使用にする。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string LabelText_UseInAppToastNotifications {
+            get {
+                return ResourceManager.GetString("LabelText_UseInAppToastNotifications", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   オーバーレイダイアログを使用する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_UseOverlayDialog {
