@@ -255,10 +255,12 @@
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem IsCheckable="True" IsChecked="{Binding Topmost, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}" Header="{le:Loc Command_Topmost}"/>
+            <Separator/>
             <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowMenuBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowMenuBar}"/>
             <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowToolBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowToolBar}"/>
             <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowSideBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowSideBar}"/>
             <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowStatusBar, Mode=TwoWay}" Header="{le:Loc Command_ShowStatusBar}"/>
+            <Separator/>
             <MenuItem Header="{le:Loc Command_Panels}">
                 <MenuItem Command="{x:Static views:MainWindow.ActivateFileExplorer}"
                           Header="{le:Loc Command_Explorer}"
@@ -334,7 +336,7 @@
             <MenuItem Command="{Binding DiffCommand, Mode=OneTime}"
                       Header="{le:Loc Command_Diff}"
                       HeaderStringFormat="{}{0}..."
-                      InputGestureText="Ctrl+Shift+D">
+                      InputGestureText="Ctrl+D">
                 <MenuItem.Icon>
                     <mi:Material Kind="FileCompare"/>
                 </MenuItem.Icon>
@@ -342,7 +344,7 @@
             <MenuItem Command="{Binding DiffUnmodifiedCommand, Mode=OneTime}"
                       Header="{le:Loc Command_DiffUnmodified}"
                       HeaderStringFormat="{}{0}..."
-                      InputGestureText="Ctrl+Alt+D">
+                      InputGestureText="Ctrl+Shift+D">
                 <MenuItem.Icon>
                     <mi:Modern Kind="ListAdd"/>
                 </MenuItem.Icon>
@@ -351,7 +353,8 @@
         <MenuItem Header="{le:Loc Command_Help}">
             <MenuItem Command="{Binding AboutCommand, Mode=OneTime}"
                       Header="{le:Loc Command_About}"
-                      HeaderStringFormat="{}{0}...">
+                      HeaderStringFormat="{}{0}..."
+                      InputGestureText="Ctrl+Shift+F1">
                 <MenuItem.Icon>
                     <mi:Modern Kind="InformationCircle"/>
                 </MenuItem.Icon>

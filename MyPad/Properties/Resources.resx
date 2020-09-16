@@ -541,7 +541,7 @@
     <value>既定で自動検出する。</value>
   </data>
   <data name="LabelText_ConvertTabsToSpaces" xml:space="preserve">
-    <value>タブをスペースに変換する。</value>
+    <value>タブをスペースに変換して入力する。</value>
   </data>
   <data name="LabelText_EnableAutoCompletion" xml:space="preserve">
     <value>キーワードの自動補完を有効にする。</value>
@@ -577,7 +577,7 @@
     <value>フリーカーソルを有効にする。</value>
   </data>
   <data name="LabelText_EnableWordWrap" xml:space="preserve">
-    <value>折り返し表示を有効にする。</value>
+    <value>右端で折り返して表示する。</value>
   </data>
   <data name="LabelText_HideCursorWhileTyping" xml:space="preserve">
     <value>入力中はカーソルを非表示にする。</value>

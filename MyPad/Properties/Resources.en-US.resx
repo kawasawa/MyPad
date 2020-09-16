@@ -501,7 +501,7 @@ These changes will be applied on restart. Do you want to continue?</value>
     <value>Auto detect by default.</value>
   </data>
   <data name="LabelText_ConvertTabsToSpaces" xml:space="preserve">
-    <value>Convert tabs to spaces.</value>
+    <value>Convert tabs to spaces as you type.</value>
   </data>
   <data name="LabelText_EnableAutoCompletion" xml:space="preserve">
     <value>Enable auto completion.</value>
@@ -537,7 +537,7 @@ These changes will be applied on restart. Do you want to continue?</value>
     <value>Enable virtual space.</value>
   </data>
   <data name="LabelText_EnableWordWrap" xml:space="preserve">
-    <value>Enable word wrap.</value>
+    <value>Word wrap at the right end.</value>
   </data>
   <data name="LabelText_HideCursorWhileTyping" xml:space="preserve">
     <value>Hide cursor while typing.</value>

@@ -78,14 +78,16 @@
         <KeyBinding Command="{Binding ExitApplicationCommand,      Mode=OneTime}" Key="F4"       Modifiers="Ctrl+Alt"/>
         <KeyBinding Command="{Binding CloseCommand,                Mode=OneTime}" Key="F4"       Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding CloseAllCommand,             Mode=OneTime}" Key="F4"       Modifiers="Ctrl+Shift"/>
+        <KeyBinding Command="{Binding CloseOtherCommand,           Mode=OneTime}" Key="F4"       Modifiers="Shift"/>
         <KeyBinding Command="{Binding PrintCommand,                Mode=OneTime}" Key="P"        Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding PrintPreviewCommand,         Mode=OneTime}" Key="P"        Modifiers="Ctrl+Shift"/>
-        <KeyBinding Command="{Binding GoToLineCommand,             Mode=OneTime}" Key="G"        Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding OptionCommand,               Mode=OneTime}" Key="OemComma" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding AboutCommand,                Mode=OneTime}" Key="F1"       Modifiers="Ctrl+Shift"/>
+        <KeyBinding Command="{Binding GoToLineCommand,             Mode=OneTime}" Key="G"        Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding ChangeEncodingCommand,       Mode=OneTime}" Key="E"        Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding ChangeSyntaxCommand,         Mode=OneTime}" Key="M"        Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding DiffCommand,                 Mode=OneTime}" Key="D"        Modifiers="Ctrl+Shift"/>
-        <KeyBinding Command="{Binding DiffUnmodifiedCommand,       Mode=OneTime}" Key="D"        Modifiers="Ctrl+Alt"/>
+        <KeyBinding Command="{Binding DiffCommand,                 Mode=OneTime}" Key="D"        Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding DiffUnmodifiedCommand,       Mode=OneTime}" Key="D"        Modifiers="Ctrl+Shift"/>
         <KeyBinding Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Key="F11"/>
     </Window.InputBindings>
 
@@ -109,7 +111,7 @@
                     </mi:PackIconModern.Resources>
                 </mi:PackIconModern>
             </ToggleButton>
-            <Button Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}">
+            <Button Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}" Focusable="False">
                 <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
             </Button>
         </m:WindowCommands>
@@ -347,7 +349,7 @@
                                 </MenuItem>
                             </ContextMenu>
                         </Grid.ContextMenu>
-                        <Button Grid.Column="0" Command="{x:Static dr:TabablzControl.AddItemCommand}" Height="20" Width="20" Padding="0" Background="Transparent" BorderBrush="Transparent" Focusable="False">
+                        <Button Grid.Column="0" Command="{x:Static dr:TabablzControl.AddItemCommand}" ToolTip="{le:Loc Command_New}" Height="20" Width="20" Padding="0" Background="Transparent" BorderBrush="Transparent" Focusable="False">
                             <mi:PackIconMaterial Kind="Plus" Height="12" Width="12" Foreground="{DynamicResource MahApps.Brushes.Gray5}"/>
                         </Button>
                         <Border Grid.Column="1" VerticalAlignment="Stretch" Background="Transparent"/>
@@ -396,7 +398,7 @@
                                 <mi:Material Kind="LayersOff"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Command="{Binding CloseOtherCommand, Mode=OneTime}" Header="{le:Loc Command_CloseOther}">
+                        <MenuItem Command="{Binding CloseOtherCommand, Mode=OneTime}" Header="{le:Loc Command_CloseOther}" InputGestureText="Shift+F4">
                             <MenuItem.Icon>
                                 <mi:Material Kind="LayersRemove"/>
                             </MenuItem.Icon>
@@ -413,7 +415,7 @@
                             </MenuItem.Icon>
                         </MenuItem>
                         <Separator/>
-                        <MenuItem Command="{Binding DiffUnmodifiedCommand, Mode=OneTime}" Header="{le:Loc Command_DiffUnmodified}" HeaderStringFormat="{}{0}..." InputGestureText="Ctrl+Alt+D">
+                        <MenuItem Command="{Binding DiffUnmodifiedCommand, Mode=OneTime}" Header="{le:Loc Command_DiffUnmodified}" HeaderStringFormat="{}{0}..." InputGestureText="Ctrl+Shift+D">
                             <MenuItem.Icon>
                                 <mi:Modern Kind="ListAdd"/>
                             </MenuItem.Icon>
