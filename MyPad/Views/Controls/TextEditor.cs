@@ -419,22 +419,21 @@ namespace MyPad.Views.Controls
                 var caret = textArea.Caret;
                 this.SelectionStart = caret.Offset;
                 this.SelectionEnd = caret.Offset;
-                this.SelectionLength = 0;
                 this.SelectionStartLine = 0;
                 this.SelectionEndLine = 0;
                 this.SelectionLineCount = 0;
+                this.SelectionLength = 0;
                 this.SelectedText = string.Empty;
             }
             else
             {
-                var segment = selection.SurroundingSegment;
-                this.SelectionStart = segment.Offset;
-                this.SelectionEnd = segment.EndOffset;
-                this.SelectionLength = segment.Length;
+                this.SelectionStart = selection.SurroundingSegment.Offset;
+                this.SelectionEnd = selection.SurroundingSegment.EndOffset;
                 this.SelectionStartLine = selection.StartPosition.Line;
                 this.SelectionEndLine = selection.EndPosition.Line;
                 this.SelectionLineCount = Math.Abs(selection.EndPosition.Line - selection.StartPosition.Line) + 1;
-                this.SelectedText = textArea.Document.GetText(segment);
+                this.SelectionLength = selection.Segments.Sum(s => s.Length);
+                this.SelectedText = string.Concat(selection.Segments.Select(s => textArea.Document.GetText(s)));
             }
         }
 
