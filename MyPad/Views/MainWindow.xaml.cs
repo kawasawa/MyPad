@@ -340,7 +340,7 @@ namespace MyPad.Views
                     }
                     catch (Exception e) when (retryCount < MAX_RETRY_COUNT)
                     {
-                        this.Logger.Log($"リージョンの追加に失敗しました。: RegionName={regionName}, RetryCount={retryCount}", Category.Warn, e);
+                        this.Logger.Log($"リージョンの追加に失敗しました。再試行します。: RegionName={regionName}, RetryCount={retryCount}", Category.Warn, e);
                         Thread.Sleep(100);
                         retryCount++;
                     }
