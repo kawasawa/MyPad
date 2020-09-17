@@ -147,11 +147,11 @@ namespace MyPad
                         while (Directory.Exists(info.FullName))
                             Thread.Sleep(LOOP_DELAY);
                     }
-                    this.Logger.Log("指定の期間を超えた一時フォルダを削除しました。(システム開始時)", Category.Debug);
+                    this.Logger.Log("不要な一時フォルダを削除しました。(システム開始時)", Category.Debug);
                 }
                 catch (Exception ex)
                 {
-                    this.Logger.Log("指定の期間を超えた一時フォルダの削除に失敗しました。(システム開始時)", Category.Warn, ex);
+                    this.Logger.Log("不要な一時フォルダの削除に失敗しました。(システム開始時)", Category.Warn, ex);
                 }
 
                 this.SharedDataService.CachedDirectories = cachedDirectories.Select(t => t.info.FullName).ToList();

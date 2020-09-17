@@ -335,14 +335,14 @@ namespace MyPad.ViewModels
                     {
                         this.DiffSource.Value = textEditors.First(e => e.FileName == diffSourcePath);
                         this.DiffDestination.Value = textEditors.First(e => e.FileName == diffDestinationPath);
-                        this.Logger.Log($"ファイルを読み込みました。: SourcePath={diffSourcePath}, DestinationPath={diffDestinationPath}", Category.Info);
+                        this.Logger.Log($"差分を比較するファイルを読み込みました。: SourcePath={diffSourcePath}, DestinationPath={diffDestinationPath}", Category.Info);
                     }
                     catch (Exception e)
                     {
                         this.DiffSource.Value = null;
                         this.DiffDestination.Value = null;
 
-                        this.Logger.Log($"ファイルの読み込みに失敗しました。: SourcePath={diffSourcePath}, DestinationPath={diffDestinationPath}", Category.Warn, e);
+                        this.Logger.Log($"差分を比較するファイルの読み込みに失敗しました。: SourcePath={diffSourcePath}, DestinationPath={diffDestinationPath}", Category.Warn, e);
                         this.DialogService.Warn(e.Message);
                         return;
                     }
@@ -765,7 +765,7 @@ namespace MyPad.ViewModels
                     catch (Exception e)
                     {
                         // ここでのエラーは無視する
-                        this.Logger.Log($"ファイルの書き込み権限の取得に失敗しました。: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Warn, e);
+                        this.Logger.Log($"ファイルの書き込み権限を取得できませんでした。読み取り権限のみで再取得します。: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Info, e);
                     }
                 }
 
