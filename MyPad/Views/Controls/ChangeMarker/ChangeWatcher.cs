@@ -59,10 +59,18 @@ namespace MyPad.Views.Controls.ChangeMarker
 
         private void UndoStack_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName != nameof(this._document.UndoStack.IsOriginalFile) ||
-                this._document.UndoStack.IsOriginalFile == false)
+            switch (e.PropertyName)
             {
-                return;
+                case nameof(this._document.UndoStack.SizeLimit):
+                    // HACK: UndoStack のサイズ変更を起点にファイルのリロードを検知
+                    // たまたま ViewModel 側でサスペンドしているため実現できるが、
+                    // 内部実装レベルで依存しており条件として非常に脆い。
+                    this._baseDocument = this._document.Clone();
+                    break;
+                case nameof(this._document.UndoStack.IsOriginalFile) when this._document.UndoStack.IsOriginalFile:
+                    break;
+                default:
+                    return;
             }
 
             try

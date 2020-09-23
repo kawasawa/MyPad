@@ -443,11 +443,15 @@ namespace MyPad.ViewModels
                 var text = await Task.Run(() => encoding.GetString(bytes));
 
                 // テキストを設定する
+                //
                 // NOTE: 非同期処理でのテキストの設定
                 // TextDocument.Text へ代入後に ClearAll() を実行すると IsModified の変更が通知されなくなる。
                 // 正確には、ClearAll() 時に UndoStack 内の未変更点が更新されていないようだ。
                 // 代入前に UndoStack をクリアしてサスペンド、代入後にレジュームする。
                 // (なお、同期処理ではこの対応は不要である。TextDocument はスレッドを監視しており、この辺りも怪しい気がする。)
+                //
+                // HACK: Views.ChangeWatcher が UndoStack.SizeLimit の変更を監視
+                // 詳細は ChangeWatcher の実装を参照。本処理の実装に依存している。
                 this.Document.UndoStack.ClearAll();
                 var buffer = this.Document.UndoStack.SizeLimit;
                 this.Document.UndoStack.SizeLimit = 0;
