@@ -9,7 +9,7 @@
   <Identity
     Name="34049KazukiAwasawa.310512F2C2269"
     Publisher="CN=FF18BBFC-17FB-4075-8AD6-0AD85AB820F9"
-    Version="1.7.0.0" />
+    Version="1.7.1.0" />
 
   <Properties>
     <DisplayName>MyPad テキストエディタ</DisplayName>
