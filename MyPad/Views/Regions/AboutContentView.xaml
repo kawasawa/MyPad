@@ -59,7 +59,7 @@
         <Border Grid.Row="2" Height="1" Margin="20 0" Background="{DynamicResource MahApps.Brushes.Gray2}"/>
 
         <m:FlipView Grid.Row="4" Margin="0 0 0 20" CircularNavigation="True" NavigationButtonsPosition="Outside" IsBannerEnabled="False" MouseHoverBorderEnabled="False">
-            <controls:MarkdownViewer Markdown="{Binding ChangeHistory.Value, Mode=OneWay}"/>
+            <controls:MarkdownViewer Markdown="{Binding ChangeHistory.Value, Mode=OneWay}" IsTabStop="False"/>
             <ListBox ItemsSource="{qc:Binding '$P.OrderBy(((AssemblyName)x) => (string)($x.Name))', P={Binding ProductInfo.ReferencedAssemblies, Mode=OneWay}}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>

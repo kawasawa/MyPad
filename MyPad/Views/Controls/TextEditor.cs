@@ -115,7 +115,11 @@ namespace MyPad.Views.Controls
         public double ActualFontSize
         {
             get => (double)this.GetValue(ActualFontSizeProperty);
-            set => this.SetValue(ActualFontSizeProperty, value);
+            set
+            {
+                this.SetValue(ActualFontSizeProperty, value);
+                this.SetValue(FontSizeProperty, value);
+            }
         }
 
         public int ZoomIncrement

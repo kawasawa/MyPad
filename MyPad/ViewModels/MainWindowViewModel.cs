@@ -786,7 +786,8 @@ namespace MyPad.ViewModels
                 }
 
                 // ファイルを読み込む
-                var textEditor = this.AddTextEditor();
+                var textEditor = this.ActiveTextEditor.Value.IsNewFile && this.ActiveTextEditor.Value.IsModified == false ?
+                    this.ActiveTextEditor.Value : this.AddTextEditor();
                 try
                 {
                     this.IsWorking.Value = true;

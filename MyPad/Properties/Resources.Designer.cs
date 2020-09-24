@@ -1291,7 +1291,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   テキストエディター に類似しているローカライズされた文字列を検索します。
+        ///   テキストエディタ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_TextEditor {
             get {
