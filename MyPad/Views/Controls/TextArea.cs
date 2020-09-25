@@ -13,6 +13,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -250,8 +251,10 @@ namespace MyPad.Views.Controls
             if (this.CanZoomIn() == false)
                 return;
 
+            var lineOffset = this.TextView.ScrollOffset.Y / this.TextView.DefaultLineHeight;
             var newSize = this.FontSize + this.ZoomIncrement;
             this.FontSize = Math.Min(newSize, MAX_FONT_SIZE);
+            ((IScrollInfo)this).SetVerticalOffset(lineOffset * this.TextView.DefaultLineHeight);
         }
 
         public bool CanZoomOut()
@@ -262,8 +265,10 @@ namespace MyPad.Views.Controls
             if (this.CanZoomOut() == false)
                 return;
 
+            var lineOffset = this.TextView.ScrollOffset.Y / this.TextView.DefaultLineHeight;
             var newSize = this.FontSize - this.ZoomIncrement;
             this.FontSize = Math.Max(newSize, MIN_FONT_SIZE);
+            ((IScrollInfo)this).SetVerticalOffset(lineOffset * this.TextView.DefaultLineHeight);
         }
 
         public bool CanZoomReset()
@@ -274,7 +279,9 @@ namespace MyPad.Views.Controls
             if (this.CanZoomReset() == false)
                 return;
 
+            var lineOffset = this.TextView.ScrollOffset.Y / this.TextView.DefaultLineHeight;
             this.FontSize = this.ActualFontSize;
+            ((IScrollInfo)this).SetVerticalOffset(lineOffset * this.TextView.DefaultLineHeight);
         }
 
         public void OpenSearchPanel()
