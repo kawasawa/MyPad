@@ -29,7 +29,7 @@ namespace MyPad.Models
         [JsonIgnore]
         public string FilePath => Path.Combine(this.ProductInfo.Roaming, "settings.json");
 
-        public string AppVersion { get; set; }
+        public string Version { get; set; }
         public SystemSettings System { get; set; }
         public TextEditorSettings TextEditor { get; set; }
 
@@ -68,7 +68,7 @@ namespace MyPad.Models
         {
             try
             {
-                this.AppVersion = this.ProductInfo.Version.ToString();
+                this.Version = this.ProductInfo.Version.ToString();
                 var json = JsonConvert.SerializeObject(this, Formatting.Indented);
                 Directory.CreateDirectory(Path.GetDirectoryName(this.FilePath));
                 using (var writer = new StreamWriter(this.FilePath, false, FILE_ENCODING))
@@ -86,6 +86,6 @@ namespace MyPad.Models
         }
 
         public bool IsDifferentVersion()
-            => this.AppVersion != this.ProductInfo.Version.ToString();
+            => this.Version != this.ProductInfo.Version.ToString();
     }
 }

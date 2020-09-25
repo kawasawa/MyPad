@@ -1,5 +1,4 @@
-﻿using FastDeepCloner;
-using ICSharpCode.AvalonEdit.Document;
+﻿using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Utils;
 using System;
 using System.Collections.Generic;
@@ -45,7 +44,7 @@ namespace MyPad.Views.Controls.ChangeMarker
             }
 
             this._document = document;
-            this._baseDocument = document.Clone();
+            this._baseDocument = new TextDocument(document);
 
             this.ChangeList.Clear();
             this.ChangeList.InsertRange(0, document.LineCount + 1, LineChangeInfo.Empty);
@@ -65,7 +64,7 @@ namespace MyPad.Views.Controls.ChangeMarker
                     // HACK: UndoStack のサイズ変更を起点にファイルのリロードを検知
                     // たまたま ViewModel 側でサスペンドしているため実現できるが、
                     // 内部実装レベルで依存しており条件として非常に脆い。
-                    this._baseDocument = this._document.Clone();
+                    this._baseDocument = new TextDocument(this._document);
                     break;
                 case nameof(this._document.UndoStack.IsOriginalFile) when this._document.UndoStack.IsOriginalFile:
                     break;
