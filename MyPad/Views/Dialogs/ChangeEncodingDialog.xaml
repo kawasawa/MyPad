@@ -42,9 +42,9 @@
             </ComboBox>
         </Grid>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="{le:Loc Command_OK}"     Command="{Binding OKCommand, Mode=Onetime}"/>
+            <Button Content="{le:Loc Command_OK}" Command="{Binding OKCommand, Mode=Onetime}" Style="{StaticResource Common.AccentButton}" MinWidth="80"/>
             <Border Width="10"/>
-            <Button Content="{le:Loc Command_Cancel}" Command="{Binding CancelCommand, Mode=Onetime}"/>
+            <Button Content="{le:Loc Command_Cancel}" Command="{Binding CancelCommand, Mode=Onetime}" MinWidth="80"/>
         </StackPanel>
     </Grid>
 
