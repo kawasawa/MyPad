@@ -93,6 +93,8 @@
         <!-- ボタンのスタイルに合わせる -->
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border}"/>
+        <!-- コンテキストメニューのスタイルに合わせる -->
+        <Setter Property="MenuStyle" Value="{DynamicResource Default.ContextMenu}"/>
     </Style>
 
     <!-- ラジオボタン -->
