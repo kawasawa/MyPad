@@ -3,7 +3,8 @@
                     xmlns:m="http://metro.mahapps.com/winfx/xaml/controls"
                     xmlns:p="http://prismlibrary.com/" 
                     xmlns:s="clr-namespace:System;assembly=System.Runtime"
-                    xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors">
+                    xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
+                    xmlns:controls="clr-namespace:MyPad.Views.Controls">
     
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="./Controls/AvalonEdit.xaml"/>
@@ -19,6 +20,8 @@
     <s:Double x:Key="MahApps.Font.Size.TabItem">20</s:Double>
     <s:Double x:Key="App.Font.Size.Dialog.Message">14</s:Double>
     <s:Double x:Key="App.Font.Size.Overlay.Message">20</s:Double>
+
+    <Style TargetType="{x:Type controls:NumericUpDownEx}" BasedOn="{StaticResource Default.NumericUpDown}"/>
 
     <m:WindowButtonCommands x:Key="_windowButtonCommands" x:Shared="False">
         <m:WindowButtonCommands.Style>
