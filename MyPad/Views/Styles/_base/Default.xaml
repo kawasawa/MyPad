@@ -54,6 +54,10 @@
     <Style x:Key="Default.MetroProgressBar" TargetType="{x:Type m:MetroProgressBar}" BasedOn="{StaticResource MahApps.Styles.MetroProgressBar}">
     </Style>
 
+    <!-- スライダー -->
+    <Style x:Key="Default.Slider" TargetType="{x:Type Slider}" BasedOn="{StaticResource MahApps.Styles.Slider}">
+    </Style>
+
     <!-- タイル -->
     <Style x:Key="Default.Tile" TargetType="{x:Type m:Tile}" BasedOn="{StaticResource {x:Type m:Tile}}">
         <Setter Property="Width" Value="100"/>

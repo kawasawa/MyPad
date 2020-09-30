@@ -323,6 +323,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   設定のエクスポート に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_ExportSettings {
+            get {
+                return ResourceManager.GetString("Command_ExportSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   ファイル に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_File {
@@ -382,6 +391,24 @@ namespace MyPad.Properties {
         public static string Command_Help {
             get {
                 return ResourceManager.GetString("Command_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   設定のインポート に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_ImportSettings {
+            get {
+                return ResourceManager.GetString("Command_ImportSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   システム設定の初期化 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_InitializeSettings {
+            get {
+                return ResourceManager.GetString("Command_InitializeSettings", resourceCulture);
             }
         }
         
@@ -1697,6 +1724,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   システム設定を初期化します。よろしいですか？ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_ConfirmInitializeSettings {
+            get {
+                return ResourceManager.GetString("Message_ConfirmInitializeSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   シンタックス定義を初期化します。
         ///定義ファイルは既定のものに置き換えられます。
         ///設定は次回起動時に反映されます。よろしいですか？ に類似しているローカライズされた文字列を検索します。
@@ -1713,6 +1749,15 @@ namespace MyPad.Properties {
         public static string Message_ConfirmOpenLargeFile {
             get {
                 return ResourceManager.GetString("Message_ConfirmOpenLargeFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   システム設定を上書きします。よろしいですか？ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_ConfirmOverrideSettings {
+            get {
+                return ResourceManager.GetString("Message_ConfirmOverrideSettings", resourceCulture);
             }
         }
         

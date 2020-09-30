@@ -741,4 +741,19 @@
   <data name="LabelText_UseInAppToastNotifications" xml:space="preserve">
     <value>アプリ内のトースト通知を使用にする。</value>
   </data>
+  <data name="Command_ExportSettings" xml:space="preserve">
+    <value>設定のエクスポート</value>
+  </data>
+  <data name="Command_ImportSettings" xml:space="preserve">
+    <value>設定のインポート</value>
+  </data>
+  <data name="Command_InitializeSettings" xml:space="preserve">
+    <value>システム設定の初期化</value>
+  </data>
+  <data name="Message_ConfirmInitializeSettings" xml:space="preserve">
+    <value>システム設定を初期化します。よろしいですか？</value>
+  </data>
+  <data name="Message_ConfirmOverrideSettings" xml:space="preserve">
+    <value>システム設定を上書きします。よろしいですか？</value>
+  </data>
 </root>

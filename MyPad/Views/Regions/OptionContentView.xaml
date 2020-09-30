@@ -35,11 +35,6 @@
                 </Style>
                 <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
                     <Setter Property="Margin" Value="5"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsReadOnly" Value="True">
-                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
-                        </Trigger>
-                    </Style.Triggers>
                 </Style>
                 <Style TargetType="{x:Type m:NumericUpDown}" BasedOn="{StaticResource Default.NumericUpDown}">
                     <Setter Property="Margin" Value="5"/>
@@ -193,57 +188,118 @@
             </TabItem>
 
             <TabItem Header="{le:Loc Label_ConfigFile}">
-                <TabItem.Resources>
-                    <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
-                        <Setter Property="Margin" Value="0 5"/>
-                        <Setter Property="Padding" Value="0"/>
-                        <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
-                    </Style>
-                    <Style x:Key="IconDropDownButton" TargetType="{x:Type m:DropDownButton}" BasedOn="{StaticResource Default.DropDownButton}">
-                        <Setter Property="Margin" Value="0 5"/>
-                        <Setter Property="Padding" Value="0"/>
-                        <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
-                    </Style>
-                </TabItem.Resources>
                 <ScrollViewer>
-                    <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto">
-                        <Label   Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_ExecutionDirectory}"/>
-                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ProductInfo.Working, Mode=OneWay}" m:TextBoxHelper.SelectAllOnFocus="True" IsReadOnly="True" IsTabStop="False"/>
-                        <Button  Grid.Row="0" Grid.Column="3" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Click">
-                                    <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{Binding ProductInfo.Working, Mode=OneWay}" ThrowException="False"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                            <mi:Modern Kind="FolderOpen"/>
-                        </Button>
+                    <StackPanel>
+                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto">
+                            <Grid.Resources>
+                                <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+                                    <Setter Property="Margin" Value="5"/>
+                                    <Setter Property="IsTabStop" Value="False"/>
+                                    <Setter Property="IsReadOnly" Value="True"/>
+                                    <Setter Property="m:TextBoxHelper.SelectAllOnFocus" Value="True"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsReadOnly" Value="True">
+                                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                                <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+                                    <Setter Property="Margin" Value="0 5"/>
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
+                                </Style>
+                                <Style x:Key="IconDropDownButton" TargetType="{x:Type m:DropDownButton}" BasedOn="{StaticResource Default.DropDownButton}">
+                                    <Setter Property="Margin" Value="0 5"/>
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
+                                </Style>
+                            </Grid.Resources>
+                            
+                            <Label   Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_ExecutionDirectory}"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ProductInfo.Working, Mode=OneWay}"/>
+                            <Button  Grid.Row="0" Grid.Column="3" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{Binding ProductInfo.Working, Mode=OneWay}" ThrowException="False"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <mi:Modern Kind="FolderOpen"/>
+                            </Button>
 
-                        <Label   Grid.Row="1" Grid.Column="0" Content="{le:Loc Label_TempDirectory}"/>
-                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ProductInfo.Temporary, Mode=OneWay}" m:TextBoxHelper.SelectAllOnFocus="True" IsReadOnly="True" IsTabStop="False"/>
-                        <Button  Grid.Row="1" Grid.Column="3" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Click">
-                                    <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{Binding ProductInfo.Temporary, Mode=OneWay}" ThrowException="False"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                            <mi:Modern Kind="FolderOpen"/>
-                        </Button>
+                            <Label   Grid.Row="1" Grid.Column="0" Content="{le:Loc Label_TempDirectory}"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ProductInfo.Temporary, Mode=OneWay}"/>
+                            <Button  Grid.Row="1" Grid.Column="3" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{Binding ProductInfo.Temporary, Mode=OneWay}" ThrowException="False"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <mi:Modern Kind="FolderOpen"/>
+                            </Button>
 
-                        <Label   Grid.Row="2" Grid.Column="0" Content="{le:Loc Label_AppDataDirectory}"/>
-                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ProductInfo.Roaming, Mode=OneWay}" m:TextBoxHelper.SelectAllOnFocus="True" IsReadOnly="True" IsTabStop="False"/>
-                        <Button  Grid.Row="2" Grid.Column="3" Command="{Binding OpenAppDataDirectoryCommand, Mode=OneTime}" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}" BorderThickness="1 1 0 1">
-                            <mi:Modern Kind="FolderOpen"/>
-                        </Button>
-                        <m:DropDownButton Grid.Row="2" Grid.Column="4" Style="{StaticResource IconDropDownButton}" BorderThickness="0 1 1 1" Height="27">
-                            <m:DropDownButton.Items>
-                                <MenuItem Command="{Binding ExportLogArchiveCommand, Mode=OneTime}" Header="{le:Loc Command_ExportLog}">
-                                    <MenuItem.Icon>
-                                        <mi:Material Kind="Archive"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                            </m:DropDownButton.Items>
-                        </m:DropDownButton>
-                    </Grid>
+                            <Label   Grid.Row="2" Grid.Column="0" Content="{le:Loc Label_AppDataDirectory}"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ProductInfo.Roaming, Mode=OneWay}"/>
+                            <Button  Grid.Row="2" Grid.Column="3" Command="{Binding OpenAppDataDirectoryCommand, Mode=OneTime}" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}" BorderThickness="1 1 0 1">
+                                <mi:Modern Kind="FolderOpen"/>
+                            </Button>
+                            <m:DropDownButton Grid.Row="2" Grid.Column="4" Style="{StaticResource IconDropDownButton}" BorderThickness="0 1 1 1">
+                                <m:DropDownButton.Items>
+                                    <MenuItem Command="{Binding ExportLogArchiveCommand, Mode=OneTime}" Header="{le:Loc Command_ExportLog}">
+                                        <MenuItem.Icon>
+                                            <mi:Material Kind="ArchiveArrowDown"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Command="{Binding InitializeSyntaxCommand, Mode=OneTime}" Header="{le:Loc Command_InitializeSyntax}">
+                                        <MenuItem.Icon>
+                                            <mi:Material Kind="FileRefreshOutline"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                </m:DropDownButton.Items>
+                            </m:DropDownButton>
+                        </Grid>
+
+                        <Border Height="10"/>
+
+                        <ge:ResponsiveGrid>
+                            <ge:ResponsiveGrid.Resources>
+                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+                                    <Setter Property="Margin" Value="5"/>
+                                    <Style.Resources>
+                                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
+                                            <Setter Property="VerticalAlignment" Value="Center"/>
+                                        </Style>
+                                    </Style.Resources>
+                                </Style>
+                            </ge:ResponsiveGrid.Resources>
+
+                            <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
+                                <Button Command="{Binding ImportSettingsFileCommand, Mode=OneTime}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <mi:FontAwesome Kind="FileImportSolid"/>
+                                        <Border Width="5"/>
+                                        <TextBlock Text="{le:Loc Command_ImportSettings}"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Command="{Binding ExportSettingsFileCommand, Mode=OneTime}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <mi:FontAwesome Kind="FileDownloadSolid"/>
+                                        <Border Width="5"/>
+                                        <TextBlock Text="{le:Loc Command_ExportSettings}"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+
+                            <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
+                                <Button Command="{Binding InitializeSettingsCommand, Mode=OneTime}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <mi:Material Kind="CogRefresh"/>
+                                        <Border Width="5"/>
+                                        <TextBlock Text="{le:Loc Command_InitializeSettings}"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </ge:ResponsiveGrid>
+                    </StackPanel>
                 </ScrollViewer>
             </TabItem>
         </TabControl>

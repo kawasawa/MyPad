@@ -38,6 +38,9 @@ namespace MyPad.ViewModels.Regions
         public ReactiveCommand OpenAppDataDirectoryCommand { get; }
         public ReactiveCommand ExportLogArchiveCommand { get; }
         public ReactiveCommand InitializeSyntaxCommand { get; }
+        public ReactiveCommand ImportSettingsFileCommand { get; }
+        public ReactiveCommand ExportSettingsFileCommand { get; }
+        public ReactiveCommand InitializeSettingsCommand { get; }
 
         [InjectionConstructor]
         [LogInterceptor]
@@ -71,6 +74,52 @@ namespace MyPad.ViewModels.Regions
                 {
                     if (this.DialogService.Confirm(Resources.Message_ConfirmInitializeSyntax))
                         this.SyntaxService.Initialize(true);
+                })
+                .AddTo(this.CompositeDisposable);
+
+            this.ImportSettingsFileCommand = this.IsWorking.Inverse().ToReactiveCommand()
+                .WithSubscribe(() =>
+                {
+                    var fileName = Path.GetFileNameWithoutExtension(this.SettingsService.FilePath);
+                    var extension = Path.GetExtension(this.SettingsService.FilePath);
+                    var parameters = new OpenFileDialogParameters()
+                    {
+                        Filter = $"{Resources.Label_SettingFile}|*{extension}|{Resources.Label_AllFiles}|*.*",
+                        DefaultExtension = extension,
+                    };
+                    var ready = this.CommonDialogService.ShowDialog(parameters);
+                    if (ready == false)
+                        return;
+
+                    if (this.DialogService.Confirm(Resources.Message_ConfirmInitializeSettings))
+                        this.ImportSettingsFile(parameters.FileName);
+                })
+                .AddTo(this.CompositeDisposable);
+
+            this.ExportSettingsFileCommand = this.IsWorking.Inverse().ToReactiveCommand()
+                .WithSubscribe(() =>
+                {
+                    var fileName = Path.GetFileNameWithoutExtension(this.SettingsService.FilePath);
+                    var extension = Path.GetExtension(this.SettingsService.FilePath);
+                    var parameters = new SaveFileDialogParameters()
+                    {
+                        DefaultFileName = $"{fileName} ({DateTime.Now:yyyyMMddHHmmss})",
+                        Filter = $"{Resources.Label_SettingFile}|*{extension}|{Resources.Label_AllFiles}|*.*",
+                        DefaultExtension = extension,
+                    };
+                    var ready = this.CommonDialogService.ShowDialog(parameters);
+                    if (ready == false)
+                        return;
+
+                    this.ExportSettingsFile(parameters.FileName);
+                })
+                .AddTo(this.CompositeDisposable);
+
+            this.InitializeSettingsCommand = this.IsWorking.Inverse().ToReactiveCommand()
+                .WithSubscribe(() =>
+                {
+                    if (this.DialogService.Confirm(Resources.Message_ConfirmInitializeSettings))
+                        this.SettingsService.Initialize();
                 })
                 .AddTo(this.CompositeDisposable);
         }
@@ -145,6 +194,52 @@ namespace MyPad.ViewModels.Regions
             {
                 if (Directory.Exists(tempPath))
                     _ = Task.Run(() => { try { Directory.Delete(tempPath, true); } catch { } });
+                this.IsWorking.Value = false;
+            }
+            return true;
+        }
+
+        [LogInterceptor]
+        private bool ImportSettingsFile(string path)
+        {
+            try
+            {
+                this.IsWorking.Value = true;
+                this.SettingsService.Load(path);
+                this.SettingsService.Save();
+                this.Logger.Log($"設定ファイルをインポートしました。: Path={path}", Category.Info);
+            }
+            catch (Exception e)
+            {
+                this.Logger.Log($"設定ファイルのインポートに失敗しました。: Path={path}", Category.Warn, e);
+                this.DialogService.Warn(e.Message);
+                return false;
+            }
+            finally
+            {
+                this.IsWorking.Value = false;
+            }
+            return true;
+        }
+        
+        [LogInterceptor]
+        private bool ExportSettingsFile(string path)
+        {
+            try
+            {
+                this.IsWorking.Value = true;
+                this.SettingsService.Save(path);
+                Process.Start("explorer.exe", $"/select, {path}");
+                this.Logger.Log($"設定ファイルをエクスポートしました。: Path={path}", Category.Info);
+            }
+            catch (Exception e)
+            {
+                this.Logger.Log($"設定ファイルのエクスポートに失敗しました。: Path={path}", Category.Warn, e);
+                this.DialogService.Warn(e.Message);
+                return false;
+            }
+            finally
+            {
                 this.IsWorking.Value = false;
             }
             return true;
