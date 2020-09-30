@@ -16,6 +16,7 @@
     <Style TargetType="{x:Type m:ProgressRing}"          BasedOn="{StaticResource Default.ProgressRing}"/>
     <Style TargetType="{x:Type ProgressBar}"             BasedOn="{StaticResource Default.ProgressBar}"/>
     <Style TargetType="{x:Type m:MetroProgressBar}"      BasedOn="{StaticResource Default.MetroProgressBar}"/>
+    <Style TargetType="{x:Type Slider}"                  BasedOn="{StaticResource Default.Slider}"/>
     <Style TargetType="{x:Type m:Tile}"                  BasedOn="{StaticResource Default.Tile}"/>
     <Style TargetType="{x:Type Button}"                  BasedOn="{StaticResource Default.Button}"/>
     <Style TargetType="{x:Type ToggleButton}"            BasedOn="{StaticResource Default.ToggleButton}"/>
