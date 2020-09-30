@@ -448,7 +448,7 @@
     <value>Yes</value>
   </data>
   <data name="Message_ConfirmCleanUpLog" xml:space="preserve">
-    <value>Do you want to remove log files?</value>
+    <value>Are you sure you want to remove log files?</value>
   </data>
   <data name="Message_ConfirmDiscardChanges" xml:space="preserve">
     <value>Are you sure you want to discard your changes?</value>
@@ -456,16 +456,16 @@
   <data name="Message_ConfirmInitializeSyntax" xml:space="preserve">
     <value>Initialize the syntax definitions.
 Definition files in the folder will be replaced with the default files.
-These changes will be applied on restart. Do you want to continue?</value>
+These changes will be applied on restart. Are you sure you want to continue?</value>
   </data>
   <data name="Message_ConfirmOpenLargeFile" xml:space="preserve">
-    <value>Open a large file may take a long time. Do you want to continue?</value>
+    <value>Open a large file may take a long time. Are you sure you want to continue?</value>
   </data>
   <data name="Message_ConfirmSaveChanges" xml:space="preserve">
-    <value>Do you want to save the changes?</value>
+    <value>Are you sure you want to save the changes?</value>
   </data>
   <data name="Message_NotifyAutoSaved" xml:space="preserve">
-    <value>Auto saved to a temporary.</value>
+    <value>Auto saved to the temporary.</value>
   </data>
   <data name="Message_NotifyDirectoryNotFound" xml:space="preserve">
     <value>Directory not found.</value>
@@ -700,5 +700,20 @@ These changes will be applied on restart. Do you want to continue?</value>
   </data>
   <data name="LabelText_UseInAppToastNotifications" xml:space="preserve">
     <value>Use in-app toast notifications.</value>
+  </data>
+  <data name="Command_ExportSettings" xml:space="preserve">
+    <value>Export settings</value>
+  </data>
+  <data name="Command_ImportSettings" xml:space="preserve">
+    <value>Import settings</value>
+  </data>
+  <data name="Command_InitializeSettings" xml:space="preserve">
+    <value>Initialize the system settings</value>
+  </data>
+  <data name="Message_ConfirmInitializeSettings" xml:space="preserve">
+    <value>Are you sure you want to initialize the system settings?</value>
+  </data>
+  <data name="Message_ConfirmOverrideSettings" xml:space="preserve">
+    <value>Are you sure you want to override the system settings?</value>
   </data>
 </root>

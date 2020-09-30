@@ -39,14 +39,14 @@ namespace MyPad.Models
             }
         }
 
-        private string _culture = CultureInfo.CurrentCulture.Name;
+        private string _culture = "ja-JP";
         public string Culture
         {
             get => this._culture;
             set
             {
-                this.SetProperty(ref this._culture, value);
-                LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(value);
+                if (this.SetProperty(ref this._culture, value));
+                    this.ApplyCulture();
             }
         }
 
@@ -181,6 +181,12 @@ namespace MyPad.Models
             set => this.SetProperty(ref this._showSideBar, value);
         }
 
+        public SystemSettings()
+        {
+            this.ApplyTheme();
+            this.ApplyCulture();
+        }
+
         public void ApplyTheme()
         {
             if (this.Theme == ThemeType.Sync)
@@ -202,6 +208,11 @@ namespace MyPad.Models
                 ThemeManager.Current.ChangeTheme(Application.Current, theme);
                 Application.Current?.Windows.OfType<Window>().ForEach(w => ThemeManager.Current.ChangeTheme(w, theme));
             }
+        }
+
+        public void ApplyCulture()
+        {
+            LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(this.Culture);
         }
 
         public enum ThemeType
