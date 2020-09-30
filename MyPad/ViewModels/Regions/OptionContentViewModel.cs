@@ -91,7 +91,7 @@ namespace MyPad.ViewModels.Regions
                     if (ready == false)
                         return;
 
-                    if (this.DialogService.Confirm(Resources.Message_ConfirmInitializeSettings))
+                    if (this.DialogService.Confirm(Resources.Message_ConfirmOverrideSettings))
                         this.ImportSettingsFile(parameters.FileName);
                 })
                 .AddTo(this.CompositeDisposable);
