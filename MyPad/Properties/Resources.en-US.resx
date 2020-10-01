@@ -690,7 +690,8 @@ These changes will be applied on restart. Are you sure you want to continue?</va
     <value>Show change marker.</value>
   </data>
   <data name="Message_NotifyCachedFilesRemain" xml:space="preserve">
-    <value>Some previously cached files remain. Please check.</value>
+    <value>Some previously cached files has been found.
+Please check and delete unnecessary files.</value>
   </data>
   <data name="LabelText_ShowColumnRuler" xml:space="preserve">
     <value>Show column ruler.</value>

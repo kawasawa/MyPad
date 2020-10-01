@@ -730,7 +730,8 @@
     <value>変更行を示すマーカーを表示にする。</value>
   </data>
   <data name="Message_NotifyCachedFilesRemain" xml:space="preserve">
-    <value>過去にキャッシュされたファイルが見つかりました。ご確認ください。</value>
+    <value>過去にキャッシュされたファイルが見つかりました。
+ご確認頂き、不要なファイルを削除してください。</value>
   </data>
   <data name="LabelText_ShowColumnRuler" xml:space="preserve">
     <value>目安線を表示する。</value>

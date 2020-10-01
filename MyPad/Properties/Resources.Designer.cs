@@ -1780,7 +1780,8 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   過去にキャッシュされたファイルが見つかりました。ご確認ください。 に類似しているローカライズされた文字列を検索します。
+        ///   過去にキャッシュされたファイルが見つかりました。
+        ///ご確認頂き、不要なファイルを削除してください。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_NotifyCachedFilesRemain {
             get {
