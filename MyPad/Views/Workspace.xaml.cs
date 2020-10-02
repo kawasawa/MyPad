@@ -81,7 +81,12 @@ namespace MyPad.Views
                 {
                     view.ContentRendered -= view_ContentRendered;
                     view.ViewModel.AboutCommand.Execute();
-                    view.ViewModel.DialogService.ToastNotify(string.Format(Properties.Resources.Message_NotifyWelcome, view.ViewModel.ProductInfo.Product, view.ViewModel.ProductInfo.Version));
+
+                    var info = view.ViewModel.ProductInfo;
+                    view.ViewModel.DialogService.ToastNotify(string.Format(
+                        Properties.Resources.Message_NotifyWelcome,
+                        info.Product,
+                        $"{info.Version.Major}.{info.Version.Minor}.{info.Version.Build}"));
                 }
                 view.ContentRendered += view_ContentRendered;
             }

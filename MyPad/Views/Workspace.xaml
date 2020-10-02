@@ -24,11 +24,6 @@
                    TrayMouseDoubleClick="TaskbarIcon_TrayMouseDoubleClick">
         <t:TaskbarIcon.ContextMenu>
             <ContextMenu>
-                <MenuItem Click="NewWindowCommand_Click" Header="{le:Loc Command_NewWindow}">
-                    <MenuItem.Icon>
-                        <mi:Modern Kind="New"/>
-                    </MenuItem.Icon>
-                </MenuItem>
                 <MenuItem x:Name="WindowListItem" Header="{le:Loc Command_WindowList}" IsEnabled="{qc:Binding '$P.CompareTo(0) == 1', P={Binding Items.Count, RelativeSource={RelativeSource Self}, Mode=OneWay}}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Default.MenuItem}">
@@ -41,6 +36,11 @@
                             </Style.Triggers>
                         </Style>
                     </MenuItem.ItemContainerStyle>
+                </MenuItem>
+                <MenuItem Click="NewWindowCommand_Click" Header="{le:Loc Command_NewWindow}">
+                    <MenuItem.Icon>
+                        <mi:Modern Kind="New"/>
+                    </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Command="{Binding ExitApplicationCommand, Mode=OneTime}" Header="{le:Loc Command_ExitApplication}">
                     <MenuItem.Icon>

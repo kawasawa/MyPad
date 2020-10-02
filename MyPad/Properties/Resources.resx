@@ -749,7 +749,7 @@
     <value>設定のインポート</value>
   </data>
   <data name="Command_InitializeSettings" xml:space="preserve">
-    <value>システム設定の初期化</value>
+    <value>設定の初期化</value>
   </data>
   <data name="Message_ConfirmInitializeSettings" xml:space="preserve">
     <value>システム設定を初期化します。よろしいですか？</value>
@@ -759,5 +759,8 @@
   </data>
   <data name="Label_IndentationSize" xml:space="preserve">
     <value>タブ幅</value>
+  </data>
+  <data name="Label_SystemSettings" xml:space="preserve">
+    <value>システム設定</value>
   </data>
 </root>

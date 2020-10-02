@@ -404,7 +404,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   システム設定の初期化 に類似しているローカライズされた文字列を検索します。
+        ///   設定の初期化 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_InitializeSettings {
             get {
@@ -1314,6 +1314,15 @@ namespace MyPad.Properties {
         public static string Label_System {
             get {
                 return ResourceManager.GetString("Label_System", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   システム設定 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_SystemSettings {
+            get {
+                return ResourceManager.GetString("Label_SystemSettings", resourceCulture);
             }
         }
         
