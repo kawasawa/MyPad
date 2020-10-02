@@ -757,4 +757,7 @@
   <data name="Message_ConfirmOverrideSettings" xml:space="preserve">
     <value>システム設定を上書きします。よろしいですか？</value>
   </data>
+  <data name="Label_IndentationSize" xml:space="preserve">
+    <value>タブ幅</value>
+  </data>
 </root>

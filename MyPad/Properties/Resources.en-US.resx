@@ -717,4 +717,7 @@ Please check and delete unnecessary files.</value>
   <data name="Message_ConfirmOverrideSettings" xml:space="preserve">
     <value>Are you sure you want to override the system settings?</value>
   </data>
+  <data name="Label_IndentationSize" xml:space="preserve">
+    <value>Indentation size</value>
+  </data>
 </root>

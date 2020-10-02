@@ -153,15 +153,17 @@
                                 <Border Height="10"/>
 
                                 <StackPanel>
-                                    <StackPanel>
-                                        <CheckBox IsChecked="{Binding ShowColumnRuler, Mode=TwoWay}" Content="{le:Loc LabelText_ShowColumnRuler}"/>
-                                        <Grid ge:GridEx.RowDefinition="Auto" ge:GridEx.ColumnDefinition="Auto, 10, Auto" Margin="30 0 0 0">
-                                            <Label           Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_ColumnRulerPosition}"/>
-                                            <m:NumericUpDown Grid.Row="0" Grid.Column="2" Value="{Binding ColumnRulerPosition, Mode=TwoWay}" Minimum="1" Maximum="10000" MinWidth="100"/>
-                                        </Grid>
-                                    </StackPanel>
+                                    <CheckBox IsChecked="{Binding ShowColumnRuler, Mode=TwoWay}" Content="{le:Loc LabelText_ShowColumnRuler}"/>
+                                    <Grid ge:GridEx.RowDefinition="Auto" ge:GridEx.ColumnDefinition="Auto, 10, Auto" Margin="30 0 0 0">
+                                        <Label           Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_ColumnRulerPosition}"/>
+                                        <m:NumericUpDown Grid.Row="0" Grid.Column="2" Value="{Binding ColumnRulerPosition, Mode=TwoWay}" Minimum="1" Maximum="10000" MinWidth="100"/>
+                                    </Grid>
                                     <CheckBox IsChecked="{Binding WordWrap, Mode=TwoWay}"            Content="{le:Loc LabelText_EnableWordWrap}"/>
                                     <CheckBox IsChecked="{Binding ConvertTabsToSpaces, Mode=TwoWay}" Content="{le:Loc LabelText_ConvertTabsToSpaces}"/>
+                                    <Grid ge:GridEx.RowDefinition="Auto" ge:GridEx.ColumnDefinition="Auto, 10, Auto" Margin="30 0 0 0">
+                                        <Label           Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_IndentationSize}"/>
+                                        <m:NumericUpDown Grid.Row="0" Grid.Column="2" Value="{Binding IndentationSize, Mode=TwoWay}" Minimum="1" Maximum="64" MinWidth="100"/>
+                                    </Grid>
                                 </StackPanel>
                             </StackPanel>
 

@@ -1174,6 +1174,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   タブ幅 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_IndentationSize {
+            get {
+                return ResourceManager.GetString("Label_IndentationSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   言語 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Language {
