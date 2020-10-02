@@ -83,11 +83,13 @@ namespace MyPad.Models
             try
             {
                 var json = string.Empty;
-                using (var reader = new StreamReader(path, FILE_ENCODING))
+                using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var reader = new StreamReader(stream, FILE_ENCODING))
                 {
                     json = reader.ReadToEnd();
                 }
                 JsonConvert.PopulateObject(json, this);
+
                 this.Logger.Log($"設定ファイルを読み込みました。: Path={path}", Category.Debug);
                 return true;
             }
@@ -108,10 +110,12 @@ namespace MyPad.Models
                 this.Version = this.ProductInfo.Version.ToString();
                 var json = JsonConvert.SerializeObject(this, Formatting.Indented);
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
-                using (var writer = new StreamWriter(path, false, FILE_ENCODING))
+                using (var stream = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.Read))
+                using (var writer = new StreamWriter(stream, FILE_ENCODING))
                 {
                     writer.Write(json);
                 }
+                
                 this.Logger.Log($"設定ファイルを保存しました。: Path={path}", Category.Debug);
                 return true;
             }
