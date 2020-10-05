@@ -730,7 +730,7 @@ namespace MyPad.ViewModels
                         continue;
 
                     viewModel.WakeUpTextEditor(existTextEditor);
-                    view.SetForegroundWindow();
+                    viewModel.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
                     return (false, null);
                 }
 
@@ -856,7 +856,7 @@ namespace MyPad.ViewModels
                         continue;
 
                     viewModel.WakeUpTextEditor(existTextEditor);
-                    view.SetForegroundWindow();
+                    viewModel.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
                     viewModel.DialogService.ToastWarn($"{Resources.Message_NotifyFileLocked}{Environment.NewLine}{existTextEditor.FileName}");
                     return (false, null);
                 }

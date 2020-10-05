@@ -709,12 +709,18 @@ Please check and delete unnecessary files.</value>
     <value>Import settings</value>
   </data>
   <data name="Command_InitializeSettings" xml:space="preserve">
-    <value>Initialize the system settings</value>
+    <value>Initialize the settings</value>
   </data>
   <data name="Message_ConfirmInitializeSettings" xml:space="preserve">
     <value>Are you sure you want to initialize the system settings?</value>
   </data>
   <data name="Message_ConfirmOverrideSettings" xml:space="preserve">
     <value>Are you sure you want to override the system settings?</value>
+  </data>
+  <data name="Label_IndentationSize" xml:space="preserve">
+    <value>Indentation size</value>
+  </data>
+  <data name="Label_SystemSettings" xml:space="preserve">
+    <value>System settings</value>
   </data>
 </root>

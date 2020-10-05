@@ -153,15 +153,17 @@
                                 <Border Height="10"/>
 
                                 <StackPanel>
-                                    <StackPanel>
-                                        <CheckBox IsChecked="{Binding ShowColumnRuler, Mode=TwoWay}" Content="{le:Loc LabelText_ShowColumnRuler}"/>
-                                        <Grid ge:GridEx.RowDefinition="Auto" ge:GridEx.ColumnDefinition="Auto, 10, Auto" Margin="30 0 0 0">
-                                            <Label           Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_ColumnRulerPosition}"/>
-                                            <m:NumericUpDown Grid.Row="0" Grid.Column="2" Value="{Binding ColumnRulerPosition, Mode=TwoWay}" Minimum="1" Maximum="10000" MinWidth="100"/>
-                                        </Grid>
-                                    </StackPanel>
+                                    <CheckBox IsChecked="{Binding ShowColumnRuler, Mode=TwoWay}" Content="{le:Loc LabelText_ShowColumnRuler}"/>
+                                    <Grid ge:GridEx.RowDefinition="Auto" ge:GridEx.ColumnDefinition="Auto, 10, Auto" Margin="30 0 0 0">
+                                        <Label           Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_ColumnRulerPosition}"/>
+                                        <m:NumericUpDown Grid.Row="0" Grid.Column="2" Value="{Binding ColumnRulerPosition, Mode=TwoWay}" Minimum="1" Maximum="10000" MinWidth="100"/>
+                                    </Grid>
                                     <CheckBox IsChecked="{Binding WordWrap, Mode=TwoWay}"            Content="{le:Loc LabelText_EnableWordWrap}"/>
                                     <CheckBox IsChecked="{Binding ConvertTabsToSpaces, Mode=TwoWay}" Content="{le:Loc LabelText_ConvertTabsToSpaces}"/>
+                                    <Grid ge:GridEx.RowDefinition="Auto" ge:GridEx.ColumnDefinition="Auto, 10, Auto" Margin="30 0 0 0">
+                                        <Label           Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_IndentationSize}"/>
+                                        <m:NumericUpDown Grid.Row="0" Grid.Column="2" Value="{Binding IndentationSize, Mode=TwoWay}" Minimum="1" Maximum="64" MinWidth="100"/>
+                                    </Grid>
                                 </StackPanel>
                             </StackPanel>
 
@@ -258,21 +260,33 @@
                             </m:DropDownButton>
                         </Grid>
 
-                        <Border Height="10"/>
+                        <Border Height="15"/>
 
-                        <ge:ResponsiveGrid>
-                            <ge:ResponsiveGrid.Resources>
-                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
-                                    <Setter Property="Margin" Value="5"/>
-                                    <Style.Resources>
-                                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
-                                            <Setter Property="VerticalAlignment" Value="Center"/>
-                                        </Style>
-                                    </Style.Resources>
-                                </Style>
-                            </ge:ResponsiveGrid.Resources>
+                        <GroupBox Header="{le:Loc Label_SystemSettings}">
+                            <ge:ResponsiveGrid>
+                                <ge:ResponsiveGrid.Resources>
+                                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+                                        <Setter Property="Margin" Value="5"/>
+                                        <Setter Property="ge:ResponsiveGrid.XS" Value="12"/>
+                                        <Setter Property="ge:ResponsiveGrid.SM" Value="6"/>
+                                        <Style.Resources>
+                                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
+                                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                            </Style>
+                                        </Style.Resources>
+                                    </Style>
+                                    <Style x:Key="This.DangerButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Common.DangerButton}">
+                                        <Setter Property="Margin" Value="5"/>
+                                        <Setter Property="ge:ResponsiveGrid.XS" Value="12"/>
+                                        <Setter Property="ge:ResponsiveGrid.SM" Value="6"/>
+                                        <Style.Resources>
+                                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
+                                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                            </Style>
+                                        </Style.Resources>
+                                    </Style>
+                                </ge:ResponsiveGrid.Resources>
 
-                            <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
                                 <Button Command="{Binding ImportSettingsFileCommand, Mode=OneTime}">
                                     <StackPanel Orientation="Horizontal">
                                         <mi:FontAwesome Kind="FileImportSolid"/>
@@ -287,18 +301,15 @@
                                         <TextBlock Text="{le:Loc Command_ExportSettings}"/>
                                     </StackPanel>
                                 </Button>
-                            </StackPanel>
-
-                            <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
-                                <Button Command="{Binding InitializeSettingsCommand, Mode=OneTime}">
+                                <Button Command="{Binding InitializeSettingsCommand, Mode=OneTime}" Style="{StaticResource This.DangerButton}">
                                     <StackPanel Orientation="Horizontal">
                                         <mi:Material Kind="CogRefresh"/>
                                         <Border Width="5"/>
                                         <TextBlock Text="{le:Loc Command_InitializeSettings}"/>
                                     </StackPanel>
                                 </Button>
-                            </StackPanel>
-                        </ge:ResponsiveGrid>
+                            </ge:ResponsiveGrid>
+                        </GroupBox>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
