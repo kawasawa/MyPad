@@ -4,6 +4,9 @@ using System;
 
 namespace MyPad
 {
+    /// <summary>
+    /// アプリケーションの構成情報を表します。
+    /// </summary>
     public static class AppSettings
     {
         private static readonly Lazy<IConfigurationRoot> _lazyConfiguration

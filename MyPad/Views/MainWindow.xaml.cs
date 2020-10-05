@@ -322,34 +322,39 @@ namespace MyPad.Views
             }
 
             // リージョンにビューを設定する
-            void addToRegion<T>(string suffix = null)
+            void createRegionContent<T>(string suffix = null)
             {
-                const int MAX_RETRY_COUNT = 5;
-                var retryCount = 0;
                 var regionName = $"{PrismNamingConverter.ConvertToRegionName<T>()}{suffix}";
-                while (true)
+                var content = this.ContainerExtension.Resolve<T>();
+
+                try
                 {
-                    try
-                    {
-                        this.RegionManager.AddToRegion(regionName, this.ContainerExtension.Resolve<T>());
-                        break;
-                    }
-                    catch (Exception e) when (retryCount < MAX_RETRY_COUNT)
-                    {
-                        this.Logger.Log($"リージョンの追加に失敗しました。再試行します。: RegionName={regionName}, RetryCount={retryCount}", Category.Warn, e);
-                        Thread.Sleep(100);
-                        retryCount++;
-                    }
+                    this.RegionManager.AddToRegion(regionName, content);
+                    return;
+                }
+                catch (Exception e)
+                {
+                    this.Logger.Log($"{nameof(IRegionManager.AddToRegion)} に失敗しました。別メソッドで再試行します。: RegionName={regionName}", Category.Warn, e);
+                }
+
+                try
+                {
+                    this.RegionManager.RegisterViewWithRegion(regionName, () => content);
+                    return;
+                }
+                catch (Exception e)
+                {
+                    this.Logger.Log($"{nameof(IRegionManager.RegisterViewWithRegion)} に失敗しました。: RegionName={regionName}", Category.Warn, e);
                 }
             }
-            addToRegion<MenuBarView>("1");
-            addToRegion<MenuBarView>("2");
-            addToRegion<ToolBarView>();
-            addToRegion<StatusBarView>();
-            addToRegion<DiffContentView>();
-            addToRegion<PrintPreviewContentView>();
-            addToRegion<OptionContentView>();
-            addToRegion<AboutContentView>();
+            createRegionContent<MenuBarView>("1");
+            createRegionContent<MenuBarView>("2");
+            createRegionContent<ToolBarView>();
+            createRegionContent<StatusBarView>();
+            createRegionContent<DiffContentView>();
+            createRegionContent<PrintPreviewContentView>();
+            createRegionContent<OptionContentView>();
+            createRegionContent<AboutContentView>();
         }
 
         [LogInterceptor]

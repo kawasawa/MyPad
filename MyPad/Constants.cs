@@ -5,6 +5,9 @@ using System.Windows.Media;
 
 namespace MyPad
 {
+    /// <summary>
+    /// アプリケーションで使用する定数を定義します。
+    /// </summary>
     public static class Constants
     {
         public static readonly IEnumerable<object> CULTURES

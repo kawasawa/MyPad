@@ -22,10 +22,10 @@ namespace MyPad
         /// <summary>
         /// 指定されたアプリケーションに対してハンドルされていない例外の発生を監視します。
         /// </summary>
-        /// <param name="self">アプリケーション</param>
+        /// <param name="application">アプリケーション</param>
         /// <param name="logger">ロガー</param>
         /// <param name="productInfo">プロダクト情報</param>
-        public static void Observe(Application self, ILoggerFacade logger, IProductInfo productInfo)
+        public static void Observe(Application application, ILoggerFacade logger, IProductInfo productInfo)
         {
             if (_isObserved)
                 throw new InvalidOperationException();
@@ -35,7 +35,7 @@ namespace MyPad
             Logger = logger;
             ProductInfo = productInfo;
 
-            self.DispatcherUnhandledException += App_DispatcherUnhandledException;
+            application.DispatcherUnhandledException += App_DispatcherUnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         }
