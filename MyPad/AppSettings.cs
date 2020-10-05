@@ -15,17 +15,7 @@ namespace MyPad
                 return builder.Build();
             });
 
-        public static int TempsLifetime
-            => int.TryParse(_lazyConfiguration.Value[nameof(TempsLifetime).ToSnakeCase()], out var value) && 0 <= value ? value : 10;
-
-        public static long LargeSizeBorder
-        {
-            get
-            {
-                const long MB = 1048576;
-                return long.TryParse(_lazyConfiguration.Value[nameof(LargeSizeBorder).ToSnakeCase()], out var value) && MB <= value ? value : 10 * MB;
-            }
-        }
+        private static readonly long SIZE_MB = 1024 * 1024;
 
         public static string ProjectSite
             => _lazyConfiguration.Value[nameof(ProjectSite).ToSnakeCase()];
@@ -33,7 +23,16 @@ namespace MyPad
         public static string DonationSite
            => _lazyConfiguration.Value[nameof(DonationSite).ToSnakeCase()];
 
-        public static int DonationAmount
-           => int.TryParse(_lazyConfiguration.Value[nameof(DonationAmount).ToSnakeCase()], out var value) && 100 <= value ? value : 100;
+        public static int CacheLifetime
+            => int.TryParse(_lazyConfiguration.Value[nameof(CacheLifetime).ToSnakeCase()], out var value) && 0 <= value ? value : 10;
+
+        public static int ToastLifetime
+            => int.TryParse(_lazyConfiguration.Value[nameof(ToastLifetime).ToSnakeCase()], out var value) && 0 <= value ? value : 5;
+
+        public static int ToastMaxCount
+            => int.TryParse(_lazyConfiguration.Value[nameof(ToastMaxCount).ToSnakeCase()], out var value) && 0 <= value ? value : 5;
+
+        public static long FileSizeThreshold
+            => long.TryParse(_lazyConfiguration.Value[nameof(FileSizeThreshold).ToSnakeCase()], out var value) && SIZE_MB <= value ? value : 10 * SIZE_MB;
     }
 }

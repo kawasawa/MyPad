@@ -133,14 +133,10 @@ namespace MyPad.Views
             this.InterTabClient = this.ContainerExtension.Resolve<InterTabClientWrapper>();
             this.Notifier = new Notifier(config =>
                 {
-                    const int TOAST_LIFE_TIME = 5000;
-                    const int TOAST_MAX_COUNT = 5;
-                    const double TOAST_WIDTH = 280;
-
-                    config.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromMilliseconds(TOAST_LIFE_TIME), MaximumNotificationCount.FromCount(TOAST_MAX_COUNT));
+                    config.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromSeconds(AppSettings.ToastLifetime), MaximumNotificationCount.FromCount(AppSettings.ToastMaxCount));
                     config.PositionProvider = new WindowPositionProvider(this, Corner.BottomRight, 5, 0);
                     config.Dispatcher = Application.Current.Dispatcher;
-                    config.DisplayOptions.Width = TOAST_WIDTH;
+                    config.DisplayOptions.Width = 280;
                     config.DisplayOptions.TopMost = false;
                 });
 
