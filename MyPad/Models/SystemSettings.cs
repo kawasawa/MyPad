@@ -45,7 +45,7 @@ namespace MyPad.Models
             get => this._culture;
             set
             {
-                if (this.SetProperty(ref this._culture, value));
+                if (this.SetProperty(ref this._culture, value))
                     this.ApplyCulture();
             }
         }

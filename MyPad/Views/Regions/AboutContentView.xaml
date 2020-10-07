@@ -49,7 +49,7 @@
                 </Button.ToolTip>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <behaviors:ProcessStartAction FileName="cmd.exe" Arguments="{qc:MultiBinding '\'/c start \' + $P0 + \'/\' + $P1', P0={Binding Source={x:Static root:AppSettings.DonationSite}, Mode=OneWay}, P1={Binding Source={x:Static root:AppSettings.DonationAmount}, Mode=OneWay}}" CreateNoWindow="True" ThrowException="False"/>
+                        <behaviors:ProcessStartAction FileName="cmd.exe" Arguments="{qc:Binding '\'/c start \' + $P', P={Binding Source={x:Static root:AppSettings.DonationSite}, Mode=OneWay}}" CreateNoWindow="True" ThrowException="False"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <mi:FontAwesome Kind="SmileRegular"/>

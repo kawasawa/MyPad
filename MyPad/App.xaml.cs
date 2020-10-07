@@ -138,7 +138,7 @@ namespace MyPad
                         info.Attributes &= ~FileAttributes.Hidden;
 
                     // 残存する一時フォルダのうち、指定の期間を超えたものを削除する
-                    var basis = this.SharedDataService.Process.StartTime.AddDays(-1 * AppSettings.TempsLifetime);
+                    var basis = this.SharedDataService.Process.StartTime.AddDays(-1 * AppSettings.CacheLifetime);
                     foreach (var info in cachedDirectories
                         .Where(t => t.result == false || t.value < basis || t.info.EnumerateFileSystemInfos().Any() == false)
                         .Select(t => t.info))
