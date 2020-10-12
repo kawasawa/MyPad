@@ -97,6 +97,19 @@ namespace MyPad.Views.Controls
             base.OnClosed(e);
         }
 
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && this.IsVisible == false)
+            {
+                // HACK: 補完候補が無い状態で Enter キーを押下しても改行されない問題への対策
+                // 0 個の状態で補完リストが存在しているため、明示的にクローズする。
+                // 続けて TextArea を改行処理させるため、ここで e.Handled = true としないように。
+                this.Close();
+                return;
+            }
+            base.OnKeyDown(e);
+        }
+
         private void TextArea_TextEntering(object sender, TextCompositionEventArgs e)
         {
             if (e.Text.Length != 1)

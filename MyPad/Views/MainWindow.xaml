@@ -149,9 +149,9 @@
     <!-- 画面コンテンツ -->
     <Grid ge:GridEx.RowDefinition="Auto, Auto, *, Auto">
         <ContentControl Grid.Row="0" Style="{StaticResource RegionContent}" p:RegionManager.RegionName="MenuBarRegion2"
-                        Visibility="{qc:MultiBinding '$P0 ## !$P1 ? Visibility.Visible : Visibility.Collapsed',
-                                     P0={Binding SettingsService.System.ShowMenuBar, Mode=OneWay},
-                                     P1={Binding ShowTitleBar, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}}"
+                        Visibility="{qc:MultiBinding '!$P0 ## $P1 ? Visibility.Visible : Visibility.Collapsed',
+                                     P0={Binding ShowTitleBar, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}},
+                                     P1={Binding SettingsService.System.ShowMenuBar, Mode=OneWay}}"
                         ContextMenu="{StaticResource ContextMenu}"/>
         <ContentControl Grid.Row="1" Style="{StaticResource RegionContent}" p:RegionManager.RegionName="ToolBarRegion"
                         Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding SettingsService.System.ShowToolBar, Mode=OneWay}}"
@@ -159,6 +159,22 @@
         <ContentControl Grid.Row="3" Style="{StaticResource RegionContent}" p:RegionManager.RegionName="StatusBarRegion"
                         Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding SettingsService.System.ShowStatusBar, Mode=OneWay}}"
                         ContextMenu="{StaticResource ContextMenu}"/>
+
+        <Button Grid.Row="0" Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}" Focusable="False"
+                Style="{DynamicResource MahApps.Styles.Button.Chromeless}" Padding="10 5" VerticalAlignment="Top" HorizontalAlignment="Right"
+                Visibility="{qc:MultiBinding '!$P0 ## $P1 ? Visibility.Visible : Visibility.Collapsed',
+                             P0={Binding ShowTitleBar, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}},
+                             P1={Binding SettingsService.System.ShowMenuBar, Mode=OneWay}}">
+            <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+        </Button>
+        <Button Grid.Row="1" Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}" Focusable="False"
+                Style="{DynamicResource MahApps.Styles.Button.Chromeless}" Padding="10 5" VerticalAlignment="Top" HorizontalAlignment="Right"
+                Visibility="{qc:MultiBinding '!$P0 ## !$P1 ## $P2 ? Visibility.Visible : Visibility.Collapsed',
+                             P0={Binding ShowTitleBar, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}},
+                             P1={Binding SettingsService.System.ShowMenuBar, Mode=OneWay},
+                             P2={Binding SettingsService.System.ShowToolBar, Mode=OneWay}}">
+            <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+        </Button>
 
         <Grid Grid.Row="2">
             <Grid.Resources>
@@ -234,9 +250,26 @@
                                 <TreeView ItemsSource="{Binding Data.FileTreeNodes, Source={StaticResource Proxy}, Mode=OneWay}">
                                     <TreeView.ItemContainerStyle>
                                         <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource Default.TreeViewItem}">
+                                            <EventSetter Event="MouseRightButtonDown" Handler="FileTreeNode_MouseRightButtonDown"/>
                                             <EventSetter Event="MouseDoubleClick" Handler="FileTreeNode_MouseDoubleClick"/>
                                             <EventSetter Event="KeyDown" Handler="FileTreeNode_KeyDown"/>
                                             <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                                            <Setter Property="ContextMenu">
+                                                <Setter.Value>
+                                                    <ContextMenu>
+                                                        <MenuItem Header="{le:Loc Command_OpenWithExplorer}">
+                                                            <i:Interaction.Triggers>
+                                                                <i:EventTrigger EventName="Click">
+                                                                    <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{qc:Binding '\'/select, \' + $P', P={Binding FileName, Mode=OneWay}}"/>
+                                                                </i:EventTrigger>
+                                                            </i:Interaction.Triggers>
+                                                            <MenuItem.Icon>
+                                                                <mi:Material Kind="FolderOpen"/>
+                                                            </MenuItem.Icon>
+                                                        </MenuItem>
+                                                    </ContextMenu>
+                                                </Setter.Value>
+                                            </Setter>
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding IsEmpty, Mode=OneWay}" Value="True">
                                                     <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>

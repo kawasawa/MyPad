@@ -763,4 +763,7 @@
   <data name="Label_SystemSettings" xml:space="preserve">
     <value>システム設定</value>
   </data>
+  <data name="Command_OpenWithExplorer" xml:space="preserve">
+    <value>エクスプローラーで開く</value>
+  </data>
 </root>

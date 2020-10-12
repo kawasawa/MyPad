@@ -566,6 +566,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   エクスプローラーで開く に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_OpenWithExplorer {
+            get {
+                return ResourceManager.GetString("Command_OpenWithExplorer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   オプション に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Option {
