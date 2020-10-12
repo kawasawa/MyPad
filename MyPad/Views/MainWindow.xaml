@@ -250,9 +250,26 @@
                                 <TreeView ItemsSource="{Binding Data.FileTreeNodes, Source={StaticResource Proxy}, Mode=OneWay}">
                                     <TreeView.ItemContainerStyle>
                                         <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource Default.TreeViewItem}">
+                                            <EventSetter Event="MouseRightButtonDown" Handler="FileTreeNode_MouseRightButtonDown"/>
                                             <EventSetter Event="MouseDoubleClick" Handler="FileTreeNode_MouseDoubleClick"/>
                                             <EventSetter Event="KeyDown" Handler="FileTreeNode_KeyDown"/>
                                             <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                                            <Setter Property="ContextMenu">
+                                                <Setter.Value>
+                                                    <ContextMenu>
+                                                        <MenuItem Header="{le:Loc Command_OpenWithExplorer}">
+                                                            <i:Interaction.Triggers>
+                                                                <i:EventTrigger EventName="Click">
+                                                                    <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{qc:Binding '\'/select, \' + $P', P={Binding FileName, Mode=OneWay}}"/>
+                                                                </i:EventTrigger>
+                                                            </i:Interaction.Triggers>
+                                                            <MenuItem.Icon>
+                                                                <mi:Material Kind="FolderOpen"/>
+                                                            </MenuItem.Icon>
+                                                        </MenuItem>
+                                                    </ContextMenu>
+                                                </Setter.Value>
+                                            </Setter>
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding IsEmpty, Mode=OneWay}" Value="True">
                                                     <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>

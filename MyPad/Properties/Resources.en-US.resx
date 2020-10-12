@@ -723,4 +723,7 @@ Please check and delete unnecessary files.</value>
   <data name="Label_SystemSettings" xml:space="preserve">
     <value>System settings</value>
   </data>
+  <data name="Command_OpenWithExplorer" xml:space="preserve">
+    <value>Open with Explorer</value>
+  </data>
 </root>

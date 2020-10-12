@@ -25,6 +25,7 @@ using ToastNotifications.Position;
 using Unity;
 using Vanara.InteropServices;
 using Vanara.PInvoke;
+using Windows.UI.Xaml.Media;
 
 namespace MyPad.Views
 {
@@ -422,6 +423,19 @@ namespace MyPad.Views
         {
             if (MouseButtonState.Pressed == Mouse.LeftButton && e.IsItemOptions == false)
                 this.ActivateHamburgerMenuItem((HamburgerMenuItem)e.InvokedItem);
+            e.Handled = true;
+        }
+
+        [LogInterceptor]
+        private void FileTreeNode_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.Handled)
+                return;
+
+            if (!((e.OriginalSource as DependencyObject)?.Ancestor().FirstOrDefault(d => d is TreeViewItem) is TreeViewItem item))
+                return;
+
+            item.Focus();
             e.Handled = true;
         }
 
