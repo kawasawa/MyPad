@@ -89,17 +89,21 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
 
-                            <Label Grid.Row="4" Grid.Column="0" Content="{le:Loc Label_Font}"/>
-                            <Grid  Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" ge:GridEx.ColumnDefinition="5*, *(50-)" DataContext="{Binding DataContext.SettingsService.TextEditor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Mode=OneWay}">
-                                <ComboBox Grid.Column="0" SelectedValue="{Binding FontFamily, Mode=TwoWay}" ItemsSource="{x:Static root:Constants.FONT_FAMILIES}">
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding Converter={converters:FontFamilyToNameConverter}}" FontFamily="{Binding}"/>
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
-                                </ComboBox>
-                                <ComboBox Grid.Column="1" SelectedValue="{Binding ActualFontSize, Mode=TwoWay}" ItemsSource="{x:Static root:Constants.FONT_SIZES}"/>
-                            </Grid>
+                            <Label    Grid.Row="4" Grid.Column="0" Content="{le:Loc Label_Font}"/>
+                            <ComboBox Grid.Row="4" Grid.Column="1" 
+                                      DataContext="{Binding DataContext.SettingsService.TextEditor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Mode=OneWay}"
+                                      SelectedValue="{Binding FontFamily, Mode=TwoWay}"
+                                      ItemsSource="{x:Static root:Constants.FONT_FAMILIES}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={converters:FontFamilyToNameConverter}}" FontFamily="{Binding}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <ComboBox Grid.Row="4" Grid.Column="3" 
+                                      DataContext="{Binding DataContext.SettingsService.TextEditor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Mode=OneWay}"
+                                      SelectedValue="{Binding ActualFontSize, Mode=TwoWay}"
+                                      ItemsSource="{x:Static root:Constants.FONT_SIZES}"/>
                         </Grid>
 
                         <Border Height="10"/>
@@ -118,12 +122,12 @@
 
                             <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
                                 <StackPanel>
-                                    <CheckBox IsChecked="{Binding EnableNotificationIcon, Mode=TwoWay}" Content="{le:Loc LabelText_EnableNotificationIcon}"/>
-                                    <CheckBox IsChecked="{Binding EnableResident, Mode=TwoWay}"         Content="{le:Loc LabelText_EnableResident}" IsEnabled="{Binding EnableNotificationIcon, Mode=OneWay}"/>
+                                    <CheckBox IsChecked="{Binding EnableNotificationIcon, Mode=TwoWay}"     Content="{le:Loc LabelText_EnableNotificationIcon}"/>
+                                    <CheckBox IsChecked="{Binding EnableResident, Mode=TwoWay}"             Content="{le:Loc LabelText_EnableResident}" IsEnabled="{Binding EnableNotificationIcon, Mode=OneWay}"/>
                                 </StackPanel>
                                 <Border Height="10"/>
                                 <StackPanel>
-                                    <CheckBox IsChecked="{Binding EnableAutoSave, Mode=TwoWay}" Content="{le:Loc LabelText_EnableAutoSave}"/>
+                                    <CheckBox IsChecked="{Binding EnableAutoSave, Mode=TwoWay}"             Content="{le:Loc LabelText_EnableAutoSave}"/>
                                     <Grid ge:GridEx.RowDefinition="Auto" ge:GridEx.ColumnDefinition="Auto, 10, Auto" Margin="30 0 0 0">
                                         <Label           Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_AutoSaveInterval}"/>
                                         <m:NumericUpDown Grid.Row="0" Grid.Column="2" Value="{Binding AutoSaveInterval, Mode=TwoWay}" Minimum="1" MinWidth="100"/>
@@ -267,8 +271,8 @@
                                 <ge:ResponsiveGrid.Resources>
                                     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
                                         <Setter Property="Margin" Value="5"/>
-                                        <Setter Property="ge:ResponsiveGrid.XS" Value="12"/>
-                                        <Setter Property="ge:ResponsiveGrid.SM" Value="6"/>
+                                        <Setter Property="ge:ResponsiveGrid.XS" Value="6"/>
+                                        <Setter Property="ge:ResponsiveGrid.SM" Value="4"/>
                                         <Style.Resources>
                                             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
                                                 <Setter Property="VerticalAlignment" Value="Center"/>
@@ -277,8 +281,8 @@
                                     </Style>
                                     <Style x:Key="This.DangerButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Common.DangerButton}">
                                         <Setter Property="Margin" Value="5"/>
-                                        <Setter Property="ge:ResponsiveGrid.XS" Value="12"/>
-                                        <Setter Property="ge:ResponsiveGrid.SM" Value="6"/>
+                                        <Setter Property="ge:ResponsiveGrid.XS" Value="6"/>
+                                        <Setter Property="ge:ResponsiveGrid.SM" Value="4"/>
                                         <Style.Resources>
                                             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
                                                 <Setter Property="VerticalAlignment" Value="Center"/>
