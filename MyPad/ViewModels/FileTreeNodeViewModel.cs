@@ -1,4 +1,7 @@
-﻿using Prism.Logging;
+﻿using Prism.Ioc;
+using Prism.Logging;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,6 +9,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 using Unity;
@@ -16,15 +21,37 @@ namespace MyPad.ViewModels
     public class FileTreeNodeViewModel : ViewModelBase
     {
         [Dependency]
+        public IContainerExtension ContainerExtension { get; set; }
+        [Dependency]
         public ILoggerFacade Logger { get; set; }
 
-        public static FileTreeNodeViewModel Empty { get; } = new FileTreeNodeViewModel() { IsEmpty = true };
+        private FileTreeNodeViewModel _parent;
+        public FileTreeNodeViewModel Parent => this._parent;
 
-        public bool IsEmpty { get; private set; }
-        public string FileName { get; }
-        public BitmapSource Image { get; }
-        public FileTreeNodeViewModel Parent { get; }
-        public ObservableCollection<FileTreeNodeViewModel> Children { get; } = new ObservableCollection<FileTreeNodeViewModel>();
+        private BitmapSource _image;
+        public BitmapSource Image => this._image;
+
+        private string _fileName;
+        public string FileName => this._fileName;
+
+        private bool _isEmpty;
+        public bool IsEmpty => this._isEmpty;
+
+        private bool _isLink;
+        public bool IsLink => this._isLink;
+
+        private bool _isHidden;
+        public bool IsHidden => this._isHidden;
+
+        private bool _isDirectory;
+        public bool IsDirectory => this._isDirectory;
+
+        private bool _isSelected;
+        public bool IsSelected
+        {
+            get => this._isSelected;
+            set => this.SetProperty(ref this._isSelected, value);
+        }
 
         private bool _isExpanded;
         public bool IsExpanded
@@ -32,24 +59,34 @@ namespace MyPad.ViewModels
             get => this._isExpanded;
             set
             {
-                if (this.SetProperty(ref this._isExpanded, value) && value)
-                    this.ExploreChildren();
+                if (this.SetProperty(ref this._isExpanded, value))
+                {
+                    this.IsSelected = true;
+                    if (value)
+                        this.ExploreChildren();
+                }
             }
         }
 
-        private FileTreeNodeViewModel()
+        public ReactiveCollection<FileTreeNodeViewModel> Children { get; }
+
+        public ReactiveCommand PropertyCommand { get; }
+
+        [InjectionConstructor]
+        public FileTreeNodeViewModel()
         {
+            this.Children = new ReactiveCollection<FileTreeNodeViewModel>().AddTo(this.CompositeDisposable);
+            BindingOperations.EnableCollectionSynchronization(this.Children, new object());
+
+            this.PropertyCommand = new ReactiveCommand()
+                .WithSubscribe(() => Shell32.SHObjectProperties(IntPtr.Zero, Shell32.SHOP.SHOP_FILEPATH, this.FileName, null))
+                .AddTo(this.CompositeDisposable);
         }
 
-        public FileTreeNodeViewModel(string fileName)
-            : this(fileName, null)
+        public FileTreeNodeViewModel Initialize(string fileName, FileTreeNodeViewModel parent)
         {
-        }
-
-        public FileTreeNodeViewModel(string fileName, FileTreeNodeViewModel parent)
-        {
-            this.FileName = fileName;
-            this.Parent = parent;
+            this._fileName = fileName;
+            this._parent = parent;
 
             var psfi = new Shell32.SHFILEINFO();
             Shell32.SHGetFileInfo(
@@ -58,29 +95,50 @@ namespace MyPad.ViewModels
                 ref psfi,
                 Marshal.SizeOf(psfi),
                 Shell32.SHGFI.SHGFI_ICON | Shell32.SHGFI.SHGFI_USEFILEATTRIBUTES | Shell32.SHGFI.SHGFI_SMALLICON);
-            if (psfi.hIcon.IsNull == false)
-                this.Image = Imaging.CreateBitmapSourceFromHIcon((IntPtr)psfi.hIcon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
 
+            if (psfi.hIcon.IsNull == false)
+                this._image = Imaging.CreateBitmapSourceFromHIcon((IntPtr)psfi.hIcon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+
+            if (((Shell32.SFGAO)psfi.dwAttributes).HasFlag(Shell32.SFGAO.SFGAO_LINK))
+                this._isLink = true;
+
+            if (File.GetAttributes(fileName).HasFlag(FileAttributes.Hidden))
+                this._isHidden = true;
+
+            this.Children.Clear();
             if (Directory.Exists(fileName))
-                this.Children.Add(Empty);
+            {
+                this._isDirectory = true;
+                this.Children.Add(this.GetEmptyChild());
+            }
+
+            return this;
         }
 
-        public void ExploreChildren()
+        public FileTreeNodeViewModel Initialize(string fileName, bool isExpanded)
+        {
+            this.Initialize(fileName, null);
+            this.IsExpanded = isExpanded;
+            this.IsSelected = isExpanded;
+            return this;
+        }
+
+        private FileTreeNodeViewModel GetEmptyChild()
+        {
+            var treeNode = this.ContainerExtension.Resolve<FileTreeNodeViewModel>();
+            treeNode._isEmpty = true;
+            treeNode._parent = this;
+            return treeNode;
+        }
+
+        private void ExploreChildren()
         {
             static bool nodeFilter(string path)
-            {
-                var attribute = File.GetAttributes(path);
-                return attribute.HasFlag(FileAttributes.System) == false &&
-                       attribute.HasFlag(FileAttributes.Hidden) == false;
-            }
+                => File.GetAttributes(path).HasFlag(FileAttributes.System) == false;
 
             static bool existChild(FileTreeNodeViewModel parent)
-            {
-                if (Directory.Exists(parent.FileName) == false)
-                    return false;
-
-                return Directory.EnumerateFileSystemEntries(parent.FileName, "*").Where(nodeFilter).Any();
-            }
+                => Directory.Exists(parent.FileName) && 
+                    Directory.EnumerateFileSystemEntries(parent.FileName, "*").Where(nodeFilter).Any();
 
             IEnumerable<FileTreeNodeViewModel> getChildren(FileTreeNodeViewModel parent)
             {
@@ -88,21 +146,26 @@ namespace MyPad.ViewModels
                     return Enumerable.Empty<FileTreeNodeViewModel>();
 
                 var temp = Directory.EnumerateFileSystemEntries(parent.FileName, "*").Where(nodeFilter);
-                var children = temp.Where(p => File.GetAttributes(p).HasFlag(FileAttributes.Directory))
-                    .Union(temp.Where(p => File.GetAttributes(p).HasFlag(FileAttributes.Directory) == false))
-                    .Select(p => new FileTreeNodeViewModel(p, parent));
-                return children.Any() ? children : new[] { Empty };
+                var children = temp.Where(p => Directory.Exists(p))
+                    .Union(temp.Where(p => Directory.Exists(p) == false))
+                    .Select(p => this.ContainerExtension.Resolve<FileTreeNodeViewModel>().Initialize(p, parent));
+                return children.Any() ? children : new[] { parent.GetEmptyChild() };
             }
 
             try
             {
+                Mouse.OverrideCursor = Cursors.Wait;
                 this.Children.Clear();
                 this.Children.AddRange(getChildren(this));
-                this.Children.Where(c => existChild(c)).ForEach(c => c.Children.Add(Empty));
+                this.Children.Where(c => existChild(c)).ForEach(c => c.Children.Add(c.GetEmptyChild()));
             }
             catch (UnauthorizedAccessException e)
             {
                 this.Logger.Log($"ファイルの探索時にエラーが発生しました。: Root={this.FileName}", Category.Warn, e);
+            }
+            finally
+            {
+                Mouse.OverrideCursor = null;
             }
         }
     }

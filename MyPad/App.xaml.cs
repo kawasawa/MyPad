@@ -195,6 +195,7 @@ namespace MyPad
 
             // ファクトリー
             containerRegistry.Register<ViewModels.TextEditorViewModel>();
+            containerRegistry.Register<ViewModels.FileTreeNodeViewModel>();
             containerRegistry.Register<Views.MainWindow.InterTabClientWrapper>();
 
             // ダイアログ

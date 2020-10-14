@@ -766,4 +766,10 @@
   <data name="Command_OpenWithExplorer" xml:space="preserve">
     <value>エクスプローラーで開く</value>
   </data>
+  <data name="Command_CopyFullPath" xml:space="preserve">
+    <value>完全パスをコピー</value>
+  </data>
+  <data name="Label_ExplorerRoot" xml:space="preserve">
+    <value>エクスプローラーの起点</value>
+  </data>
 </root>

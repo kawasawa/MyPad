@@ -115,6 +115,7 @@ namespace MyPad.ViewModels
         public ReactiveCommand ChangeSyntaxCommand { get; }
 
         public ReactiveCommand<DragEventArgs> DropHandler { get; }
+        public ReactiveCommand<EventArgs> ContentRenderedHandler { get; }
         public ReactiveCommand<CancelEventArgs> ClosingHandler { get; }
 
         public Func<TextEditorViewModel> TextEditorFactory =>
@@ -165,11 +166,6 @@ namespace MyPad.ViewModels
             this.FileTreeNodes = new ReactiveCollection<FileTreeNodeViewModel>().AddTo(this.CompositeDisposable);
             BindingOperations.EnableCollectionSynchronization(this.TextEditors, new object());
             BindingOperations.EnableCollectionSynchronization(this.FileTreeNodes, new object());
-
-            var rootPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var rootNode = new FileTreeNodeViewModel(rootPath) { IsExpanded = true };
-            this.FileTreeNodes.Clear();
-            this.FileTreeNodes.Add(rootNode);
 
             // ----- 変更通知の購読 ------------------------------
 
@@ -431,6 +427,14 @@ namespace MyPad.ViewModels
                 })
                 .AddTo(this.CompositeDisposable);
 
+            this.ContentRenderedHandler = new ReactiveCommand<EventArgs>()
+                .WithSubscribe(e =>
+                {
+                    this.SettingsService.System.PropertyChanged += this.System_PropertyChanged;
+                    this.RefreshFileTreeNodes();
+                })
+                .AddTo(this.CompositeDisposable);
+
             this.ClosingHandler = new ReactiveCommand<CancelEventArgs>()
                 .WithSubscribe(e =>
                 {
@@ -454,8 +458,33 @@ namespace MyPad.ViewModels
                 if (await this.TryCloseTextEditor(target) == false)
                     return false;
             }
+
+            this.SettingsService.System.PropertyChanged -= this.System_PropertyChanged;
             this.Dispose();
             return true;
+        }
+
+        [LogInterceptor]
+        private void System_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(SystemSettings.ExplorerRoot):
+                    this.RefreshFileTreeNodes();
+                    break;
+            }
+        }
+
+        [LogInterceptor]
+        private void RefreshFileTreeNodes()
+        {
+            var rootPath = this.SettingsService.System.ExplorerRoot;
+            if (string.IsNullOrEmpty(rootPath))
+                rootPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var rootNode = this.ContainerExtension.Resolve<FileTreeNodeViewModel>().Initialize(rootPath, true);
+
+            this.FileTreeNodes.Clear();
+            this.FileTreeNodes.Add(rootNode);
         }
 
         #region テキストエディターの制御

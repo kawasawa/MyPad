@@ -181,6 +181,13 @@ namespace MyPad.Models
             set => this.SetProperty(ref this._showSideBar, value);
         }
 
+        private string _explorerRoot;
+        public string ExplorerRoot
+        {
+            get => this._explorerRoot;
+            set => this.SetProperty(ref this._explorerRoot, value);
+        }
+
         public SystemSettings()
         {
             this.ApplyTheme();

@@ -435,7 +435,7 @@ namespace MyPad.Views
             if (!((e.OriginalSource as DependencyObject)?.Ancestor().FirstOrDefault(d => d is TreeViewItem) is TreeViewItem item))
                 return;
 
-            item.Focus();
+            item.IsSelected = true;
             e.Handled = true;
         }
 

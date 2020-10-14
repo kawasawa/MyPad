@@ -726,4 +726,10 @@ Please check and delete unnecessary files.</value>
   <data name="Command_OpenWithExplorer" xml:space="preserve">
     <value>Open with Explorer</value>
   </data>
+  <data name="Command_CopyFullPath" xml:space="preserve">
+    <value>Copy the full path</value>
+  </data>
+  <data name="Label_ExplorerRoot" xml:space="preserve">
+    <value>Home of the explorer</value>
+  </data>
 </root>

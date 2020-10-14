@@ -224,6 +224,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   完全パスをコピー に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_CopyFullPath {
+            get {
+                return ResourceManager.GetString("Command_CopyFullPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   切り取り に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Cut {
@@ -1161,6 +1170,15 @@ namespace MyPad.Properties {
         public static string Label_ExecutionFile {
             get {
                 return ResourceManager.GetString("Label_ExecutionFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   エクスプローラーの起点 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_ExplorerRoot {
+            get {
+                return ResourceManager.GetString("Label_ExplorerRoot", resourceCulture);
             }
         }
         
