@@ -43,7 +43,7 @@
     <PackageReference Include="Plow.Wpf" Version="1.0.0-beta1" />
     <PackageReference Include="Prism.Unity" Version="7.2.0.1422" />
     <PackageReference Include="QuickConverter" Version="1.2.5" />
-    <PackageReference Include="ReactiveProperty" Version="7.4.1" />
+    <PackageReference Include="ReactiveProperty" Version="7.5.0" />
     <PackageReference Include="System.Interactive" Version="4.1.1" />
     <PackageReference Include="ToastNotifications.Messages" Version="2.5.1" />
     <PackageReference Include="Ude.NetStandard" Version="1.2.0" />
