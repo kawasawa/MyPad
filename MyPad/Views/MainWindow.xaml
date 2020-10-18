@@ -164,14 +164,14 @@
                         ContextMenu="{StaticResource ContextMenu}"/>
 
         <Button Grid.Row="0" Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}" Focusable="False"
-                Style="{DynamicResource MahApps.Styles.Button.Chromeless}" Padding="10 5" VerticalAlignment="Top" HorizontalAlignment="Right"
+                Style="{DynamicResource Common.ChromelessButton}" Padding="10 5" VerticalAlignment="Top" HorizontalAlignment="Right"
                 Visibility="{qc:MultiBinding '!$P0 ## $P1 ? Visibility.Visible : Visibility.Collapsed',
                              P0={Binding ShowTitleBar, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}},
                              P1={Binding SettingsService.System.ShowMenuBar, Mode=OneWay}}">
             <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
         </Button>
         <Button Grid.Row="1" Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}" Focusable="False"
-                Style="{DynamicResource MahApps.Styles.Button.Chromeless}" Padding="10 5" VerticalAlignment="Top" HorizontalAlignment="Right"
+                Style="{DynamicResource Common.ChromelessButton}" Padding="10 5" VerticalAlignment="Top" HorizontalAlignment="Right"
                 Visibility="{qc:MultiBinding '!$P0 ## !$P1 ## $P2 ? Visibility.Visible : Visibility.Collapsed',
                              P0={Binding ShowTitleBar, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}},
                              P1={Binding SettingsService.System.ShowMenuBar, Mode=OneWay},
@@ -331,7 +331,7 @@
                                                 <Label  Content="{le:Loc Label_Name}"/>
                                                 <Border Width="10"/>
                                                 <Button Click="{qc:QuickEvent 'Clipboard.SetText($dataContext.FileName)'}"
-                                                        Style="{StaticResource MahApps.Styles.Button.Chromeless}"
+                                                        Style="{StaticResource Common.ChromelessButton}"
                                                         ToolTip="{le:Loc Command_CopyFullPath}">
                                                     <mi:Modern Kind="ClipboardVariantText"/>
                                                 </Button>

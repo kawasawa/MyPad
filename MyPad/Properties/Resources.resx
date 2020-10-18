@@ -772,4 +772,19 @@
   <data name="Label_ExplorerRoot" xml:space="preserve">
     <value>エクスプローラーの起点</value>
   </data>
+  <data name="Label_OtherTools" xml:space="preserve">
+    <value>その他ツール</value>
+  </data>
+  <data name="Label_Path" xml:space="preserve">
+    <value>パス</value>
+  </data>
+  <data name="Label_IsEnabled" xml:space="preserve">
+    <value>有効</value>
+  </data>
+  <data name="Label_SystemDirectory" xml:space="preserve">
+    <value>システムフォルダ</value>
+  </data>
+  <data name="Command_Apply" xml:space="preserve">
+    <value>適用</value>
+  </data>
 </root>

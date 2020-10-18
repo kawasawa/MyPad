@@ -102,7 +102,8 @@ namespace MyPad.ViewModels
             if (((Shell32.SFGAO)psfi.dwAttributes).HasFlag(Shell32.SFGAO.SFGAO_LINK))
                 this._isLink = true;
 
-            if (File.GetAttributes(fileName).HasFlag(FileAttributes.Hidden))
+            if ((File.Exists(fileName) || Directory.Exists(fileName)) &&
+                File.GetAttributes(fileName).HasFlag(FileAttributes.Hidden))
                 this._isHidden = true;
 
             this.Children.Clear();
@@ -115,11 +116,11 @@ namespace MyPad.ViewModels
             return this;
         }
 
-        public FileTreeNodeViewModel Initialize(string fileName, bool isExpanded)
+        public FileTreeNodeViewModel Initialize(string fileName, bool isSelected, bool isExpanded)
         {
             this.Initialize(fileName, null);
+            this.IsSelected = isSelected;
             this.IsExpanded = isExpanded;
-            this.IsSelected = isExpanded;
             return this;
         }
 

@@ -192,23 +192,44 @@
     <!-- グリッドビュー 列ヘッダ -->
     <Style x:Key="Default.GridViewColumnHeader" TargetType="{x:Type GridViewColumnHeader}" BasedOn="{StaticResource MahApps.Styles.GridViewColumnHeader}">
         <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="FontWeight" Value="Normal"/>
     </Style>
+
+    <!-- データグリッド 全選択ボタン -->
+    <ControlTemplate x:Key="Default.DataGridSelectAllButtonTemplate" TargetType="{x:Type Button}">
+        <Grid>
+            <Rectangle x:Name="Border" Fill="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
+            <Polygon x:Name="Arrow" Fill="{DynamicResource MahApps.Brushes.Gray1}" Margin="8 8 3 3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Opacity="0.15" Points="0,10 10,10 10,0" Stretch="Uniform"/>
+            <Border Background="{DynamicResource MahApps.Brushes.Gray7}" VerticalAlignment="Bottom" Height="1.8"/>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="Border" Property="Fill" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="Arrow" Property="Visibility" Value="Collapsed"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
 
     <!-- データグリッド 列ヘッダ -->
     <Style x:Key="Default.DataGridColumnHeader" TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource MahApps.Styles.DataGridColumnHeader}">
         <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+        <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="BorderThickness" Value="0 0 0 2"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray7}"/>
     </Style>
 
     <!-- データグリッド 行ヘッダ -->
     <Style x:Key="Default.DataGridRowHeader" TargetType="{x:Type DataGridRowHeader}" BasedOn="{StaticResource MahApps.Styles.DataGridRowHeader}">
         <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+        <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="BorderThickness" Value="0 0 0 1"/>
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray7}"/>
     </Style>
-
+   
     <!-- データグリッド 行 -->
     <Style x:Key="Default.DataGridRow" TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource MahApps.Styles.DataGridRow}">
     </Style>
@@ -219,7 +240,8 @@
 
     <!-- データグリッド -->
     <Style x:Key="Default.DataGrid" TargetType="{x:Type DataGrid}" BasedOn="{StaticResource MahApps.Styles.DataGrid}">
-        <Setter Property="GridLinesVisibility" Value="All"/>
+        <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource MahApps.Brushes.Gray7}"/>
     </Style>
 
     <!-- グリッドスプリッター -->
@@ -232,11 +254,13 @@
     <!-- グループボックス -->
     <Style x:Key="Default.GroupBox" TargetType="{x:Type GroupBox}" BasedOn="{StaticResource MahApps.Styles.GroupBox}">
         <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+        <Setter Property="m:HeaderedControlHelper.HeaderFontWeight" Value="Normal"/>
     </Style>
 
     <!-- エクスパンダー -->
     <Style x:Key="Default.Expander" TargetType="{x:Type Expander}" BasedOn="{StaticResource MahApps.Styles.Expander}">
         <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+        <Setter Property="m:HeaderedControlHelper.HeaderFontWeight" Value="Normal"/>
         <Setter Property="IsExpanded" Value="True"/>
     </Style>
 

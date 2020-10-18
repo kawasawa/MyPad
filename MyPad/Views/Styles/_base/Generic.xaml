@@ -61,4 +61,8 @@
     <Style TargetType="{x:Type m:HamburgerMenu}"         BasedOn="{StaticResource Default.HamburgerMenu}"/>
     <Style TargetType="{x:Type m:Flyout}"                BasedOn="{StaticResource Default.Flyout}"/>
 
+    <Style x:Key="{ComponentResourceKey ResourceId=MetroDataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
+        <Setter Property="Template" Value="{DynamicResource Default.DataGridSelectAllButtonTemplate}"/>
+    </Style>
+
 </ResourceDictionary>

@@ -80,6 +80,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   適用 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Apply {
+            get {
+                return ResourceManager.GetString("Command_Apply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   キャンセル に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Cancel {
@@ -1210,6 +1219,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   有効 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_IsEnabled {
+            get {
+                return ResourceManager.GetString("Label_IsEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   言語 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Language {
@@ -1273,11 +1291,29 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   その他ツール に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_OtherTools {
+            get {
+                return ResourceManager.GetString("Label_OtherTools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   所有者 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Owner {
             get {
                 return ResourceManager.GetString("Label_Owner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   パス に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_Path {
+            get {
+                return ResourceManager.GetString("Label_Path", resourceCulture);
             }
         }
         
@@ -1341,6 +1377,15 @@ namespace MyPad.Properties {
         public static string Label_System {
             get {
                 return ResourceManager.GetString("Label_System", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   システムフォルダ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_SystemDirectory {
+            get {
+                return ResourceManager.GetString("Label_SystemDirectory", resourceCulture);
             }
         }
         

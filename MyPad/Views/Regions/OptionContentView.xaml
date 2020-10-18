@@ -11,8 +11,10 @@
              xmlns:qc="http://QuickConverter.CodePlex.com/"
              xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
              xmlns:root="clr-namespace:MyPad"
+             xmlns:views="clr-namespace:MyPad.Views"
              xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
              xmlns:converters="clr-namespace:MyPad.Views.Converters"
+             xmlns:controls="clr-namespace:MyPad.Views.Controls"
              mc:Ignorable="d" 
              p:ViewModelLocator.AutoWireViewModel="True"
              d:DesignHeight="450" d:DesignWidth="800"
@@ -50,6 +52,7 @@
                 </Style>
             </TabControl.Resources>
 
+            <!-- ********** システム ********** -->
             <TabItem DataContext="{Binding SettingsService.System, Mode=OneWay}" Header="{le:Loc Label_System}">
                 <ScrollViewer>
                     <StackPanel>
@@ -81,7 +84,7 @@
                             <CheckBox Grid.Row="2" Grid.Column="3" IsChecked="{Binding AutoDetectEncoding, Mode=TwoWay}" Content="{le:Loc LabelText_AutoDetectByDefault}"/>
 
                             <Label    Grid.Row="3" Grid.Column="0" Content="{le:Loc Label_Syntax}"/>
-                            <ComboBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" ItemsSource="{qc:Binding 'new string[] { string.Empty }.Concat($P.Keys)', P={Binding DataContext.SyntaxService.Definitions, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}, Mode=OneWay}}" SelectedValue="{qc:Binding Convert='$P ?? string.Empty', ConvertBack='string.IsNullOrEmpty($value) ? null : $value', P={Binding SyntaxDefinitionName, Mode=TwoWay}}">
+                            <ComboBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" ItemsSource="{qc:Binding 'new string[] { string.Empty }.Concat($P.Keys)', P={Binding DataContext.SyntaxService.Definitions, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Mode=OneWay}}" SelectedValue="{qc:Binding Convert='$P ?? string.Empty', ConvertBack='string.IsNullOrEmpty($value) ? null : $value', P={Binding SyntaxDefinitionName, Mode=TwoWay}}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{qc:Binding 'string.IsNullOrEmpty($P) ? \'Plain Text\' : $P', P={Binding Mode=OneWay}}"/>
@@ -139,6 +142,7 @@
                 </ScrollViewer>
             </TabItem>
 
+            <!-- ********** テキストエディタ ********** -->
             <TabItem DataContext="{Binding SettingsService.TextEditor, Mode=OneWay}" Header="{le:Loc Label_TextEditor}">
                 <ScrollViewer>
                     <StackPanel>
@@ -193,78 +197,175 @@
                 </ScrollViewer>
             </TabItem>
 
+            <!-- ********** その他ツール ********** -->
+            <TabItem DataContext="{Binding SettingsService.OtherTools, Mode=OneWay}" Header="{le:Loc Label_OtherTools}">
+                <ScrollViewer>
+                    <StackPanel>
+                        <GroupBox>
+                            <GroupBox.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Command="{Binding DataContext.RefreshExplorerCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" ToolTip="{le:Loc Command_Apply}" Style="{DynamicResource Common.ChromelessButton}">
+                                        <mi:Material Kind="Refresh"/>
+                                    </Button>
+                                    <Border Width="5"/>
+                                    <TextBlock Text="{le:Loc Command_Explorer}"/>
+                                </StackPanel>
+                            </GroupBox.Header>
+                            <DataGrid ItemsSource="{Binding ExplorerRoots, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}"
+                                      CanUserResizeRows="False" CanUserResizeColumns="False" CanUserSortColumns="False" CanUserAddRows="True" CanUserDeleteRows="True"
+                                      HeadersVisibility="All" RowHeaderWidth="50" ColumnWidth="*" AutoGenerateColumns="False"
+                                      SelectionUnit="Cell" KeyboardNavigation.ControlTabNavigation="None">
+                                <DataGrid.Resources>
+                                    <!-- 全選択ボタンを無効化する -->
+                                    <Style x:Key="{ComponentResourceKey ResourceId=MetroDataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
+                                        <Setter Property="Template" Value="{DynamicResource Default.DataGridSelectAllButtonTemplate}"/>
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </Style>
+                                    <!-- テンプレートカラム用のセル -->
+                                    <Style x:Key="TemplateColumnDataGridCell" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource Default.DataGridCell}">
+                                        <Setter Property="IsTabStop" Value="False"/>
+                                    </Style>
+                                </DataGrid.Resources>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Binding="{Binding Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{le:Loc Label_Path}">
+                                        <DataGridTextColumn.EditingElementStyle>
+                                            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                                <Setter Property="m:TextBoxHelper.SelectAllOnFocus" Value="True"/>
+                                                <Setter Property="m:TextBoxHelper.ClearTextButton" Value="True"/>
+                                                <Setter Property="m:TextBoxHelper.Watermark" Value="{qc:QuickValue 'Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)'}"/>
+                                            </Style>
+                                        </DataGridTextColumn.EditingElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTemplateColumn Header="{le:Loc Label_IsEnabled}" IsReadOnly="True" Width="60" CellStyle="{StaticResource TemplateColumnDataGridCell}">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DataTemplate.Triggers>
+                                                    <!-- プレースホルダーには表示しない -->
+                                                    <DataTrigger Binding="{Binding}" Value="{x:Static controls:DataGridHelper.NewItemPlaceholder}">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                                <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                          HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5 0 0 0"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="True" Width="30" CellStyle="{StaticResource TemplateColumnDataGridCell}">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DataTemplate.Triggers>
+                                                    <!-- プレースホルダーには表示しない -->
+                                                    <DataTrigger Binding="{Binding}" Value="{x:Static controls:DataGridHelper.NewItemPlaceholder}">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                                <Button Command="{Binding DataContext.SelectDirectoryCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding Mode=OneWay}" Style="{DynamicResource Common.ChromelessButton}">
+                                                    <mi:Material Kind="FolderOpen"/>
+                                                </Button>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn IsReadOnly="True" Width="30" CellStyle="{StaticResource TemplateColumnDataGridCell}">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DataTemplate.Triggers>
+                                                    <!-- プレースホルダーには表示しない -->
+                                                    <DataTrigger Binding="{Binding}" Value="{x:Static controls:DataGridHelper.NewItemPlaceholder}">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                                <Button Command="{Binding DataContext.RemoveDirectoryCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding Mode=OneWay}" Style="{DynamicResource Common.ChromelessButton}">
+                                                    <mi:Material Kind="FolderRemove"/>
+                                                </Button>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </GroupBox>
+                        <GroupBox Header="{le:Loc Command_Diff}">
+                            <CheckBox IsChecked="{Binding ShowInlineDiffViewer, Mode=TwoWay}" Content="{le:Loc LabelText_ShowInlineDiffViewer}"/>
+                        </GroupBox>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- ********** 構成ファイル ********** -->
             <TabItem Header="{le:Loc Label_ConfigFile}">
                 <ScrollViewer>
                     <StackPanel>
-                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto">
-                            <Grid.Resources>
-                                <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
-                                    <Setter Property="Margin" Value="5"/>
-                                    <Setter Property="IsTabStop" Value="False"/>
-                                    <Setter Property="IsReadOnly" Value="True"/>
-                                    <Setter Property="m:TextBoxHelper.SelectAllOnFocus" Value="True"/>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsReadOnly" Value="True">
-                                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                                <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
-                                    <Setter Property="Margin" Value="0 5"/>
-                                    <Setter Property="Padding" Value="0"/>
-                                    <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
-                                </Style>
-                                <Style x:Key="IconDropDownButton" TargetType="{x:Type m:DropDownButton}" BasedOn="{StaticResource Default.DropDownButton}">
-                                    <Setter Property="Margin" Value="0 5"/>
-                                    <Setter Property="Padding" Value="0"/>
-                                    <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
-                                </Style>
-                            </Grid.Resources>
-                            
-                            <Label   Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_ExecutionDirectory}"/>
-                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ProductInfo.Working, Mode=OneWay}"/>
-                            <Button  Grid.Row="0" Grid.Column="3" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{Binding ProductInfo.Working, Mode=OneWay}" ThrowException="False"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <mi:Modern Kind="FolderOpen"/>
-                            </Button>
+                        <GroupBox Header="{le:Loc Label_SystemDirectory}">
+                            <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto">
+                                <Grid.Resources>
+                                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+                                        <Setter Property="Margin" Value="5"/>
+                                        <Setter Property="IsTabStop" Value="False"/>
+                                        <Setter Property="IsReadOnly" Value="True"/>
+                                        <Setter Property="m:TextBoxHelper.SelectAllOnFocus" Value="True"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsReadOnly" Value="True">
+                                                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                    <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+                                        <Setter Property="Margin" Value="0 5"/>
+                                        <Setter Property="Padding" Value="0"/>
+                                        <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
+                                    </Style>
+                                    <Style x:Key="IconDropDownButton" TargetType="{x:Type m:DropDownButton}" BasedOn="{StaticResource Default.DropDownButton}">
+                                        <Setter Property="Margin" Value="0 5"/>
+                                        <Setter Property="Padding" Value="0"/>
+                                        <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
+                                    </Style>
+                                </Grid.Resources>
 
-                            <Label   Grid.Row="1" Grid.Column="0" Content="{le:Loc Label_TempDirectory}"/>
-                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ProductInfo.Temporary, Mode=OneWay}"/>
-                            <Button  Grid.Row="1" Grid.Column="3" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{Binding ProductInfo.Temporary, Mode=OneWay}" ThrowException="False"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <mi:Modern Kind="FolderOpen"/>
-                            </Button>
+                                <Label   Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_ExecutionDirectory}"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ProductInfo.Working, Mode=OneWay}"/>
+                                <Button  Grid.Row="0" Grid.Column="3" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click">
+                                            <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{Binding ProductInfo.Working, Mode=OneWay}" ThrowException="False"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <mi:Modern Kind="FolderOpen"/>
+                                </Button>
 
-                            <Label   Grid.Row="2" Grid.Column="0" Content="{le:Loc Label_AppDataDirectory}"/>
-                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ProductInfo.Roaming, Mode=OneWay}"/>
-                            <Button  Grid.Row="2" Grid.Column="3" Command="{Binding OpenAppDataDirectoryCommand, Mode=OneTime}" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}" BorderThickness="1 1 0 1">
-                                <mi:Modern Kind="FolderOpen"/>
-                            </Button>
-                            <m:DropDownButton Grid.Row="2" Grid.Column="4" Style="{StaticResource IconDropDownButton}" BorderThickness="0 1 1 1">
-                                <m:DropDownButton.Items>
-                                    <MenuItem Command="{Binding ExportLogArchiveCommand, Mode=OneTime}" Header="{le:Loc Command_ExportLog}">
-                                        <MenuItem.Icon>
-                                            <mi:Material Kind="ArchiveArrowDown"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Command="{Binding InitializeSyntaxCommand, Mode=OneTime}" Header="{le:Loc Command_InitializeSyntax}">
-                                        <MenuItem.Icon>
-                                            <mi:Material Kind="FileRefreshOutline"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                </m:DropDownButton.Items>
-                            </m:DropDownButton>
-                        </Grid>
+                                <Label   Grid.Row="1" Grid.Column="0" Content="{le:Loc Label_TempDirectory}"/>
+                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ProductInfo.Temporary, Mode=OneWay}"/>
+                                <Button  Grid.Row="1" Grid.Column="3" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click">
+                                            <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{Binding ProductInfo.Temporary, Mode=OneWay}" ThrowException="False"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <mi:Modern Kind="FolderOpen"/>
+                                </Button>
 
-                        <Border Height="15"/>
+                                <Label   Grid.Row="2" Grid.Column="0" Content="{le:Loc Label_AppDataDirectory}"/>
+                                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ProductInfo.Roaming, Mode=OneWay}"/>
+                                <Button  Grid.Row="2" Grid.Column="3" Command="{Binding OpenAppDataDirectoryCommand, Mode=OneTime}" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}" BorderThickness="1 1 0 1">
+                                    <mi:Modern Kind="FolderOpen"/>
+                                </Button>
+                                <m:DropDownButton Grid.Row="2" Grid.Column="4" Style="{StaticResource IconDropDownButton}" BorderThickness="0 1 1 1" Height="27">
+                                    <m:DropDownButton.Items>
+                                        <MenuItem Command="{Binding ExportLogArchiveCommand, Mode=OneTime}" Header="{le:Loc Command_ExportLog}">
+                                            <MenuItem.Icon>
+                                                <mi:Material Kind="ArchiveArrowDown"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Command="{Binding InitializeSyntaxCommand, Mode=OneTime}" Header="{le:Loc Command_InitializeSyntax}">
+                                            <MenuItem.Icon>
+                                                <mi:Material Kind="FileRefreshOutline"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                    </m:DropDownButton.Items>
+                                </m:DropDownButton>
+                            </Grid>
+                        </GroupBox>
+
+                        <Border Height="10"/>
 
                         <GroupBox Header="{le:Loc Label_SystemSettings}">
                             <ge:ResponsiveGrid>

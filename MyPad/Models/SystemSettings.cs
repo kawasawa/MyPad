@@ -117,13 +117,6 @@ namespace MyPad.Models
             set => this.SetProperty(ref this._showSingleTab, value);
         }
 
-        private bool _showInlineDiffViewer;
-        public bool ShowInlineDiffViewer
-        {
-            get => this._showInlineDiffViewer;
-            set => this.SetProperty(ref this._showInlineDiffViewer, value);
-        }
-
         private bool _enableNotificationIcon = true;
         public bool EnableNotificationIcon
         {
@@ -179,13 +172,6 @@ namespace MyPad.Models
         {
             get => this._showSideBar;
             set => this.SetProperty(ref this._showSideBar, value);
-        }
-
-        private string _explorerRoot;
-        public string ExplorerRoot
-        {
-            get => this._explorerRoot;
-            set => this.SetProperty(ref this._explorerRoot, value);
         }
 
         public SystemSettings()

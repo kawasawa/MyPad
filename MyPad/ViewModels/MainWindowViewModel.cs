@@ -430,8 +430,7 @@ namespace MyPad.ViewModels
             this.ContentRenderedHandler = new ReactiveCommand<EventArgs>()
                 .WithSubscribe(e =>
                 {
-                    this.SettingsService.System.PropertyChanged += this.System_PropertyChanged;
-                    this.RefreshFileTreeNodes();
+                    this.RefreshExplorer();
                 })
                 .AddTo(this.CompositeDisposable);
 
@@ -446,6 +445,11 @@ namespace MyPad.ViewModels
                     this.ExitCommand.Execute();
                 })
                 .AddTo(this.CompositeDisposable);
+
+            // ----- PUB/SUB メッセージ ------------------------------
+
+            void refreshExplorer() => this.RefreshExplorer();
+            this.EventAggregator.GetEvent<RefreshExplorerEvent>().Subscribe(refreshExplorer);
         }
 
         [LogInterceptor]
@@ -459,32 +463,29 @@ namespace MyPad.ViewModels
                     return false;
             }
 
-            this.SettingsService.System.PropertyChanged -= this.System_PropertyChanged;
             this.Dispose();
             return true;
         }
 
         [LogInterceptor]
-        private void System_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void RefreshExplorer()
         {
-            switch (e.PropertyName)
-            {
-                case nameof(SystemSettings.ExplorerRoot):
-                    this.RefreshFileTreeNodes();
-                    break;
-            }
-        }
+            var roots = Enumerable.Empty<string>();
+            if (this.SettingsService.OtherTools?.ExplorerRoots?.Any() == true)
+                roots = this.SettingsService.OtherTools.ExplorerRoots.Where(i => i.IsEnabled).Select(i => i.Path);
+            else
+                roots = new[] { Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) };
+            var isExpanded = roots.Count() == 1;
+            var isSelected = true;
 
-        [LogInterceptor]
-        private void RefreshFileTreeNodes()
-        {
-            var rootPath = this.SettingsService.System.ExplorerRoot;
-            if (string.IsNullOrEmpty(rootPath))
-                rootPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var rootNode = this.ContainerExtension.Resolve<FileTreeNodeViewModel>().Initialize(rootPath, true);
-
-            this.FileTreeNodes.Clear();
-            this.FileTreeNodes.Add(rootNode);
+            this.FileTreeNodes.ClearOnScheduler();
+            this.FileTreeNodes.AddRangeOnScheduler(
+                roots.Select(r =>
+                {
+                    var node = this.ContainerExtension.Resolve<FileTreeNodeViewModel>().Initialize(r, isSelected, isExpanded);
+                    isSelected = false;
+                    return node;
+                }));
         }
 
         #region テキストエディターの制御
