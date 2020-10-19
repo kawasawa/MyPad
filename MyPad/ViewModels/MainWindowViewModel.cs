@@ -626,6 +626,9 @@ namespace MyPad.ViewModels
                 }
                 foreach (var (result, fileNames, filter, encoding, isReadOnly) in paths.Where(path => Directory.Exists(path)).Select(path => decideConditions(path)))
                 {
+                    if (result == false)
+                        continue;
+
                     foreach (var path in fileNames)
                     {
                         var definition = filter != null && this.SyntaxService.Definitions.ContainsKey(filter) ?
