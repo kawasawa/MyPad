@@ -36,7 +36,7 @@ namespace MyPad.Views.Regions
         {
             if (e.NewValue is bool isVisible && isVisible)
             {
-                if (this.SettingsService.System.ShowInlineDiffViewer)
+                if (this.SettingsService.OtherTools?.ShowInlineDiffViewer == true)
                     this.DiffViewer.ShowInline();
                 else
                     this.DiffViewer.ShowSideBySide();

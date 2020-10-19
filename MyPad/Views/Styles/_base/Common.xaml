@@ -24,6 +24,10 @@
     ************************************************************
     -->
 
+    <!-- ボタン (ボーダーレス) -->
+    <Style x:Key="Common.ChromelessButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.Chromeless}">
+    </Style>
+
     <!-- ボタン (アクセント) -->
     <Style x:Key="Common.AccentButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
         <Setter Property="Foreground" Value="White"/>

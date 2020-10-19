@@ -22,5 +22,10 @@ namespace MyPad.Views.Regions
         {
             InitializeComponent();
         }
+
+        private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.Header = e.Row.IsNewItem ? string.Empty : e.Row.GetIndex().ToString();
+        }
     }
 }

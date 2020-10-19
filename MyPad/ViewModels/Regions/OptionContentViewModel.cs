@@ -1,8 +1,10 @@
 ﻿using Microsoft.VisualBasic.FileIO;
 using MyPad.Models;
 using MyPad.Properties;
+using MyPad.ViewModels.Events;
 using Plow;
 using Plow.Wpf.CommonDialogs;
+using Prism.Events;
 using Prism.Logging;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
@@ -18,6 +20,8 @@ namespace MyPad.ViewModels.Regions
 {
     public class OptionContentViewModel : ViewModelBase
     {
+        [Dependency]
+        public IEventAggregator EventAggregator { get; set; }
         [Dependency]
         public IDialogService DialogService { get; set; }
         [Dependency]
@@ -35,6 +39,9 @@ namespace MyPad.ViewModels.Regions
 
         public ReactiveProperty<bool> IsWorking { get; }
 
+        public ReactiveCommand<object> SelectDirectoryCommand { get; }
+        public ReactiveCommand<object> RemoveDirectoryCommand { get; }
+        public ReactiveCommand RefreshExplorerCommand { get; }
         public ReactiveCommand OpenAppDataDirectoryCommand { get; }
         public ReactiveCommand ExportLogArchiveCommand { get; }
         public ReactiveCommand InitializeSyntaxCommand { get; }
@@ -48,7 +55,32 @@ namespace MyPad.ViewModels.Regions
         {
             this.IsWorking = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
 
-            this.OpenAppDataDirectoryCommand = new ReactiveCommand()
+            this.SelectDirectoryCommand = this.IsWorking.Inverse().ToReactiveCommand<object>()
+                .WithSubscribe(args =>
+                {
+                    var info = (ToolSettings.PathInfo)args;
+                    var parameter = new FolderBrowserDialogParameters();
+                    if (string.IsNullOrEmpty(info.Path) == false)
+                        parameter.InitialDirectory = info.Path;
+                    var ready = this.CommonDialogService.ShowDialog(parameter);
+                    if (ready)
+                        info.Path = parameter.FileName;
+                })
+                .AddTo(this.CompositeDisposable);
+
+            this.RemoveDirectoryCommand = this.IsWorking.Inverse().ToReactiveCommand<object>()
+                .WithSubscribe(args =>
+                {
+                    var info = (ToolSettings.PathInfo)args;
+                    this.SettingsService.OtherTools.ExplorerRoots.Remove(info);
+                })
+                .AddTo(this.CompositeDisposable);
+
+            this.RefreshExplorerCommand = this.IsWorking.Inverse().ToReactiveCommand()
+                .WithSubscribe(() => this.EventAggregator?.GetEvent<RefreshExplorerEvent>().Publish())
+                .AddTo(this.CompositeDisposable);
+
+            this.OpenAppDataDirectoryCommand = this.IsWorking.Inverse().ToReactiveCommand()
                 .WithSubscribe(() => this.OpenAppDataDirectory())
                 .AddTo(this.CompositeDisposable);
 

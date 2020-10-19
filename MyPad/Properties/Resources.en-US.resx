@@ -726,4 +726,25 @@ Please check and delete unnecessary files.</value>
   <data name="Command_OpenWithExplorer" xml:space="preserve">
     <value>Open with Explorer</value>
   </data>
+  <data name="Command_CopyFullPath" xml:space="preserve">
+    <value>Copy the full path</value>
+  </data>
+  <data name="Label_ExplorerRoot" xml:space="preserve">
+    <value>Home of the explorer</value>
+  </data>
+  <data name="Label_OtherTools" xml:space="preserve">
+    <value>Other tools</value>
+  </data>
+  <data name="Label_Path" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="Label_IsEnabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="Label_SystemDirectory" xml:space="preserve">
+    <value>System directory</value>
+  </data>
+  <data name="Command_Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
 </root>

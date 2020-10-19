@@ -65,6 +65,9 @@
             <behaviors:WindowActivateAction/>
             <i:InvokeCommandAction Command="{Binding DropHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
         </i:EventTrigger>
+        <i:EventTrigger EventName="ContentRendered">
+            <i:InvokeCommandAction Command="{Binding ContentRenderedHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
         <i:EventTrigger EventName="Closing">
             <i:InvokeCommandAction Command="{Binding ClosingHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
         </i:EventTrigger>
@@ -161,14 +164,14 @@
                         ContextMenu="{StaticResource ContextMenu}"/>
 
         <Button Grid.Row="0" Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}" Focusable="False"
-                Style="{DynamicResource MahApps.Styles.Button.Chromeless}" Padding="10 5" VerticalAlignment="Top" HorizontalAlignment="Right"
+                Style="{DynamicResource Common.ChromelessButton}" Padding="10 5" VerticalAlignment="Top" HorizontalAlignment="Right"
                 Visibility="{qc:MultiBinding '!$P0 ## $P1 ? Visibility.Visible : Visibility.Collapsed',
                              P0={Binding ShowTitleBar, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}},
                              P1={Binding SettingsService.System.ShowMenuBar, Mode=OneWay}}">
             <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
         </Button>
         <Button Grid.Row="1" Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}" Focusable="False"
-                Style="{DynamicResource MahApps.Styles.Button.Chromeless}" Padding="10 5" VerticalAlignment="Top" HorizontalAlignment="Right"
+                Style="{DynamicResource Common.ChromelessButton}" Padding="10 5" VerticalAlignment="Top" HorizontalAlignment="Right"
                 Visibility="{qc:MultiBinding '!$P0 ## !$P1 ## $P2 ? Visibility.Visible : Visibility.Collapsed',
                              P0={Binding ShowTitleBar, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}},
                              P1={Binding SettingsService.System.ShowMenuBar, Mode=OneWay},
@@ -254,17 +257,30 @@
                                             <EventSetter Event="MouseDoubleClick" Handler="FileTreeNode_MouseDoubleClick"/>
                                             <EventSetter Event="KeyDown" Handler="FileTreeNode_KeyDown"/>
                                             <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
                                             <Setter Property="ContextMenu">
                                                 <Setter.Value>
                                                     <ContextMenu>
+                                                        <MenuItem Click="{qc:QuickEvent 'Clipboard.SetText($dataContext.FileName)'}" Header="{le:Loc Command_CopyFullPath}">
+                                                            <MenuItem.Icon>
+                                                                <mi:Modern Kind="ClipboardVariantText"/>
+                                                            </MenuItem.Icon>
+                                                        </MenuItem>
                                                         <MenuItem Header="{le:Loc Command_OpenWithExplorer}">
                                                             <i:Interaction.Triggers>
                                                                 <i:EventTrigger EventName="Click">
-                                                                    <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{qc:Binding '\'/select, \' + $P', P={Binding FileName, Mode=OneWay}}"/>
+                                                                    <behaviors:ProcessStartAction
+                                                                        FileName="explorer.exe"
+                                                                        Arguments="{qc:Binding '$P.IsEmpty ? $P.Parent.FileName : ($P.IsDirectory ? $P.FileName : (\'/select, \' + $P.FileName))', P={Binding Mode=OneWay}}"/>
                                                                 </i:EventTrigger>
                                                             </i:Interaction.Triggers>
                                                             <MenuItem.Icon>
-                                                                <mi:Material Kind="FolderOpen"/>
+                                                                <mi:Material Kind="FolderOutline"/>
+                                                            </MenuItem.Icon>
+                                                        </MenuItem>
+                                                        <MenuItem Command="{Binding PropertyCommand, Mode=OneTime}" Header="{le:Loc Command_Property}" IsEnabled="{qc:Binding '!$P', P={Binding IsEmpty, Mode=OneWay}}">
+                                                            <MenuItem.Icon>
+                                                                <mi:FontAwesome Kind="WrenchSolid"/>
                                                             </MenuItem.Icon>
                                                         </MenuItem>
                                                     </ContextMenu>
@@ -274,6 +290,9 @@
                                                 <DataTrigger Binding="{Binding IsEmpty, Mode=OneWay}" Value="True">
                                                     <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
                                                 </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsHidden, Mode=OneWay}" Value="True">
+                                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
+                                                </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </TreeView.ItemContainerStyle>
@@ -281,7 +300,7 @@
                                         <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="{x:Type viewModels:FileTreeNodeViewModel}">
                                             <Border Background="Transparent" ToolTip="{Binding FileName, Mode=OneWay}" ToolTipService.IsEnabled="{qc:Binding '!$P', P={Binding IsEmpty, Mode=OneWay}}">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <Image Source="{Binding Image, Mode=OneWay}" Margin="0 0 3 0"/>
+                                                    <Image Source="{Binding Image, Mode=OneWay}" Opacity="{qc:Binding '$P ? 0.5 : 1.0', P={Binding IsHidden}}" Margin="0 0 3 0"/>
                                                     <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsEmpty, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" VerticalAlignment="Center"/>
                                                 </StackPanel>
                                             </Border>
@@ -308,7 +327,15 @@
                                         </ge:ResponsiveGrid.Resources>
 
                                         <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5 0">
-                                            <Label     Content="{le:Loc Label_Name}"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label  Content="{le:Loc Label_Name}"/>
+                                                <Border Width="10"/>
+                                                <Button Click="{qc:QuickEvent 'Clipboard.SetText($dataContext.FileName)'}"
+                                                        Style="{StaticResource Common.ChromelessButton}"
+                                                        ToolTip="{le:Loc Command_CopyFullPath}">
+                                                    <mi:Modern Kind="ClipboardVariantText"/>
+                                                </Button>
+                                            </StackPanel>
                                             <TextBlock Text="{qc:Binding 'Path.GetFileName($P)', P={Binding FileName, Mode=OneWay}}"/>
                                             <Label     Content="{le:Loc Label_Type}"/>
                                             <TextBlock Text="{Binding FileType, Mode=OneWay}"/>

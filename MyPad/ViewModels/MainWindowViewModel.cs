@@ -115,6 +115,7 @@ namespace MyPad.ViewModels
         public ReactiveCommand ChangeSyntaxCommand { get; }
 
         public ReactiveCommand<DragEventArgs> DropHandler { get; }
+        public ReactiveCommand<EventArgs> ContentRenderedHandler { get; }
         public ReactiveCommand<CancelEventArgs> ClosingHandler { get; }
 
         public Func<TextEditorViewModel> TextEditorFactory =>
@@ -165,11 +166,6 @@ namespace MyPad.ViewModels
             this.FileTreeNodes = new ReactiveCollection<FileTreeNodeViewModel>().AddTo(this.CompositeDisposable);
             BindingOperations.EnableCollectionSynchronization(this.TextEditors, new object());
             BindingOperations.EnableCollectionSynchronization(this.FileTreeNodes, new object());
-
-            var rootPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var rootNode = new FileTreeNodeViewModel(rootPath) { IsExpanded = true };
-            this.FileTreeNodes.Clear();
-            this.FileTreeNodes.Add(rootNode);
 
             // ----- 変更通知の購読 ------------------------------
 
@@ -431,6 +427,13 @@ namespace MyPad.ViewModels
                 })
                 .AddTo(this.CompositeDisposable);
 
+            this.ContentRenderedHandler = new ReactiveCommand<EventArgs>()
+                .WithSubscribe(e =>
+                {
+                    this.RefreshExplorer();
+                })
+                .AddTo(this.CompositeDisposable);
+
             this.ClosingHandler = new ReactiveCommand<CancelEventArgs>()
                 .WithSubscribe(e =>
                 {
@@ -442,6 +445,11 @@ namespace MyPad.ViewModels
                     this.ExitCommand.Execute();
                 })
                 .AddTo(this.CompositeDisposable);
+
+            // ----- PUB/SUB メッセージ ------------------------------
+
+            void refreshExplorer() => this.RefreshExplorer();
+            this.EventAggregator.GetEvent<RefreshExplorerEvent>().Subscribe(refreshExplorer);
         }
 
         [LogInterceptor]
@@ -454,8 +462,30 @@ namespace MyPad.ViewModels
                 if (await this.TryCloseTextEditor(target) == false)
                     return false;
             }
+
             this.Dispose();
             return true;
+        }
+
+        [LogInterceptor]
+        private void RefreshExplorer()
+        {
+            var roots = Enumerable.Empty<string>();
+            if (this.SettingsService.OtherTools?.ExplorerRoots?.Any() == true)
+                roots = this.SettingsService.OtherTools.ExplorerRoots.Where(i => i.IsEnabled).Select(i => i.Path);
+            else
+                roots = new[] { Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) };
+            var isExpanded = roots.Count() == 1;
+            var isSelected = true;
+
+            this.FileTreeNodes.ClearOnScheduler();
+            this.FileTreeNodes.AddRangeOnScheduler(
+                roots.Select(r =>
+                {
+                    var node = this.ContainerExtension.Resolve<FileTreeNodeViewModel>().Initialize(r, isSelected, isExpanded);
+                    isSelected = false;
+                    return node;
+                }));
         }
 
         #region テキストエディターの制御
