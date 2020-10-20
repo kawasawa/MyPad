@@ -151,7 +151,7 @@ namespace MyPad.ViewModels.Regions
                 .WithSubscribe(() =>
                 {
                     if (this.DialogService.Confirm(Resources.Message_ConfirmInitializeSettings))
-                        this.SettingsService.Initialize();
+                        this.SettingsService.Initialize(true);
                 })
                 .AddTo(this.CompositeDisposable);
         }

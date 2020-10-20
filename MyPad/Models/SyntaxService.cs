@@ -35,7 +35,7 @@ namespace MyPad.Models
 
         #endregion
 
-        public bool Initialize(bool force = false)
+        public bool Initialize(bool force)
         {
             try
             {
