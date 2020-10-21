@@ -204,11 +204,11 @@
                         <GroupBox>
                             <GroupBox.Header>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Command="{Binding DataContext.RefreshExplorerCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" ToolTip="{le:Loc Command_Apply}" Style="{DynamicResource Common.ChromelessButton}">
+                                    <Button Command="{Binding DataContext.RefreshExplorerCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" ToolTip="{le:Loc Command_Apply}" Style="{DynamicResource Common.ChromelessButton}" Foreground="White">
                                         <mi:Material Kind="Refresh"/>
                                     </Button>
-                                    <Border Width="5"/>
-                                    <TextBlock Text="{le:Loc Command_Explorer}"/>
+                                    <Border Width="10"/>
+                                    <TextBlock Text="{le:Loc Command_Explorer}" Foreground="White"/>
                                 </StackPanel>
                             </GroupBox.Header>
                             <DataGrid ItemsSource="{Binding ExplorerRoots, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}"

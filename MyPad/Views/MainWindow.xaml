@@ -213,7 +213,7 @@
                                 <ColumnDefinition Width="{StaticResource HamburgerColumnWidth}"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Border ToolTip="{Binding Label, Mode=OneWay}" Background="{qc:MultiBinding '$P0 == $P1 ? new SolidColorBrush(Color.FromRgb((byte)16, (byte)110, (byte)190)) : Brushes.Transparent', P0={Binding Mode=OneWay}, P1={Binding Content, ElementName=HamburgerMenu, Mode=OneWay}}">
+                            <Border ToolTip="{Binding Label, Mode=OneWay}" Background="{qc:MultiBinding '$P0 == $P1 ? new SolidColorBrush(Color.FromArgb((byte)204, (byte)0, (byte)120, (byte)215)) : Brushes.Transparent', P0={Binding Mode=OneWay}, P1={Binding Content, ElementName=HamburgerMenu, Mode=OneWay}}">
                                 <ContentControl Content="{Binding Icon, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" IsTabStop="False" Focusable="False"/>
                             </Border>
                         </Grid>
