@@ -17,20 +17,20 @@ namespace MyPad.Test
         [TestCase("ToolBarRegion",             typeof(ToolBarView))]
         [TestCase("StatusBarRegion",           typeof(StatusBarView))]
         public void ConvertToRegionName(string expected, Type actual)
-            => Assert.AreEqual(expected, PrismNamingConverter.ConvertToRegionName(actual));
+            => Assert.That(PrismNamingConverter.ConvertToRegionName(actual), Is.EqualTo(expected));
 
         [TestCase(typeof(Workspace),         typeof(WorkspaceViewModel))]
         [TestCase(typeof(MainWindow),        typeof(MainWindowViewModel))]
         [TestCase(typeof(AboutContentView),  typeof(AboutContentViewModel))]
         [TestCase(typeof(OptionContentView), typeof(OptionContentViewModel))]
         public void ViewModelTypeToViewType(Type expected, Type actual)
-            => Assert.AreEqual(expected, PrismNamingConverter.ViewModelTypeToViewType(actual));
+            => Assert.That(PrismNamingConverter.ViewModelTypeToViewType(actual), Is.EqualTo(expected));
 
         [TestCase(typeof(WorkspaceViewModel),     typeof(Workspace))]
         [TestCase(typeof(MainWindowViewModel),    typeof(MainWindow))]
         [TestCase(typeof(AboutContentViewModel),  typeof(AboutContentView))]
         [TestCase(typeof(OptionContentViewModel), typeof(OptionContentView))]
         public void ViewTypeToViewModelType(Type expected, Type actual)
-            => Assert.AreEqual(expected, PrismNamingConverter.ViewTypeToViewModelType(actual));
+            => Assert.That(PrismNamingConverter.ViewTypeToViewModelType(actual), Is.EqualTo(expected));
     }
 }

@@ -11,7 +11,6 @@
              xmlns:qc="http://QuickConverter.CodePlex.com/"
              xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
              xmlns:root="clr-namespace:MyPad"
-             xmlns:views="clr-namespace:MyPad.Views"
              xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
              xmlns:converters="clr-namespace:MyPad.Views.Converters"
              xmlns:controls="clr-namespace:MyPad.Views.Controls"
@@ -65,7 +64,10 @@
                             </StackPanel>
 
                             <Label    Grid.Row="1" Grid.Column="0" Content="{le:Loc Label_Language}"/>
-                            <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" SelectedValue="{Binding Culture, Mode=TwoWay}" ItemsSource="{x:Static root:Constants.CULTURES}" SelectedValuePath="Name">
+                            <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
+                                      ItemsSource="{x:Static root:Constants.CULTURES}"
+                                      SelectedValue="{Binding Culture, Mode=TwoWay}"
+                                      SelectedValuePath="Name">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{qc:MultiBinding '$P0 + \' (\' + $P1 + \')\'', P0={Binding Description, Mode=OneWay}, P1={Binding Name, Mode=OneWay}}"/>
@@ -74,7 +76,9 @@
                             </ComboBox>
 
                             <Label    Grid.Row="2" Grid.Column="0" Content="{le:Loc Label_Encoding}"/>
-                            <ComboBox Grid.Row="2" Grid.Column="1" SelectedValue="{Binding Encoding, Mode=TwoWay}" ItemsSource="{x:Static root:Constants.ENCODINGS}">
+                            <ComboBox Grid.Row="2" Grid.Column="1"
+                                      ItemsSource="{x:Static root:Constants.ENCODINGS}"
+                                      SelectedValue="{Binding Encoding, Mode=TwoWay}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{qc:MultiBinding '$P0 + \' - \' + $P1', P0={Binding CodePage, Mode=OneWay}, P1={Binding EncodingName, Mode=OneWay}}"/>
@@ -84,7 +88,9 @@
                             <CheckBox Grid.Row="2" Grid.Column="3" IsChecked="{Binding AutoDetectEncoding, Mode=TwoWay}" Content="{le:Loc LabelText_AutoDetectByDefault}"/>
 
                             <Label    Grid.Row="3" Grid.Column="0" Content="{le:Loc Label_Syntax}"/>
-                            <ComboBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" ItemsSource="{qc:Binding 'new string[] { string.Empty }.Concat($P.Keys)', P={Binding DataContext.SyntaxService.Definitions, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Mode=OneWay}}" SelectedValue="{qc:Binding Convert='$P ?? string.Empty', ConvertBack='string.IsNullOrEmpty($value) ? null : $value', P={Binding SyntaxDefinitionName, Mode=TwoWay}}">
+                            <ComboBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"
+                                      ItemsSource="{qc:Binding 'new string[] { string.Empty }.Concat($P.Keys)', P={Binding DataContext.SyntaxService.Definitions, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Mode=OneWay}}"
+                                      SelectedValue="{qc:Binding Convert='$P ?? string.Empty', ConvertBack='string.IsNullOrEmpty($value) ? null : $value', P={Binding SyntaxDefinitionName, Mode=TwoWay}}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{qc:Binding 'string.IsNullOrEmpty($P) ? \'Plain Text\' : $P', P={Binding Mode=OneWay}}"/>
@@ -94,19 +100,17 @@
 
                             <Label    Grid.Row="4" Grid.Column="0" Content="{le:Loc Label_Font}"/>
                             <ComboBox Grid.Row="4" Grid.Column="1" 
-                                      DataContext="{Binding DataContext.SettingsService.TextEditor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Mode=OneWay}"
-                                      SelectedValue="{Binding FontFamily, Mode=TwoWay}"
-                                      ItemsSource="{x:Static root:Constants.FONT_FAMILIES}">
+                                      ItemsSource="{x:Static root:Constants.FONT_FAMILIES}"
+                                      SelectedValue="{Binding DataContext.SettingsService.TextEditor.FontFamily, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Converter={converters:FontFamilyToNameConverter}}" FontFamily="{Binding}"/>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
-                            <ComboBox Grid.Row="4" Grid.Column="3" 
-                                      DataContext="{Binding DataContext.SettingsService.TextEditor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Mode=OneWay}"
-                                      SelectedValue="{Binding ActualFontSize, Mode=TwoWay}"
-                                      ItemsSource="{x:Static root:Constants.FONT_SIZES}"/>
+                            <ComboBox Grid.Row="4" Grid.Column="3"
+                                      ItemsSource="{x:Static root:Constants.FONT_SIZES}"
+                                      SelectedValue="{Binding DataContext.SettingsService.TextEditor.ActualFontSize, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"/>
                         </Grid>
 
                         <Border Height="10"/>

@@ -179,7 +179,7 @@ namespace MyPad
         }
 
         /// <summary>
-        /// DI コンテナに登録されるオブジェクトを定義します。
+        /// DI コンテナに登録される型とインスタンスを定義します。
         /// </summary>
         /// <param name="containerRegistry">DI コンテナ</param>
         [LogInterceptor]
@@ -211,7 +211,7 @@ namespace MyPad
         }
 
         /// <summary>
-        /// アプリケーションの起動時に表示されるメインウィンドウを生成します。
+        /// アプリケーションのメインウィンドウを生成します。
         /// </summary>
         /// <returns>ウィンドウのインスタンス</returns>
         [LogInterceptor]

@@ -472,7 +472,9 @@ namespace MyPad.ViewModels
         {
             var roots = Enumerable.Empty<string>();
             if (this.SettingsService.OtherTools?.ExplorerRoots?.Any() == true)
-                roots = this.SettingsService.OtherTools.ExplorerRoots.Where(i => i.IsEnabled).Select(i => i.Path);
+                roots = this.SettingsService.OtherTools.ExplorerRoots
+                    .Where(i => string.IsNullOrEmpty(i.Path) == false && i.IsEnabled)
+                    .Select(i => i.Path);
             else
                 roots = new[] { Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) };
             var isExpanded = roots.Count() == 1;

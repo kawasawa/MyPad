@@ -14,7 +14,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -25,7 +24,6 @@ using ToastNotifications.Position;
 using Unity;
 using Vanara.InteropServices;
 using Vanara.PInvoke;
-using Windows.UI.Xaml.Media;
 
 namespace MyPad.Views
 {
