@@ -6,7 +6,6 @@ using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Search;
 using MyPad.Views.Controls.ChangeMarker;
 using MyPad.Views.Controls.Folding;
-using Plow.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Linq;

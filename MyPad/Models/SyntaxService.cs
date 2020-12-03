@@ -1,7 +1,7 @@
 ﻿using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using MyPad.Properties;
 using Plow;
-using Prism.Logging;
+using Plow.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;

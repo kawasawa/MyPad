@@ -3,7 +3,6 @@ using MyPad.Models;
 using MyPad.ViewModels;
 using MyPad.ViewModels.Events;
 using Plow;
-using Plow.Wpf;
 using Prism.Events;
 using Prism.Ioc;
 using Prism.Regions;

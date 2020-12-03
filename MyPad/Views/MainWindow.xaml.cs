@@ -4,10 +4,9 @@ using MyPad.Models;
 using MyPad.ViewModels;
 using MyPad.Views.Controls;
 using MyPad.Views.Regions;
-using Plow.Wpf;
+using Plow.Logging;
 using Prism.Commands;
 using Prism.Ioc;
-using Prism.Logging;
 using Prism.Regions;
 using System;
 using System.ComponentModel;
@@ -343,7 +342,7 @@ namespace MyPad.Views
                 }
                 catch (Exception e)
                 {
-                    this.Logger.Log($"{nameof(IRegionManager.RegisterViewWithRegion)} に失敗しました。: RegionName={regionName}", Category.Warn, e);
+                    this.Logger.Log($"{nameof(IRegionManager.RegisterViewWithRegion)} に失敗しました。: RegionName={regionName}", Category.Error, e);
                 }
             }
             createRegionContent<MenuBarView>("1");

@@ -1,4 +1,4 @@
-﻿using Prism.Logging;
+﻿using Plow.Logging;
 using System;
 using System.Diagnostics;
 using System.Reflection;
@@ -29,13 +29,13 @@ namespace MyPad
         }
 
         public void OnEntry()
-            => this._logger.Log(this.GetMessage("BEGIN"), Category.Debug);
+            => this._logger.Log(this.GetMessage("BEGIN"), Category.Trace);
 
         public void OnExit()
-            => this._logger.Log(this.GetMessage("END  "), Category.Debug);
+            => this._logger.Log(this.GetMessage("END  "), Category.Trace);
 
         public void OnException(Exception e)
-            => this._logger.Log(this.GetMessage("ERROR"), Category.Debug);
+            => this._logger.Log(this.GetMessage("ERROR"), Category.Trace);
 
         private string GetMessage(string kind)
             => $"[{string.Format("{0,5}", this._process.Id)}] [{string.Format("{0,5}", this._sequence)}] {kind}: {this._method.DeclaringType?.Name ?? "<unknown>"}.{this._method.Name}";

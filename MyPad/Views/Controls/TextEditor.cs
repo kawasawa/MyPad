@@ -2,7 +2,6 @@
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Utils;
-using Plow.Wpf;
 using System;
 using System.ComponentModel;
 using System.Linq;

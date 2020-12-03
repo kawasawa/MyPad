@@ -3,9 +3,9 @@ using MyPad.Models;
 using MyPad.Properties;
 using MyPad.ViewModels.Events;
 using Plow;
+using Plow.Logging;
 using Plow.Wpf.CommonDialogs;
 using Prism.Events;
-using Prism.Logging;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -165,6 +165,7 @@ namespace MyPad.ViewModels.Regions
                 try
                 {
                     path = Windows.Storage.ApplicationData.Current.LocalCacheFolder.Path;
+                    this.Logger.Log($"ストアアプリのデータ領域にアクセスしました。: Path={path}", Category.Debug);
                 }
                 catch
                 {
@@ -175,7 +176,7 @@ namespace MyPad.ViewModels.Regions
             }
             catch (Exception e)
             {
-                this.Logger.Log($"データフォルダのオープンに失敗しました。", Category.Warn, e);
+                this.Logger.Log($"データフォルダのオープンに失敗しました。", Category.Error, e);
                 this.DialogService.Warn(e.Message);
             }
         }
@@ -213,12 +214,13 @@ namespace MyPad.ViewModels.Regions
             catch (OperationCanceledException e)
             {
                 // NOTE: FileSystem.CopyDirectory の処理をキャンセルした場合
+                this.Logger.Log($"ログファイルの出力をキャンセルしました。: Path={path}, Temp={tempPath}", Category.Debug, e);
                 this.DialogService.Notify(e.Message);
                 return false;
             }
             catch (Exception e)
             {
-                this.Logger.Log($"ログファイルの出力に失敗しました。: Path={path}, Temp={tempPath}", Category.Warn, e);
+                this.Logger.Log($"ログファイルの出力に失敗しました。: Path={path}, Temp={tempPath}", Category.Error, e);
                 this.DialogService.Warn(e.Message);
                 return false;
             }
@@ -243,7 +245,7 @@ namespace MyPad.ViewModels.Regions
             }
             catch (Exception e)
             {
-                this.Logger.Log($"設定ファイルのインポートに失敗しました。: Path={path}", Category.Warn, e);
+                this.Logger.Log($"設定ファイルのインポートに失敗しました。: Path={path}", Category.Error, e);
                 this.DialogService.Warn(e.Message);
                 return false;
             }
@@ -266,7 +268,7 @@ namespace MyPad.ViewModels.Regions
             }
             catch (Exception e)
             {
-                this.Logger.Log($"設定ファイルのエクスポートに失敗しました。: Path={path}", Category.Warn, e);
+                this.Logger.Log($"設定ファイルのエクスポートに失敗しました。: Path={path}", Category.Error, e);
                 this.DialogService.Warn(e.Message);
                 return false;
             }

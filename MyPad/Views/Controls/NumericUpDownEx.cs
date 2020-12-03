@@ -1,5 +1,4 @@
-﻿using Plow.Wpf;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 
 namespace MyPad.Views.Controls

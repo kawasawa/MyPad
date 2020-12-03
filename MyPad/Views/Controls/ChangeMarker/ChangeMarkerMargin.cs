@@ -1,6 +1,5 @@
 ﻿using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
-using Plow.Wpf;
 using System;
 using System.ComponentModel;
 using System.Linq;
