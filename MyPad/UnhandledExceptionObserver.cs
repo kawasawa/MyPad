@@ -1,5 +1,5 @@
 ﻿using Plow;
-using Prism.Logging;
+using Plow.Logging;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -80,7 +80,7 @@ namespace MyPad
         {
             try
             {
-                Logger?.Log("ハンドルされていない例外が発生しました。", Category.Exception, e);
+                Logger?.Log("ハンドルされていない例外が発生しました。", Category.Fatal, e);
             }
             catch
             {
@@ -119,7 +119,7 @@ namespace MyPad
         {
             try
             {
-                Logger?.Log("アプリケーションを終了します。", Category.Exception, e);
+                Logger?.Log("アプリケーションを終了します。", Category.Fatal, e);
             }
             catch
             {

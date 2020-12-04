@@ -1,23 +1,28 @@
 ﻿using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyPad.ViewModels.Dialogs
 {
     public class ChangeLineDialogViewModel : DialogViewModelBase
     {
-        public ReactiveProperty<int> Line { get; }
+        [Required]
+        public ReactiveProperty<int?> Line { get; }
         public ReactiveProperty<int> MaxLine { get; }
-
         public ReactiveCommand OKCommand { get; }
         public ReactiveCommand CancelCommand { get; }
 
         public ChangeLineDialogViewModel()
         {
-            this.Line = new ReactiveProperty<int>().AddTo(this.CompositeDisposable);
-            this.MaxLine = new ReactiveProperty<int>().AddTo(this.CompositeDisposable);
+            this.Line = new ReactiveProperty<int?>()
+                .SetValidateAttribute(() => this.Line)
+                .AddTo(this.CompositeDisposable);
+            this.MaxLine = new ReactiveProperty<int>()
+                .AddTo(this.CompositeDisposable);
 
-            this.OKCommand = new ReactiveCommand()
+            this.OKCommand = this.Line.ObserveHasErrors.Inverse()
+                .ToReactiveCommand()
                 .WithSubscribe(() => this.OnRequestClose(
                     new DialogResult(ButtonResult.OK, new DialogParameters { 
                         { nameof(this.Line), this.Line.Value },

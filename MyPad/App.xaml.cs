@@ -1,7 +1,7 @@
 ﻿using Plow;
+using Plow.Logging;
 using Plow.Wpf.CommonDialogs;
 using Prism.Ioc;
-using Prism.Logging;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
@@ -78,16 +78,8 @@ namespace MyPad
                     },
                     CreateLoggerHook = (logger, category) =>
                     {
-                        var categoryName = category switch
-                        {
-                            Category.Debug => nameof(NLog.LogLevel.Debug),
-                            Category.Info => nameof(NLog.LogLevel.Info),
-                            Category.Warn => nameof(NLog.LogLevel.Warn),
-                            Category.Exception => nameof(NLog.LogLevel.Error),
-                            _ => nameof(NLog.LogLevel.Debug),
-                        };
                         logger.Factory.Configuration.Variables.Add("DIR", this.SharedDataService.LogDirectoryPath);
-                        logger.Factory.Configuration.Variables.Add("CTG", categoryName);
+                        logger.Factory.Configuration.Variables.Add("CTG", category.ToString());
                         logger.Factory.ReconfigExistingLoggers();
                     },
                 });
@@ -325,7 +317,7 @@ namespace MyPad
             Marshal.StructureToPtr(structure, lParam, false);
 
             var result = User32.SendMessage(destinationHandle, (uint)User32.WindowMessage.WM_COPYDATA, sourceProcess.Handle, lParam);
-            this.Logger.Log($"メッセージを送信しました。: hWnd=[0x{ destinationHandle.DangerousGetHandle().ToString("X")}], Values=[{string.Join(", ", values)}]", Category.Debug);
+            this.Logger.Log($"システムメッセージを送信しました。: hWnd=[0x{ destinationHandle.DangerousGetHandle().ToString("X")}], Values=[{string.Join(", ", values)}]", Category.Debug);
             return result;
         }
 

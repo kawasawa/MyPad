@@ -1,5 +1,5 @@
-﻿using Prism.Ioc;
-using Prism.Logging;
+﻿using Plow.Logging;
+using Prism.Ioc;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;

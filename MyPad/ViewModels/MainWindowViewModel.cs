@@ -7,10 +7,10 @@ using MyPad.Models;
 using MyPad.Properties;
 using MyPad.ViewModels.Events;
 using Plow;
+using Plow.Logging;
 using Plow.Wpf.CommonDialogs;
 using Prism.Events;
 using Prism.Ioc;
-using Prism.Logging;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -330,7 +330,7 @@ namespace MyPad.ViewModels
                         this.DiffSource.Value = null;
                         this.DiffDestination.Value = null;
 
-                        this.Logger.Log($"差分を比較するファイルの読み込みに失敗しました。: SourcePath={diffSourcePath}, DestinationPath={diffDestinationPath}", Category.Warn, e);
+                        this.Logger.Log($"差分を比較するファイルの読み込みに失敗しました。: SourcePath={diffSourcePath}, DestinationPath={diffDestinationPath}", Category.Error, e);
                         this.DialogService.Warn(e.Message);
                         return;
                     }
@@ -733,7 +733,7 @@ namespace MyPad.ViewModels
                     }
                     catch (Exception e)
                     {
-                        this.Logger.Log($"ファイルの再読み込みに失敗しました。: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Warn, e);
+                        this.Logger.Log($"ファイルの再読み込みに失敗しました。: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Error, e);
                         this.DialogService.Warn(e.Message);
                         return (false, sameTextEditor);
                     }
@@ -788,7 +788,7 @@ namespace MyPad.ViewModels
                     catch (Exception e)
                     {
                         // ここでのエラーは無視する
-                        this.Logger.Log($"ファイルの書き込み権限を取得できませんでした。読み取り権限のみで再取得します。: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Info, e);
+                        this.Logger.Log($"ファイルの書き込み権限を取得できませんでした。読み取り権限のみで再取得します。: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Warn, e);
                     }
                 }
 
@@ -802,7 +802,7 @@ namespace MyPad.ViewModels
                     }
                     catch (Exception e)
                     {
-                        this.Logger.Log($"ファイルの読み取り権限の取得に失敗しました。: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Warn, e);
+                        this.Logger.Log($"ファイルの読み取り権限の取得に失敗しました。: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Error, e);
                         this.DialogService.Warn(e.Message);
                         return (false, null);
                     }
@@ -819,7 +819,7 @@ namespace MyPad.ViewModels
                 }
                 catch (Exception e)
                 {
-                    this.Logger.Log($"ファイルの読み込みに失敗しました。: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Warn, e);
+                    this.Logger.Log($"ファイルの読み込みに失敗しました。: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Error, e);
                     this.DialogService.Warn(e.Message);
                     return (false, textEditor);
                 }
@@ -862,7 +862,7 @@ namespace MyPad.ViewModels
                 }
                 catch (Exception e)
                 {
-                    this.Logger.Log($"ファイルの上書き保存に失敗しました。: Path={path}, Encoding={encoding.EncodingName}", Category.Warn, e);
+                    this.Logger.Log($"ファイルの上書き保存に失敗しました。: Path={path}, Encoding={encoding.EncodingName}", Category.Error, e);
                     this.DialogService.Warn(e.Message);
                     return (false, sameTextEditor);
                 }
@@ -908,7 +908,7 @@ namespace MyPad.ViewModels
                 }
                 catch (Exception e)
                 {
-                    this.Logger.Log($"ファイルの新規保存に失敗しました。: Path={path}, Encoding={encoding.EncodingName}", Category.Warn, e);
+                    this.Logger.Log($"ファイルの新規保存に失敗しました。: Path={path}, Encoding={encoding.EncodingName}", Category.Error, e);
                     this.DialogService.Warn(e.Message);
                     return (false, textEditor);
                 }
