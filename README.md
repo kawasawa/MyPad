@@ -1,11 +1,11 @@
-# MyPad (.NET Core)
+# MyPad
 
 <div>
   <a href="https://www.microsoft.com/ja-jp/p/mypad-%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%82%A8%E3%83%87%E3%82%A3%E3%82%BF/9pp2600zm2jd">
     <img src="https://img.shields.io/badge/-Microsoft Store-017ACC.svg?logo=microsoft&style=flat-square">
   </a>
-  <a href="https://github.com/kawasawa/MyPad.NetCore/blob/master/LICENSE.txt">
-    <img src="https://img.shields.io/github/license/kawasawa/MyPad.NetCore.svg?style=flat-square">
+  <a href="https://github.com/kawasawa/MyPad/blob/master/LICENSE.txt">
+    <img src="https://img.shields.io/github/license/kawasawa/MyPad.svg?style=flat-square">
   </a>
 </div>
 
