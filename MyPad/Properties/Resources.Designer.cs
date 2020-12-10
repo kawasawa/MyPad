@@ -152,6 +152,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   コーディング に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Coding {
+            get {
+                return ResourceManager.GetString("Command_Coding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   キーワード補完 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Completion {
@@ -382,6 +391,15 @@ namespace MyPad.Properties {
         public static string Command_FindPrev {
             get {
                 return ResourceManager.GetString("Command_FindPrev", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   コードを折りたたむ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Folding {
+            get {
+                return ResourceManager.GetString("Command_Folding", resourceCulture);
             }
         }
         
@@ -895,6 +913,15 @@ namespace MyPad.Properties {
         public static string Command_Undo {
             get {
                 return ResourceManager.GetString("Command_Undo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   コードを展開する に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Unfolding {
+            get {
+                return ResourceManager.GetString("Command_Unfolding", resourceCulture);
             }
         }
         
