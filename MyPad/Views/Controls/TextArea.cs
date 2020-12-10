@@ -167,6 +167,14 @@ namespace MyPad.Views.Controls
                 (sender, e) => this.ZoomReset(),
                 (sender, e) => e.CanExecute = this.CanZoomReset()));
             bindings.Add(new CommandBinding(
+                Commands.Folding,
+                (sender, e) => this.Folding(),
+                (sender, e) => e.CanExecute = this.CanFolding()));
+            bindings.Add(new CommandBinding(
+                Commands.Unfolding,
+                (sender, e) => this.Unfolding(),
+                (sender, e) => e.CanExecute = this.CanUnfolding()));
+            bindings.Add(new CommandBinding(
                 Commands.Completion,
                 (sender, e) => this.ShowCompletionList(),
                 (sender, e) => e.CanExecute = this.CanShowCompletionList()));
@@ -250,6 +258,7 @@ namespace MyPad.Views.Controls
             if (this.CanZoomIn() == false)
                 return;
 
+            // フォントサイズの変更によるスクロール位置をずれを補正する
             var lineOffset = this.TextView.ScrollOffset.Y / this.TextView.DefaultLineHeight;
             var newSize = this.FontSize + this.ZoomIncrement;
             this.FontSize = Math.Min(newSize, MAX_FONT_SIZE);
@@ -264,6 +273,7 @@ namespace MyPad.Views.Controls
             if (this.CanZoomOut() == false)
                 return;
 
+            // フォントサイズの変更によるスクロール位置をずれを補正する
             var lineOffset = this.TextView.ScrollOffset.Y / this.TextView.DefaultLineHeight;
             var newSize = this.FontSize - this.ZoomIncrement;
             this.FontSize = Math.Max(newSize, MIN_FONT_SIZE);
@@ -278,6 +288,7 @@ namespace MyPad.Views.Controls
             if (this.CanZoomReset() == false)
                 return;
 
+            // フォントサイズの変更によるスクロール位置をずれを補正する
             var lineOffset = this.TextView.ScrollOffset.Y / this.TextView.DefaultLineHeight;
             this.FontSize = this.ActualFontSize;
             ((IScrollInfo)this).SetVerticalOffset(lineOffset * this.TextView.DefaultLineHeight);
@@ -339,6 +350,56 @@ namespace MyPad.Views.Controls
                     .OrderByDescending(segment => segment.EndOffset)
                     .ForEach(segment => this.Document.Replace(segment.StartOffset, segment.Length, text));
             }
+        }
+
+        public bool CanFolding()
+        {
+            if (this.EnableFoldings == false || this.FoldingManager == null)
+                return false;
+
+            var section = this.GetFoldingSection(this.Caret);
+            return section?.IsFolded == false;
+        }
+
+        public void Folding()
+        {
+            if (this.CanFolding() == false)
+                return;
+
+            var section = this.GetFoldingSection(this.Caret);
+            section.IsFolded = true;
+
+            // 開始括弧が表示領域外にある場合、開始括弧の位置までスクロールする
+            var viewAreaTopOffset = this.TextView.ScrollOffset.Y;
+            var viewAreaBottomOffset = viewAreaTopOffset + ((IScrollInfo)this).ScrollOwner.ActualHeight;
+            var lineOffset = Math.Max(this.Document.GetLineByOffset(section.StartOffset).LineNumber - 2, 0) * this.TextView.DefaultLineHeight;            
+            if (lineOffset < viewAreaTopOffset || viewAreaBottomOffset < lineOffset)
+                ((IScrollInfo)this).SetVerticalOffset(lineOffset);
+        }
+
+        public bool CanUnfolding()
+        {
+            if (this.EnableFoldings == false || this.FoldingManager == null)
+                return false;
+
+            var section = this.GetFoldingSection(this.Caret);
+            return section?.IsFolded == true;
+        }
+
+        public void Unfolding()
+        {
+            if (this.CanUnfolding() == false)
+                return;
+
+            var section = this.GetFoldingSection(this.Caret);
+            section.IsFolded = false;
+
+            // 開始括弧が表示領域外にある場合、開始括弧の位置までスクロールする
+            var viewAreaTopOffset = this.TextView.ScrollOffset.Y;
+            var viewAreaBottomOffset = viewAreaTopOffset + ((IScrollInfo)this).ScrollOwner.ActualHeight;
+            var lineOffset = Math.Max(this.Document.GetLineByOffset(section.StartOffset).LineNumber - 2, 0) * this.TextView.DefaultLineHeight;
+            if (lineOffset < viewAreaTopOffset || viewAreaBottomOffset < lineOffset)
+                ((IScrollInfo)this).SetVerticalOffset(lineOffset);
         }
 
         public bool CanShowCompletionList()
@@ -424,6 +485,19 @@ namespace MyPad.Views.Controls
 
             this.FoldingManager ??= FoldingManager.Install(this);
             this.FoldingStrategy.UpdateFoldings(this.FoldingManager, this.Document);
+        }
+
+        public FoldingSection GetFoldingSection(ICSharpCode.AvalonEdit.Editing.Caret caret)
+        {
+            return this.FoldingManager.AllFoldings
+                .Where(s =>
+                {
+                    var startLine = this.Document.GetLineByOffset(s.StartOffset);
+                    var endLine = this.Document.GetLineByOffset(s.EndOffset);
+                    return startLine.LineNumber <= caret.Line && caret.Line <= endLine.LineNumber;
+                })
+                .OrderBy(s => s.Length)
+                .FirstOrDefault();
         }
 
         private void InvokeTransformSelectedSegments(object[] parameters)
@@ -586,6 +660,12 @@ namespace MyPad.Views.Controls
 
             public static readonly ICommand ZoomReset
                 = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.D0, ModifierKeys.Control) });
+
+            public static readonly ICommand Folding
+                = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.OemOpenBrackets, ModifierKeys.Control | ModifierKeys.Shift) });
+
+            public static readonly ICommand Unfolding
+                = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.OemCloseBrackets, ModifierKeys.Control | ModifierKeys.Shift) });
 
             public static readonly ICommand Completion
                 = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.Space, ModifierKeys.Control) });
