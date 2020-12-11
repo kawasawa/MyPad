@@ -211,6 +211,28 @@
                 <MenuItem Command="ae:AvalonEditCommands.ConvertSpacesToTabs"
                           Header="{le:Loc Command_ConvertSpacesToTabs}"/>
             </MenuItem>
+            <MenuItem Header="{le:Loc Command_Coding}">
+                <MenuItem Command="controls:TextArea+Commands.Completion"
+                      Header="{le:Loc Command_Completion}">
+                    <MenuItem.Icon>
+                        <mi:Material Kind="AutoFix"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="controls:TextArea+Commands.Folding"
+                          Header="{le:Loc Command_Folding}"
+                          InputGestureText="Ctrl+Shift+[">
+                    <MenuItem.Icon>
+                        <mi:Octicons Kind="Fold"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="controls:TextArea+Commands.Unfolding"
+                          Header="{le:Loc Command_Unfolding}"
+                          InputGestureText="Ctrl+Shift+]">
+                    <MenuItem.Icon>
+                        <mi:Octicons Kind="Unfold"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
         </MenuItem>
         <MenuItem Header="{le:Loc Command_Find}">
             <MenuItem Command="Find"
@@ -324,12 +346,6 @@
                       InputGestureText="Ctrl+M">
                 <MenuItem.Icon>
                     <mi:Material Kind="LanguageCsharp"/>
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem Command="controls:TextArea+Commands.Completion"
-                      Header="{le:Loc Command_Completion}">
-                <MenuItem.Icon>
-                    <mi:Material Kind="AutoFix"/>
                 </MenuItem.Icon>
             </MenuItem>
             <Separator/>

@@ -58,7 +58,6 @@ namespace MyPad
                         layout.Quoting = NLog.Layouts.CsvQuotingMode.Nothing;
                         layout.WithHeader = false;
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${date:format=yyyy/MM/dd HH\\:mm\\:ss}"));
-                        layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${callsite}"));
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${message}"));
 
                         var target = new NLog.Targets.FileTarget("log");

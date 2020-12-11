@@ -747,4 +747,13 @@ Please check and delete unnecessary files.</value>
   <data name="Command_Apply" xml:space="preserve">
     <value>Apply</value>
   </data>
+  <data name="Command_Coding" xml:space="preserve">
+    <value>Coding</value>
+  </data>
+  <data name="Command_Folding" xml:space="preserve">
+    <value>Folding</value>
+  </data>
+  <data name="Command_Unfolding" xml:space="preserve">
+    <value>Unfolding</value>
+  </data>
 </root>

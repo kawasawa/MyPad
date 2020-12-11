@@ -42,7 +42,7 @@ namespace MyPad
                 Category.Info => this.InfoLogger.Value,
                 Category.Warn => this.WarnLogger.Value,
                 Category.Error => this.ErrorLogger.Value,
-                Category.Fatal => this.ErrorLogger.Value,
+                Category.Fatal => this.FatalLogger.Value,
                 _ => this.InfoLogger.Value,
             };
             var level = category switch
@@ -56,7 +56,7 @@ namespace MyPad
                 _ => LogLevel.Info,
             };
 
-            var logInfo = new NLog.LogEventInfo(level, logger.Name, message);
+            var logInfo = new LogEventInfo(level, logger.Name, message);
             var e = new LogEventArgs(category, priority, logInfo);
             this.LogWriting?.Invoke(this, e);
             if (e.Cancel)
