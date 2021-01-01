@@ -1,8 +1,11 @@
 ﻿using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace MyPad.Test
 {
@@ -106,6 +109,36 @@ namespace MyPad.Test
         [TestCaseSource(typeof(Source), nameof(Source.Messages))]
         public void Fatal(string message)
             => this.Log(message, Plow.Logging.Category.Fatal);
+
+        [TestCaseSource(typeof(Source), nameof(Source.Messages))]
+        public async Task StressTest(string message)
+        {
+            IEnumerable<Task> createTasks(int taskCount, int lineCount, Plow.Logging.Category category)
+            {
+                for (var i = 1; i <= taskCount; i++)
+                {
+                    var taskNumber = i;
+                    yield return Task.Run(() =>
+                    {
+                        for (var j = 1; j <= lineCount; j++)
+                            this.Logger.Log($"[Task {taskNumber}: {string.Format("{0," + lineCount.ToString().Length + "}", j)}] {message}", category);
+                    });
+                }
+            }
+
+            const int TASK_COUNT = 10;
+            const int LINE_COUNT = 1000;
+            const Plow.Logging.Category CATEGORY = Plow.Logging.Category.Trace;
+
+            await Task.WhenAll(createTasks(TASK_COUNT, LINE_COUNT, CATEGORY));
+
+            var path = Path.Combine(this.LogDirectoryPath, $"{CATEGORY}.log");
+            Assert.That(File.Exists(path), Is.EqualTo(true));
+
+            var logLineCount = File.ReadLines(path).Count();
+            var messageLineCount = (message.Length - message.Replace(Environment.NewLine, string.Empty).Length) / Environment.NewLine.Length + 1;
+            Assert.That(logLineCount, Is.EqualTo(TASK_COUNT * LINE_COUNT * messageLineCount));
+        }
 
         private static class Source
         {
