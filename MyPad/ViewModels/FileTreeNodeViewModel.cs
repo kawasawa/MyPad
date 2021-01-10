@@ -18,6 +18,7 @@ using Vanara.PInvoke;
 
 namespace MyPad.ViewModels
 {
+    // NOTE: このクラスは頻出するためトレースしない
     public class FileTreeNodeViewModel : ViewModelBase
     {
         [Dependency]
@@ -110,7 +111,7 @@ namespace MyPad.ViewModels
             if (Directory.Exists(fileName))
             {
                 this._isDirectory = true;
-                this.Children.Add(this.GetEmptyChild());
+                this.Children.Add(this.CreateEmptyChild());
             }
 
             return this;
@@ -124,7 +125,7 @@ namespace MyPad.ViewModels
             return this;
         }
 
-        private FileTreeNodeViewModel GetEmptyChild()
+        private FileTreeNodeViewModel CreateEmptyChild()
         {
             var treeNode = this.ContainerExtension.Resolve<FileTreeNodeViewModel>();
             treeNode._isEmpty = true;
@@ -150,7 +151,7 @@ namespace MyPad.ViewModels
                 var children = temp.Where(p => Directory.Exists(p))
                     .Union(temp.Where(p => Directory.Exists(p) == false))
                     .Select(p => this.ContainerExtension.Resolve<FileTreeNodeViewModel>().Initialize(p, parent));
-                return children.Any() ? children : new[] { parent.GetEmptyChild() };
+                return children.Any() ? children : new[] { parent.CreateEmptyChild() };
             }
 
             try
@@ -158,7 +159,7 @@ namespace MyPad.ViewModels
                 Mouse.OverrideCursor = Cursors.Wait;
                 this.Children.Clear();
                 this.Children.AddRange(getChildren(this));
-                this.Children.Where(c => existChild(c)).ForEach(c => c.Children.Add(c.GetEmptyChild()));
+                this.Children.Where(c => existChild(c)).ForEach(c => c.Children.Add(c.CreateEmptyChild()));
             }
             catch (UnauthorizedAccessException e)
             {

@@ -1,6 +1,5 @@
 ﻿using Plow.Logging;
 using System;
-using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
 
@@ -17,14 +16,12 @@ namespace MyPad
 
         private int _sequence;
         private ILoggerFacade _logger;
-        private Process _process;
         private MethodBase _method;
 
         public void Init(object instance, MethodBase method, object[] args)
         {
             this._sequence = ++GlobalSequence;
             this._logger = ((App)Application.Current).Logger;
-            this._process = ((App)Application.Current).SharedDataService.Process;
             this._method = method;
         }
 
@@ -38,6 +35,6 @@ namespace MyPad
             => this._logger.Log(this.GetMessage("ERROR"), Category.Trace);
 
         private string GetMessage(string kind)
-            => $"[{string.Format("{0,5}", this._process.Id)}] [{string.Format("{0,5}", this._sequence)}] {kind}: {this._method.DeclaringType?.Name ?? "<unknown>"}.{this._method.Name}";
+            => $"{kind} #{this._sequence}: {this._method.DeclaringType?.Name ?? "<unknown>"}.{this._method.Name}";
     }
 }

@@ -1,8 +1,9 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
 using MyPad.Models;
+using MyPad.PubSub;
 using MyPad.ViewModels;
-using MyPad.ViewModels.Events;
 using Plow;
+using Plow.Logging;
 using Prism.Events;
 using Prism.Ioc;
 using Prism.Regions;
@@ -32,6 +33,8 @@ namespace MyPad.Views
         [Dependency]
         public IRegionManager RegionManager { get; set; }
         [Dependency]
+        public ILoggerFacade Logger { get; set; }
+        [Dependency]
         public IProductInfo ProductInfo { get; set; }
         [Dependency]
         public SharedDataService SharedDataService { get; set; }
@@ -59,7 +62,11 @@ namespace MyPad.Views
 
         [LogInterceptor]
         private MainWindow CreateWindow()
-            => this.ContainerExtension.Resolve<MainWindow>((typeof(IRegionManager), this.RegionManager.CreateRegionManager()));
+        {
+            var window = this.ContainerExtension.Resolve<MainWindow>((typeof(IRegionManager), this.RegionManager.CreateRegionManager()));
+            this.Logger.Log($"ウィンドウを生成しました。win#{((MainWindowViewModel)window.DataContext).Sequense}", Category.Info);
+            return window;
+        }
 
         [LogInterceptor]
         private IEnumerable<MainWindow> GetWindows()
@@ -73,7 +80,7 @@ namespace MyPad.Views
             this.Hide();
 
             // 初期ウィンドウを生成する
-            var view = this.ContainerExtension.Resolve<MainWindow>();
+            var view = this.CreateWindow();
             if (view.ViewModel.SettingsService.IsDifferentVersion())
             {
                 void view_ContentRendered(object sender, EventArgs e)
@@ -166,6 +173,7 @@ namespace MyPad.Views
             ((sender as FrameworkElement)?.DataContext as Window)?.SetForegroundWindow();
         }
 
+        // NOTE: このメソッドが頻発するためトレースしない
         private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             switch ((User32.WindowMessage)msg)

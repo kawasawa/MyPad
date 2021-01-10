@@ -4,6 +4,7 @@ using MyPad.Properties;
 using MyPad.ViewModels.Dialogs;
 using MyPad.Views;
 using MyPad.Views.Dialogs;
+using Plow.Logging;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using System;
@@ -88,6 +89,15 @@ namespace MyPad.ViewModels
         private static IContainerExtension GetContainerExtension(this IDialogService self)
             => self.GetType().GetField("_containerExtension", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(self) as IContainerExtension;
 
+        private static ILoggerFacade GetLogger(this IDialogService self)
+        {
+            var containerExtension = self.GetContainerExtension();
+            if (containerExtension == null)
+                return null;
+
+            return containerExtension.Resolve<ILoggerFacade>();
+        }
+
         private static bool UseInAppToastNotifications(IDialogService dialogService, out MainWindow window)
         {
             window = GetActiveWindow<MainWindow>();
@@ -116,17 +126,20 @@ namespace MyPad.ViewModels
             return settingsService?.System?.UseOverlayDialog ?? false;
         }
 
+        [LogInterceptor]
         public static void ToastNotify(this IDialogService self, string message)
         {
             if (UseInAppToastNotifications(self, out var window))
                 GetActiveWindow<MainWindow>()?.Notifier.ShowInformation(message, CreateToastMessageOptions());
         }
 
+        [LogInterceptor]
         public static void ToastWarn(this IDialogService self, string message)
         {
             GetActiveWindow<MainWindow>()?.Notifier.ShowWarning(message, CreateToastMessageOptions());
         }
 
+        [LogInterceptor]
         public static void Notify(this IDialogService self, string message)
         {
             if (UseOverlayDialog(self, out var window))
@@ -146,6 +159,7 @@ namespace MyPad.ViewModels
             }
         }
 
+        [LogInterceptor]
         public static void Warn(this IDialogService self, string message)
         {
             if (UseOverlayDialog(self, out var window))
@@ -166,6 +180,7 @@ namespace MyPad.ViewModels
             }
         }
 
+        [LogInterceptor]
         public static bool Confirm(this IDialogService self, string message)
         {
             if (UseOverlayDialog(self, out var window))
@@ -190,6 +205,7 @@ namespace MyPad.ViewModels
             }
         }
 
+        [LogInterceptor]
         public static bool? CancelableConfirm(this IDialogService self, string message)
         {
             if (UseOverlayDialog(self, out var window))
@@ -216,8 +232,11 @@ namespace MyPad.ViewModels
             }
         }
 
+        [LogInterceptor]
         public async static Task<(bool result, int line)> ChangeLine(this IDialogService self, TextEditorViewModel textEditor)
         {
+            self.GetLogger()?.Log($"指定行へ移動するダイアログを表示します。", Category.Info);
+
             var parameters = new DialogParameters {
                 { nameof(DialogViewModelBase.Title), Resources.Command_GoToLine },
                 { nameof(ChangeLineDialogViewModel.Line), textEditor.Line },
@@ -262,8 +281,11 @@ namespace MyPad.ViewModels
             }
         }
 
+        [LogInterceptor]
         public async static Task<(bool result, Encoding encoding)> ChangeEncoding(this IDialogService self, TextEditorViewModel textEditor)
         {
+            self.GetLogger()?.Log($"文字コードを変更するダイアログを表示します。", Category.Info);
+
             var parameters = new DialogParameters {
                 { nameof(ChangeEncodingDialogViewModel.Title), Resources.Command_ChangeEncoding },
                 { nameof(ChangeEncodingDialogViewModel.Encoding), textEditor.Encoding },
@@ -307,8 +329,11 @@ namespace MyPad.ViewModels
             }
         }
 
+        [LogInterceptor]
         public async static Task<(bool result, string syntax)> ChangeSyntax(this IDialogService self, TextEditorViewModel textEditor)
         {
+            self.GetLogger()?.Log($"シンタックス定義を変更するダイアログを表示します。", Category.Info);
+
             var parameters = new DialogParameters {
                 { nameof(ChangeSyntaxDialogViewModel.Title), Resources.Command_ChangeSyntax },
                 { nameof(ChangeSyntaxDialogViewModel.Syntax), textEditor.SyntaxDefinition?.Name },
@@ -352,8 +377,11 @@ namespace MyPad.ViewModels
             }
         }
 
+        [LogInterceptor]
         public async static Task<(bool result, string diffSourcePath, string diffDestinationPath)> SelectDiffFiles(this IDialogService self, IEnumerable<string> fileNames, string diffSourcePath = null, string diffDestinationPath = null)
         {
+            self.GetLogger()?.Log($"差分比較のファイル選択を表示します。", Category.Info);
+
             var parameters = new DialogParameters {
                 { nameof(SelectDiffFilesDialogViewModel.Title), Resources.Command_Diff },
                 { nameof(SelectDiffFilesDialogViewModel.FileNames), fileNames },

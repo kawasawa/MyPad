@@ -18,6 +18,7 @@ namespace MyPad.Views.Dialogs
     /// </summary>
     public partial class SelectDiffFilesDialog : UserControl
     {
+        [LogInterceptor]
         public SelectDiffFilesDialog()
         {
             InitializeComponent();

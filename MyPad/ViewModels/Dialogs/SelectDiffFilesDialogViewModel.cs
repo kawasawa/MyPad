@@ -28,6 +28,8 @@ namespace MyPad.ViewModels.Dialogs
         public ReactiveCommand OKCommand { get; }
         public ReactiveCommand CancelCommand { get; }
 
+        [InjectionConstructor]
+        [LogInterceptor]
         public SelectDiffFilesDialogViewModel()
         {
             this.FileNames = new ReactiveCollection<string>()
@@ -55,6 +57,7 @@ namespace MyPad.ViewModels.Dialogs
                 .AddTo(this.CompositeDisposable);
         }
 
+        [LogInterceptor]
         public override void OnDialogOpened(IDialogParameters parameters)
         {
             base.OnDialogOpened(parameters);

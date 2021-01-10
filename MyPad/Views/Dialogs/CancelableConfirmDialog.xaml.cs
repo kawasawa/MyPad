@@ -18,6 +18,7 @@ namespace MyPad.Views.Dialogs
     /// </summary>
     public partial class CancelableConfirmDialog : UserControl
     {
+        [LogInterceptor]
         public CancelableConfirmDialog()
         {
             InitializeComponent();

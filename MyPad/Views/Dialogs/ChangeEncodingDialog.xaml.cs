@@ -18,11 +18,13 @@ namespace MyPad.Views.Dialogs
     /// </summary>
     public partial class ChangeEncodingDialog : UserControl
     {
+        [LogInterceptor]
         public ChangeEncodingDialog()
         {
             InitializeComponent();
         }
 
+        [LogInterceptor]
         private void Dialog_Loaded(object sender, RoutedEventArgs e)
         {
             this.Encoding.Focus();

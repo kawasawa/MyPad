@@ -1,5 +1,5 @@
 ﻿using MyPad.Models;
-using MyPad.ViewModels.Events;
+using MyPad.PubSub;
 using Plow;
 using Prism.Events;
 using Reactive.Bindings;
