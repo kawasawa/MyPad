@@ -35,8 +35,7 @@ MyPad は簡単操作ですぐに使えるシンプルなテキストエディ�
 - テーマカラーや表示言語の変更
 - テキストエディターの細かな動作を変更
 
-![mypad](./images/mypad-option-1.jpg)
-![mypad](./images/mypad-option-2.jpg)
+![mypad](./images/mypad-option.jpg)
 
 ## 開発情報
 
