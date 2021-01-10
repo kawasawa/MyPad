@@ -27,11 +27,13 @@ namespace MyPad.Views.Regions
 
         #endregion
 
+        [LogInterceptor]
         public DiffContentView()
         {
             InitializeComponent();
         }
 
+        [LogInterceptor]
         private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue is bool isVisible && isVisible)
@@ -43,12 +45,14 @@ namespace MyPad.Views.Regions
             }
         }
 
+        [LogInterceptor]
         private void ShowInlineDiffViewer_Checked(object sender, RoutedEventArgs e)
         {
             this.DiffViewer.ShowInline();
 
         }
 
+        [LogInterceptor]
         private void ShowInlineDiffViewer_Unchecked(object sender, RoutedEventArgs e)
         {
             this.DiffViewer.ShowSideBySide();

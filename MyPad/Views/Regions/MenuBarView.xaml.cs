@@ -18,6 +18,7 @@ namespace MyPad.Views.Regions
     /// </summary>
     public partial class MenuBarView : UserControl
     {
+        [LogInterceptor]
         public MenuBarView()
         {
             InitializeComponent();

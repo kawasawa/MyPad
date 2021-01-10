@@ -10,7 +10,7 @@ namespace MyPad.ViewModels
             => (self.Extensions?.Select(e =>
             {
                 if (e.StartsWith("*."))
-                    e = e.Substring(1);
+                    e = e[1..];
                 if (e.StartsWith('.') == false)
                     e = $".{e}";
                 return e;

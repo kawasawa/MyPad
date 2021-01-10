@@ -2,6 +2,7 @@
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System.ComponentModel.DataAnnotations;
+using Unity;
 
 namespace MyPad.ViewModels.Dialogs
 {
@@ -13,6 +14,8 @@ namespace MyPad.ViewModels.Dialogs
         public ReactiveCommand OKCommand { get; }
         public ReactiveCommand CancelCommand { get; }
 
+        [InjectionConstructor]
+        [LogInterceptor]
         public ChangeLineDialogViewModel()
         {
             this.Line = new ReactiveProperty<int?>()
@@ -34,6 +37,7 @@ namespace MyPad.ViewModels.Dialogs
                 .AddTo(this.CompositeDisposable);
         }
 
+        [LogInterceptor]
         public override void OnDialogOpened(IDialogParameters parameters)
         {
             base.OnDialogOpened(parameters);

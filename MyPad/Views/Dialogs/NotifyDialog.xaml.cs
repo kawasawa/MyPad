@@ -18,6 +18,7 @@ namespace MyPad.Views.Dialogs
     /// </summary>
     public partial class NotifyDialog : UserControl
     {
+        [LogInterceptor]
         public NotifyDialog()
         {
             InitializeComponent();

@@ -365,6 +365,8 @@ namespace MyPad.Views
         [LogInterceptor]
         private void Window_Closed(object sender, EventArgs e)
         {
+            this.Logger.Log($"ウィンドウを破棄しました。win#{this.ViewModel.Sequense}", Category.Info);
+
             // 表示位置を退避する
             if (this.SettingsService.System.SaveWindowPlacement && this._handleSource.IsDisposed == false)
             {
@@ -518,6 +520,7 @@ namespace MyPad.Views
             textEditor.Redraw();
         }
 
+        // NOTE: このメソッドが頻発するためトレースしない
         private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             switch ((User32.WindowMessage)msg)
@@ -568,15 +571,19 @@ namespace MyPad.Views
             public IContainerExtension ContainerExtension { get; set; }
             [Dependency]
             public IRegionManager RegionManager { get; set; }
+            [Dependency]
+            public ILoggerFacade Logger { get; set; }
 
+            [LogInterceptor]
             INewTabHost<Window> IInterTabClient.GetNewHost(IInterTabClient interTabClient, object partition, TabablzControl source)
             {
                 var view = this.ContainerExtension.Resolve<MainWindow>((typeof(IRegionManager), this.RegionManager.CreateRegionManager()));
+                this.Logger.Log($"タブのアンドックによりウィンドウが生成されました。win#{((MainWindowViewModel)view.DataContext).Sequense}", Category.Info);
                 view.IsNewTabHost = true;
 
                 // NOTE: IsHeaderPanelVisible = false の状態でフローティングを行うと例外が発生する現象への対策
                 // ドラッグ移動中(マウスの左ボタンが押下されている間)はタブを表示する。
-                // また既存のタブにドッキングされウィンドウが消滅する場合に備え Closed イベントも監視する。
+                // また、既存のタブコントロールにドッキングされウィンドウが消滅する場合に備え Closed イベントも監視する。
                 //
                 // Dragablz/Dragablz/TabablzControl.cs | 6311e72 on 16 Aug 2017 | Line 1330:
                 //   _dragablzItemsControl.InstigateDrag(interTabTransfer.Item, newContainer =>
@@ -596,6 +603,7 @@ namespace MyPad.Views
                 return new NewTabHost<Window>(view, view.DraggableTabControl);
             }
 
+            [LogInterceptor]
             TabEmptiedResponse IInterTabClient.TabEmptiedHandler(TabablzControl tabControl, Window window)
                 => TabEmptiedResponse.CloseWindowOrLayoutBranch;
         }

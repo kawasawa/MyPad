@@ -18,6 +18,7 @@ namespace MyPad.Views.Regions
     /// </summary>
     public partial class OptionContentView : UserControl
     {
+        [LogInterceptor]
         public OptionContentView()
         {
             InitializeComponent();

@@ -18,6 +18,7 @@ namespace MyPad.Views.Regions
     /// </summary>
     public partial class AboutContentView : UserControl
     {
+        [LogInterceptor]
         public AboutContentView()
         {
             InitializeComponent();

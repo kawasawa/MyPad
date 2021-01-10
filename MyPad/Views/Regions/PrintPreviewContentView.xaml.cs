@@ -18,6 +18,7 @@ namespace MyPad.Views.Regions
     /// </summary>
     public partial class PrintPreviewContentView : UserControl
     {
+        [LogInterceptor]
         public PrintPreviewContentView()
         {
             InitializeComponent();

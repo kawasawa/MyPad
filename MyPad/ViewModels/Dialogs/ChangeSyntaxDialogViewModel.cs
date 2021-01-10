@@ -16,6 +16,8 @@ namespace MyPad.ViewModels.Dialogs
         public ReactiveCommand OKCommand { get; }
         public ReactiveCommand CancelCommand { get; }
 
+        [InjectionConstructor]
+        [LogInterceptor]
         public ChangeSyntaxDialogViewModel()
         {
             this.Syntax = new ReactiveProperty<string>().AddTo(this.CompositeDisposable);
@@ -32,6 +34,7 @@ namespace MyPad.ViewModels.Dialogs
                 .AddTo(this.CompositeDisposable);
         }
 
+        [LogInterceptor]
         public override void OnDialogOpened(IDialogParameters parameters)
         {
             base.OnDialogOpened(parameters);

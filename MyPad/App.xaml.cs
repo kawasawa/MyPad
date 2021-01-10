@@ -53,11 +53,19 @@ namespace MyPad
                     PublisherType = typeof(ILoggerFacadeExtension),
                     ConfigurationFactory = () =>
                     {
+                        var header = new NLog.Layouts.CsvLayout();
+                        header.Delimiter = NLog.Layouts.CsvColumnDelimiterMode.Tab;
+                        header.Quoting = NLog.Layouts.CsvQuotingMode.Nothing;
+                        header.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, $"v{this.ProductInfo.Version}"));
+
                         var layout = new NLog.Layouts.CsvLayout();
                         layout.Delimiter = NLog.Layouts.CsvColumnDelimiterMode.Tab;
                         layout.Quoting = NLog.Layouts.CsvQuotingMode.Nothing;
-                        layout.WithHeader = false;
-                        layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${date:format=yyyy/MM/dd HH\\:mm\\:ss}"));
+                        layout.Header = header;
+                        layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${longdate}"));
+                        layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${environment-user}"));
+                        layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${processid}"));
+                        layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${threadid}"));
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${message}"));
 
                         var target = new NLog.Targets.FileTarget("log");
@@ -85,8 +93,6 @@ namespace MyPad
             this.ProductInfo = new ProductInfo();
             this.SharedDataService = new Models.SharedDataService(this.ProductInfo, Process.GetCurrentProcess());
             UnhandledExceptionObserver.Observe(this, this.Logger, this.ProductInfo);
-            Initializer.InitEncoding();
-            Initializer.InitQuickConverter();
         }
 
         /// <summary>
@@ -96,13 +102,16 @@ namespace MyPad
         [LogInterceptor]
         protected override void OnStartup(StartupEventArgs e)
         {
+            this.Logger.Log($"アプリケーションを開始しました。: Args=[{string.Join(", ", e.Args)}]", Category.Info);
             this.SharedDataService.CommandLineArgs = e.Args;
-            this.Logger.Log($"アプリケーションを開始しました。: Process={this.SharedDataService.Process.Id}, Args=[{string.Join(", ", this.SharedDataService.CommandLineArgs)}]", Category.Info);
+
+            Initializer.InitEncoding();
+            Initializer.InitQuickConverter();
 
             var handle = this.GetOtherProcessHandle(this.SharedDataService.Process);
             if (handle.IsNull == false)
             {
-                this.SendValues(this.SharedDataService.Process, handle, this.SharedDataService.CommandLineArgs);
+                this.SendData(this.SharedDataService.Process, handle, this.SharedDataService.CommandLineArgs);
                 this.Shutdown(0);
                 return;
             }
@@ -246,7 +255,7 @@ namespace MyPad
             }
 
             base.OnExit(e);
-            this.Logger.Log($"アプリケーションを終了しました。: Process={this.SharedDataService.Process.Id}, ExitCode={e.ApplicationExitCode}", Category.Info);
+            this.Logger.Log($"アプリケーションを終了しました。: ExitCode={e.ApplicationExitCode}", Category.Info);
         }
 
         /// <summary>
@@ -290,6 +299,11 @@ namespace MyPad
                     return true;
                 }
             }), IntPtr.Zero);
+
+            if (result.IsNull)
+                this.Logger.Log($"起動中の同一アプリケーションは存在しません。", Category.Debug);
+            else
+                this.Logger.Log($"起動中の同一アプリケーションのウィンドウハンドルを取得しました。: hWnd=[0x{result.DangerousGetHandle().ToString("X")}]", Category.Debug);
             return result;
         }
 
@@ -298,25 +312,26 @@ namespace MyPad
         /// </summary>
         /// <param name="sourceProcess">送信元のプロセス</param>
         /// <param name="destinationHandle">送信先のウィンドウハンドル</param>
-        /// <param name="values">送信されるデータ</param>
+        /// <param name="data">送信されるデータ</param>
         /// <param name="separator">データの区切りを示す文字</param>
         /// <returns>ウィンドウプロシージャの戻り値</returns>
         [LogInterceptor]
-        private IntPtr SendValues(Process sourceProcess, HWND destinationHandle, IEnumerable<string> values, char separator = '\t')
+        private IntPtr SendData(Process sourceProcess, HWND destinationHandle, IEnumerable<string> data, char separator = '\t')
         {
-            var data = values.Any() ? string.Join(separator, values) : string.Empty;
+            var lpData = data.Any() ? string.Join(separator, data) : string.Empty;
             var structure = new COPYDATASTRUCT
             {
                 dwData = IntPtr.Zero,
-                cbData = Encoding.UTF8.GetByteCount(data) + 1,
-                lpData = data,
+                cbData = Encoding.UTF8.GetByteCount(lpData) + 1,
+                lpData = lpData,
             };
 
             var lParam = Marshal.AllocHGlobal(Marshal.SizeOf(structure));
             Marshal.StructureToPtr(structure, lParam, false);
 
-            var result = User32.SendMessage(destinationHandle, (uint)User32.WindowMessage.WM_COPYDATA, sourceProcess.Handle, lParam);
-            this.Logger.Log($"システムメッセージを送信しました。: hWnd=[0x{ destinationHandle.DangerousGetHandle().ToString("X")}], Values=[{string.Join(", ", values)}]", Category.Debug);
+            var msg = User32.WindowMessage.WM_COPYDATA;
+            var result = User32.SendMessage(destinationHandle, (uint)msg, sourceProcess.Handle, lParam);
+            this.Logger.Log($"ウィンドウメッセージを送信しました。: hWnd=[0x{destinationHandle.DangerousGetHandle().ToString("X")}], msg=[{msg}], data=[{string.Join(", ", data)}]", Category.Debug);
             return result;
         }
 
@@ -328,6 +343,7 @@ namespace MyPad
             /// <summary>
             /// 文字コードの初期設定を行います。
             /// </summary>
+            [LogInterceptor]
             public static void InitEncoding()
             {
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -336,6 +352,7 @@ namespace MyPad
             /// <summary>
             /// <see cref="QuickConverter"/> の初期設定を行います。
             /// </summary>
+            [LogInterceptor]
             public static void InitQuickConverter()
             {
 #pragma warning disable IDE0049
@@ -360,6 +377,7 @@ namespace MyPad
             /// 指定された View のインスタンスに対する <see cref="WPFLocalizeExtension"/> の初期設定を行います。
             /// </summary>
             /// <param name="view">View のインスタンス</param>
+            [LogInterceptor]
             public static void InitWPFLocalizeExtension(DependencyObject view)
             {
                 ResxLocalizationProvider.SetDefaultAssembly(view, nameof(MyPad));
@@ -374,11 +392,13 @@ namespace MyPad
         {
             IDialogResult IDialogWindow.Result { get; set; }
 
+            [LogInterceptor]
             public PrismDialogWindowWrapper()
             {
                 this.Loaded += this.Window_Loaded;
             }
 
+            [LogInterceptor]
             private void Window_Loaded(object sender, RoutedEventArgs e)
             {
                 if (this.DataContext is IDialogAware dialogAware)

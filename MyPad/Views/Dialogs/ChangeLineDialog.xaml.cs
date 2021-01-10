@@ -18,11 +18,13 @@ namespace MyPad.Views.Dialogs
     /// </summary>
     public partial class ChangeLineDialog : UserControl
     {
+        [LogInterceptor]
         public ChangeLineDialog()
         {
             InitializeComponent();
         }
 
+        [LogInterceptor]
         private void Dialog_Loaded(object sender, RoutedEventArgs e)
         {
             this.Line.Focus();

@@ -18,6 +18,7 @@ namespace MyPad.Views.Regions
     /// </summary>
     public partial class StatusBarView : UserControl
     {
+        [LogInterceptor]
         public StatusBarView()
         {
             InitializeComponent();

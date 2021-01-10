@@ -18,11 +18,13 @@ namespace MyPad.Views.Dialogs
     /// </summary>
     public partial class ChangeSyntaxDialog : UserControl
     {
+        [LogInterceptor]
         public ChangeSyntaxDialog()
         {
             InitializeComponent();
         }
 
+        [LogInterceptor]
         private void Dialog_Loaded(object sender, RoutedEventArgs e)
         {
             this.Syntax.Focus();

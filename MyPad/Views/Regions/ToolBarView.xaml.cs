@@ -18,6 +18,7 @@ namespace MyPad.Views.Regions
     /// </summary>
     public partial class ToolBarView : UserControl
     {
+        [LogInterceptor]
         public ToolBarView()
         {
             InitializeComponent();
