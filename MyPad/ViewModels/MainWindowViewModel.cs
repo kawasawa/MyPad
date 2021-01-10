@@ -5,7 +5,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.WindowsAPICodePack.Dialogs.Controls;
 using MyPad.Models;
 using MyPad.Properties;
-using MyPad.ViewModels.Events;
+using MyPad.PubSub;
 using Plow;
 using Plow.Logging;
 using Plow.Wpf.CommonDialogs;

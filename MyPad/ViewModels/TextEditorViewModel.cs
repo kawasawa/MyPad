@@ -4,7 +4,7 @@ using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Utils;
 using MyPad.Models;
 using MyPad.Properties;
-using MyPad.ViewModels.Events;
+using MyPad.PubSub;
 using Plow.Logging;
 using Prism.Events;
 using Prism.Ioc;

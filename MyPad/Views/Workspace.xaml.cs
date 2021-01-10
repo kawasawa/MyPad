@@ -1,7 +1,7 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
 using MyPad.Models;
+using MyPad.PubSub;
 using MyPad.ViewModels;
-using MyPad.ViewModels.Events;
 using Plow;
 using Prism.Events;
 using Prism.Ioc;
