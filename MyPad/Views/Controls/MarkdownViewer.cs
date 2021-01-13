@@ -1,4 +1,5 @@
-﻿using Markdig.Wpf;
+﻿using Markdig;
+using Markdig.Wpf;
 
 namespace MyPad.Views.Controls
 {
@@ -6,7 +7,7 @@ namespace MyPad.Views.Controls
     {
         public MarkdownViewer()
         {
-            this.Pipeline = new Markdig.MarkdownPipelineBuilder().UseSupportedExtensions().Build();
+            this.Pipeline = new MarkdownPipelineBuilder().UseSupportedExtensions().Build();
         }
     }
 }

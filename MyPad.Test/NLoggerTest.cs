@@ -32,7 +32,7 @@ namespace MyPad.Test
                     layout.Delimiter = NLog.Layouts.CsvColumnDelimiterMode.Tab;
                     layout.Quoting = NLog.Layouts.CsvQuotingMode.Nothing;
                     layout.WithHeader = false;
-                    layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${date:format=yyyy/MM/dd HH\\:mm\\:ss}"));
+                    layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${longdate}"));
                     layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${message}"));
 
                     var target = new NLog.Targets.FileTarget("log");
@@ -48,11 +48,11 @@ namespace MyPad.Test
                     var config = new NLog.Config.LoggingConfiguration();
                     config.AddTarget(target);
                     config.LoggingRules.Add(new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, target));
+                    config.Variables.Add("DIR", this.LogDirectoryPath);
                     return config;
                 },
                 CreateLoggerHook = (logger, category) =>
                 {
-                    logger.Factory.Configuration.Variables.Add("DIR", this.LogDirectoryPath);
                     logger.Factory.Configuration.Variables.Add("CTG", category.ToString());
                     logger.Factory.ReconfigExistingLoggers();
                 },

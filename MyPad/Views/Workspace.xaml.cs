@@ -173,7 +173,7 @@ namespace MyPad.Views
             ((sender as FrameworkElement)?.DataContext as Window)?.SetForegroundWindow();
         }
 
-        // NOTE: このメソッドが頻発するためトレースしない
+        // NOTE: このメソッドは頻発するためトレースしない
         private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             switch ((User32.WindowMessage)msg)

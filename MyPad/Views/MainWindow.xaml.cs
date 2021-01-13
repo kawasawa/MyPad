@@ -139,7 +139,7 @@ namespace MyPad.Views
                 });
 
             this.CommandBindings.AddRange(new[] {
-                // NOTE: ApplicationCommands.Close の実装
+                // ApplicationCommands.Close の実装
                 new CommandBinding( 
                     ApplicationCommands.Close,
                     (sender, e) =>
@@ -358,7 +358,7 @@ namespace MyPad.Views
         [LogInterceptor]
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            // NOTE: ダイアログの表示に備えてフォアグラウンドへ移動
+            // ダイアログの表示に備えてフォアグラウンドへ移動
             this.SetForegroundWindow();
         }
 
@@ -520,7 +520,7 @@ namespace MyPad.Views
             textEditor.Redraw();
         }
 
-        // NOTE: このメソッドが頻発するためトレースしない
+        // NOTE: このメソッドは頻発するためトレースしない
         private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             switch ((User32.WindowMessage)msg)
