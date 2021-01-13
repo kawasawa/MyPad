@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace MyPad.Views
+namespace MyPad.Views.Helpers
 {
     public class BindingProxy : Freezable
     {

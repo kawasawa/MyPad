@@ -16,9 +16,9 @@
                xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
                xmlns:s="clr-namespace:System;assembly=System.Runtime"
                xmlns:viewModels="clr-namespace:MyPad.ViewModels"
-               xmlns:views="clr-namespace:MyPad.Views"
                xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
                xmlns:controls="clr-namespace:MyPad.Views.Controls"
+               xmlns:helpers="clr-namespace:MyPad.Views.Helpers"
                mc:Ignorable="d"
                p:ViewModelLocator.AutoWireViewModel="True"
                Style="{StaticResource App.Window}"
@@ -183,7 +183,7 @@
             <Grid.Resources>
                 <s:Double x:Key="HamburgerWidth">48</s:Double>
                 <GridLength x:Key="HamburgerColumnWidth">48</GridLength>
-                <views:BindingProxy x:Key="Proxy" Data="{Binding Mode=OneWay}"/>
+                <helpers:BindingProxy x:Key="Proxy" Data="{Binding Mode=OneWay}"/>
             </Grid.Resources>
 
             <Grid.ColumnDefinitions>
