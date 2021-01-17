@@ -677,8 +677,8 @@ These changes will be applied on restart. Are you sure you want to continue?</va
   <data name="Command_ShowSideBar" xml:space="preserve">
     <value>SideBar</value>
   </data>
-  <data name="Command_Panels" xml:space="preserve">
-    <value>Panels</value>
+  <data name="Command_Contents" xml:space="preserve">
+    <value>Contents</value>
   </data>
   <data name="Message_NotifyLoaded" xml:space="preserve">
     <value>Text loaded.</value>
@@ -755,5 +755,14 @@ Please check and delete unnecessary files.</value>
   </data>
   <data name="Command_Unfolding" xml:space="preserve">
     <value>Unfolding</value>
+  </data>
+  <data name="Command_ScriptRunner" xml:space="preserve">
+    <value>C# script runner</value>
+  </data>
+  <data name="Command_Terminal" xml:space="preserve">
+    <value>Terminal</value>
+  </data>
+  <data name="Command_WindowStructure" xml:space="preserve">
+    <value>Window structure</value>
   </data>
 </root>

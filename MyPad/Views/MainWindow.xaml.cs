@@ -15,6 +15,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Interop;
 using ToastNotifications;
@@ -45,26 +46,53 @@ namespace MyPad.Views
 
         #region プロパティ
 
-        public static readonly ICommand SwitchFocus
+        public static readonly ICommand ActivateTextEditorCommand
             = new RoutedCommand(
-                nameof(SwitchFocus),
+                nameof(ActivateTextEditorCommand),
                 typeof(MainWindow),
-                new InputGestureCollection { new KeyGesture(Key.F6) });
-        public static readonly ICommand ActivateFileExplorer
+                new InputGestureCollection { new KeyGesture(Key.F6, ModifierKeys.Control) });
+        public static readonly ICommand ActivateTerminalCommand
             = new RoutedCommand(
-                nameof(ActivateFileExplorer),
+                nameof(ActivateTerminalCommand),
+                typeof(MainWindow),
+                new InputGestureCollection { new KeyGesture(Key.OemTilde, ModifierKeys.Control, "Ctrl+@") });
+        public static readonly ICommand ActivateScriptRunnerCommand
+            = new RoutedCommand(
+                nameof(ActivateScriptRunnerCommand),
+                typeof(MainWindow),
+                new InputGestureCollection { new KeyGesture(Key.OemTilde, ModifierKeys.Control | ModifierKeys.Shift, "Ctrl+Shift+@") });
+        public static readonly ICommand ActivateFileExplorerCommand
+            = new RoutedCommand(
+                nameof(ActivateFileExplorerCommand),
                 typeof(MainWindow),
                 new InputGestureCollection { new KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Shift) });
-        public static readonly ICommand ActivateProperty
-            = new RoutedCommand(
-                nameof(ActivateProperty),
-                typeof(MainWindow),
-                new InputGestureCollection { new KeyGesture(Key.Enter, ModifierKeys.Alt) });
+                public static readonly ICommand ActivatePropertyCommand
+                    = new RoutedCommand(
+                        nameof(ActivatePropertyCommand),
+                        typeof(MainWindow),
+                        new InputGestureCollection { new KeyGesture(Key.Enter, ModifierKeys.Alt) });
+
+        private static readonly DependencyProperty IsVisibleBottomContentProperty
+            = DependencyPropertyExtensions.Register(
+                new PropertyMetadata((obj, e) =>
+                {
+                    var self = (MainWindow)obj;
+                    if (e.NewValue is bool value && value)
+                    {
+                        self.BottomContentRow.Height = new GridLength(150);
+                        self.FocusBottomContent();
+                    }
+                    else
+                    {
+                        self.BottomContentRow.Height = new GridLength(0);
+                        self.FocusTextEditor();
+                    }
+                }));
 
         private HwndSource _handleSource;
         private (uint fByPosition, User32.MENUITEMINFO lpmii) _miiShowMenuBar;
         private (uint fByPosition, User32.MENUITEMINFO lpmii) _miiShowToolBar;
-        private (uint fByPosition, User32.MENUITEMINFO lpmii) _miiShowSideBar; 
+        private (uint fByPosition, User32.MENUITEMINFO lpmii) _miiShowSideBar;
         private (uint fByPosition, User32.MENUITEMINFO lpmii) _miiShowStatusBar;
         private (uint fByPosition, User32.MENUITEMINFO lpmii) _miiSeparator;
         private (double sideBarWidth, double contentAreaWidth) _columnWidthCache = (2, 5);
@@ -75,6 +103,7 @@ namespace MyPad.Views
         public Notifier Notifier { get; }
         public bool IsNewTabHost { get; set; }
         public MainWindowViewModel ViewModel => (MainWindowViewModel)this.DataContext;
+
         public TextEditor ActiveTextEditor
         {
             get
@@ -86,8 +115,8 @@ namespace MyPad.Views
                     // 子要素のビジュアルオブジェクトを直接取得する方法が無い。(仕様)
                     // VisualTree をたどり ContentPreseneter を取得し、内包する要素の名前からコントロールを特定する。
                     // ただし、描画前のオブジェクトはツリーに登録されていないため取得できない。
-                    var presenter = this.DraggableTabControl.Descendants().OfType<ContentPresenter>()
-                        .Where(x => x.DataContext == this.DraggableTabControl.SelectedItem)
+                    var presenter = this.MainContent.Descendants().OfType<ContentPresenter>()
+                        .Where(x => x.DataContext == this.MainContent.SelectedItem)
                         .Where(x => x.TemplatedParent == null)
                         .FirstOrDefault();
                     return presenter?.ContentTemplate?.FindName("TextEditor", presenter) as TextEditor;
@@ -99,23 +128,30 @@ namespace MyPad.Views
             }
         }
 
-        public ICommand SwitchFullScreenModeCommand => new DelegateCommand(() => {
-            if (this._fullScreenMode)
-            {
-                this._fullScreenMode = false;
-                this.ShowTitleBar = true;
-                this.IgnoreTaskbarOnMaximize = false;
-                this.WindowState = WindowState.Normal;
-            }
-            else
-            {
-                this._fullScreenMode = true;
-                this.ShowTitleBar = false;
-                this.IgnoreTaskbarOnMaximize = true;
-                this.WindowState = WindowState.Maximized;
-                this.ViewModel.DialogService.ToastNotify(Properties.Resources.Message_NotifyFullScreenMode);
-            }
-        });
+        public bool IsVisibleBottomContent
+        {
+            get => (bool)this.GetValue(IsVisibleBottomContentProperty);
+            set => this.SetValue(IsVisibleBottomContentProperty, value);
+        }
+
+        public ICommand SwitchFullScreenModeCommand
+            => new DelegateCommand(() => {
+                if (this._fullScreenMode)
+                {
+                    this._fullScreenMode = false;
+                    this.ShowTitleBar = true;
+                    this.IgnoreTaskbarOnMaximize = false;
+                    this.WindowState = WindowState.Normal;
+                }
+                else
+                {
+                    this._fullScreenMode = true;
+                    this.ShowTitleBar = false;
+                    this.IgnoreTaskbarOnMaximize = true;
+                    this.WindowState = WindowState.Maximized;
+                    this.ViewModel.DialogService.ToastNotify(Properties.Resources.Message_NotifyFullScreenMode);
+                }
+            });
 
         #endregion
 
@@ -130,17 +166,17 @@ namespace MyPad.Views
             this.Localization = new LocalizationWrapper();
             this.InterTabClient = this.ContainerExtension.Resolve<InterTabClientWrapper>();
             this.Notifier = new Notifier(config =>
-                {
-                    config.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromSeconds(AppSettings.ToastLifetime), MaximumNotificationCount.FromCount(AppSettings.ToastMaxCount));
-                    config.PositionProvider = new WindowPositionProvider(this, Corner.BottomRight, 5, 0);
-                    config.Dispatcher = Application.Current.Dispatcher;
-                    config.DisplayOptions.Width = 280;
-                    config.DisplayOptions.TopMost = false;
-                });
+            {
+                config.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromSeconds(AppSettings.ToastLifetime), MaximumNotificationCount.FromCount(AppSettings.ToastMaxCount));
+                config.PositionProvider = new WindowPositionProvider(this, Corner.BottomRight, 5, 0);
+                config.Dispatcher = Application.Current.Dispatcher;
+                config.DisplayOptions.Width = 280;
+                config.DisplayOptions.TopMost = false;
+            });
 
             this.CommandBindings.AddRange(new[] {
                 // ApplicationCommands.Close の実装
-                new CommandBinding( 
+                new CommandBinding(
                     ApplicationCommands.Close,
                     (sender, e) =>
                     {
@@ -157,15 +193,47 @@ namespace MyPad.Views
                     }
                 ),
                 new CommandBinding(
-                    SwitchFocus,
-                    (sender, e) => this.SwitchFocusedElement()
+                    ActivateTextEditorCommand,
+                    (sender, e) => this.FocusTextEditor()
                 ),
                 new CommandBinding(
-                    ActivateFileExplorer,
+                    ActivateTerminalCommand,
+                    (sender, e) =>
+                    {
+                        if (this.IsVisibleBottomContent && this.BottomContent.SelectedIndex == 0)
+                        {
+                            this.IsVisibleBottomContent = false;
+                        }
+                        else
+                        {
+                            this.BottomContent.SelectedIndex = 0;
+                            this.IsVisibleBottomContent = true;
+                            this.FocusBottomContent();
+                        }
+                    }
+                ),
+                new CommandBinding(
+                    ActivateScriptRunnerCommand,
+                    (sender, e) =>
+                     {
+                        if (this.IsVisibleBottomContent && this.BottomContent.SelectedIndex == 1)
+                        {
+                            this.IsVisibleBottomContent = false;
+                        }
+                        else
+                        {
+                            this.BottomContent.SelectedIndex = 1;
+                            this.IsVisibleBottomContent = true;
+                            this.FocusBottomContent();
+                         }
+                    }
+                ),
+                new CommandBinding(
+                    ActivateFileExplorerCommand,
                     (sender, e) => this.ActivateHamburgerMenuItem(this.FileExplorerItem)
                 ),
                 new CommandBinding(
-                    ActivateProperty,
+                    ActivatePropertyCommand,
                     (sender, e) => this.ActivateHamburgerMenuItem(this.PropertyItem)
                 ),
             });
@@ -195,83 +263,90 @@ namespace MyPad.Views
         }
 
         [LogInterceptor]
+        private void FocusTextEditor()
+        {
+            this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus());
+        }
+
+        [LogInterceptor]
+        private void FocusBottomContent()
+        {
+            if (!((((this.BottomContent.SelectedItem as TabItem)?.Content as ContentControl)?.Content as UserControl)?.FindName("ScriptInputField") is FrameworkElement element))
+                return;
+
+            if (element.IsLoaded)
+            {
+                this.Dispatcher.InvokeAsync(() => element.Focus());
+                return;
+            }
+
+            void elementLoaded(object sender, EventArgs e)
+            {
+                element.Focus();
+                element.Loaded -= elementLoaded;
+            }
+            element.Loaded += elementLoaded;
+        }
+
+        [LogInterceptor]
+        private void FocusSideContent()
+        {
+            if (!((this.SideContent.Content as HamburgerMenuItem)?.Tag is FrameworkElement element))
+                return;
+
+            void elementLoaded(object sender, EventArgs e)
+            {
+                element.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+                element.Loaded -= elementLoaded;
+            }
+            element.Loaded += elementLoaded;
+        }
+
+        [LogInterceptor]
         private void ActivateHamburgerMenuItem(HamburgerMenuItem targetItem)
         {
             this.SettingsService.System.ShowSideBar = true;
 
-            if (double.IsNaN(this.HamburgerMenu.Width) == false)
+            if (double.IsNaN(this.SideContent.Width) == false)
             {
                 // 閉じた状態の場合
                 // ・選択された項目をアクティブにする
                 // ・ハンバーガーメニューを開く
-                this.HamburgerMenu.Content = targetItem;
-                this.HamburgerMenu.Width = double.NaN;
+                this.SideContent.Content = targetItem;
+                this.SideContent.Width = double.NaN;
 
                 // グリッドの列構成を調整する
-                this.HamburgerMenuColumn.Width = new GridLength(this._columnWidthCache.sideBarWidth, GridUnitType.Star);
-                this.DraggableTabControlColumn.Width = new GridLength(this._columnWidthCache.contentAreaWidth, GridUnitType.Star);
+                this.SideContentColumn.Width = new GridLength(this._columnWidthCache.sideBarWidth, GridUnitType.Star);
+                this.MainContentColumn.Width = new GridLength(this._columnWidthCache.contentAreaWidth, GridUnitType.Star);
 
                 // フォーカスを設定する
-                if (targetItem.Tag is FrameworkElement element)
-                {
-                    void elementLoaded(object sender, EventArgs e)
-                    {
-                        element.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
-                        element.Loaded -= elementLoaded;
-                    }
-                    element.Loaded += elementLoaded;
-                }
+                this.FocusSideContent();
+
             }
-            else if (targetItem?.Equals(this.HamburgerMenu.Content) != true)
+            else if (targetItem?.Equals(this.SideContent.Content) != true)
             {
                 // 非アクティブな項目が選択された場合
                 // ・選択された項目をアクティブにする
-                this.HamburgerMenu.Content = targetItem;
+                this.SideContent.Content = targetItem;
 
                 // フォーカスを設定する
-                if (targetItem.Tag is FrameworkElement element)
-                {
-                    void elementLoaded(object sender, EventArgs e)
-                    {
-                        element.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
-                        element.Loaded -= elementLoaded;
-                    }
-                    element.Loaded += elementLoaded;
-                }
+                this.FocusSideContent();
             }
             else
             {
                 // 開いた状態 かつ アクティブな項目が選択された 場合
                 // ・選択された項目の非アクティブにする
                 // ・ハンバーガーメニューを閉じる
-                this.HamburgerMenu.Content = null;
-                this.HamburgerMenu.Width = this.HamburgerMenu.HamburgerWidth;
+                this.SideContent.Content = null;
+                this.SideContent.Width = this.SideContent.HamburgerWidth;
 
                 // グリッドの列構成を調整する
-                this._columnWidthCache = (this.HamburgerMenuColumn.Width.Value, this.DraggableTabControlColumn.Width.Value);
-                this.HamburgerMenuColumn.Width = GridLength.Auto;
-                this.DraggableTabControlColumn.Width = new GridLength(1, GridUnitType.Star);
+                this._columnWidthCache = (this.SideContentColumn.Width.Value, this.MainContentColumn.Width.Value);
+                this.SideContentColumn.Width = GridLength.Auto;
+                this.MainContentColumn.Width = new GridLength(1, GridUnitType.Star);
 
                 // フォーカスを設定する
-                this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus());
-            }
-        }
-
-        [LogInterceptor]
-        private void SwitchFocusedElement()
-        {
-            if (Keyboard.FocusedElement != this.ActiveTextEditor?.TextArea)
-            {
-                this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus());
-                return;
-            }
-            
-            if (this.SettingsService.System.ShowSideBar &&
-                double.IsNaN(this.HamburgerMenu.Width) &&
-                (this.HamburgerMenu.Content as HamburgerMenuIconItem)?.Tag is FrameworkElement element)
-            {
-                element.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
-                return;
+                this.FocusTextEditor();
             }
         }
 
@@ -313,9 +388,9 @@ namespace MyPad.Views
                 }
 
                 // 既定のタブを生成する
-                if (this.DraggableTabControl.Items.Count == 0)
+                if (this.MainContent.Items.Count == 0)
                 {
-                    TabablzControl.AddItemCommand.Execute(null, this.DraggableTabControl);
+                    TabablzControl.AddItemCommand.Execute(null, this.MainContent);
                 }
             }
 
@@ -353,6 +428,8 @@ namespace MyPad.Views
             createRegionContent<PrintPreviewContentView>();
             createRegionContent<OptionContentView>();
             createRegionContent<AboutContentView>();
+            createRegionContent<TerminalView>();
+            createRegionContent<ScriptRunnerView>();
         }
 
         [LogInterceptor]
@@ -413,7 +490,7 @@ namespace MyPad.Views
             if ((sender as Flyout)?.IsOpen != false)
                 return;
 
-            this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus());
+            this.FocusTextEditor();
             e.Handled = true;
         }
 
@@ -497,7 +574,7 @@ namespace MyPad.Views
             if (e.Handled || e.Source != e.OriginalSource)
                 return;
 
-            this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus());
+            this.FocusTextEditor();
             e.Handled = true;
         }
 
@@ -520,6 +597,15 @@ namespace MyPad.Views
             textEditor.Redraw();
         }
 
+        [LogInterceptor]
+        private void RowSplitter_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            if (this.BottomContentRow.Height.Value != 0)
+                return;
+
+            this.IsVisibleBottomContent = false;
+        }
+
         // NOTE: このメソッドは頻発するためトレースしない
         private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
@@ -530,7 +616,7 @@ namespace MyPad.Views
                     var hMenu = User32.GetSystemMenu(this._handleSource.Handle, false);
                     this._miiShowMenuBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowMenuBar);
                     this._miiShowToolBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowToolBar);
-                    this._miiShowSideBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowSideBar); 
+                    this._miiShowSideBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowSideBar);
                     this._miiShowStatusBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowStatusBar);
                     this._miiShowMenuBar.lpmii.fState = this.SettingsService.System.ShowMenuBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
                     this._miiShowToolBar.lpmii.fState = this.SettingsService.System.ShowToolBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
@@ -600,7 +686,7 @@ namespace MyPad.Views
                     view.Closed += windowMoveEnd;
                 }
 
-                return new NewTabHost<Window>(view, view.DraggableTabControl);
+                return new NewTabHost<Window>(view, view.MainContent);
             }
 
             [LogInterceptor]
