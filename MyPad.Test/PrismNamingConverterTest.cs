@@ -9,6 +9,22 @@ namespace MyPad.Test
 {
     public class PrismNamingConverterTest
     {
+        [TestCase("Workspace", typeof(WorkspaceViewModel))]
+        [TestCase("MainWindow", typeof(MainWindowViewModel))]
+        [TestCase("AboutContent", typeof(AboutContentViewModel))]
+        [TestCase("OptionContent", typeof(OptionContentViewModel))]
+        [TestCase("AboutContent", typeof(AboutContentViewModel))]
+        [TestCase("OptionContent", typeof(OptionContentViewModel))]
+        [TestCase("AboutContent", typeof(AboutContentView))]
+        [TestCase("OptionContent", typeof(OptionContentView))]
+        [TestCase("PrintPreviewContent", typeof(PrintPreviewContentView))]
+        [TestCase("DiffContent", typeof(DiffContentView))]
+        [TestCase("MenuBar", typeof(MenuBarView))]
+        [TestCase("ToolBar", typeof(ToolBarView))]
+        [TestCase("StatusBar", typeof(StatusBarView))]
+        public void ConvertToCoreName(string expected, Type actual)
+            => Assert.That(PrismNamingConverter.ConvertToCoreName(actual), Is.EqualTo(expected));
+        
         [TestCase("AboutContentRegion",        typeof(AboutContentView))]
         [TestCase("OptionContentRegion",       typeof(OptionContentView))]
         [TestCase("PrintPreviewContentRegion", typeof(PrintPreviewContentView))]
