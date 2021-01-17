@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Windows.Controls;
 
-namespace MyPad.Views.Controls
+namespace MyPad.Views.Helpers
 {
     public class DataGridHelper
     {

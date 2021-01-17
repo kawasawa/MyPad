@@ -10,7 +10,7 @@
     <Authors>Kazuki Awasawa</Authors>
     <Copyright>© Kazuki Awasawa All Rights Reserved.</Copyright>
     <Description></Description>
-    <Version>1.9.1</Version>
+    <Version>1.10.0</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Deterministic>true</Deterministic>
     <DeterministicSourceRoot>/_/</DeterministicSourceRoot>
@@ -34,12 +34,13 @@
     <PackageReference Include="DiffPlex.Wpf" Version="1.1.1" />
     <PackageReference Include="Dragablz" Version="0.0.3.223" />
     <PackageReference Include="GridExtra" Version="0.4.0" />
-    <PackageReference Include="Hardcodet.NotifyIcon.Wpf.NetCore" Version="1.0.14" />
+    <PackageReference Include="Hardcodet.NotifyIcon.Wpf.NetCore" Version="1.0.17" />
     <PackageReference Include="LivetCask.Messaging" Version="3.2.3.1" />
     <PackageReference Include="MahApps.Metro" Version="2.4.3" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="4.8.0" />
-    <PackageReference Include="Markdig.Wpf" Version="0.4.0" />
+    <PackageReference Include="Markdig.Wpf" Version="0.5.0.1" />
     <PackageReference Include="MethodDecorator.Fody" Version="1.1.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.8.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="NLog" Version="4.7.6" />
@@ -47,7 +48,7 @@
     <PackageReference Include="Plow.Wpf" Version="1.1.0" />
     <PackageReference Include="Prism.Unity" Version="8.0.0.1909" />
     <PackageReference Include="QuickConverter" Version="1.2.5" />
-    <PackageReference Include="ReactiveProperty" Version="7.5.1" />
+    <PackageReference Include="ReactiveProperty" Version="7.6.1" />
     <PackageReference Include="System.Interactive" Version="5.0.0" />
     <PackageReference Include="ToastNotifications.Messages" Version="2.5.1" />
     <PackageReference Include="Ude.NetStandard" Version="1.2.0" />
@@ -89,6 +90,9 @@
     <Compile Update="Views\Dialogs\NotifyDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Regions\TerminalView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -125,6 +129,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Dialogs\NotifyDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Regions\TerminalView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

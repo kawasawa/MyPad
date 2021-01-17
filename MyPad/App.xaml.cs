@@ -53,10 +53,17 @@ namespace MyPad
                     PublisherType = typeof(ILoggerFacadeExtension),
                     ConfigurationFactory = () =>
                     {
+                        var headerText = new StringBuilder();
+                        headerText.AppendLine($"# v{this.ProductInfo.Version}");
+                        headerText.AppendLine("# ${environment:OS}");
+                        headerText.AppendLine("# ${environment:PROCESSOR_ARCHITECTURE} - ${environment:PROCESSOR_IDENTIFIER}");
+                        headerText.AppendLine("# ${environment:COMPUTERNAME}");
+                        headerText.Append("##");
+
                         var header = new NLog.Layouts.CsvLayout();
                         header.Delimiter = NLog.Layouts.CsvColumnDelimiterMode.Tab;
                         header.Quoting = NLog.Layouts.CsvQuotingMode.Nothing;
-                        header.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, $"v{this.ProductInfo.Version}"));
+                        header.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, headerText.ToString()));
 
                         var layout = new NLog.Layouts.CsvLayout();
                         layout.Delimiter = NLog.Layouts.CsvColumnDelimiterMode.Tab;
@@ -81,17 +88,18 @@ namespace MyPad
                         var config = new NLog.Config.LoggingConfiguration();
                         config.AddTarget(target);
                         config.LoggingRules.Add(new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, target));
+                        config.Variables.Add("DIR", this.SharedDataService.LogDirectoryPath);
                         return config;
                     },
                     CreateLoggerHook = (logger, category) =>
                     {
-                        logger.Factory.Configuration.Variables.Add("DIR", this.SharedDataService.LogDirectoryPath);
+                        // ログの種類ごとにファイルを切り替える
                         logger.Factory.Configuration.Variables.Add("CTG", category.ToString());
                         logger.Factory.ReconfigExistingLoggers();
                     },
                 });
             this.ProductInfo = new ProductInfo();
-            this.SharedDataService = new Models.SharedDataService(this.ProductInfo, Process.GetCurrentProcess());
+            this.SharedDataService = new Models.SharedDataService(this.Logger, this.ProductInfo, Process.GetCurrentProcess());
             UnhandledExceptionObserver.Observe(this, this.Logger, this.ProductInfo);
         }
 
@@ -102,11 +110,13 @@ namespace MyPad
         [LogInterceptor]
         protected override void OnStartup(StartupEventArgs e)
         {
-            this.Logger.Log($"アプリケーションを開始しました。: Args=[{string.Join(", ", e.Args)}]", Category.Info);
-            this.SharedDataService.CommandLineArgs = e.Args;
+            this.Logger.Log($"アプリケーションを開始しました。", Category.Info);
+            this.Logger.Log($"アプリケーションを開始しました。: Args=[{string.Join(", ", e.Args)}]", Category.Debug);
 
             Initializer.InitEncoding();
             Initializer.InitQuickConverter();
+
+            this.SharedDataService.CommandLineArgs = e.Args;
 
             var handle = this.GetOtherProcessHandle(this.SharedDataService.Process);
             if (handle.IsNull == false)
@@ -217,8 +227,12 @@ namespace MyPad
         [LogInterceptor]
         protected override Window CreateShell()
         {
-            this.Container.Resolve<Models.SettingsService>().Load();
-            this.Container.Resolve<Models.SyntaxService>().Initialize(this.Container.Resolve<Models.SettingsService>().IsDifferentVersion());
+            var settingsService = this.Container.Resolve<Models.SettingsService>();
+            settingsService.Load();
+            if (settingsService.IsDifferentVersion())
+                this.Logger.Log($"アプリケーションのバージョンが更新されました。: Old={settingsService.Version}, New={this.ProductInfo.Version}", Category.Debug);
+
+            this.Container.Resolve<Models.SyntaxService>().Initialize(settingsService.IsDifferentVersion());
             this.Container.Resolve<IRegionManager>().Regions.CollectionChanged += (sender, e) =>
             {
                 for (var i = 0; i < (e.NewItems?.Count ?? 0); i++)
@@ -227,6 +241,7 @@ namespace MyPad
                         this.Logger.Log($"Region が追加されました。: Name={region.Name}", Category.Debug);
                 }
             };
+
             var shell = this.Container.Resolve<Views.Workspace>();
             shell.Title = this.SharedDataService.Identifier;
             shell.Closed += (sender, e) => this.Container?.Resolve<Models.SettingsService>()?.Save();
@@ -242,20 +257,24 @@ namespace MyPad
         {
             const int LOOP_DELAY = 500;
 
-            try
+            if (Directory.Exists(this.SharedDataService.TempDirectoryPath))
             {
-                Directory.Delete(this.SharedDataService.TempDirectoryPath, true);
-                while (Directory.Exists(this.SharedDataService.TempDirectoryPath))
-                    Thread.Sleep(LOOP_DELAY);
-                this.Logger.Log("一時フォルダを削除しました。(システム終了時)", Category.Debug);
-            }
-            catch (Exception ex)
-            {
-                this.Logger.Log("一時フォルダの削除に失敗しました。(システム終了時)", Category.Warn, ex);
+                try
+                {
+                    Directory.Delete(this.SharedDataService.TempDirectoryPath, true);
+                    while (Directory.Exists(this.SharedDataService.TempDirectoryPath))
+                        Thread.Sleep(LOOP_DELAY);
+                    this.Logger.Log($"一時フォルダを削除しました。(システム終了時): Path={this.SharedDataService.TempDirectoryPath}", Category.Debug);
+                }
+                catch (Exception ex)
+                {
+                    this.Logger.Log($"一時フォルダの削除に失敗しました。(システム終了時): Path={this.SharedDataService.TempDirectoryPath}", Category.Warn, ex);
+                }
             }
 
             base.OnExit(e);
-            this.Logger.Log($"アプリケーションを終了しました。: ExitCode={e.ApplicationExitCode}", Category.Info);
+            this.Logger.Log($"アプリケーションを終了しました。", Category.Info);
+            this.Logger.Log($"アプリケーションを終了しました。: ExitCode={e.ApplicationExitCode}", Category.Debug);
         }
 
         /// <summary>
@@ -301,9 +320,9 @@ namespace MyPad
             }), IntPtr.Zero);
 
             if (result.IsNull)
-                this.Logger.Log($"起動中の同一アプリケーションは存在しません。", Category.Debug);
+                this.Logger.Log($"起動中の同一アプリケーションは存在しませんでした。: ProcessName={sourceProcess?.ProcessName}", Category.Debug);
             else
-                this.Logger.Log($"起動中の同一アプリケーションのウィンドウハンドルを取得しました。: hWnd=[0x{result.DangerousGetHandle().ToString("X")}]", Category.Debug);
+                this.Logger.Log($"起動中の同一アプリケーションのウィンドウハンドルを取得しました。: ProcessName={sourceProcess?.ProcessName}, hWnd=0x{result.DangerousGetHandle().ToString("X")}", Category.Debug);
             return result;
         }
 
@@ -331,7 +350,7 @@ namespace MyPad
 
             var msg = User32.WindowMessage.WM_COPYDATA;
             var result = User32.SendMessage(destinationHandle, (uint)msg, sourceProcess.Handle, lParam);
-            this.Logger.Log($"ウィンドウメッセージを送信しました。: hWnd=[0x{destinationHandle.DangerousGetHandle().ToString("X")}], msg=[{msg}], data=[{string.Join(", ", data)}]", Category.Debug);
+            this.Logger.Log($"ウィンドウメッセージを送信しました。: hWnd=0x{destinationHandle.DangerousGetHandle().ToString("X")}, msg={msg}, data=[{string.Join(", ", data)}]", Category.Debug);
             return result;
         }
 

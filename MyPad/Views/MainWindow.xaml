@@ -16,9 +16,9 @@
                xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
                xmlns:s="clr-namespace:System;assembly=System.Runtime"
                xmlns:viewModels="clr-namespace:MyPad.ViewModels"
-               xmlns:views="clr-namespace:MyPad.Views"
                xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
                xmlns:controls="clr-namespace:MyPad.Views.Controls"
+               xmlns:helpers="clr-namespace:MyPad.Views.Helpers"
                mc:Ignorable="d"
                p:ViewModelLocator.AutoWireViewModel="True"
                Style="{StaticResource App.Window}"
@@ -183,18 +183,24 @@
             <Grid.Resources>
                 <s:Double x:Key="HamburgerWidth">48</s:Double>
                 <GridLength x:Key="HamburgerColumnWidth">48</GridLength>
-                <views:BindingProxy x:Key="Proxy" Data="{Binding Mode=OneWay}"/>
+                <helpers:BindingProxy x:Key="Proxy" Data="{Binding Mode=OneWay}"/>
             </Grid.Resources>
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" x:Name="HamburgerMenuColumn"
+                <ColumnDefinition Width="Auto" x:Name="SideContentColumn"
                                   MinWidth="{qc:MultiBinding '$P0 ? $P1 : 0', P0={Binding SettingsService.System.ShowSideBar, Mode=OneWay}, P1={Binding Source={StaticResource HamburgerWidth}}}"
                                   MaxWidth="{qc:MultiBinding '$P0 - $P1', P0={Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}, P1={Binding Source={StaticResource HamburgerWidth}}}"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*" x:Name="DraggableTabControlColumn"/>
+                <ColumnDefinition Width="*" x:Name="MainContentColumn"/>
             </Grid.ColumnDefinitions>
 
-            <m:HamburgerMenu Grid.Column="0" x:Name="HamburgerMenu"
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" MinHeight="50"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" x:Name="BottomContentRow"/>
+            </Grid.RowDefinitions>
+
+            <m:HamburgerMenu Grid.Column="0" Grid.RowSpan="3" x:Name="SideContent"
                              Width="{StaticResource HamburgerWidth}"
                              HamburgerWidth="{StaticResource HamburgerWidth}"
                              HamburgerVisibility="Collapsed"
@@ -204,7 +210,7 @@
                              ItemInvoked="HamburgerMenu_ItemInvoked">
                 <i:Interaction.Triggers>
                     <i:PropertyChangedTrigger Binding="{Binding Visibility, ElementName=HamburgerMenu, Mode=OneWay}">
-                        <i:ChangePropertyAction TargetName="HamburgerMenuColumn" PropertyName="Width" Value="Auto"/>
+                        <i:ChangePropertyAction TargetName="SideContentColumn" PropertyName="Width" Value="Auto"/>
                     </i:PropertyChangedTrigger>
                 </i:Interaction.Triggers>
                 <m:HamburgerMenu.ItemTemplate>
@@ -374,13 +380,13 @@
                     </m:HamburgerMenuItemCollection>
                 </m:HamburgerMenu.OptionsItemsSource>
             </m:HamburgerMenu>
-            
-            <GridSplitter Grid.Column="1"
+
+            <GridSplitter Grid.Column="1" Grid.RowSpan="3"
                           Width="{qc:MultiBinding '$P0 == Visibility.Visible ## double.IsNaN($P1) ? 5 : 0',
                                  P0={Binding Visibility, ElementName=HamburgerMenu, Mode=OneWay},
                                  P1={Binding Width, ElementName=HamburgerMenu, Mode=OneWay}}"/>
 
-            <controls:DraggableTabControl Grid.Column="2" x:Name="DraggableTabControl"
+            <controls:DraggableTabControl Grid.Column="2" Grid.Row="0" x:Name="MainContent"
                                           ItemsSource="{Binding TextEditors, Mode=OneWay}"
                                           SelectedItem="{Binding ActiveTextEditor.Value, Mode=TwoWay}"
                                           NewItemFactory="{Binding TextEditorFactory, Mode=OneTime}"
@@ -684,8 +690,23 @@
                     </DataTemplate>
                 </dr:TabablzControl.ContentTemplate>
             </controls:DraggableTabControl>
+
+            <GridSplitter Grid.Column="2" Grid.Row="1" Height="5"
+                          Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsVisibleBottomContent, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}"
+                          DragCompleted="RowSplitter_DragCompleted"/>
+
+            <TabControl Grid.Column="2" Grid.Row="2" x:Name="BottomContent"
+                        TabStripPlacement="Bottom" m:HeaderedControlHelper.HeaderFontWeight="Bold" m:HeaderedControlHelper.HeaderFontSize="10"
+                        Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsVisibleBottomContent, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}">
+                <TabItem Header="{le:Loc Command_Terminal}">
+                    <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="TerminalRegion"/>
+                </TabItem>
+                <TabItem Header="{le:Loc Command_ScriptRunner}">
+                    <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="ScriptRunnerRegion"/>
+                </TabItem>
+            </TabControl>
         </Grid>
-        
+
         <Border Grid.RowSpan="3" d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsWorking.Value, Mode=OneWay}}">
             <StackPanel Margin="5 0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                 <TextBlock Text="{le:Loc Text_Working}" HorizontalAlignment="Center" TextAlignment="Center"/>

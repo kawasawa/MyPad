@@ -5,7 +5,7 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Media;
 
-namespace MyPad.Views.Converters
+namespace MyPad.Views.Helpers
 {
     public class FontFamilyToNameConverter : MarkupExtension, IValueConverter
     {

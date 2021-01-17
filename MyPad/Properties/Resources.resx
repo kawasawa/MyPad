@@ -717,8 +717,8 @@
   <data name="Command_ShowSideBar" xml:space="preserve">
     <value>サイドバー</value>
   </data>
-  <data name="Command_Panels" xml:space="preserve">
-    <value>パネル</value>
+  <data name="Command_Contents" xml:space="preserve">
+    <value>コンテンツ</value>
   </data>
   <data name="Message_NotifyLoaded" xml:space="preserve">
     <value>テキストを読み込みました。</value>
@@ -795,5 +795,14 @@
   </data>
   <data name="Command_Unfolding" xml:space="preserve">
     <value>コードを展開する</value>
+  </data>
+  <data name="Command_ScriptRunner" xml:space="preserve">
+    <value>C# スクリプトランナー</value>
+  </data>
+  <data name="Command_Terminal" xml:space="preserve">
+    <value>ターミナル</value>
+  </data>
+  <data name="Command_WindowStructure" xml:space="preserve">
+    <value>画面構成</value>
   </data>
 </root>

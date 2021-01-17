@@ -12,8 +12,7 @@
              xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
              xmlns:root="clr-namespace:MyPad"
              xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
-             xmlns:converters="clr-namespace:MyPad.Views.Converters"
-             xmlns:controls="clr-namespace:MyPad.Views.Controls"
+             xmlns:helpers="clr-namespace:MyPad.Views.Helpers"
              mc:Ignorable="d" 
              p:ViewModelLocator.AutoWireViewModel="True"
              d:DesignHeight="450" d:DesignWidth="800"
@@ -104,7 +103,7 @@
                                       SelectedValue="{Binding DataContext.SettingsService.TextEditor.FontFamily, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Converter={converters:FontFamilyToNameConverter}}" FontFamily="{Binding}"/>
+                                        <TextBlock Text="{Binding Converter={helpers:FontFamilyToNameConverter}}" FontFamily="{Binding}"/>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
@@ -246,7 +245,7 @@
                                             <DataTemplate>
                                                 <DataTemplate.Triggers>
                                                     <!-- プレースホルダーには表示しない -->
-                                                    <DataTrigger Binding="{Binding}" Value="{x:Static controls:DataGridHelper.NewItemPlaceholder}">
+                                                    <DataTrigger Binding="{Binding}" Value="{x:Static helpers:DataGridHelper.NewItemPlaceholder}">
                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                     </DataTrigger>
                                                 </DataTemplate.Triggers>
@@ -260,7 +259,7 @@
                                             <DataTemplate>
                                                 <DataTemplate.Triggers>
                                                     <!-- プレースホルダーには表示しない -->
-                                                    <DataTrigger Binding="{Binding}" Value="{x:Static controls:DataGridHelper.NewItemPlaceholder}">
+                                                    <DataTrigger Binding="{Binding}" Value="{x:Static helpers:DataGridHelper.NewItemPlaceholder}">
                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                     </DataTrigger>
                                                 </DataTemplate.Triggers>
@@ -275,7 +274,7 @@
                                             <DataTemplate>
                                                 <DataTemplate.Triggers>
                                                     <!-- プレースホルダーには表示しない -->
-                                                    <DataTrigger Binding="{Binding}" Value="{x:Static controls:DataGridHelper.NewItemPlaceholder}">
+                                                    <DataTrigger Binding="{Binding}" Value="{x:Static helpers:DataGridHelper.NewItemPlaceholder}">
                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                     </DataTrigger>
                                                 </DataTemplate.Triggers>

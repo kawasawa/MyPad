@@ -10,7 +10,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Blue.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/ToastNotifications.Messages;component/Themes/Default.xaml"/>
-                <ResourceDictionary Source="./Views/Styles/_base/Generic.xaml"/>
+                <ResourceDictionary Source="./Views/Styles/Base/Generic.xaml"/>
                 <ResourceDictionary Source="./Views/Styles/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
