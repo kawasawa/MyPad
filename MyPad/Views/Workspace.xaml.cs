@@ -61,9 +61,9 @@ namespace MyPad.Views
         }
 
         [LogInterceptor]
-        private MainWindow CreateWindow()
+        private MainWindow CreateWindow(IRegionManager regionManager = null)
         {
-            var window = this.ContainerExtension.Resolve<MainWindow>((typeof(IRegionManager), this.RegionManager.CreateRegionManager()));
+            var window = this.ContainerExtension.Resolve<MainWindow>((typeof(IRegionManager), regionManager ?? this.RegionManager?.CreateRegionManager()));
             this.Logger.Log($"ウィンドウを生成しました。win#{((MainWindowViewModel)window.DataContext).Sequense}", Category.Info);
             return window;
         }
@@ -80,7 +80,7 @@ namespace MyPad.Views
             this.Hide();
 
             // 初期ウィンドウを生成する
-            var view = this.CreateWindow();
+            var view = this.CreateWindow(this.RegionManager);
             if (view.ViewModel.SettingsService.IsDifferentVersion())
             {
                 void view_ContentRendered(object sender, EventArgs e)
