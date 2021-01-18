@@ -24,41 +24,41 @@
     </Style>
     
     <Style x:Key="{x:Static md:Styles.Heading2StyleKey}" TargetType="{x:Type Paragraph}">
-        <Setter Property="FontSize"   Value="28"/>
+        <Setter Property="FontSize"   Value="26"/>
         <Setter Property="FontWeight" Value="Bold"/>
     </Style>
     
     <Style x:Key="{x:Static md:Styles.Heading3StyleKey}" TargetType="{x:Type Paragraph}">
-        <Setter Property="FontSize"   Value="24"/>
+        <Setter Property="FontSize"   Value="20"/>
         <Setter Property="FontWeight" Value="Bold"/>
     </Style>
     
     <Style x:Key="{x:Static md:Styles.Heading4StyleKey}" TargetType="{x:Type Paragraph}">
-        <Setter Property="FontSize"        Value="20"/>
-        <Setter Property="FontWeight"      Value="Bold"/>
-        <Setter Property="TextDecorations" Value="{StaticResource MarkDig.TextDecoration}"/>
+        <Setter Property="FontSize"   Value="18"/>
+        <Setter Property="FontWeight" Value="Bold"/>
     </Style>
     
     <Style x:Key="{x:Static md:Styles.Heading5StyleKey}" TargetType="{x:Type Paragraph}">
-        <Setter Property="FontSize"        Value="18"/>
-        <Setter Property="FontWeight"      Value="Bold"/>
-        <Setter Property="TextDecorations" Value="{StaticResource MarkDig.TextDecoration}"/>
+        <Setter Property="FontSize"   Value="16"/>
+        <Setter Property="FontWeight" Value="Bold"/>
     </Style>
     
     <Style x:Key="{x:Static md:Styles.Heading6StyleKey}" TargetType="{x:Type Paragraph}">
-        <Setter Property="FontSize"        Value="16"/>
-        <Setter Property="FontWeight"      Value="Bold"/>
-        <Setter Property="TextDecorations" Value="{StaticResource MarkDig.TextDecoration}"/>
-        <Setter Property="Foreground"      Value="{DynamicResource MahApps.Brushes.Gray1}"/>
+        <Setter Property="FontSize"   Value="14"/>
+        <Setter Property="FontWeight" Value="Bold"/>
     </Style>
-    
+
+    <Style x:Key="{x:Static md:Styles.HyperlinkStyleKey}" TargetType="{x:Type Hyperlink}">
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.AccentBase}"/>
+    </Style>
+
     <Style x:Key="{x:Static md:Styles.QuoteBlockStyleKey}" TargetType="{x:Type Section}">
         <Setter Property="Foreground"      Value="{DynamicResource MahApps.Brushes.Gray1}"/>
         <Setter Property="BorderBrush"     Value="{DynamicResource MahApps.Brushes.Gray10}"/>
         <Setter Property="BorderThickness" Value="4 0 0 0"/>
         <Setter Property="Padding"         Value="16 0 0 0"/>
     </Style>
-    
+
     <Style x:Key="{x:Static md:Styles.TableStyleKey}" TargetType="{x:Type Table}">
         <Setter Property="BorderBrush"     Value="{DynamicResource MahApps.Brushes.Control.Border}"/>
         <Setter Property="BorderThickness" Value="0 0 1 1"/>
