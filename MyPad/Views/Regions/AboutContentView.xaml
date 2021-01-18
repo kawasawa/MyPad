@@ -10,6 +10,7 @@
              xmlns:le="http://wpflocalizeextension.codeplex.com"
              xmlns:qc="http://QuickConverter.CodePlex.com/"
              xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
+             xmlns:md="clr-namespace:Markdig.Wpf;assembly=Markdig.Wpf"
              xmlns:root="clr-namespace:MyPad"
              xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
              xmlns:controls="clr-namespace:MyPad.Views.Controls"
@@ -23,7 +24,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid ge:GridEx.RowDefinition="Auto, 15, Auto, 15, *">
+    <Grid ge:GridEx.RowDefinition="Auto, 15, Auto, 15, *, 15">
         <Grid Grid.Row="0" Margin="40 0" ge:GridEx.ColumnDefinition="Auto, 20, Auto, 20, Auto, 15, Auto">
             <TextBlock Grid.Column="0" Text="{Binding ProductInfo.Product, Mode=OneWay}" FontWeight="Bold" FontSize="32" VerticalAlignment="Center"/>
             <TextBlock Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center">
@@ -58,25 +59,14 @@
 
         <Border Grid.Row="2" Height="1" Margin="20 0" Background="{DynamicResource MahApps.Brushes.Gray2}"/>
 
-        <m:FlipView Grid.Row="4" Margin="0 0 0 20" CircularNavigation="True" NavigationButtonsPosition="Outside" IsBannerEnabled="False" MouseHoverBorderEnabled="False">
-            <controls:MarkdownViewer Markdown="{Binding ChangeHistory.Value, Mode=OneWay}" IsTabStop="False"/>
-            <ListBox ItemsSource="{qc:Binding '$P.OrderBy(((AssemblyName)x) => (string)($x.Name))', P={Binding ProductInfo.ReferencedAssemblies, Mode=OneWay}}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{qc:Binding '$P.Name + \' - \' + $P.Version', P={Binding Mode=OneWay}}" ToolTip="{Binding FullName, Mode=OneWay}"/>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <TextBlock TextWrapping="Wrap">
-                    <Run Text="THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT."/>
-                    <Run Text="IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."/>
-                    <LineBreak/>
-                    <LineBreak/>
-                    <Run Text="ソフトウェアは「現状のまま」で、明示であるか暗黙であるかを問わず、何らの保証もなく提供されます。ここでいう保証とは、商品性、特定の目的への適合性、および権利非侵害についての保証も含みますが、それに限定されるものではありません。"/>
-                    <Run Text="作者または著作権者は、契約行為、不法行為、またはそれ以外であろうと、ソフトウェアに起因または関連し、あるいはソフトウェアの使用またはその他の扱いによって生じる一切の請求、損害、その他の義務について何らの責任も負わないものとします。"/>
-                </TextBlock>
-            </ScrollViewer>
+        <m:FlipView Grid.Row="4" CircularNavigation="True" NavigationButtonsPosition="Outside" IsBannerEnabled="False" MouseHoverBorderEnabled="False">
+            <m:FlipView.CommandBindings>
+                <CommandBinding Command="{x:Static md:Commands.Hyperlink}" Executed="Hyperlink_Executed"/>
+            </m:FlipView.CommandBindings>
+            <controls:MarkdownViewer Markdown="{Binding History.Value, Mode=OneWay}"       IsTabStop="False"/>
+            <controls:MarkdownViewer Markdown="{Binding Disclaimer.Value, Mode=OneWay}"    IsTabStop="False"/>
+            <controls:MarkdownViewer Markdown="{Binding PrivacyPolicy.Value, Mode=OneWay}" IsTabStop="False"/>
+            <controls:MarkdownViewer Markdown="{Binding OssLicense.Value, Mode=OneWay}"    IsTabStop="False"/>
         </m:FlipView>
     </Grid>
     
