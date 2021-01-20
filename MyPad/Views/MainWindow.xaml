@@ -257,7 +257,7 @@
                                 <mi:Material Kind="FileTree"/>
                             </m:HamburgerMenuIconItem.Icon>
                             <m:HamburgerMenuIconItem.Tag>
-                                <TreeView ItemsSource="{Binding Data.FileTreeNodes, Source={StaticResource Proxy}, Mode=OneWay}">
+                                <TreeView ItemsSource="{Binding Data.FileExplorer.Value.FileTreeNodes, Source={StaticResource Proxy}, Mode=OneWay}">
                                     <TreeView.ItemContainerStyle>
                                         <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource Default.TreeViewItem}">
                                             <EventSetter Event="MouseRightButtonDown" Handler="FileTreeNode_MouseRightButtonDown"/>

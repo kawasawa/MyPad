@@ -22,12 +22,12 @@ namespace MyPad.ViewModels.Regions
 
         #region プロパティ
 
+        public ReactiveCollection<string> ScriptHistories { get; }
+        public ReactiveCollection<string> ResultHistories { get; }
+
         public ReactiveProperty<bool> IsWorking { get; }
         public ReactiveProperty<string> Script { get; }
         public ReactiveProperty<string> OutputText { get; }
-
-        public ReactiveCollection<string> ScriptHistories { get; }
-        public ReactiveCollection<string> ResultHistories { get; }
 
         public ReactiveCommand RunScriptCommand { get; }
 

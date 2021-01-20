@@ -84,18 +84,18 @@ namespace MyPad.ViewModels
 
         public InteractionMessenger Messenger { get; }
 
+        public ReactiveCollection<TextEditorViewModel> TextEditors { get; }
+
         public ReactiveProperty<bool> IsWorking { get; }
         public ReactiveProperty<TextEditorViewModel> ActiveTextEditor { get; }
-        public ReactiveProperty<FlowDocument> FlowDocument { get; }
         public ReactiveProperty<TextEditorViewModel> DiffSource { get; }
         public ReactiveProperty<TextEditorViewModel> DiffDestination { get; }
+        public ReactiveProperty<FileExplorerViewModel> FileExplorer { get; }
+        public ReactiveProperty<FlowDocument> FlowDocument { get; }
         public ReactiveProperty<bool> IsOpenDiffContent { get; }
         public ReactiveProperty<bool> IsOpenPrintPreviewContent { get; }
         public ReactiveProperty<bool> IsOpenOptionContent { get; }
         public ReactiveProperty<bool> IsOpenAboutContent { get; }
-
-        public ReactiveCollection<TextEditorViewModel> TextEditors { get; }
-        public ReactiveCollection<FileTreeNodeViewModel> FileTreeNodes { get; }
 
         public ReactiveCommand NewCommand { get; }
         public ReactiveCommand NewWindowCommand { get; }
@@ -152,11 +152,15 @@ namespace MyPad.ViewModels
 
             this.Messenger = new InteractionMessenger();
 
+            this.TextEditors = new ReactiveCollection<TextEditorViewModel>().AddTo(this.CompositeDisposable);
+            BindingOperations.EnableCollectionSynchronization(this.TextEditors, new object());
+
             this.IsWorking = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             this.ActiveTextEditor = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
-            this.FlowDocument = new ReactiveProperty<FlowDocument>().AddTo(this.CompositeDisposable);
             this.DiffSource = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
             this.DiffDestination = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
+            this.FileExplorer = new ReactiveProperty<FileExplorerViewModel>().AddTo(this.CompositeDisposable);
+            this.FlowDocument = new ReactiveProperty<FlowDocument>().AddTo(this.CompositeDisposable);
             this.IsOpenDiffContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             this.IsOpenPrintPreviewContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             this.IsOpenOptionContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
@@ -167,11 +171,6 @@ namespace MyPad.ViewModels
                 this.IsOpenOptionContent,
                 this.IsOpenAboutContent
             };
-
-            this.TextEditors = new ReactiveCollection<TextEditorViewModel>().AddTo(this.CompositeDisposable);
-            this.FileTreeNodes = new ReactiveCollection<FileTreeNodeViewModel>().AddTo(this.CompositeDisposable);
-            BindingOperations.EnableCollectionSynchronization(this.TextEditors, new object());
-            BindingOperations.EnableCollectionSynchronization(this.FileTreeNodes, new object());
 
             // ----- 変更通知の購読 ------------------------------
 
@@ -453,7 +452,8 @@ namespace MyPad.ViewModels
             this.ContentRenderedHandler = new ReactiveCommand<EventArgs>()
                 .WithSubscribe(e =>
                 {
-                    this.RefreshExplorer();
+                    this.FileExplorer.Value = this.ContainerExtension.Resolve<FileExplorerViewModel>();
+                    this.FileExplorer.Value.RefreshExplorer();
                 })
                 .AddTo(this.CompositeDisposable);
 
@@ -468,11 +468,6 @@ namespace MyPad.ViewModels
                     this.ExitCommand.Execute();
                 })
                 .AddTo(this.CompositeDisposable);
-
-            // ----- PUB/SUB メッセージ ------------------------------
-
-            void refreshExplorer() => this.RefreshExplorer();
-            this.EventAggregator.GetEvent<RefreshExplorerEvent>().Subscribe(refreshExplorer);
         }
 
         [LogInterceptor]
@@ -488,29 +483,6 @@ namespace MyPad.ViewModels
 
             this.Dispose();
             return true;
-        }
-
-        [LogInterceptor]
-        private void RefreshExplorer()
-        {
-            var roots = Enumerable.Empty<string>();
-            if (this.SettingsService.OtherTools?.ExplorerRoots?.Any() == true)
-                roots = this.SettingsService.OtherTools.ExplorerRoots
-                    .Where(i => string.IsNullOrEmpty(i.Path) == false && i.IsEnabled)
-                    .Select(i => i.Path);
-            else
-                roots = new[] { Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) };
-            var isExpanded = roots.Count() == 1;
-            var isSelected = true;
-
-            this.FileTreeNodes.ClearOnScheduler();
-            this.FileTreeNodes.AddRangeOnScheduler(
-                roots.Select(r =>
-                {
-                    var node = this.ContainerExtension.Resolve<FileTreeNodeViewModel>().Initialize(r, isSelected, isExpanded);
-                    isSelected = false;
-                    return node;
-                }));
         }
 
         #region テキストエディターの制御
