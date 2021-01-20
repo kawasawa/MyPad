@@ -110,16 +110,16 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="DISCLAIMER.md">
+    <None Update="doc\DISCLAIMER.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="HISTORY.md">
+    <None Update="doc\HISTORY.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="OSS_LICENSE.md">
+    <None Update="doc\OSS_LICENSE.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="PRIVACY_POLICY.md">
+    <None Update="doc\PRIVACY_POLICY.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

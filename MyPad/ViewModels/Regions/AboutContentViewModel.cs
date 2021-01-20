@@ -12,10 +12,10 @@ namespace MyPad.ViewModels.Regions
     public class AboutContentViewModel : ViewModelBase
     {
         private static readonly Encoding FILE_ENCODING = Encoding.UTF8;
-        private string DisclaimerPath => Path.Combine(this.ProductInfo.Working, "DISCLAIMER.md");
-        private string HistoryPath => Path.Combine(this.ProductInfo.Working, "HISTORY.md");
-        private string OssLicensePath => Path.Combine(this.ProductInfo.Working, "OSS_LICENSE.md");
-        private string PrivacyPolicyPath => Path.Combine(this.ProductInfo.Working, "PRIVACY_POLICY.md");
+        private string DisclaimerPath => Path.Combine(this.ProductInfo.Working, "doc", "DISCLAIMER.md");
+        private string HistoryPath => Path.Combine(this.ProductInfo.Working, "doc", "HISTORY.md");
+        private string OssLicensePath => Path.Combine(this.ProductInfo.Working, "doc", "OSS_LICENSE.md");
+        private string PrivacyPolicyPath => Path.Combine(this.ProductInfo.Working, "doc", "PRIVACY_POLICY.md");
 
         [Dependency]
         public IDialogService DialogService { get; set; }
