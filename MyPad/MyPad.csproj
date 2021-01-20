@@ -10,7 +10,7 @@
     <Authors>Kazuki Awasawa</Authors>
     <Copyright>© Kazuki Awasawa All Rights Reserved.</Copyright>
     <Description></Description>
-    <Version>1.10.1</Version>
+    <Version>1.10.2</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Deterministic>true</Deterministic>
     <DeterministicSourceRoot>/_/</DeterministicSourceRoot>
@@ -110,16 +110,16 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="DISCLAIMER.md">
+    <None Update="doc\DISCLAIMER.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="HISTORY.md">
+    <None Update="doc\HISTORY.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="OSS_LICENSE.md">
+    <None Update="doc\OSS_LICENSE.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="PRIVACY_POLICY.md">
+    <None Update="doc\PRIVACY_POLICY.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -147,7 +147,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="del &quot;$(TargetDir)*.xml&quot;" />
+    <Exec Command="del &quot;$(TargetDir)*.xml&quot;&#xD;&#xA;rd /s /q &quot;$(TargetDir)cs&quot;&#xD;&#xA;rd /s /q &quot;$(TargetDir)de&quot;&#xD;&#xA;rd /s /q &quot;$(TargetDir)es&quot;&#xD;&#xA;rd /s /q &quot;$(TargetDir)fr&quot;&#xD;&#xA;rd /s /q &quot;$(TargetDir)it&quot;&#xD;&#xA;rd /s /q &quot;$(TargetDir)ja&quot;&#xD;&#xA;rd /s /q &quot;$(TargetDir)ko&quot;&#xD;&#xA;rd /s /q &quot;$(TargetDir)pl&quot;&#xD;&#xA;rd /s /q &quot;$(TargetDir)pt-BR&quot;&#xD;&#xA;rd /s /q &quot;$(TargetDir)ru&quot;&#xD;&#xA;rd /s /q &quot;$(TargetDir)tr&quot;&#xD;&#xA;rd /s /q &quot;$(TargetDir)zh-Hans&quot;&#xD;&#xA;rd /s /q &quot;$(TargetDir)zh-Hant&quot;" />
   </Target>
 
 </Project>

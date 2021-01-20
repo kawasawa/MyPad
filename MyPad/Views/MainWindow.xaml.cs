@@ -598,6 +598,17 @@ namespace MyPad.Views
         }
 
         [LogInterceptor]
+        private void ColumnSplitter_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            if (this.SideContentColumn.Width.Value != this.SideContentColumn.MinWidth)
+                return;
+
+            this.SideContentColumn.Width = new GridLength(this._columnWidthCache.sideBarWidth, GridUnitType.Star);
+            this.MainContentColumn.Width = new GridLength(this._columnWidthCache.contentAreaWidth, GridUnitType.Star);
+            this.ActivateHamburgerMenuItem((HamburgerMenuItem)this.SideContent.Content);
+        }
+
+        [LogInterceptor]
         private void RowSplitter_DragCompleted(object sender, DragCompletedEventArgs e)
         {
             if (this.BottomContentRow.Height.Value != 0)

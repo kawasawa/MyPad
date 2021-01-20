@@ -28,13 +28,13 @@ namespace MyPad.ViewModels.Regions
         private StreamWriter _terminalInput;
         private bool _terminalClosing;
 
+        public ReactiveCollection<string> ScriptHistories { get; }
+        public ReactiveCollection<string> ResultHistories { get; }
+
         public ReactiveProperty<bool> IsWorking { get; }
         public ReactiveProperty<string> Script { get; }
         public ReactiveProperty<string> OutputText { get; }
         public ReactiveProperty<string> OutputLastLine { get; }
-
-        public ReactiveCollection<string> ScriptHistories { get; }
-        public ReactiveCollection<string> ResultHistories { get; }
 
         public ReactiveCommand RunScriptCommand { get; }
 

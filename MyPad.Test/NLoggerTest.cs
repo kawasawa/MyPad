@@ -59,6 +59,17 @@ namespace MyPad.Test
             };
         }
 
+        [TearDown]
+        public void Cleanup()
+        {
+            this.Logger = null;
+
+            if (Directory.Exists(this.LogDirectoryPath))
+                Directory.Delete(this.LogDirectoryPath, true);
+            while (Directory.Exists(this.LogDirectoryPath))
+                System.Threading.Thread.Sleep(100);
+        }
+
         private void Log(string message, Plow.Logging.Category category)
         {
             this.Logger.Log(message, category);
@@ -73,17 +84,6 @@ namespace MyPad.Test
             Assert.That(match.Groups.Count, Is.Not.EqualTo(0));
 
             Assert.That(() => match.Groups[1].Value.StartsWith(message), Is.EqualTo(true));
-        }
-
-        [TearDown]
-        public void Cleanup()
-        {
-            this.Logger = null;
-
-            if (Directory.Exists(this.LogDirectoryPath))
-                Directory.Delete(this.LogDirectoryPath, true);
-            while (Directory.Exists(this.LogDirectoryPath))
-                System.Threading.Thread.Sleep(100);
         }
 
         [TestCaseSource(typeof(Source), nameof(Source.Messages))]
