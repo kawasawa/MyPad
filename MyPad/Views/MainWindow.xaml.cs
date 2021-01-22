@@ -521,7 +521,7 @@ namespace MyPad.Views
             if (e.Handled)
                 return;
 
-            var node = (FileTreeNodeViewModel)((TreeViewItem)sender).DataContext;
+            var node = (FileExplorerViewModel.FileTreeNode)((TreeViewItem)sender).DataContext;
             if (node.IsEmpty)
             {
                 e.Handled = true;
@@ -545,7 +545,7 @@ namespace MyPad.Views
             {
                 case Key.Enter:
                 {
-                    var node = (FileTreeNodeViewModel)((TreeViewItem)sender).DataContext;
+                    var node = (FileExplorerViewModel.FileTreeNode)((TreeViewItem)sender).DataContext;
                     if (node.IsEmpty)
                     {
                         e.Handled = true;
