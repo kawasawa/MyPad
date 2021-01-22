@@ -612,7 +612,7 @@ namespace MyPad.ViewModels
                 {
                     var definition = filter != null && this.SyntaxService.Definitions.ContainsKey(filter) ?
                         this.SyntaxService.Definitions[filter] :
-                        this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetCommonExtensions().Contains(Path.GetExtension(path)));
+                        this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetExtensions().Contains(Path.GetExtension(path)));
                     results.Add(await this.ReadFile(path, encoding, definition, isReadOnly));
                 }
                 return results;
@@ -627,7 +627,7 @@ namespace MyPad.ViewModels
                 foreach (var path in paths.Where(path => File.Exists(path)))
                 {
                     var encoding = this.SettingsService.System.AutoDetectEncoding ? null : this.SettingsService.System.Encoding;
-                    var definition = this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetCommonExtensions().Contains(Path.GetExtension(path)));
+                    var definition = this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetExtensions().Contains(Path.GetExtension(path)));
                     results.Add(await this.ReadFile(path, encoding, definition));
                 }
                 foreach (var (result, fileNames, filter, encoding, isReadOnly) in paths.Where(path => Directory.Exists(path)).Select(path => decideConditions(path)))
@@ -639,7 +639,7 @@ namespace MyPad.ViewModels
                     {
                         var definition = filter != null && this.SyntaxService.Definitions.ContainsKey(filter) ?
                             this.SyntaxService.Definitions[filter] :
-                            this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetCommonExtensions().Contains(Path.GetExtension(path)));
+                            this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetExtensions().Contains(Path.GetExtension(path)));
                         results.Add(await this.ReadFile(path, encoding, definition, isReadOnly));
                     }
                 }
@@ -698,7 +698,7 @@ namespace MyPad.ViewModels
             if (ready == false)
                 return (false, textEditor);
 
-            var definition = this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetCommonExtensions().Contains(Path.GetExtension(path)));
+            var definition = this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetExtensions().Contains(Path.GetExtension(path)));
             return await this.WriteFile(textEditor, path, encoding, definition);
         }
 
