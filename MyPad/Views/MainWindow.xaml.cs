@@ -497,7 +497,7 @@ namespace MyPad.Views
         [LogInterceptor]
         private void HamburgerMenu_ItemInvoked(object sender, HamburgerMenuItemInvokedEventArgs e)
         {
-            if (MouseButtonState.Pressed == Mouse.LeftButton && e.IsItemOptions == false)
+            if (System.Windows.Input.MouseButtonState.Pressed == Mouse.LeftButton && e.IsItemOptions == false)
                 this.ActivateHamburgerMenuItem((HamburgerMenuItem)e.InvokedItem);
             e.Handled = true;
         }
