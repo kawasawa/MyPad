@@ -260,6 +260,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   作成者 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Creator {
+            get {
+                return ResourceManager.GetString("Command_Creator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   切り取り に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Cut {

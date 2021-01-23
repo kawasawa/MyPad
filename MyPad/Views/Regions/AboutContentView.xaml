@@ -25,37 +25,47 @@
     </i:Interaction.Triggers>
 
     <Grid ge:GridEx.RowDefinition="Auto, 15, Auto, 15, *, 15">
-        <Grid Grid.Row="0" Margin="40 0" ge:GridEx.ColumnDefinition="Auto, 20, Auto, 20, Auto, 15, Auto">
-            <TextBlock Grid.Column="0" Text="{Binding ProductInfo.Product, Mode=OneWay}" FontWeight="Bold" FontSize="32" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center">
-                <Run Text="{qc:MultiBinding '\'Version \' + $P0.Major + \'.\' + $P0.Minor + \'.\' + $P0.Build + ($P1 ? \' - Debug Build\' : null)', P0={Binding ProductInfo.Version, Mode=OneWay}, P1={Binding ProductInfo.IsDebugBuild, Mode=OneWay}}"/>
-                <LineBreak/>
-                <Run Text="{Binding ProductInfo.Copyright, Mode=OneWay}"/>
-            </TextBlock>
-            <Button Grid.Column="4" Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_Repository}" VerticalAlignment="Center" IsTabStop="False">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <behaviors:ProcessStartAction FileName="cmd.exe" Arguments="{qc:Binding '\'/c start \' + $P', P={Binding Source={x:Static root:AppSettings.ProjectSite}, Mode=OneWay}}" CreateNoWindow="True" ThrowException="False"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <mi:Material Kind="Github"/>
-            </Button>
-            <Button Grid.Column="6" Style="{StaticResource Common.CircleButton}" ToolTipService.ShowDuration="10000" VerticalAlignment="Center" IsTabStop="False">
-                <Button.ToolTip>
-                    <StackPanel>
-                        <TextBlock Text="{le:Loc Command_Donate}" FontSize="14"/>
-                        <Border Height="5"/>
-                        <TextBlock Text="{le:Loc Message_NotifyDonate}" Margin="5 0"/>
-                    </StackPanel>
-                </Button.ToolTip>
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <behaviors:ProcessStartAction FileName="cmd.exe" Arguments="{qc:Binding '\'/c start \' + $P', P={Binding Source={x:Static root:AppSettings.DonationSite}, Mode=OneWay}}" CreateNoWindow="True" ThrowException="False"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <mi:FontAwesome Kind="SmileRegular"/>
-            </Button>
-        </Grid>
+        <ScrollViewer Grid.Row="0" Margin="40 0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
+            <Grid ge:GridEx.ColumnDefinition="Auto, 15, Auto, 20, Auto, 15, Auto, 15, Auto">
+                <TextBlock Grid.Column="0" Text="{Binding ProductInfo.Product, Mode=OneWay}" FontWeight="Bold" FontSize="32" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center">
+                    <Run Text="{qc:MultiBinding '\'Version \' + $P0.Major + \'.\' + $P0.Minor + \'.\' + $P0.Build + ($P1 ? \' - Debug Build\' : null)', P0={Binding ProductInfo.Version, Mode=OneWay}, P1={Binding ProductInfo.IsDebugBuild, Mode=OneWay}}"/>
+                    <LineBreak/>
+                    <Run Text="{Binding ProductInfo.Copyright, Mode=OneWay}"/>
+                </TextBlock>
+                <Button Grid.Column="4" Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_Repository}" VerticalAlignment="Center" IsTabStop="False">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <behaviors:ProcessStartAction FileName="cmd.exe" Arguments="{qc:Binding '\'/c start \' + $P', P={Binding Source={x:Static root:AppSettings.ProjectSite}, Mode=OneWay}}" CreateNoWindow="True" ThrowException="False"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <mi:Material Kind="Github"/>
+                </Button>
+                <Button Grid.Column="6" Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_Creator}" VerticalAlignment="Center" IsTabStop="False">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <behaviors:ProcessStartAction FileName="cmd.exe" Arguments="{qc:Binding '\'/c start \' + $P', P={Binding Source={x:Static root:AppSettings.CreatorSite}, Mode=OneWay}}" CreateNoWindow="True" ThrowException="False"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <mi:FontAwesome Kind="AddressCardRegular"/>
+                </Button>
+                <Button Grid.Column="8" Style="{StaticResource Common.CircleButton}" ToolTipService.ShowDuration="10000" VerticalAlignment="Center" IsTabStop="False">
+                    <Button.ToolTip>
+                        <StackPanel>
+                            <TextBlock Text="{le:Loc Command_Donate}" FontSize="14"/>
+                            <Border Height="5"/>
+                            <TextBlock Text="{le:Loc Message_NotifyDonate}" Margin="5 0"/>
+                        </StackPanel>
+                    </Button.ToolTip>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <behaviors:ProcessStartAction FileName="cmd.exe" Arguments="{qc:Binding '\'/c start \' + $P', P={Binding Source={x:Static root:AppSettings.DonationSite}, Mode=OneWay}}" CreateNoWindow="True" ThrowException="False"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <mi:FontAwesome Kind="SmileRegular"/>
+                </Button>
+            </Grid>
+        </ScrollViewer>
 
         <Border Grid.Row="2" Height="1" Margin="20 0" Background="{DynamicResource MahApps.Brushes.Gray2}"/>
 

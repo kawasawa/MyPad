@@ -23,6 +23,9 @@ namespace MyPad
         public static string ProjectSite
             => _lazyConfiguration.Value[nameof(ProjectSite).ToSnakeCase()];
 
+        public static string CreatorSite
+            => _lazyConfiguration.Value[nameof(CreatorSite).ToSnakeCase()];
+
         public static string DonationSite
            => _lazyConfiguration.Value[nameof(DonationSite).ToSnakeCase()];
 
