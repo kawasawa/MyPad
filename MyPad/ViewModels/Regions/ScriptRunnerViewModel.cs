@@ -73,6 +73,9 @@ namespace MyPad.ViewModels.Regions
             if (string.IsNullOrEmpty(result) == false)
                 this.ResultHistories.Add(result);
 
+            while (AppSettings.TerminalBufferSize < this.ResultHistories.Count)
+                this.ResultHistories.RemoveAt(0);
+
             this.Script.Value = string.Empty;
         }
 

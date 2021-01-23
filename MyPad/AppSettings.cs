@@ -37,5 +37,8 @@ namespace MyPad
 
         public static long FileSizeThreshold
             => long.TryParse(_lazyConfiguration.Value[nameof(FileSizeThreshold).ToSnakeCase()], out var value) && SIZE_MB <= value ? value : 10 * SIZE_MB;
+
+        public static long TerminalBufferSize
+            => long.TryParse(_lazyConfiguration.Value[nameof(TerminalBufferSize).ToSnakeCase()], out var value) && 0 <= value ? value : 10000;
     }
 }
