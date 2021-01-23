@@ -54,8 +54,9 @@ namespace MyPad
                     ConfigurationFactory = () =>
                     {
                         var headerText = new StringBuilder();
-                        headerText.AppendLine($"# v{this.ProductInfo.Version}");
-                        headerText.AppendLine("# ${environment:OS}");
+                        headerText.AppendLine($"# {this.ProductInfo.Product} {this.ProductInfo.Version}");
+                        headerText.AppendLine($"# CLR {Environment.Version}");
+                        headerText.AppendLine($"# {Environment.OSVersion}");
                         headerText.AppendLine("# ${environment:PROCESSOR_ARCHITECTURE} - ${environment:PROCESSOR_IDENTIFIER}");
                         headerText.AppendLine("# ${environment:COMPUTERNAME}");
                         headerText.Append("##");
