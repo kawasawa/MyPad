@@ -789,9 +789,9 @@ namespace MyPad.ViewModels
                     {
                         stream = info.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
                     }
-                    catch (Exception e)
+                    catch
                     {
-                        this.Logger.Log($"ファイルの書き込み権限を取得できませんでした。読み取り権限のみで再取得します。: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Warn, e);
+                        this.Logger.Log($"ファイルの書き込み権限を取得できませんでした。読み取り権限のみで再取得します。(win#{this.Sequense}): Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Info);
                     }
                 }
 
@@ -805,7 +805,7 @@ namespace MyPad.ViewModels
                     }
                     catch (Exception e)
                     {
-                        this.Logger.Log($"ファイルの読み取り権限の取得に失敗しました。: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Error, e);
+                        this.Logger.Log($"ファイルの読み取り権限の取得に失敗しました。(win#{this.Sequense}): Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Error, e);
                         this.DialogService.Warn(e.Message);
                         return (false, null);
                     }
@@ -818,11 +818,11 @@ namespace MyPad.ViewModels
                 {
                     this.IsWorking.Value = true;
                     await textEditor.Load(stream, encoding);
-                    this.Logger.Log($"ファイルを読み込みました。tab#{textEditor.Sequense} (win#{this.Sequense}): Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Info);
+                    this.Logger.Log($"ファイルを読み込みました。tab#{textEditor.Sequense} (win#{this.Sequense}): Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}, IsReadOnly={textEditor.IsReadOnly}", Category.Info);
                 }
                 catch (Exception e)
                 {
-                    this.Logger.Log($"ファイルの読み込みに失敗しました。tab#{textEditor.Sequense} (win#{this.Sequense}): Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Error, e);
+                    this.Logger.Log($"ファイルの読み込みに失敗しました。tab#{textEditor.Sequense} (win#{this.Sequense}): Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}, IsReadOnly={textEditor.IsReadOnly}", Category.Error, e);
                     this.DialogService.Warn(e.Message);
                     return (false, textEditor);
                 }

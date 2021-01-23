@@ -158,11 +158,11 @@ namespace MyPad
                         while (Directory.Exists(info.FullName))
                             Thread.Sleep(LOOP_DELAY);
                     }
-                    this.Logger.Log("不要な一時フォルダを削除しました。(システム開始時)", Category.Debug);
+                    this.Logger.Log("保存期限を過ぎた不要な一時フォルダを削除しました。", Category.Debug);
                 }
                 catch (Exception ex)
                 {
-                    this.Logger.Log("不要な一時フォルダの削除に失敗しました。(システム開始時)", Category.Warn, ex);
+                    this.Logger.Log("保存期限を過ぎた不要な一時フォルダの削除に失敗しました。", Category.Warn, ex);
                 }
 
                 this.SharedDataService.CachedDirectories = cachedDirectories.Select(t => t.info.FullName).ToList();
@@ -291,15 +291,15 @@ namespace MyPad
             // このウィンドウは描画されないため Process.MainWindowHandle からハンドルを取得できない。
             // すべてのハンドルを列挙し、ウィンドウテキストが一致するハンドルから特定する。
 
-            var result = HWND.NULL;
-            User32.EnumWindows(new User32.EnumWindowsProc((hWnd, _) =>
+            var (hWnd, lpdwProcessId) = (HWND.NULL, 0u);
+            var result = User32.EnumWindows(new User32.EnumWindowsProc((_hWnd, _) =>
             {
                 try
                 {
                     // プロセスの情報を比較する
-                    User32.GetWindowThreadProcessId(hWnd, out var lpdwProcessID);
-                    var process = Process.GetProcessById((int)lpdwProcessID);
-                    if (sourceProcess.Id == lpdwProcessID)
+                    User32.GetWindowThreadProcessId(_hWnd, out var _lpdwProcessId);
+                    var process = Process.GetProcessById((int)_lpdwProcessId);
+                    if (sourceProcess.Id == _lpdwProcessId)
                         return true;
                     if (sourceProcess.ProcessName != process.ProcessName)
                         return true;
@@ -307,12 +307,12 @@ namespace MyPad
                     // ウィンドウテキストを比較する
                     // 本アプリケーションでは実質的に識別子として使用される
                     var lpString = new StringBuilder(256);
-                    User32.GetWindowText(hWnd, lpString, lpString.Capacity);
+                    User32.GetWindowText(_hWnd, lpString, lpString.Capacity);
                     if (lpString.ToString().Contains(this.SharedDataService.Identifier) == false)
                         return true;
 
                     // ハンドルを保持する
-                    result = hWnd;
+                    (hWnd, lpdwProcessId) = (_hWnd, _lpdwProcessId);
                     return false;
                 }
                 catch
@@ -321,11 +321,11 @@ namespace MyPad
                 }
             }), IntPtr.Zero);
 
-            if (result.IsNull)
+            if (result)
                 this.Logger.Log($"起動中の同一アプリケーションは存在しませんでした。: ProcessName={sourceProcess?.ProcessName}", Category.Debug);
             else
-                this.Logger.Log($"起動中の同一アプリケーションのウィンドウハンドルを取得しました。: ProcessName={sourceProcess?.ProcessName}, hWnd=0x{result.DangerousGetHandle().ToString("X")}", Category.Debug);
-            return result;
+                this.Logger.Log($"起動中の同一アプリケーションのウィンドウハンドルを取得しました。: ProcessName={sourceProcess?.ProcessName}, lpdwProcessID={lpdwProcessId}, hWnd=0x{hWnd.DangerousGetHandle().ToString("X")}", Category.Debug);
+            return hWnd;
         }
 
         /// <summary>
@@ -349,11 +349,10 @@ namespace MyPad
 
             var lParam = Marshal.AllocHGlobal(Marshal.SizeOf(structure));
             Marshal.StructureToPtr(structure, lParam, false);
-
             var msg = User32.WindowMessage.WM_COPYDATA;
-            var result = User32.SendMessage(destinationHandle, (uint)msg, sourceProcess.Handle, lParam);
-            this.Logger.Log($"ウィンドウメッセージを送信しました。: hWnd=0x{destinationHandle.DangerousGetHandle().ToString("X")}, msg={msg}, data=[{string.Join(", ", data)}]", Category.Debug);
-            return result;
+            this.Logger.Log($"ウィンドウメッセージを送信します。: hWnd=0x{destinationHandle.DangerousGetHandle().ToString("X")}, msg={msg}, data=[{string.Join(", ", data)}]", Category.Debug);
+
+            return User32.SendMessage(destinationHandle, (uint)msg, sourceProcess.Handle, lParam);
         }
 
         /// <summary>
