@@ -24,7 +24,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid ge:GridEx.RowDefinition="Auto, 15, Auto, 15, *, 15">
+    <Grid ge:GridEx.RowDefinition="Auto, 15, Auto, 15, *, 20">
         <ScrollViewer Grid.Row="0" Margin="40 0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
             <Grid ge:GridEx.ColumnDefinition="Auto, 15, Auto, 20, Auto, 15, Auto, 15, Auto">
                 <TextBlock Grid.Column="0" Text="{Binding ProductInfo.Product, Mode=OneWay}" FontWeight="Bold" FontSize="32" VerticalAlignment="Center"/>
@@ -78,6 +78,8 @@
             <controls:MarkdownViewer Markdown="{Binding PrivacyPolicy.Value, Mode=OneWay}" IsTabStop="False"/>
             <controls:MarkdownViewer Markdown="{Binding OssLicense.Value, Mode=OneWay}"    IsTabStop="False"/>
         </m:FlipView>
+
+        <TextBlock Grid.Row="5" Text="{qc:QuickValue 'Environment.OSVersion.ToString() + \' - CLR \' + Environment.Version.ToString()'}" TextAlignment="Right" TextTrimming="CharacterEllipsis" Margin="40 0"/>
     </Grid>
     
 </UserControl>

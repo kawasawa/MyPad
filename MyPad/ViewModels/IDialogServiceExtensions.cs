@@ -235,8 +235,6 @@ namespace MyPad.ViewModels
         [LogInterceptor]
         public async static Task<(bool result, int line)> ChangeLine(this IDialogService self, TextEditorViewModel textEditor)
         {
-            self.GetLogger()?.Log($"指定行へ移動するダイアログを表示します。", Category.Info);
-
             var parameters = new DialogParameters {
                 { nameof(DialogViewModelBase.Title), Resources.Command_GoToLine },
                 { nameof(ChangeLineDialogViewModel.Line), textEditor.Line },
@@ -284,8 +282,6 @@ namespace MyPad.ViewModels
         [LogInterceptor]
         public async static Task<(bool result, Encoding encoding)> ChangeEncoding(this IDialogService self, TextEditorViewModel textEditor)
         {
-            self.GetLogger()?.Log($"文字コードを変更するダイアログを表示します。", Category.Info);
-
             var parameters = new DialogParameters {
                 { nameof(ChangeEncodingDialogViewModel.Title), Resources.Command_ChangeEncoding },
                 { nameof(ChangeEncodingDialogViewModel.Encoding), textEditor.Encoding },
@@ -332,8 +328,6 @@ namespace MyPad.ViewModels
         [LogInterceptor]
         public async static Task<(bool result, string syntax)> ChangeSyntax(this IDialogService self, TextEditorViewModel textEditor)
         {
-            self.GetLogger()?.Log($"シンタックス定義を変更するダイアログを表示します。", Category.Info);
-
             var parameters = new DialogParameters {
                 { nameof(ChangeSyntaxDialogViewModel.Title), Resources.Command_ChangeSyntax },
                 { nameof(ChangeSyntaxDialogViewModel.Syntax), textEditor.SyntaxDefinition?.Name },
@@ -380,8 +374,6 @@ namespace MyPad.ViewModels
         [LogInterceptor]
         public async static Task<(bool result, string diffSourcePath, string diffDestinationPath)> SelectDiffFiles(this IDialogService self, IEnumerable<string> fileNames, string diffSourcePath = null, string diffDestinationPath = null)
         {
-            self.GetLogger()?.Log($"差分比較のファイル選択を表示します。", Category.Info);
-
             var parameters = new DialogParameters {
                 { nameof(SelectDiffFilesDialogViewModel.Title), Resources.Command_Diff },
                 { nameof(SelectDiffFilesDialogViewModel.FileNames), fileNames },

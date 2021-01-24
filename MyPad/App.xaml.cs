@@ -55,8 +55,7 @@ namespace MyPad
                     {
                         var headerText = new StringBuilder();
                         headerText.AppendLine($"# {this.ProductInfo.Product} {this.ProductInfo.Version}");
-                        headerText.AppendLine($"# CLR {Environment.Version}");
-                        headerText.AppendLine($"# {Environment.OSVersion}");
+                        headerText.AppendLine($"# {Environment.OSVersion} - CLR {Environment.Version}");
                         headerText.AppendLine("# ${environment:PROCESSOR_ARCHITECTURE} - ${environment:PROCESSOR_IDENTIFIER}");
                         headerText.AppendLine("# ${environment:COMPUTERNAME}");
                         headerText.Append("##");
@@ -180,11 +179,14 @@ namespace MyPad
             ViewModelLocationProvider.SetDefaultViewModelFactory((view, viewModelType) => {
                 // 多言語化の初期設定を行う
                 if (view is DependencyObject obj)
+                {
                     Initializer.InitWPFLocalizeExtension(obj);
+                    this.Logger.Log($"View に多言語化の設定を適用しました。: View={view.GetType().FullName}", Category.Debug);
+                }
 
                 // ViewModel のインスタンスを生成する
                 var viewModel = this.Container.Resolve(viewModelType);
-                this.Logger.Log($"ViewModel のインスタンスが生成されました。: Type={viewModelType.FullName}", Category.Debug);
+                this.Logger.Log($"ViewModel のインスタンスが生成されました。: ViewModel={viewModelType.FullName}", Category.Debug);
                 return viewModel;
             });
         }
