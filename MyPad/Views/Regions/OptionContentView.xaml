@@ -42,6 +42,9 @@
                 <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Default.ComboBox}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
+                <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource Default.DataGrid}">
+                    <Setter Property="Margin" Value="5"/>
+                </Style>
                 <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource Default.GroupBox}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
@@ -200,98 +203,89 @@
                 </ScrollViewer>
             </TabItem>
 
-            <!-- ********** その他ツール ********** -->
-            <TabItem DataContext="{Binding SettingsService.OtherTools, Mode=OneWay}" Header="{le:Loc Label_OtherTools}">
-                <ScrollViewer>
-                    <StackPanel>
-                        <GroupBox>
-                            <GroupBox.Header>
-                                <StackPanel Orientation="Horizontal">
-                                    <Button Command="{Binding DataContext.RefreshExplorerCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" ToolTip="{le:Loc Command_Apply}" Style="{DynamicResource Common.ChromelessButton}" Foreground="White">
-                                        <mi:Material Kind="Refresh"/>
-                                    </Button>
-                                    <Border Width="10"/>
-                                    <TextBlock Text="{le:Loc Command_Explorer}" Foreground="White"/>
-                                </StackPanel>
-                            </GroupBox.Header>
-                            <DataGrid ItemsSource="{Binding ExplorerRoots, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}"
-                                      CanUserResizeRows="False" CanUserResizeColumns="False" CanUserSortColumns="False" CanUserAddRows="True" CanUserDeleteRows="True"
-                                      HeadersVisibility="All" RowHeaderWidth="50" ColumnWidth="*" AutoGenerateColumns="False"
-                                      SelectionUnit="Cell" KeyboardNavigation.ControlTabNavigation="None">
-                                <DataGrid.Resources>
-                                    <!-- 全選択ボタンを無効化する -->
-                                    <Style x:Key="{ComponentResourceKey ResourceId=MetroDataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
-                                        <Setter Property="Template" Value="{DynamicResource Default.DataGridSelectAllButtonTemplate}"/>
-                                        <Setter Property="IsEnabled" Value="False"/>
+            <!-- ********** エクスプローラー ********** -->
+            <TabItem DataContext="{Binding SettingsService.OtherTools, Mode=OneWay}" Header="{le:Loc Command_Explorer}">
+                <Grid ge:GridEx.RowDefinition="Auto, *">
+                    <Label    Grid.Row="0" Content="{le:Loc LabelText_SetExplorerRoot}"/>
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding ExplorerRoots, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}"
+                              CanUserResizeRows="False" CanUserResizeColumns="False" CanUserSortColumns="False" CanUserAddRows="True" CanUserDeleteRows="True"
+                              HeadersVisibility="All" RowHeaderWidth="50" ColumnWidth="*" AutoGenerateColumns="False"
+                              SelectionUnit="Cell" KeyboardNavigation.ControlTabNavigation="None">
+                        <DataGrid.Resources>
+                            <!-- 全選択ボタンを置き換える -->
+                            <Style x:Key="{ComponentResourceKey ResourceId=MetroDataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Button Command="{Binding DataContext.RefreshExplorerCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" ToolTip="{le:Loc Command_Apply}" Style="{DynamicResource Common.ChromelessButton}">
+                                                <mi:Material Kind="Refresh"/>
+                                            </Button>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                            <!-- テンプレートカラム用のセル -->
+                            <Style x:Key="TemplateColumnDataGridCell" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource Default.DataGridCell}">
+                                <Setter Property="IsTabStop" Value="False"/>
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{le:Loc Label_Path}">
+                                <DataGridTextColumn.EditingElementStyle>
+                                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                        <Setter Property="m:TextBoxHelper.SelectAllOnFocus" Value="True"/>
+                                        <Setter Property="m:TextBoxHelper.ClearTextButton" Value="True"/>
+                                        <Setter Property="m:TextBoxHelper.Watermark" Value="{qc:QuickValue 'Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)'}"/>
                                     </Style>
-                                    <!-- テンプレートカラム用のセル -->
-                                    <Style x:Key="TemplateColumnDataGridCell" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource Default.DataGridCell}">
-                                        <Setter Property="IsTabStop" Value="False"/>
-                                    </Style>
-                                </DataGrid.Resources>
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Binding="{Binding Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{le:Loc Label_Path}">
-                                        <DataGridTextColumn.EditingElementStyle>
-                                            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
-                                                <Setter Property="BorderThickness" Value="0"/>
-                                                <Setter Property="m:TextBoxHelper.SelectAllOnFocus" Value="True"/>
-                                                <Setter Property="m:TextBoxHelper.ClearTextButton" Value="True"/>
-                                                <Setter Property="m:TextBoxHelper.Watermark" Value="{qc:QuickValue 'Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)'}"/>
-                                            </Style>
-                                        </DataGridTextColumn.EditingElementStyle>
-                                    </DataGridTextColumn>
-                                    <DataGridTemplateColumn Header="{le:Loc Label_IsEnabled}" IsReadOnly="True" Width="60" CellStyle="{StaticResource TemplateColumnDataGridCell}">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <DataTemplate.Triggers>
-                                                    <!-- プレースホルダーには表示しない -->
-                                                    <DataTrigger Binding="{Binding}" Value="{x:Static helpers:DataGridHelper.NewItemPlaceholder}">
-                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                    </DataTrigger>
-                                                </DataTemplate.Triggers>
-                                                <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                          HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5 0 0 0"/>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn IsReadOnly="True" Width="30" CellStyle="{StaticResource TemplateColumnDataGridCell}">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <DataTemplate.Triggers>
-                                                    <!-- プレースホルダーには表示しない -->
-                                                    <DataTrigger Binding="{Binding}" Value="{x:Static helpers:DataGridHelper.NewItemPlaceholder}">
-                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                    </DataTrigger>
-                                                </DataTemplate.Triggers>
-                                                <Button Command="{Binding DataContext.SelectDirectoryCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding Mode=OneWay}" Style="{DynamicResource Common.ChromelessButton}">
-                                                    <mi:Material Kind="FolderOpen"/>
-                                                </Button>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn IsReadOnly="True" Width="30" CellStyle="{StaticResource TemplateColumnDataGridCell}">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <DataTemplate.Triggers>
-                                                    <!-- プレースホルダーには表示しない -->
-                                                    <DataTrigger Binding="{Binding}" Value="{x:Static helpers:DataGridHelper.NewItemPlaceholder}">
-                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                    </DataTrigger>
-                                                </DataTemplate.Triggers>
-                                                <Button Command="{Binding DataContext.RemoveDirectoryCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding Mode=OneWay}" Style="{DynamicResource Common.ChromelessButton}">
-                                                    <mi:Material Kind="FolderRemove"/>
-                                                </Button>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                </DataGrid.Columns>
-                            </DataGrid>
-                        </GroupBox>
-                        <GroupBox Header="{le:Loc Command_Diff}">
-                            <CheckBox IsChecked="{Binding ShowInlineDiffViewer, Mode=TwoWay}" Content="{le:Loc LabelText_ShowInlineDiffViewer}"/>
-                        </GroupBox>
-                    </StackPanel>
-                </ScrollViewer>
+                                </DataGridTextColumn.EditingElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTemplateColumn Header="{le:Loc Label_IsEnabled}" IsReadOnly="True" Width="60" CellStyle="{StaticResource TemplateColumnDataGridCell}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <DataTemplate.Triggers>
+                                            <!-- プレースホルダーには表示しない -->
+                                            <DataTrigger Binding="{Binding}" Value="{x:Static helpers:DataGridHelper.NewItemPlaceholder}">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                        <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5 0 0 0"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn IsReadOnly="True" Width="30" CellStyle="{StaticResource TemplateColumnDataGridCell}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <DataTemplate.Triggers>
+                                            <!-- プレースホルダーには表示しない -->
+                                            <DataTrigger Binding="{Binding}" Value="{x:Static helpers:DataGridHelper.NewItemPlaceholder}">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                        <Button Command="{Binding DataContext.SelectDirectoryCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding Mode=OneWay}" ToolTip="{le:Loc Command_Select}" Style="{DynamicResource Common.ChromelessButton}">
+                                            <mi:Material Kind="FolderOpen"/>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn IsReadOnly="True" Width="30" CellStyle="{StaticResource TemplateColumnDataGridCell}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <DataTemplate.Triggers>
+                                            <!-- プレースホルダーには表示しない -->
+                                            <DataTrigger Binding="{Binding}" Value="{x:Static helpers:DataGridHelper.NewItemPlaceholder}">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                        <Button Command="{Binding DataContext.RemoveDirectoryCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding Mode=OneWay}" ToolTip="{le:Loc Command_Delete}" Style="{DynamicResource Common.ChromelessButton}">
+                                            <mi:Material Kind="FolderRemove"/>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
             </TabItem>
 
             <!-- ********** 構成ファイル ********** -->

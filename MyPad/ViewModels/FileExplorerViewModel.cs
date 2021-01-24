@@ -58,24 +58,13 @@ namespace MyPad.ViewModels
         [LogInterceptor]
         public void RefreshExplorer()
         {
-            var roots = Enumerable.Empty<string>();
-            if (this.SettingsService.OtherTools?.ExplorerRoots?.Any() == true)
-                roots = this.SettingsService.OtherTools.ExplorerRoots
-                    .Where(i => string.IsNullOrEmpty(i.Path) == false && i.IsEnabled)
-                    .Select(i => i.Path);
-            else
-                roots = new[] { Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) };
-            var isExpanded = roots.Count() == 1;
-            var isSelected = true;
+            var roots = this.SettingsService.OtherTools?.ExplorerRoots?.Where(i => string.IsNullOrEmpty(i.Path) == false && i.IsEnabled);
+            var rootPath = roots?.Any() == true ? roots.Select(i => i.Path) : new[] { Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) };
+            var isExpanded = rootPath.Count() == 1;
 
             this.FileTreeNodes.ClearOnScheduler();
             this.FileTreeNodes.AddRangeOnScheduler(
-                roots.Select(r =>
-                {
-                    var node = this.ContainerExtension.Resolve<FileTreeNode>().Initialize(r, isSelected, isExpanded);
-                    isSelected = false;
-                    return node;
-                }));
+                rootPath.Select((r, i) => this.ContainerExtension.Resolve<FileTreeNode>().Initialize(r, i == 0, isExpanded)));
         }
 
         // NOTE: このクラスは頻出するためトレースしない
