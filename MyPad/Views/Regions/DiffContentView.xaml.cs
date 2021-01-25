@@ -49,7 +49,6 @@ namespace MyPad.Views.Regions
         private void ShowInlineDiffViewer_Checked(object sender, RoutedEventArgs e)
         {
             this.DiffViewer.ShowInline();
-
         }
 
         [LogInterceptor]

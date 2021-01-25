@@ -103,7 +103,7 @@ namespace MyPad.ViewModels
             => this.FileStream == null;
 
         public string FileName
-            => this.IsNewFile ? $"NoName-{this.Sequense}{this.SyntaxDefinition?.GetCommonExtensions().FirstOrDefault() ?? TEXT_EXTENSION}" : this.FileStream.Name;
+            => this.IsNewFile ? $"NoName-{this.Sequense}{this.SyntaxDefinition?.GetExtensions().FirstOrDefault() ?? TEXT_EXTENSION}" : this.FileStream.Name;
 
         public string ShortFileName
         {

@@ -167,7 +167,7 @@
                           Header="{le:Loc Command_MoveToDocumentEnd}"
                           InputGestureText="Ctrl+End"/>
             </MenuItem>
-            <MenuItem Header="{le:Loc Command_Selection}">
+            <MenuItem Header="{le:Loc Command_Select}">
                 <MenuItem Command="EditingCommands.SelectLeftByWord"
                           Header="{le:Loc Command_SelectLeftByWord}"
                           InputGestureText="Ctrl+Shift+Left"/>

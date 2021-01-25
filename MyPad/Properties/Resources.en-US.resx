@@ -279,7 +279,7 @@
   <data name="Command_SelectDownByPage" xml:space="preserve">
     <value>Select down by page</value>
   </data>
-  <data name="Command_Selection" xml:space="preserve">
+  <data name="Command_Select" xml:space="preserve">
     <value>Selection</value>
   </data>
   <data name="Command_SelectLeftByWord" xml:space="preserve">
@@ -729,12 +729,6 @@ Please check and delete unnecessary files.</value>
   <data name="Command_CopyFullPath" xml:space="preserve">
     <value>Copy the full path</value>
   </data>
-  <data name="Label_ExplorerRoot" xml:space="preserve">
-    <value>Home of the explorer</value>
-  </data>
-  <data name="Label_OtherTools" xml:space="preserve">
-    <value>Other tools</value>
-  </data>
   <data name="Label_Path" xml:space="preserve">
     <value>Path</value>
   </data>
@@ -764,5 +758,11 @@ Please check and delete unnecessary files.</value>
   </data>
   <data name="Command_WindowStructure" xml:space="preserve">
     <value>Window structure</value>
+  </data>
+  <data name="Command_Creator" xml:space="preserve">
+    <value>Creator</value>
+  </data>
+  <data name="LabelText_SetExplorerRoot" xml:space="preserve">
+    <value>Set the root directory of explorer.</value>
   </data>
 </root>

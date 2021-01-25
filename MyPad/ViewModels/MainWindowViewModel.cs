@@ -179,7 +179,7 @@ namespace MyPad.ViewModels
                 .Subscribe(_ =>
                 {
                     compositeFlyout.Except(new[] { this.IsOpenDiffContent }).ForEach(p => p.Value = false);
-                    this.Logger.Log($"差分比較を表示します。", Category.Info);
+                    this.Logger.Log($"差分比較を表示します。: Source={this.DiffSource.Value?.FileName}, Destination={this.DiffDestination.Value?.FileName}", Category.Info);
                 })
                 .AddTo(this.CompositeDisposable);
 
@@ -344,7 +344,6 @@ namespace MyPad.ViewModels
                     {
                         this.DiffSource.Value = textEditors.First(e => e.FileName == diffSourcePath);
                         this.DiffDestination.Value = textEditors.First(e => e.FileName == diffDestinationPath);
-                        this.Logger.Log($"差分を比較するファイルを読み込みました。: SourcePath={diffSourcePath}, DestinationPath={diffDestinationPath}", Category.Info);
                     }
                     catch (Exception e)
                     {
@@ -372,15 +371,20 @@ namespace MyPad.ViewModels
             this.PrintCommand = this.FlowDocument.IsEmpty().Inverse().ToReactiveCommand()
                 .WithSubscribe(async () =>
                 {
-                    this.Logger.Log($"印刷ダイアログを表示します。", Category.Info);
+                    var target = this.ActiveTextEditor.Value;
+                    this.Logger.Log($"印刷ダイアログを表示します。tab#{target.Sequense} win#{this.Sequense}", Category.Info);
+                    
                     var result = this.CommonDialogService.ShowDialog(
                         new PrintDialogParameters()
                         {
                             Title = this.ProductInfo.Description,
-                            FlowDocument = this.FlowDocument.Value ?? await this.ActiveTextEditor.Value.CreateFlowDocument()
+                            FlowDocument = this.FlowDocument.Value ?? await target.CreateFlowDocument()
                         });
                     if (result)
-                        this.Logger.Log($"ファイルを印刷しました。(OSやハードウェアの要因でキャンセルされた可能性もあります)", Category.Info);
+                        this.Logger.Log($"印刷を実行しました。(OSやハードウェアの要因で処理がキャンセルされた可能性もあります。) tab#{target.Sequense} win#{this.Sequense}", Category.Info);
+                    else
+                        this.Logger.Log($"印刷はキャンセルされました。tab#{target.Sequense} win#{this.Sequense}", Category.Info);
+
                     this.IsOpenPrintPreviewContent.Value = false;
                 })
                 .AddTo(this.CompositeDisposable);
@@ -401,11 +405,13 @@ namespace MyPad.ViewModels
                 .WithSubscribe(async () =>
                 {
                     var target = this.ActiveTextEditor.Value;
-                    if (await this.DialogService.ChangeLine(target) is (true, var line))
-                    {
-                        target.Line = line;
-                        await this.Messenger.RaiseAsync(new InteractionMessage(nameof(Views.MainWindow.ScrollToCaret)));
-                    }
+                    var (result, line) = await this.DialogService.ChangeLine(target);
+                    if (result == false)
+                        return;
+
+                    target.Line = line;
+                    await this.Messenger.RaiseAsync(new InteractionMessage(nameof(Views.MainWindow.ScrollToCaret)));
+                    this.Logger.Log($"指定行へ移動しました。tab#{target.Sequense} win#{this.Sequense}: Line={line}", Category.Info);
                 })
                 .AddTo(this.CompositeDisposable);
 
@@ -421,6 +427,7 @@ namespace MyPad.ViewModels
                         target.Encoding = encoding;
                     else
                         await this.ReadFile(target.FileName, encoding, target.SyntaxDefinition, target.IsReadOnly);
+                    this.Logger.Log($"文字コードを変更しました。tab#{target.Sequense} win#{this.Sequense}: Encoding={encoding.EncodingName}", Category.Info);
                 })
                 .AddTo(this.CompositeDisposable);
 
@@ -435,6 +442,7 @@ namespace MyPad.ViewModels
                     var definition = string.IsNullOrEmpty(syntax) ? null :
                         this.SyntaxService.Definitions.ContainsKey(syntax) ? this.SyntaxService.Definitions[syntax] : null;
                     target.SyntaxDefinition = definition;
+                    this.Logger.Log($"シンタックス定義を変更しました。tab#{target.Sequense} win#{this.Sequense}: Syntax={syntax}", Category.Info);
                 })
                 .AddTo(this.CompositeDisposable);
 
@@ -443,6 +451,7 @@ namespace MyPad.ViewModels
                 {
                     if (e.Data.GetData(DataFormats.FileDrop) is IEnumerable<string> paths && paths.Any())
                     {
+                        this.Logger.Log($"ファイルがドロップされました。: Paths=[{string.Join(", ", paths)}]", Category.Info);
                         this.LoadCommand.Execute(paths);
                         e.Handled = true;
                     }
@@ -491,7 +500,7 @@ namespace MyPad.ViewModels
         public TextEditorViewModel CreateTextEditor()
         {
             var textEditor = this.ContainerExtension.Resolve<TextEditorViewModel>();
-            this.Logger.Log($"タブを生成しました。tab#{textEditor.Sequense} (win#{this.Sequense})", Category.Info);
+            this.Logger.Log($"タブを生成しました。tab#{textEditor.Sequense} win#{this.Sequense}", Category.Info);
             return textEditor;
         }
 
@@ -511,7 +520,7 @@ namespace MyPad.ViewModels
 
             this.TextEditors.Remove(textEditor);
             textEditor.Dispose();
-            this.Logger.Log($"タブを破棄しました。tab#{textEditor.Sequense} (win#{this.Sequense})", Category.Info);
+            this.Logger.Log($"タブを破棄しました。tab#{textEditor.Sequense} win#{this.Sequense}", Category.Info);
         }
 
         [LogInterceptor]
@@ -612,7 +621,7 @@ namespace MyPad.ViewModels
                 {
                     var definition = filter != null && this.SyntaxService.Definitions.ContainsKey(filter) ?
                         this.SyntaxService.Definitions[filter] :
-                        this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetCommonExtensions().Contains(Path.GetExtension(path)));
+                        this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetExtensions().Contains(Path.GetExtension(path)));
                     results.Add(await this.ReadFile(path, encoding, definition, isReadOnly));
                 }
                 return results;
@@ -627,7 +636,7 @@ namespace MyPad.ViewModels
                 foreach (var path in paths.Where(path => File.Exists(path)))
                 {
                     var encoding = this.SettingsService.System.AutoDetectEncoding ? null : this.SettingsService.System.Encoding;
-                    var definition = this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetCommonExtensions().Contains(Path.GetExtension(path)));
+                    var definition = this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetExtensions().Contains(Path.GetExtension(path)));
                     results.Add(await this.ReadFile(path, encoding, definition));
                 }
                 foreach (var (result, fileNames, filter, encoding, isReadOnly) in paths.Where(path => Directory.Exists(path)).Select(path => decideConditions(path)))
@@ -639,7 +648,7 @@ namespace MyPad.ViewModels
                     {
                         var definition = filter != null && this.SyntaxService.Definitions.ContainsKey(filter) ?
                             this.SyntaxService.Definitions[filter] :
-                            this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetCommonExtensions().Contains(Path.GetExtension(path)));
+                            this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetExtensions().Contains(Path.GetExtension(path)));
                         results.Add(await this.ReadFile(path, encoding, definition, isReadOnly));
                     }
                 }
@@ -698,7 +707,7 @@ namespace MyPad.ViewModels
             if (ready == false)
                 return (false, textEditor);
 
-            var definition = this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetCommonExtensions().Contains(Path.GetExtension(path)));
+            var definition = this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetExtensions().Contains(Path.GetExtension(path)));
             return await this.WriteFile(textEditor, path, encoding, definition);
         }
 
@@ -733,11 +742,11 @@ namespace MyPad.ViewModels
                     {
                         this.IsWorking.Value = true;
                         await sameTextEditor.Reload(encoding);
-                        this.Logger.Log($"ファイルを再読み込みしました。tab#{sameTextEditor.Sequense} (win#{this.Sequense}): Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Info);
+                        this.Logger.Log($"ファイルを再読み込みしました。tab#{sameTextEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Info);
                     }
                     catch (Exception e)
                     {
-                        this.Logger.Log($"ファイルの再読み込みに失敗しました。tab#{sameTextEditor.Sequense} (win#{this.Sequense}): Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Error, e);
+                        this.Logger.Log($"ファイルの再読み込みに失敗しました。tab#{sameTextEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Error, e);
                         this.DialogService.Warn(e.Message);
                         return (false, sameTextEditor);
                     }
@@ -789,9 +798,9 @@ namespace MyPad.ViewModels
                     {
                         stream = info.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
                     }
-                    catch (Exception e)
+                    catch
                     {
-                        this.Logger.Log($"ファイルの書き込み権限を取得できませんでした。読み取り権限のみで再取得します。: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Warn, e);
+                        this.Logger.Log($"ファイルの書き込み権限を取得できませんでした。読み取り権限のみで再取得します。win#{this.Sequense}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Info);
                     }
                 }
 
@@ -805,7 +814,7 @@ namespace MyPad.ViewModels
                     }
                     catch (Exception e)
                     {
-                        this.Logger.Log($"ファイルの読み取り権限の取得に失敗しました。: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Error, e);
+                        this.Logger.Log($"ファイルの読み取り権限の取得に失敗しました。win#{this.Sequense}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Error, e);
                         this.DialogService.Warn(e.Message);
                         return (false, null);
                     }
@@ -818,11 +827,11 @@ namespace MyPad.ViewModels
                 {
                     this.IsWorking.Value = true;
                     await textEditor.Load(stream, encoding);
-                    this.Logger.Log($"ファイルを読み込みました。tab#{textEditor.Sequense} (win#{this.Sequense}): Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Info);
+                    this.Logger.Log($"ファイルを読み込みました。tab#{textEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}, IsReadOnly={textEditor.IsReadOnly}", Category.Info);
                 }
                 catch (Exception e)
                 {
-                    this.Logger.Log($"ファイルの読み込みに失敗しました。tab#{textEditor.Sequense} (win#{this.Sequense}): Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Error, e);
+                    this.Logger.Log($"ファイルの読み込みに失敗しました。tab#{textEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}, IsReadOnly={textEditor.IsReadOnly}", Category.Error, e);
                     this.DialogService.Warn(e.Message);
                     return (false, textEditor);
                 }
@@ -861,11 +870,11 @@ namespace MyPad.ViewModels
                 {
                     this.IsWorking.Value = true;
                     await sameTextEditor.Save(encoding);
-                    this.Logger.Log($"ファイルを上書き保存しました。tab#{sameTextEditor.Sequense} (win#{this.Sequense}): Path={path}, Encoding={encoding.EncodingName}", Category.Info);
+                    this.Logger.Log($"ファイルを上書き保存しました。tab#{sameTextEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding.EncodingName}", Category.Info);
                 }
                 catch (Exception e)
                 {
-                    this.Logger.Log($"ファイルの上書き保存に失敗しました。tab#{sameTextEditor.Sequense} (win#{this.Sequense}): Path={path}, Encoding={encoding.EncodingName}", Category.Error, e);
+                    this.Logger.Log($"ファイルの上書き保存に失敗しました。tab#{sameTextEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding.EncodingName}", Category.Error, e);
                     this.DialogService.Warn(e.Message);
                     return (false, sameTextEditor);
                 }
@@ -907,11 +916,11 @@ namespace MyPad.ViewModels
                     Directory.CreateDirectory(Path.GetDirectoryName(path));
                     stream = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.Read);
                     await textEditor.SaveAs(stream, encoding);
-                    this.Logger.Log($"ファイルを新規保存しました。tab#{textEditor.Sequense} (win#{this.Sequense}): Path={path}, Encoding={encoding.EncodingName}", Category.Info);
+                    this.Logger.Log($"ファイルを新規保存しました。tab#{textEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding.EncodingName}", Category.Info);
                 }
                 catch (Exception e)
                 {
-                    this.Logger.Log($"ファイルの新規保存に失敗しました。tab#{textEditor.Sequense} (win#{this.Sequense}): Path={path}, Encoding={encoding.EncodingName}", Category.Error, e);
+                    this.Logger.Log($"ファイルの新規保存に失敗しました。tab#{textEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding.EncodingName}", Category.Error, e);
                     this.DialogService.Warn(e.Message);
                     return (false, textEditor);
                 }
@@ -929,5 +938,44 @@ namespace MyPad.ViewModels
         }
 
         #endregion
+
+        private static class CommonDialogHelper
+        {
+            public static string CreateFileFilter(SyntaxService syntaxService)
+            {
+                return string.Join("|",
+                    new[] { $"{Resources.Label_AllFiles}|*.*" }
+                    .Concat(syntaxService.Definitions.Values.Select(d => $"{d.Name}|{string.Join(";", d.Extensions)}")));
+            }
+
+            public static CommonFileDialogComboBox ConvertToComboBox(Encoding defaultEncoding)
+            {
+                var comboBox = new CommonFileDialogComboBox();
+                var encodings = Constants.ENCODINGS;
+                for (var i = 0; i < encodings.Count(); i++)
+                {
+                    comboBox.Items.Add(new EncodingComboBoxItem(encodings.ElementAt(i)));
+                    if (encodings.ElementAt(i) == defaultEncoding)
+                        comboBox.SelectedIndex = i;
+                }
+                return comboBox;
+            }
+
+            public class EncodingComboBoxItem : CommonFileDialogComboBoxItem
+            {
+                public Encoding Encoding { get; }
+
+                public EncodingComboBoxItem(Encoding encoding)
+                    : this(encoding, encoding?.EncodingName)
+                {
+                }
+
+                public EncodingComboBoxItem(Encoding encoding, string text)
+                    : base(text)
+                {
+                    this.Encoding = encoding;
+                }
+            }
+        }
     }
 }

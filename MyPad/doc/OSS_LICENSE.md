@@ -6,7 +6,7 @@ Copyright (c) AvalonEdit Contributors
 
 ### CaseExtensions
 Copyright (c) Vadim Orekhov  
-[MIT License](https://github.com/vad3x/case-extensions)  
+[MIT License](https://github.com/vad3x/case-extensions/blob/master/readme.md#license)  
 
 ### DiffPlex.Wpf
 Copyright (c) Kingcean Tuan, Matthew Manela  

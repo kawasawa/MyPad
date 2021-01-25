@@ -214,7 +214,7 @@ namespace MyPad.ViewModels.Regions
             catch (OperationCanceledException e)
             {
                 // FileSystem.CopyDirectory の処理をキャンセルした場合
-                this.Logger.Log($"ログファイルの出力をキャンセルしました。: Path={path}, Temp={tempPath}", Category.Debug, e);
+                this.Logger.Log($"ログファイルの出力をキャンセルしました。: Path={path}, Temp={tempPath}", Category.Info, e);
                 this.DialogService.Notify(e.Message);
                 return false;
             }

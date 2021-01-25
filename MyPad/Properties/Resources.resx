@@ -319,7 +319,7 @@
   <data name="Command_SelectDownByPage" xml:space="preserve">
     <value>次ページまで選択</value>
   </data>
-  <data name="Command_Selection" xml:space="preserve">
+  <data name="Command_Select" xml:space="preserve">
     <value>選択</value>
   </data>
   <data name="Command_SelectLeftByWord" xml:space="preserve">
@@ -769,12 +769,6 @@
   <data name="Command_CopyFullPath" xml:space="preserve">
     <value>完全パスをコピー</value>
   </data>
-  <data name="Label_ExplorerRoot" xml:space="preserve">
-    <value>エクスプローラーの起点</value>
-  </data>
-  <data name="Label_OtherTools" xml:space="preserve">
-    <value>その他ツール</value>
-  </data>
   <data name="Label_Path" xml:space="preserve">
     <value>パス</value>
   </data>
@@ -804,5 +798,11 @@
   </data>
   <data name="Command_WindowStructure" xml:space="preserve">
     <value>画面構成</value>
+  </data>
+  <data name="Command_Creator" xml:space="preserve">
+    <value>作成者</value>
+  </data>
+  <data name="LabelText_SetExplorerRoot" xml:space="preserve">
+    <value>エクスプローラーのルートフォルダを指定します。</value>
   </data>
 </root>

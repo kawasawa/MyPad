@@ -260,6 +260,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   作成者 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Creator {
+            get {
+                return ResourceManager.GetString("Command_Creator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   切り取り に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Cut {
@@ -746,6 +755,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   選択 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Select {
+            get {
+                return ResourceManager.GetString("Command_Select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   すべて選択 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_SelectAll {
@@ -760,15 +778,6 @@ namespace MyPad.Properties {
         public static string Command_SelectDownByPage {
             get {
                 return ResourceManager.GetString("Command_SelectDownByPage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   選択 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Command_Selection {
-            get {
-                return ResourceManager.GetString("Command_Selection", resourceCulture);
             }
         }
         
@@ -1237,15 +1246,6 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   エクスプローラーの起点 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_ExplorerRoot {
-            get {
-                return ResourceManager.GetString("Label_ExplorerRoot", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   フォント に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Font {
@@ -1341,15 +1341,6 @@ namespace MyPad.Properties {
         public static string Label_Notify {
             get {
                 return ResourceManager.GetString("Label_Notify", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   その他ツール に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_OtherTools {
-            get {
-                return ResourceManager.GetString("Label_OtherTools", resourceCulture);
             }
         }
         
@@ -1692,6 +1683,15 @@ namespace MyPad.Properties {
         public static string LabelText_SaveWindowPlacement {
             get {
                 return ResourceManager.GetString("LabelText_SaveWindowPlacement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   エクスプローラーのルートフォルダを指定します。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string LabelText_SetExplorerRoot {
+            get {
+                return ResourceManager.GetString("LabelText_SetExplorerRoot", resourceCulture);
             }
         }
         

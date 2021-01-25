@@ -156,8 +156,6 @@ namespace MyPad.ViewModels.Regions
         // NOTE: このメソッドは頻発するためトレースしない
         private void Terminal_DataReceived(object sender, DataReceivedEventArgs e)
         {
-            const int BUFFER_SIZE = 10000;
-
             if (this.OutputLastLine.Value != null)
                 this.ResultHistories.Add(this.OutputLastLine.Value);
             this.OutputLastLine.Value = e.Data;
@@ -169,7 +167,7 @@ namespace MyPad.ViewModels.Regions
                 this.OutputLastLine.Value = $"{this._terminalProcess.StartInfo.WorkingDirectory}>";
             }
 
-            if (BUFFER_SIZE < this.ResultHistories.Count)
+            while (AppSettings.TerminalBufferSize < this.ResultHistories.Count)
                 this.ResultHistories.RemoveAt(0);
         }
     }
