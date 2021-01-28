@@ -1,0 +1,48 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="Markdown" extensions="*.md;*.mkd;*.mkdn;*.mdwn;*.mdown;*.markdown;*.mdtxt;*.mdtext" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+  <Color name="Header"    foreground="DodgerBlue"  fontWeight="bold"/>
+  <Color name="SubHeader" foreground="DeepSkyBlue" fontWeight="bold"/>
+  <Color name="Strong"                             fontWeight="bold"/>
+  <Color name="Italic"                             fontStyle="italic"/>
+  <Color name="Code"/>
+  <Color name="Image"     foreground="Goldenrod"/>
+  <Color name="Link"      foreground="DarkGoldenrod"/>
+  <Color name="LineBreak" background="LightGray"/>
+
+  <RuleSet ignoreCase="true">
+    <Rule color="Header">
+      ^\#.*
+    </Rule>
+    <Rule color="SubHeader">
+      ^\-.*
+    </Rule>
+    <Rule color="Strong">
+      \*\*.*\*\*
+    </Rule>
+    <Rule color="Strong">
+      __.*__
+    </Rule>
+    <Rule color="Italic">
+      \*(?![ ]).*\*
+    </Rule>
+    <Rule color="Italic">
+      _.*_
+    </Rule>
+    <Rule color="Code">
+      `.*`
+    </Rule>
+    <Rule color="Image">
+      \!\[.*\]\[.*\]
+    </Rule>
+    <Rule color="Link">
+      \[.*\]\(.*\)
+    </Rule>
+    <Rule color="Link">
+      \[.*\]\[.*\]
+    </Rule>
+    <Rule color="LineBreak">
+      [ ]{2}$
+    </Rule>
+  </RuleSet>
+</SyntaxDefinition>

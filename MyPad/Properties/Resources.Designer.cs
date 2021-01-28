@@ -1076,9 +1076,9 @@ namespace MyPad.Properties {
         /// <summary>
         ///   型 System.Byte[] のローカライズされたリソースを検索します。
         /// </summary>
-        public static byte[] JSON {
+        public static byte[] Json {
             get {
-                object obj = ResourceManager.GetObject("JSON", resourceCulture);
+                object obj = ResourceManager.GetObject("Json", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1842,9 +1842,9 @@ namespace MyPad.Properties {
         /// <summary>
         ///   型 System.Byte[] のローカライズされたリソースを検索します。
         /// </summary>
-        public static byte[] MarkDown {
+        public static byte[] Markdown {
             get {
-                object obj = ResourceManager.GetObject("MarkDown", resourceCulture);
+                object obj = ResourceManager.GetObject("Markdown", resourceCulture);
                 return ((byte[])(obj));
             }
         }

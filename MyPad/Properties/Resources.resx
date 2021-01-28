@@ -133,12 +133,6 @@
   <data name="JavaScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\JavaScript.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="JSON" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\JSON.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="MarkDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\MarkDown.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="PHP" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\PHP.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -804,5 +798,11 @@
   </data>
   <data name="LabelText_SetExplorerRoot" xml:space="preserve">
     <value>エクスプローラーのルートフォルダを指定します。</value>
+  </data>
+  <data name="Json" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\json.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Markdown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\markdown.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
