@@ -1,0 +1,85 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="Json" extensions="*.json;*.jsonc" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+  <Property name="FoldingStrategy" value="Brace"/>
+
+  <Color name="Keywords"       foreground="DodgerBlue"/>
+  <Color name="NumericLiteral" foreground="DeepSkyBlue"/>
+  <Color name="Comment"        foreground="MediumSlateBlue"/>
+  <Color name="String"         foreground="DarkGoldenrod"/>
+  <Color name="FieldName"      foreground="MediumSeaGreen"/>
+  <Color name="Punctuation"    foreground="DarkGray"/>
+
+  <RuleSet name="String">
+    <Span begin="\\" end="."/>
+  </RuleSet>
+
+  <RuleSet name="Object">
+    <Span color="FieldName" ruleSet="String">
+      <Begin>"</Begin>
+      <End>"</End>
+    </Span>
+    <Span color="FieldName" ruleSet="String">
+      <Begin>'</Begin>
+      <End>'</End>
+    </Span>
+    <Span color="Punctuation" ruleSet="Expression">
+      <Begin>:</Begin>
+    </Span>
+    <Span color="Punctuation">
+      <Begin>,</Begin>
+    </Span>
+    <Span color="Comment">
+      <Begin>//</Begin>
+    </Span>
+    <Span color="Comment" multiline="true">
+      <Begin>/\*</Begin>
+      <End>\*/</End>
+    </Span>
+  </RuleSet>
+
+  <RuleSet name="Array">
+    <Import ruleSet="Expression"/>
+    <Span color="Punctuation">
+      <Begin>,</Begin>
+    </Span>
+  </RuleSet>
+
+  <RuleSet name="Expression">
+    <Keywords color="Keywords">
+      <Word>true</Word>
+      <Word>false</Word>
+      <Word>null</Word>
+    </Keywords>
+    <Span color="String" ruleSet="String">
+      <Begin>"</Begin>
+      <End>"</End>
+    </Span>
+    <Span color="String" ruleSet="String">
+      <Begin>'</Begin>
+      <End>'</End>
+    </Span>
+    <Span color="Comment">
+      <Begin>//</Begin>
+    </Span>
+    <Span color="Comment" multiline="true">
+      <Begin>/\*</Begin>
+      <End>\*/</End>
+    </Span>
+    <Span color="Punctuation" ruleSet="Object" multiline="true">
+      <Begin>\{</Begin>
+      <End>\}</End>
+    </Span>
+    <Span color="Punctuation" ruleSet="Array" multiline="true">
+      <Begin>\[</Begin>
+      <End>\]</End>
+    </Span>
+    <Rule color="NumericLiteral">
+      \b0[xX][0-9a-fA-F]+|(\b\d+(\.[0-9]+)?|\.[0-9]+)([eE][+-]?[0-9]+)?
+    </Rule>
+  </RuleSet>
+
+  <RuleSet>
+    <Import ruleSet="Expression"/>
+  </RuleSet>
+</SyntaxDefinition>
