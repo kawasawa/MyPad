@@ -78,9 +78,10 @@ namespace MyPad
         /// <param name="e">例外の情報</param>
         private static void ContinueOrExit(Exception e)
         {
+            var guid = Guid.NewGuid().ToString()[..6];
             try
             {
-                Logger?.Log("ハンドルされていない例外が発生しました。", Category.Fatal, e);
+                Logger?.Log($"[{guid}] ハンドルされていない例外が発生しました。", Category.Fatal, e);
             }
             catch
             {
@@ -108,18 +109,22 @@ namespace MyPad
             {
             }
 
-            Terminate(e);
+            Terminate(e, guid);
         }
 
         /// <summary>
         /// 例外の発生を通知し、アプリケーションを終了します。
         /// </summary>
         /// <param name="e">例外の情報</param>
-        private static void Terminate(Exception e)
+        /// <param name="guid">GUID</param>
+        private static void Terminate(Exception e, string guid = null)
         {
             try
             {
-                Logger?.Log("アプリケーションを終了します。", Category.Fatal, e);
+                if (string.IsNullOrEmpty(guid))
+                    Logger?.Log("アプリケーションを終了します。", Category.Fatal);
+                else
+                    Logger?.Log($"[{guid}] アプリケーションを終了します。", Category.Fatal);
             }
             catch
             {

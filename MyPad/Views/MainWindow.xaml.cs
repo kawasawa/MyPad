@@ -405,7 +405,7 @@ namespace MyPad.Views
             }
 
             // リージョンにビューを設定する
-            void createRegionContent<T>(string suffix = null)
+            void injectRegionContent<T>(string suffix = null)
             {
                 var regionName = $"{PrismNamingConverter.ConvertToRegionName<T>()}{suffix}";
                 var content = this.ContainerExtension.Resolve<T>();
@@ -417,7 +417,7 @@ namespace MyPad.Views
                 }
                 catch (Exception e)
                 {
-                    this.Logger.Log($"{nameof(IRegionManager.AddToRegion)} に失敗しました。別メソッドで再試行します。: RegionName={regionName}", Category.Warn, e);
+                    this.Logger.Log($"IRegionManager.AddToRegion() が失敗しました。別メソッドで再試行します。: RegionName={regionName}", Category.Warn, e);
                 }
 
                 try
@@ -427,19 +427,19 @@ namespace MyPad.Views
                 }
                 catch (Exception e)
                 {
-                    this.Logger.Log($"{nameof(IRegionManager.RegisterViewWithRegion)} に失敗しました。: RegionName={regionName}", Category.Error, e);
+                    this.Logger.Log($"IRegionManager.RegisterViewWithRegion() が失敗しました。: RegionName={regionName}", Category.Error, e);
                 }
             }
-            createRegionContent<MenuBarView>("1");
-            createRegionContent<MenuBarView>("2");
-            createRegionContent<ToolBarView>();
-            createRegionContent<StatusBarView>();
-            createRegionContent<DiffContentView>();
-            createRegionContent<PrintPreviewContentView>();
-            createRegionContent<OptionContentView>();
-            createRegionContent<AboutContentView>();
-            createRegionContent<TerminalView>();
-            createRegionContent<ScriptRunnerView>();
+            injectRegionContent<MenuBarView>("1");
+            injectRegionContent<MenuBarView>("2");
+            injectRegionContent<ToolBarView>();
+            injectRegionContent<StatusBarView>();
+            injectRegionContent<DiffContentView>();
+            injectRegionContent<PrintPreviewContentView>();
+            injectRegionContent<OptionContentView>();
+            injectRegionContent<AboutContentView>();
+            injectRegionContent<TerminalView>();
+            injectRegionContent<ScriptRunnerView>();
         }
 
         [LogInterceptor]

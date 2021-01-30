@@ -34,7 +34,7 @@ namespace MyPad.Models
             info.Create();
             info.Attributes |= FileAttributes.Hidden;
 
-            this._logger.Log($"一時フォルダを作成し、隠し属性を付与しました。: Path={this.TempDirectoryPath}", Category.Debug);
+            this._logger.Debug($"一時フォルダを作成し、隠し属性を付与しました。: Path={this.TempDirectoryPath}");
         }
     }
 }

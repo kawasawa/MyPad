@@ -3,7 +3,6 @@ using Plow.Logging;
 using Plow.Wpf.CommonDialogs;
 using Prism.Ioc;
 using Prism.Mvvm;
-using Prism.Regions;
 using Prism.Services.Dialogs;
 using Prism.Unity;
 using QuickConverter;
@@ -111,7 +110,7 @@ namespace MyPad
         protected override void OnStartup(StartupEventArgs e)
         {
             this.Logger.Log($"アプリケーションを開始しました。", Category.Info);
-            this.Logger.Log($"アプリケーションを開始しました。: Args=[{string.Join(", ", e.Args)}]", Category.Debug);
+            this.Logger.Debug($" アプリケーションを開始しました。: Args=[{string.Join(", ", e.Args)}]");
 
             Initializer.InitEncoding();
             Initializer.InitQuickConverter();
@@ -157,7 +156,7 @@ namespace MyPad
                         while (Directory.Exists(info.FullName))
                             Thread.Sleep(LOOP_DELAY);
                     }
-                    this.Logger.Log("保存期限を過ぎた不要な一時フォルダを削除しました。", Category.Debug);
+                    this.Logger.Debug($"保存期限を過ぎた不要な一時フォルダを削除しました。");
                 }
                 catch (Exception ex)
                 {
@@ -179,14 +178,10 @@ namespace MyPad
             ViewModelLocationProvider.SetDefaultViewModelFactory((view, viewModelType) => {
                 // 多言語化の初期設定を行う
                 if (view is DependencyObject obj)
-                {
                     Initializer.InitWPFLocalizeExtension(obj);
-                    this.Logger.Log($"View に多言語化の設定を適用しました。: View={view.GetType().FullName}", Category.Debug);
-                }
 
                 // ViewModel のインスタンスを生成する
                 var viewModel = this.Container.Resolve(viewModelType);
-                this.Logger.Log($"ViewModel のインスタンスが生成されました。: ViewModel={viewModelType.FullName}", Category.Debug);
                 return viewModel;
             });
         }
@@ -233,18 +228,10 @@ namespace MyPad
         {
             var settingsService = this.Container.Resolve<Models.SettingsService>();
             settingsService.Load();
-            if (settingsService.IsDifferentVersion())
-                this.Logger.Log($"アプリケーションのバージョンが更新されました。: Old={settingsService.Version}, New={this.ProductInfo.Version}", Category.Debug);
-
             this.Container.Resolve<Models.SyntaxService>().Initialize(settingsService.IsDifferentVersion());
-            this.Container.Resolve<IRegionManager>().Regions.CollectionChanged += (sender, e) =>
-            {
-                for (var i = 0; i < (e.NewItems?.Count ?? 0); i++)
-                {
-                    if (e.NewItems[i] is IRegion region)
-                        this.Logger.Log($"Region が追加されました。: Name={region.Name}", Category.Debug);
-                }
-            };
+
+            if (settingsService.IsDifferentVersion())
+                this.Logger.Debug($"アプリケーションのバージョンが更新されました。: Old={settingsService.Version}, New={this.ProductInfo.Version}");
 
             var shell = this.Container.Resolve<Views.Workspace>();
             shell.Title = this.SharedDataService.Identifier;
@@ -268,17 +255,17 @@ namespace MyPad
                     Directory.Delete(this.SharedDataService.TempDirectoryPath, true);
                     while (Directory.Exists(this.SharedDataService.TempDirectoryPath))
                         Thread.Sleep(LOOP_DELAY);
-                    this.Logger.Log($"一時フォルダを削除しました。(システム終了時): Path={this.SharedDataService.TempDirectoryPath}", Category.Debug);
+                    this.Logger.Debug($"一時フォルダを削除しました。: Path={this.SharedDataService.TempDirectoryPath}");
                 }
                 catch (Exception ex)
                 {
-                    this.Logger.Log($"一時フォルダの削除に失敗しました。(システム終了時): Path={this.SharedDataService.TempDirectoryPath}", Category.Warn, ex);
+                    this.Logger.Log($"一時フォルダの削除に失敗しました。: Path={this.SharedDataService.TempDirectoryPath}", Category.Warn, ex);
                 }
             }
 
             base.OnExit(e);
             this.Logger.Log($"アプリケーションを終了しました。", Category.Info);
-            this.Logger.Log($"アプリケーションを終了しました。: ExitCode={e.ApplicationExitCode}", Category.Debug);
+            this.Logger.Debug($"アプリケーションを終了しました。: ExitCode={e.ApplicationExitCode}");
         }
 
         /// <summary>
@@ -324,9 +311,9 @@ namespace MyPad
             }), IntPtr.Zero);
 
             if (result)
-                this.Logger.Log($"起動中の同一アプリケーションは存在しませんでした。: ProcessName={sourceProcess?.ProcessName}", Category.Debug);
+                this.Logger.Debug($"起動中の同一アプリケーションは存在しませんでした。: ProcessName={sourceProcess?.ProcessName}");
             else
-                this.Logger.Log($"起動中の同一アプリケーションのウィンドウハンドルを取得しました。: ProcessName={sourceProcess?.ProcessName}, lpdwProcessID={lpdwProcessId}, hWnd=0x{hWnd.DangerousGetHandle().ToString("X")}", Category.Debug);
+                this.Logger.Debug($"起動中の同一アプリケーションのウィンドウハンドルを取得しました。: ProcessName={sourceProcess?.ProcessName}, lpdwProcessID={lpdwProcessId}, hWnd=0x{hWnd.DangerousGetHandle().ToString("X")}");
             return hWnd;
         }
 
@@ -352,7 +339,7 @@ namespace MyPad
             var lParam = Marshal.AllocHGlobal(Marshal.SizeOf(structure));
             Marshal.StructureToPtr(structure, lParam, false);
             var msg = User32.WindowMessage.WM_COPYDATA;
-            this.Logger.Log($"ウィンドウメッセージを送信します。: hWnd=0x{destinationHandle.DangerousGetHandle().ToString("X")}, msg={msg}, data=[{string.Join(", ", data)}]", Category.Debug);
+            this.Logger.Debug($"ウィンドウメッセージを送信します。: hWnd=0x{destinationHandle.DangerousGetHandle().ToString("X")}, msg={msg}, data=[{string.Join(", ", data)}]");
 
             return User32.SendMessage(destinationHandle, (uint)msg, sourceProcess.Handle, lParam);
         }
