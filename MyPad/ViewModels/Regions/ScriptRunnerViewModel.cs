@@ -66,7 +66,7 @@ namespace MyPad.ViewModels.Regions
                 else
                     this.ScriptHistories.Insert(0, script);
             }
-            this.Logger.Log($"スクリプトランナーでスクリプトを実行します。: Script={script}", Category.Debug);
+            this.Logger.Debug($"スクリプトランナーでスクリプトを実行します。: Script={script}");
 
             var result = await this.EvaluateAsync(script);
             this.ResultHistories.Add($"> {script}");

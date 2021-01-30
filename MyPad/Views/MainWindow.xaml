@@ -207,7 +207,8 @@
                              Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding SettingsService.System.ShowSideBar, Mode=OneWay}}"
                              IsTabStop="False"
                              ContextMenu="{StaticResource ContextMenu}"
-                             ItemInvoked="HamburgerMenu_ItemInvoked">
+                             IsVisibleChanged="SideContent_IsVisibleChanged"
+                             ItemInvoked="SideContent_ItemInvoked">
                 <i:Interaction.Triggers>
                     <i:PropertyChangedTrigger Binding="{Binding Visibility, ElementName=HamburgerMenu, Mode=OneWay}">
                         <i:ChangePropertyAction TargetName="SideContentColumn" PropertyName="Width" Value="Auto"/>

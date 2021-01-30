@@ -51,7 +51,7 @@ namespace MyPad.Models
                         writer.Write((byte[])p.GetValue(null));
                     });
 
-                this.Logger.Log($"シンタックス定義ファイルを初期化しました。: Path={this.DirectoryPath}", Category.Debug);
+                this.Logger.Debug($"シンタックス定義ファイルを初期化しました。: Path={this.DirectoryPath}");
                 return true;
             }
             catch (Exception e)

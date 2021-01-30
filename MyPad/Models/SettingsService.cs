@@ -80,7 +80,7 @@ namespace MyPad.Models
             try
             {
                 this.InitializeInternal(force);
-                this.Logger.Log($"システム設定を初期化しました。", Category.Debug);
+                this.Logger.Debug($"システム設定を初期化しました。");
                 return true;
             }
             catch (Exception e)
@@ -113,7 +113,7 @@ namespace MyPad.Models
                 JsonConvert.PopulateObject(json, this);
                 this.InitializeInternal(false);
 
-                this.Logger.Log($"設定ファイルを読み込みました。: Path={path}", Category.Debug);
+                this.Logger.Debug($"設定ファイルを読み込みました。: Path={path}");
                 return true;
             }
             catch (Exception e)
@@ -140,7 +140,7 @@ namespace MyPad.Models
                     writer.Write(json);
                 }
                 
-                this.Logger.Log($"設定ファイルを保存しました。: Path={path}", Category.Debug);
+                this.Logger.Debug($"設定ファイルを保存しました。: Path={path}");
                 return true;
             }
             catch (Exception e)

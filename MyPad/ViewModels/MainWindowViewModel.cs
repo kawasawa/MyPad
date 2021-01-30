@@ -718,6 +718,8 @@ namespace MyPad.ViewModels
         [LogInterceptor]
         private async Task<(bool result, TextEditorViewModel textEditor)> ReadFile(string path, Encoding encoding, XshdSyntaxDefinition definition, bool isReadOnly = false)
         {
+            this.Logger.Debug($"ファイルを読み込みます。: Path={path}, Encoding={encoding?.EncodingName ?? "<null>"}, Definition={definition?.Name ?? "<null>"}, IsReadOnly={isReadOnly}");
+
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentException("空のパスが指定されています。", nameof(path));
 
@@ -821,7 +823,7 @@ namespace MyPad.ViewModels
                 }
 
                 // ファイルを読み込む
-                var textEditor = this.ActiveTextEditor.Value.IsNewFile && this.ActiveTextEditor.Value.IsModified == false ?
+                var textEditor = this.ActiveTextEditor.Value?.IsNewFile == true && this.ActiveTextEditor.Value.IsModified == false ?
                     this.ActiveTextEditor.Value : this.AddTextEditor();
                 try
                 {
@@ -851,6 +853,8 @@ namespace MyPad.ViewModels
         [LogInterceptor]
         private async Task<(bool result, TextEditorViewModel textEditor)> WriteFile(TextEditorViewModel textEditor, string path, Encoding encoding, XshdSyntaxDefinition definition)
         {
+            this.Logger.Debug($"ファイルに書き出します。: TextEditor={textEditor?.FileName ?? "<null>"}, Path={path}, Encoding={encoding?.EncodingName ?? "<null>"}, Definition={definition?.Name ?? "<null>"}");
+
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentException("空のパスが渡されました。", nameof(path));
 

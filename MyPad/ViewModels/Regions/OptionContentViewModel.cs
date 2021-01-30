@@ -165,7 +165,7 @@ namespace MyPad.ViewModels.Regions
                 try
                 {
                     path = Windows.Storage.ApplicationData.Current.LocalCacheFolder.Path;
-                    this.Logger.Log($"ストアアプリのデータ領域にアクセスしました。: Path={path}", Category.Debug);
+                    this.Logger.Debug($"ストアアプリのデータ領域にアクセスしました。: Path={path}");
                 }
                 catch
                 {

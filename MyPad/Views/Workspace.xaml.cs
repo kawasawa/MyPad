@@ -181,7 +181,7 @@ namespace MyPad.Views
                 case User32.WindowMessage.WM_COPYDATA:
                 {
                     var structure = Marshal.PtrToStructure<COPYDATASTRUCT>(lParam);
-                    this.Logger.Log($"ウィンドウメッセージを受信しました。: hWnd=0x{hWnd.ToString("X")}, msg={(User32.WindowMessage)msg}, data=[{string.Join(", ", structure.lpData)}]", Category.Debug);
+                    this.Logger.Debug($"ウィンドウメッセージを受信しました。: hWnd=0x{hWnd.ToString("X")}, msg={(User32.WindowMessage)msg}, data=[{string.Join(", ", structure.lpData)}]");
 
                     if (string.IsNullOrEmpty(structure.lpData) == false)
                     {

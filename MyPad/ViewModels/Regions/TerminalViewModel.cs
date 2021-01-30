@@ -143,7 +143,7 @@ namespace MyPad.ViewModels.Regions
                 else
                     this.ScriptHistories.Insert(0, script);
             }
-            this.Logger.Log($"ターミナルでスクリプトを実行します。: Script={script}", Category.Debug);
+            this.Logger.Debug($"ターミナルでスクリプトを実行します。: Script={script}");
 
             // DataReceived の際にカレントディレクトリの表示が重複してしまうため削除しておく
             this.OutputLastLine.Value = null;
