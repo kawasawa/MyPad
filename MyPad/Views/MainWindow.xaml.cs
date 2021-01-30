@@ -230,11 +230,11 @@ namespace MyPad.Views
                 ),
                 new CommandBinding(
                     ActivateFileExplorerCommand,
-                    (sender, e) => this.ActivateHamburgerMenuItem(this.FileExplorerItem)
+                    (sender, e) => this.PerformInvokeSideContent(this.FileExplorerItem)
                 ),
                 new CommandBinding(
                     ActivatePropertyCommand,
-                    (sender, e) => this.ActivateHamburgerMenuItem(this.PropertyItem)
+                    (sender, e) => this.PerformInvokeSideContent(this.PropertyItem)
                 ),
             });
 
@@ -303,49 +303,59 @@ namespace MyPad.Views
         }
 
         [LogInterceptor]
-        private void ActivateHamburgerMenuItem(HamburgerMenuItem targetItem)
+        private void OpenSideContent(object targetItem)
+        {
+            // 指定されたコンテンツを選択し、ハンバーガーメニューを開く
+            this.SideContent.Content = targetItem;
+            this.SideContent.Width = double.NaN;
+
+            // グリッドの列構成を調整する
+            this.SideContentColumn.Width = new GridLength(this._columnWidthCache.sideBarWidth, GridUnitType.Star);
+            this.MainContentColumn.Width = new GridLength(this._columnWidthCache.contentAreaWidth, GridUnitType.Star);
+        }
+
+        [LogInterceptor]
+        private void CloseSideContent()
+        {
+            // コンテンツの選択状態を解除し、ハンバーガーメニューを閉じる
+            this.SideContent.Content = null;
+            this.SideContent.Width = this.SideContent.HamburgerWidth;
+
+            // グリッドの列構成を調整する
+            this._columnWidthCache = (this.SideContentColumn.Width.Value, this.MainContentColumn.Width.Value);
+            this.SideContentColumn.Width = GridLength.Auto;
+            this.MainContentColumn.Width = new GridLength(1, GridUnitType.Star);
+        }
+
+        [LogInterceptor]
+        private bool IsClosedSideContent()
+        {
+            return double.IsNaN(this.SideContent.Width) == false;
+        }
+
+        [LogInterceptor]
+        private void PerformInvokeSideContent(object targetItem)
         {
             this.SettingsService.System.ShowSideBar = true;
 
-            if (double.IsNaN(this.SideContent.Width) == false)
+            if (this.IsClosedSideContent())
             {
                 // 閉じた状態の場合
-                // ・選択された項目をアクティブにする
-                // ・ハンバーガーメニューを開く
-                this.SideContent.Content = targetItem;
-                this.SideContent.Width = double.NaN;
-
-                // グリッドの列構成を調整する
-                this.SideContentColumn.Width = new GridLength(this._columnWidthCache.sideBarWidth, GridUnitType.Star);
-                this.MainContentColumn.Width = new GridLength(this._columnWidthCache.contentAreaWidth, GridUnitType.Star);
-
-                // フォーカスを設定する
+                this.OpenSideContent(targetItem);
                 this.FocusSideContent();
-
             }
             else if (targetItem?.Equals(this.SideContent.Content) != true)
             {
-                // 非アクティブな項目が選択された場合
-                // ・選択された項目をアクティブにする
+                // 開いた状態 かつ 非アクティブな項目が選択された場合
+                // 選択された項目をアクティブにする
                 this.SideContent.Content = targetItem;
-
-                // フォーカスを設定する
                 this.FocusSideContent();
             }
             else
             {
                 // 開いた状態 かつ アクティブな項目が選択された 場合
-                // ・選択された項目の非アクティブにする
-                // ・ハンバーガーメニューを閉じる
-                this.SideContent.Content = null;
-                this.SideContent.Width = this.SideContent.HamburgerWidth;
-
-                // グリッドの列構成を調整する
-                this._columnWidthCache = (this.SideContentColumn.Width.Value, this.MainContentColumn.Width.Value);
-                this.SideContentColumn.Width = GridLength.Auto;
-                this.MainContentColumn.Width = new GridLength(1, GridUnitType.Star);
-
-                // フォーカスを設定する
+                // 選択状態を解除し、ハンバーガーメニューを閉じる
+                this.CloseSideContent();
                 this.FocusTextEditor();
             }
         }
@@ -495,10 +505,21 @@ namespace MyPad.Views
         }
 
         [LogInterceptor]
-        private void HamburgerMenu_ItemInvoked(object sender, HamburgerMenuItemInvokedEventArgs e)
+        private void SideContent_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (!(e.NewValue is bool visible) || visible)
+                return;
+            if (this.IsClosedSideContent())
+                return;
+
+            this.CloseSideContent();
+        }
+
+        [LogInterceptor]
+        private void SideContent_ItemInvoked(object sender, HamburgerMenuItemInvokedEventArgs e)
         {
             if (System.Windows.Input.MouseButtonState.Pressed == Mouse.LeftButton && e.IsItemOptions == false)
-                this.ActivateHamburgerMenuItem((HamburgerMenuItem)e.InvokedItem);
+                this.PerformInvokeSideContent(e.InvokedItem);
             e.Handled = true;
         }
 
@@ -605,7 +626,7 @@ namespace MyPad.Views
 
             this.SideContentColumn.Width = new GridLength(this._columnWidthCache.sideBarWidth, GridUnitType.Star);
             this.MainContentColumn.Width = new GridLength(this._columnWidthCache.contentAreaWidth, GridUnitType.Star);
-            this.ActivateHamburgerMenuItem((HamburgerMenuItem)this.SideContent.Content);
+            this.CloseSideContent();
         }
 
         [LogInterceptor]
