@@ -135,7 +135,7 @@ namespace MyPad.ViewModels
                e.Cancel();
                await this.TryCloseTextEditor(textEditor);
                if (this.TextEditors.Any() == false)
-                   this.NewCommand.Execute();
+                   this.WakeUpTextEditor(this.AddTextEditor());
            });
 
         #endregion
@@ -288,7 +288,7 @@ namespace MyPad.ViewModels
                 {
                     await this.TryCloseTextEditor(this.ActiveTextEditor.Value);
                     if (this.TextEditors.Any() == false)
-                        this.NewCommand.Execute();
+                        this.WakeUpTextEditor(this.AddTextEditor());
                 })
                 .AddTo(this.CompositeDisposable);
 
@@ -303,7 +303,7 @@ namespace MyPad.ViewModels
                             return;
                     }
                     if (this.TextEditors.Any() == false)
-                        this.NewCommand.Execute();
+                        this.WakeUpTextEditor(this.AddTextEditor());
                 })
                 .AddTo(this.CompositeDisposable);
 
@@ -440,12 +440,13 @@ namespace MyPad.ViewModels
                 .AddTo(this.CompositeDisposable);
 
             this.DropHandler = new ReactiveCommand<DragEventArgs>()
-                .WithSubscribe(e =>
+                .WithSubscribe(async e =>
                 {
                     if (e.Data.GetData(DataFormats.FileDrop) is IEnumerable<string> paths && paths.Any())
                     {
                         this.Logger.Log($"ファイルがドロップされました。: Paths=[{string.Join(", ", paths)}]", Category.Info);
-                        this.LoadCommand.Execute(paths);
+                        var results = await this.LoadTextEditor(paths);
+                        this.WakeUpTextEditor(results.LastOrDefault(tuple => tuple.textEditor != null).textEditor);
                         e.Handled = true;
                     }
                 })
@@ -460,14 +461,14 @@ namespace MyPad.ViewModels
                 .AddTo(this.CompositeDisposable);
 
             this.ClosingHandler = new ReactiveCommand<CancelEventArgs>()
-                .WithSubscribe(e =>
+                .WithSubscribe(async e =>
                 {
                     // NOTE: Closing イベント内で非同期処理後にイベントをキャンセルできなくなる問題 (ViewModel)
                     // 最初にイベントはキャンセルしてから非同期処理を行う。
                     // 閉じる条件を満たした場合は Dispose メソッドを実行する。
                     // (ViewModel の Dispose をトリガーに、View が Close メソッドを実行する。)
                     e.Cancel = true;
-                    this.ExitCommand.Execute();
+                    await this.InvokeExit();
                 })
                 .AddTo(this.CompositeDisposable);
         }
