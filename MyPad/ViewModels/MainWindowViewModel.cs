@@ -328,14 +328,7 @@ namespace MyPad.ViewModels
             this.DiffCommand = new ReactiveCommand()
                 .WithSubscribe(async () =>
                 {
-                    IEnumerable<(TextEditorViewModel textEditors, Views.MainWindow window)> getTextEditors()
-                    {
-                        foreach (var v in this.GetViews())
-                            foreach (var e in ((MainWindowViewModel)v.DataContext).TextEditors)
-                                yield return (e, v);
-                    }
-
-                    var textEditors = getTextEditors().Select(tuple => tuple.textEditors);
+                    var textEditors = this.GetAllViewModels().SelectMany(viewModel => viewModel.TextEditors);
                     var (result, diffSourcePath, diffDestinationPath) = await this.DialogService.SelectDiffFiles(textEditors.Select(e => e.FileName), this.ActiveTextEditor.Value.FileName);
                     if (result == false)
                         return;
@@ -769,13 +762,9 @@ namespace MyPad.ViewModels
             else
             {
                 // 他のウィンドウが同名ファイルを占有している場合は処理を委譲する
-                foreach (var view in this.GetViews())
+                foreach (var viewModel in this.GetAllViewModels())
                 {
-                    var viewModel = (MainWindowViewModel)view.DataContext;
-                    if (viewModel == this)
-                        continue;
-
-                    var existTextEditor = viewModel.TextEditors.FirstOrDefault(e => e.FileName == path);
+                    var existTextEditor = viewModel?.TextEditors.FirstOrDefault(e => e.FileName == path);
                     if (existTextEditor == null)
                         continue;
 
@@ -896,13 +885,9 @@ namespace MyPad.ViewModels
             else
             {
                 // 他のウィンドウが同名ファイルを占有している場合は、保存せずに終了する
-                foreach (var view in this.GetViews())
+                foreach (var viewModel in this.GetAllViewModels())
                 {
-                    var viewModel = (MainWindowViewModel)view.DataContext;
-                    if (viewModel == this)
-                        continue;
-
-                    var existTextEditor = viewModel.TextEditors.FirstOrDefault(e => e.FileName == path);
+                    var existTextEditor = viewModel?.TextEditors.FirstOrDefault(e => e.FileName == path);
                     if (existTextEditor == null)
                         continue;
 

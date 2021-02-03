@@ -1,4 +1,5 @@
-﻿using MyPad.Models;
+﻿using Livet.Messaging;
+using MyPad.Models;
 using MyPad.PubSub;
 using Plow;
 using Prism.Events;
@@ -60,12 +61,12 @@ namespace MyPad.ViewModels
         private async Task ExitApplication()
         {
             // すべての ViewModel の破棄に成功した場合はアプリケーションを終了する
-            var views = this.GetViews();
-            for (var i = views.Count() - 1; 0 <= i; i--)
+            var viewModels = this.GetAllViewModels();
+            for (var i = viewModels.Count() - 1; 0 <= i; i--)
             {
-                var view = views.ElementAt(i);
-                view.SetForegroundWindow();
-                if (await ((MainWindowViewModel)view.DataContext).InvokeExit() == false)
+                var viewModel = viewModels.ElementAt(i);
+                viewModel.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
+                if (await viewModel.InvokeExit() == false)
                     return;
             }
             this.Dispose();

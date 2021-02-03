@@ -1,5 +1,4 @@
 ﻿using Plow;
-using MyPad.Views;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -15,7 +14,7 @@ namespace MyPad.ViewModels
         }
 
         [LogInterceptor]
-        protected IEnumerable<MainWindow> GetViews()
-            => Application.Current?.Windows.OfType<MainWindow>() ?? Enumerable.Empty<MainWindow>();
+        protected IEnumerable<MainWindowViewModel> GetAllViewModels()
+            => Application.Current?.Windows.OfType<Views.MainWindow>()?.Select(view => (MainWindowViewModel)view.DataContext) ?? Enumerable.Empty<MainWindowViewModel>();
     }
 }
