@@ -17,11 +17,29 @@ namespace MyPad
         private readonly Lazy<Logger> ErrorLogger;
         private readonly Lazy<Logger> FatalLogger;
 
+        /// <summary>
+        /// 発行元のロガーの型を取得または設定します。
+        /// </summary>
         public Type PublisherType { get; set; }
+
+        /// <summary>
+        /// ファクトリーの生成に使用される構成情報を取得または設定します。
+        /// </summary>
         public Func<LoggingConfiguration> ConfigurationFactory { get; set; }
+
+        /// <summary>
+        /// ロガーのインスタンスを生成する処理をフックするためのメソッドを取得または設定します。
+        /// </summary>
         public Action<Logger, Category> CreateLoggerHook { get; set; }
+
+        /// <summary>
+        /// ログが出力されるときに発生します。
+        /// </summary>
         public event EventHandler<LogEventArgs> LogWriting;
 
+        /// <summary>
+        /// このクラスの新しいインスタンスを生成します。
+        /// </summary>
         public NLogger()
         {
             this.TraceLogger = new Lazy<Logger>(() => this.CreateLogger(Category.Trace));
@@ -33,6 +51,12 @@ namespace MyPad
             this.PublisherType = this.GetType();
         }
 
+        /// <summary>
+        /// ログを出力します。
+        /// </summary>
+        /// <param name="message">メッセージ</param>
+        /// <param name="category">ログの種類</param>
+        /// <param name="priority">ログの優先度</param>
         public void Log(string message, Category category, Priority priority = Priority.None)
         {
             var logger = category switch
@@ -65,6 +89,11 @@ namespace MyPad
             logger.Log(this.PublisherType, logInfo);
         }
 
+        /// <summary>
+        /// ログの出力に使用されるロガーのインスタンスを生成します。
+        /// </summary>
+        /// <param name="category">ログの種類</param>
+        /// <returns>NLog.Logger のロガーのインスタンス</returns>
         protected virtual Logger CreateLogger(Category category)
         {
             var logger = this.CreateLogFactory().GetLogger(nameof(NLogger));
@@ -72,6 +101,10 @@ namespace MyPad
             return logger;
         }
 
+        /// <summary>
+        /// ロガーのインスタンスを生成するためのファクトリーを生成します。
+        /// </summary>
+        /// <returns>NLog.LogFactory ファクトリー</returns>
         protected virtual LogFactory CreateLogFactory()
         {
             if (this.ConfigurationFactory != null)

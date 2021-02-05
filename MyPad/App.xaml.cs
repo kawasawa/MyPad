@@ -401,12 +401,20 @@ namespace MyPad
         {
             IDialogResult IDialogWindow.Result { get; set; }
 
+            /// <summary>
+            /// このクラスの新しいインスタンスを生成します。
+            /// </summary>
             [LogInterceptor]
             public PrismDialogWindowWrapper()
             {
                 this.Loaded += this.Window_Loaded;
             }
 
+            /// <summary>
+            /// ウィンドウがロードされたときに行う処理を定義します。
+            /// </summary>
+            /// <param name="sender">イベントの発生源</param>
+            /// <param name="e">イベントの情報</param>
             [LogInterceptor]
             private void Window_Loaded(object sender, RoutedEventArgs e)
             {
