@@ -58,13 +58,19 @@ namespace MyPad.ViewModels.Regions
             this.SelectDirectoryCommand = this.IsWorking.Inverse().ToReactiveCommand<object>()
                 .WithSubscribe(args =>
                 {
-                    var info = (ToolSettings.PathInfo)args;
                     var parameter = new FolderBrowserDialogParameters();
-                    if (string.IsNullOrEmpty(info.Path) == false)
+                    var info = args as ToolSettings.PathInfo;
+                    if (string.IsNullOrEmpty(info?.Path) == false)
                         parameter.InitialDirectory = info.Path;
+                    
                     var ready = this.CommonDialogService.ShowDialog(parameter);
-                    if (ready)
+                    if (ready == false)
+                        return;
+                    
+                    if (info != null)
                         info.Path = parameter.FileName;
+                    else
+                        this.SettingsService.OtherTools.ExplorerRoots.Add(new ToolSettings.PathInfo() { Path = parameter.FileName });
                 })
                 .AddTo(this.CompositeDisposable);
 

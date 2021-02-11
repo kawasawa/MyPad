@@ -256,12 +256,6 @@
                             <DataGridTemplateColumn IsReadOnly="True" Width="30" CellStyle="{StaticResource TemplateColumnDataGridCell}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <DataTemplate.Triggers>
-                                            <!-- プレースホルダーには表示しない -->
-                                            <DataTrigger Binding="{Binding}" Value="{x:Static helpers:DataGridHelper.NewItemPlaceholder}">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                            </DataTrigger>
-                                        </DataTemplate.Triggers>
                                         <Button Command="{Binding DataContext.SelectDirectoryCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding Mode=OneWay}" ToolTip="{le:Loc Command_Select}" Style="{DynamicResource Common.ChromelessButton}">
                                             <mi:Material Kind="FolderOpen"/>
                                         </Button>
