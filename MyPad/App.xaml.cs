@@ -53,7 +53,7 @@ namespace MyPad
                     ConfigurationFactory = () =>
                     {
                         var headerText = new StringBuilder();
-                        headerText.AppendLine($"# {this.ProductInfo.Product} {this.ProductInfo.Version}");
+                        headerText.AppendLine($"# {this.ProductInfo.Product} ${{var:CTG}} Log");
                         headerText.AppendLine($"# {Environment.OSVersion} - CLR {Environment.Version}");
                         headerText.AppendLine("# ${environment:PROCESSOR_ARCHITECTURE} - ${environment:PROCESSOR_IDENTIFIER}");
                         headerText.AppendLine("# ${environment:COMPUTERNAME}");
@@ -70,6 +70,7 @@ namespace MyPad
                         layout.Header = header;
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${longdate}"));
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${environment-user}"));
+                        layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, $"{this.ProductInfo.Version}"));
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${processid}"));
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${threadid}"));
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${message}"));

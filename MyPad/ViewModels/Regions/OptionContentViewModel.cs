@@ -194,27 +194,29 @@ namespace MyPad.ViewModels.Regions
 
                 this.SharedDataService.CreateTempDirectory();
 
-                // 一時フォルダに退避する
+                // 一時フォルダに複製する
                 if (Directory.Exists(tempPath))
                     await Task.Run(() => Directory.Delete(tempPath, true));
                 while (Directory.Exists(tempPath))
                     await Task.Delay(LOOP_DELAY);
                 await Task.Run(() => FileSystem.CopyDirectory(this.SharedDataService.LogDirectoryPath, tempPath, UIOption.AllDialogs, UICancelOption.ThrowException));
+                this.Logger.Debug($"ログファイルを一時フォルダに複製しました。: Source={this.SharedDataService.LogDirectoryPath}, Dest={tempPath}");
 
-                // 退避したファイルを圧縮して出力する
+                // 複製したファイルを圧縮して出力する
                 if (File.Exists(path))
                     await Task.Run(() => File.Delete(path));
                 while (File.Exists(path))
                     await Task.Delay(LOOP_DELAY);
                 await Task.Run(() => ZipFile.CreateFromDirectory(tempPath, path, CompressionLevel.Optimal, false));
+                this.Logger.Debug($"ログファイルを圧縮して出力しました。: Source={tempPath}, Dest={path}");
 
                 Process.Start("explorer.exe", $"/select, {path}");
-                this.Logger.Log($"ログファイルを出力しました。: Path={path}, Temp={tempPath}", Category.Info);
+                this.Logger.Log($"ログファイルを出力しました。: Path={path}", Category.Info);
             }
             catch (OperationCanceledException e)
             {
                 // FileSystem.CopyDirectory の処理をキャンセルした場合
-                this.Logger.Log($"ログファイルの出力をキャンセルしました。: Path={path}, Temp={tempPath}", Category.Info, e);
+                this.Logger.Log($"ログファイルの出力をキャンセルしました。: Path={path}", Category.Info, e);
                 this.DialogService.Notify(e.Message);
                 return false;
             }
