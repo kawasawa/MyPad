@@ -10,12 +10,12 @@ namespace MyPad
     /// </summary>
     public class NLogger : ILoggerFacade
     {
-        private readonly Lazy<Logger> TraceLogger;
-        private readonly Lazy<Logger> DebugLogger;
-        private readonly Lazy<Logger> InfoLogger;
-        private readonly Lazy<Logger> WarnLogger;
-        private readonly Lazy<Logger> ErrorLogger;
-        private readonly Lazy<Logger> FatalLogger;
+        public readonly Lazy<ILogger> TraceCoreLogger;
+        public readonly Lazy<ILogger> DebugCoreLogger;
+        public readonly Lazy<ILogger> InfoCoreLogger;
+        public readonly Lazy<ILogger> WarnCoreLogger;
+        public readonly Lazy<ILogger> ErrorCoreLogger;
+        public readonly Lazy<ILogger> FatalCoreLogger;
 
         /// <summary>
         /// 発行元のロガーの型を取得または設定します。
@@ -30,7 +30,7 @@ namespace MyPad
         /// <summary>
         /// ロガーのインスタンスを生成する処理をフックするためのメソッドを取得または設定します。
         /// </summary>
-        public Action<Logger, Category> CreateLoggerHook { get; set; }
+        public Action<ILogger, Category> CreateLoggerHook { get; set; }
 
         /// <summary>
         /// ログが出力されるときに発生します。
@@ -42,12 +42,12 @@ namespace MyPad
         /// </summary>
         public NLogger()
         {
-            this.TraceLogger = new Lazy<Logger>(() => this.CreateLogger(Category.Trace));
-            this.DebugLogger = new Lazy<Logger>(() => this.CreateLogger(Category.Debug));
-            this.InfoLogger = new Lazy<Logger>(() => this.CreateLogger(Category.Info));
-            this.WarnLogger = new Lazy<Logger>(() => this.CreateLogger(Category.Warn));
-            this.ErrorLogger = new Lazy<Logger>(() => this.CreateLogger(Category.Error));
-            this.FatalLogger = new Lazy<Logger>(() => this.CreateLogger(Category.Fatal));
+            this.TraceCoreLogger = new Lazy<ILogger>(() => this.CreateLogger(Category.Trace));
+            this.DebugCoreLogger = new Lazy<ILogger>(() => this.CreateLogger(Category.Debug));
+            this.InfoCoreLogger = new Lazy<ILogger>(() => this.CreateLogger(Category.Info));
+            this.WarnCoreLogger = new Lazy<ILogger>(() => this.CreateLogger(Category.Warn));
+            this.ErrorCoreLogger = new Lazy<ILogger>(() => this.CreateLogger(Category.Error));
+            this.FatalCoreLogger = new Lazy<ILogger>(() => this.CreateLogger(Category.Fatal));
             this.PublisherType = this.GetType();
         }
 
@@ -61,13 +61,13 @@ namespace MyPad
         {
             var logger = category switch
             {
-                Category.Trace => this.TraceLogger.Value,
-                Category.Debug => this.DebugLogger.Value,
-                Category.Info => this.InfoLogger.Value,
-                Category.Warn => this.WarnLogger.Value,
-                Category.Error => this.ErrorLogger.Value,
-                Category.Fatal => this.FatalLogger.Value,
-                _ => this.InfoLogger.Value,
+                Category.Trace => this.TraceCoreLogger.Value,
+                Category.Debug => this.DebugCoreLogger.Value,
+                Category.Info => this.InfoCoreLogger.Value,
+                Category.Warn => this.WarnCoreLogger.Value,
+                Category.Error => this.ErrorCoreLogger.Value,
+                Category.Fatal => this.FatalCoreLogger.Value,
+                _ => this.InfoCoreLogger.Value,
             };
             var level = category switch
             {
@@ -93,8 +93,8 @@ namespace MyPad
         /// ログの出力に使用されるロガーのインスタンスを生成します。
         /// </summary>
         /// <param name="category">ログの種類</param>
-        /// <returns>NLog.Logger のロガーのインスタンス</returns>
-        protected virtual Logger CreateLogger(Category category)
+        /// <returns>NLog.ILogger を実装したインスタンス</returns>
+        protected virtual ILogger CreateLogger(Category category)
         {
             var logger = this.CreateLogFactory().GetLogger(nameof(NLogger));
             this.CreateLoggerHook?.Invoke(logger, category);

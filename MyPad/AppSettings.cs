@@ -38,6 +38,12 @@ namespace MyPad
         public static int ToastCountLimit
             => int.TryParse(_lazyConfiguration.Value[nameof(ToastCountLimit).ToSnakeCase()], out var value) && 0 <= value ? value : 5;
 
+        public static int PerformanceCheckInterval
+            => int.TryParse(_lazyConfiguration.Value[nameof(PerformanceCheckInterval).ToSnakeCase()], out var value) && 500 <= value ? value : 2000;
+        
+        public static int PerformanceGraphLimit
+            => int.TryParse(_lazyConfiguration.Value[nameof(PerformanceGraphLimit).ToSnakeCase()], out var value) && 10 <= value ? value : 50;
+
         public static long EditorFileSizeThreshold
             => long.TryParse(_lazyConfiguration.Value[nameof(EditorFileSizeThreshold).ToSnakeCase()], out var value) && SIZE_MB <= value ? value : 10 * SIZE_MB;
 

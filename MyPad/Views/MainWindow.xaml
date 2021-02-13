@@ -88,6 +88,7 @@
         <KeyBinding Command="{Binding PrintCommand,                Mode=OneTime}" Key="P"        Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding PrintPreviewCommand,         Mode=OneTime}" Key="P"        Modifiers="Ctrl+Shift"/>
         <KeyBinding Command="{Binding OptionCommand,               Mode=OneTime}" Key="OemComma" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding MaintenanceCommand,          Mode=OneTime}" Key="OemComma" Modifiers="Ctrl+Shift"/>
         <KeyBinding Command="{Binding AboutCommand,                Mode=OneTime}" Key="F1"       Modifiers="Ctrl+Shift"/>
         <KeyBinding Command="{Binding GoToLineCommand,             Mode=OneTime}" Key="G"        Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding ChangeEncodingCommand,       Mode=OneTime}" Key="E"        Modifiers="Ctrl"/>
@@ -142,6 +143,9 @@
             </m:Flyout>
             <m:Flyout Header="{le:Loc Command_Option}" IsOpen="{Binding IsOpenOptionContent.Value, Mode=TwoWay}">
                 <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="OptionContentRegion"/>
+            </m:Flyout>
+            <m:Flyout Header="{le:Loc Command_Maintenance}" IsOpen="{Binding IsOpenMaintenanceContent.Value, Mode=TwoWay}">
+                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="MaintenanceContentRegion"/>
             </m:Flyout>
             <m:Flyout Header="{le:Loc Command_About}" IsOpen="{Binding IsOpenAboutContent.Value, Mode=TwoWay}">
                 <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="AboutContentRegion"/>

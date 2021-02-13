@@ -56,7 +56,7 @@ namespace MyPad.Views
 
             void createWindow() => this.CreateWindow().Show();
             this.EventAggregator.GetEvent<CreateWindowEvent>().Subscribe(createWindow);
-            void showBalloon((string title, string message) args) => this.TaskbarIcon.ShowBalloonTip(args.title, args.message, BalloonIcon.Info);
+            void showBalloon((string title, string message) payload) => this.TaskbarIcon.ShowBalloonTip(payload.title, payload.message, BalloonIcon.Info);
             this.EventAggregator.GetEvent<RaiseBalloonEvent>().Subscribe(showBalloon);
         }
 

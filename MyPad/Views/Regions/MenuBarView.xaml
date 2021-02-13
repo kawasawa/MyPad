@@ -347,6 +347,15 @@
                     <mi:Modern Kind="Cog"/>
                 </MenuItem.Icon>
             </MenuItem>
+            <MenuItem Command="{Binding MaintenanceCommand, Mode=OneTime}"
+                      Header="{le:Loc Command_Maintenance}"
+                      HeaderStringFormat="{}{0}..."
+                      InputGestureText="Ctrl+Shift+,">
+                <MenuItem.Icon>
+                    <mi:Material Kind="MonitorDashboard"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator/>
             <MenuItem Command="{Binding ChangeEncodingCommand, Mode=OneTime}"
                       Header="{le:Loc Command_ChangeEncoding}"
                       HeaderStringFormat="{}{0}..."

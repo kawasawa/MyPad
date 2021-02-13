@@ -476,6 +476,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   メンテナンス に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Maintenance {
+            get {
+                return ResourceManager.GetString("Command_Maintenance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   ウィンドウを集約 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_MergeWindows {
@@ -1318,6 +1327,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   ログビューワー に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_LogViewer {
+            get {
+                return ResourceManager.GetString("Label_LogViewer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   更新日時 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_ModifiredDate {
@@ -1359,6 +1377,15 @@ namespace MyPad.Properties {
         public static string Label_Path {
             get {
                 return ResourceManager.GetString("Label_Path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   パフォーマンスモニター に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_PerformanceMonitor {
+            get {
+                return ResourceManager.GetString("Label_PerformanceMonitor", resourceCulture);
             }
         }
         

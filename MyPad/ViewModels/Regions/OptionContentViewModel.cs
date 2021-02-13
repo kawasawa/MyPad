@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic.FileIO;
-using MyPad.Models;
+﻿using MyPad.Models;
 using MyPad.Properties;
 using MyPad.PubSub;
 using Plow;
@@ -12,8 +11,6 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
-using System.Threading.Tasks;
 using Unity;
 
 namespace MyPad.ViewModels.Regions
@@ -31,8 +28,6 @@ namespace MyPad.ViewModels.Regions
         [Dependency]
         public IProductInfo ProductInfo { get; set; }
         [Dependency]
-        public SharedDataService SharedDataService { get; set; }
-        [Dependency]
         public SettingsService SettingsService { get; set; }
         [Dependency]
         public SyntaxService SyntaxService { get; set; }
@@ -43,7 +38,6 @@ namespace MyPad.ViewModels.Regions
         public ReactiveCommand<object> RemoveDirectoryCommand { get; }
         public ReactiveCommand RefreshExplorerCommand { get; }
         public ReactiveCommand OpenAppDataDirectoryCommand { get; }
-        public ReactiveCommand ExportLogArchiveCommand { get; }
         public ReactiveCommand InitializeSyntaxCommand { get; }
         public ReactiveCommand ImportSettingsFileCommand { get; }
         public ReactiveCommand ExportSettingsFileCommand { get; }
@@ -88,23 +82,6 @@ namespace MyPad.ViewModels.Regions
 
             this.OpenAppDataDirectoryCommand = this.IsWorking.Inverse().ToReactiveCommand()
                 .WithSubscribe(() => this.OpenAppDataDirectory())
-                .AddTo(this.CompositeDisposable);
-
-            this.ExportLogArchiveCommand = this.IsWorking.Inverse().ToReactiveCommand()
-                .WithSubscribe(async () =>
-                {
-                    var parameters = new SaveFileDialogParameters()
-                    {
-                        DefaultFileName = $"{this.ProductInfo.Product}-log ({DateTime.Now:yyyyMMddHHmmss})",
-                        Filter = "ZIP|*.zip",
-                        DefaultExtension = ".zip",
-                    };
-                    var ready = this.CommonDialogService.ShowDialog(parameters);
-                    if (ready == false)
-                        return;
-
-                    await this.ExportLogArchive(parameters.FileName);
-                })
                 .AddTo(this.CompositeDisposable);
 
             this.InitializeSyntaxCommand = this.IsWorking.Inverse().ToReactiveCommand()
@@ -185,60 +162,6 @@ namespace MyPad.ViewModels.Regions
                 this.Logger.Log($"データフォルダのオープンに失敗しました。", Category.Error, e);
                 this.DialogService.Warn(e.Message);
             }
-        }
-
-        [LogInterceptor]
-        private async Task<bool> ExportLogArchive(string path)
-        {
-            const int LOOP_DELAY = 500;
-
-            var tempPath = Path.Combine(this.SharedDataService.TempDirectoryPath, Path.GetFileNameWithoutExtension(path));
-
-            try
-            {
-                this.IsWorking.Value = true;
-
-                this.SharedDataService.CreateTempDirectory();
-
-                // 一時フォルダに複製する
-                if (Directory.Exists(tempPath))
-                    await Task.Run(() => Directory.Delete(tempPath, true));
-                while (Directory.Exists(tempPath))
-                    await Task.Delay(LOOP_DELAY);
-                await Task.Run(() => FileSystem.CopyDirectory(this.SharedDataService.LogDirectoryPath, tempPath, UIOption.AllDialogs, UICancelOption.ThrowException));
-                this.Logger.Debug($"ログファイルを一時フォルダに複製しました。: Source={this.SharedDataService.LogDirectoryPath}, Dest={tempPath}");
-
-                // 複製したファイルを圧縮して出力する
-                if (File.Exists(path))
-                    await Task.Run(() => File.Delete(path));
-                while (File.Exists(path))
-                    await Task.Delay(LOOP_DELAY);
-                await Task.Run(() => ZipFile.CreateFromDirectory(tempPath, path, CompressionLevel.Optimal, false));
-                this.Logger.Debug($"ログファイルを圧縮して出力しました。: Source={tempPath}, Dest={path}");
-
-                Process.Start("explorer.exe", $"/select, {path}");
-                this.Logger.Log($"ログファイルを出力しました。: Path={path}", Category.Info);
-            }
-            catch (OperationCanceledException e)
-            {
-                // FileSystem.CopyDirectory の処理をキャンセルした場合
-                this.Logger.Log($"ログファイルの出力をキャンセルしました。: Path={path}", Category.Info, e);
-                this.DialogService.Notify(e.Message);
-                return false;
-            }
-            catch (Exception e)
-            {
-                this.Logger.Log($"ログファイルの出力に失敗しました。: Path={path}, Temp={tempPath}", Category.Error, e);
-                this.DialogService.Warn(e.Message);
-                return false;
-            }
-            finally
-            {
-                if (Directory.Exists(tempPath))
-                    _ = Task.Run(() => { try { Directory.Delete(tempPath, true); } catch { } });
-                this.IsWorking.Value = false;
-            }
-            return true;
         }
 
         [LogInterceptor]

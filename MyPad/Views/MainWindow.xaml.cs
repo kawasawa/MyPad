@@ -437,6 +437,7 @@ namespace MyPad.Views
             injectRegionContent<DiffContentView>();
             injectRegionContent<PrintPreviewContentView>();
             injectRegionContent<OptionContentView>();
+            injectRegionContent<MaintenanceContentView>();
             injectRegionContent<AboutContentView>();
             injectRegionContent<TerminalView>();
             injectRegionContent<ScriptRunnerView>();

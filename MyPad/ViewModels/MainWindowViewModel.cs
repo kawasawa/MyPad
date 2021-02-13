@@ -95,6 +95,7 @@ namespace MyPad.ViewModels
         public ReactiveProperty<bool> IsOpenDiffContent { get; }
         public ReactiveProperty<bool> IsOpenPrintPreviewContent { get; }
         public ReactiveProperty<bool> IsOpenOptionContent { get; }
+        public ReactiveProperty<bool> IsOpenMaintenanceContent { get; }
         public ReactiveProperty<bool> IsOpenAboutContent { get; }
 
         public ReactiveCommand NewCommand { get; }
@@ -115,6 +116,7 @@ namespace MyPad.ViewModels
         public ReactiveCommand PrintCommand { get; }
         public ReactiveCommand PrintPreviewCommand { get; }
         public ReactiveCommand OptionCommand { get; }
+        public ReactiveCommand MaintenanceCommand { get; }
         public ReactiveCommand AboutCommand { get; }
         public ReactiveCommand GoToLineCommand { get; }
         public ReactiveCommand ChangeEncodingCommand { get; }
@@ -164,11 +166,13 @@ namespace MyPad.ViewModels
             this.IsOpenDiffContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             this.IsOpenPrintPreviewContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             this.IsOpenOptionContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
+            this.IsOpenMaintenanceContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             this.IsOpenAboutContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             var compositeFlyout = new[] {
                 this.IsOpenDiffContent,
                 this.IsOpenPrintPreviewContent,
                 this.IsOpenOptionContent,
+                this.IsOpenMaintenanceContent,
                 this.IsOpenAboutContent
             };
 
@@ -198,6 +202,15 @@ namespace MyPad.ViewModels
                 {
                     compositeFlyout.Except(new[] { this.IsOpenOptionContent }).ForEach(p => p.Value = false);
                     this.Logger.Log($"オプションを表示します。", Category.Info);
+                })
+                .AddTo(this.CompositeDisposable);
+
+            this.IsOpenMaintenanceContent
+                .Where(isOpen => isOpen)
+                .Subscribe(_ =>
+                {
+                    compositeFlyout.Except(new[] { this.IsOpenMaintenanceContent }).ForEach(p => p.Value = false);
+                    this.Logger.Log($"メンテナンスを表示します。", Category.Info);
                 })
                 .AddTo(this.CompositeDisposable);
 
@@ -388,6 +401,10 @@ namespace MyPad.ViewModels
 
             this.OptionCommand = new ReactiveCommand()
                 .WithSubscribe(() => this.IsOpenOptionContent.Value = true)
+                .AddTo(this.CompositeDisposable);
+
+            this.MaintenanceCommand = new ReactiveCommand()
+                .WithSubscribe(() => this.IsOpenMaintenanceContent.Value = true)
                 .AddTo(this.CompositeDisposable);
 
             this.AboutCommand = new ReactiveCommand()
