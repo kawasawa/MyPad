@@ -776,7 +776,7 @@ namespace MyPad.ViewModels
 
                 // ファイルサイズを確認する
                 var info = new FileInfo(path);
-                if (AppSettings.FileSizeThreshold <= info.Length &&
+                if (AppSettings.EditorFileSizeThreshold <= info.Length &&
                     this.DialogService.Confirm(Resources.Message_ConfirmOpenLargeFile) == false)
                 {
                     return (false, null);
