@@ -24,6 +24,10 @@ Copyright (c) 2016 minami_SC
 Copyright (c) 2020 havendv  
 [MIT License](https://github.com/HavenDV/H.NotifyIcon.WPF/blob/master/LICENSE.md)  
 
+### LiveCharts.Wpf.Core
+Copyright (c) 2016 Alberto Rodriguez & LiveCharts contributors  
+[MIT License](https://github.com/fedoaa/Live-Charts/blob/master/LICENSE.TXT)  
+
 ### LivetCask.Messaging
 Copyright (c) 2010-2011 Livet Project  
 [MIT License](https://github.com/runceel/Livet/blob/master/license-en.txt)  

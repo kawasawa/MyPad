@@ -476,6 +476,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   メンテナンス に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Maintenance {
+            get {
+                return ResourceManager.GetString("Command_Maintenance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   ウィンドウを集約 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_MergeWindows {
@@ -679,6 +688,15 @@ namespace MyPad.Properties {
         public static string Command_Redo {
             get {
                 return ResourceManager.GetString("Command_Redo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   再読み込み に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Refresh {
+            get {
+                return ResourceManager.GetString("Command_Refresh", resourceCulture);
             }
         }
         
@@ -1318,6 +1336,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   ログビューワー に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_LogViewer {
+            get {
+                return ResourceManager.GetString("Label_LogViewer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   更新日時 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_ModifiredDate {
@@ -1359,6 +1386,15 @@ namespace MyPad.Properties {
         public static string Label_Path {
             get {
                 return ResourceManager.GetString("Label_Path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   パフォーマンスモニター に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_PerformanceMonitor {
+            get {
+                return ResourceManager.GetString("Label_PerformanceMonitor", resourceCulture);
             }
         }
         

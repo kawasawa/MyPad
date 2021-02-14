@@ -95,6 +95,7 @@ namespace MyPad.ViewModels
         public ReactiveProperty<bool> IsOpenDiffContent { get; }
         public ReactiveProperty<bool> IsOpenPrintPreviewContent { get; }
         public ReactiveProperty<bool> IsOpenOptionContent { get; }
+        public ReactiveProperty<bool> IsOpenMaintenanceContent { get; }
         public ReactiveProperty<bool> IsOpenAboutContent { get; }
 
         public ReactiveCommand NewCommand { get; }
@@ -115,6 +116,7 @@ namespace MyPad.ViewModels
         public ReactiveCommand PrintCommand { get; }
         public ReactiveCommand PrintPreviewCommand { get; }
         public ReactiveCommand OptionCommand { get; }
+        public ReactiveCommand MaintenanceCommand { get; }
         public ReactiveCommand AboutCommand { get; }
         public ReactiveCommand GoToLineCommand { get; }
         public ReactiveCommand ChangeEncodingCommand { get; }
@@ -135,7 +137,7 @@ namespace MyPad.ViewModels
                e.Cancel();
                await this.TryCloseTextEditor(textEditor);
                if (this.TextEditors.Any() == false)
-                   this.NewCommand.Execute();
+                   this.WakeUpTextEditor(this.AddTextEditor());
            });
 
         #endregion
@@ -164,11 +166,13 @@ namespace MyPad.ViewModels
             this.IsOpenDiffContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             this.IsOpenPrintPreviewContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             this.IsOpenOptionContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
+            this.IsOpenMaintenanceContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             this.IsOpenAboutContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             var compositeFlyout = new[] {
                 this.IsOpenDiffContent,
                 this.IsOpenPrintPreviewContent,
                 this.IsOpenOptionContent,
+                this.IsOpenMaintenanceContent,
                 this.IsOpenAboutContent
             };
 
@@ -198,6 +202,15 @@ namespace MyPad.ViewModels
                 {
                     compositeFlyout.Except(new[] { this.IsOpenOptionContent }).ForEach(p => p.Value = false);
                     this.Logger.Log($"オプションを表示します。", Category.Info);
+                })
+                .AddTo(this.CompositeDisposable);
+
+            this.IsOpenMaintenanceContent
+                .Where(isOpen => isOpen)
+                .Subscribe(_ =>
+                {
+                    compositeFlyout.Except(new[] { this.IsOpenMaintenanceContent }).ForEach(p => p.Value = false);
+                    this.Logger.Log($"メンテナンスを表示します。", Category.Info);
                 })
                 .AddTo(this.CompositeDisposable);
 
@@ -288,7 +301,7 @@ namespace MyPad.ViewModels
                 {
                     await this.TryCloseTextEditor(this.ActiveTextEditor.Value);
                     if (this.TextEditors.Any() == false)
-                        this.NewCommand.Execute();
+                        this.WakeUpTextEditor(this.AddTextEditor());
                 })
                 .AddTo(this.CompositeDisposable);
 
@@ -303,7 +316,7 @@ namespace MyPad.ViewModels
                             return;
                     }
                     if (this.TextEditors.Any() == false)
-                        this.NewCommand.Execute();
+                        this.WakeUpTextEditor(this.AddTextEditor());
                 })
                 .AddTo(this.CompositeDisposable);
 
@@ -328,14 +341,7 @@ namespace MyPad.ViewModels
             this.DiffCommand = new ReactiveCommand()
                 .WithSubscribe(async () =>
                 {
-                    IEnumerable<(TextEditorViewModel textEditors, Views.MainWindow window)> getTextEditors()
-                    {
-                        foreach (var v in this.GetViews())
-                            foreach (var e in ((MainWindowViewModel)v.DataContext).TextEditors)
-                                yield return (e, v);
-                    }
-
-                    var textEditors = getTextEditors().Select(tuple => tuple.textEditors);
+                    var textEditors = this.GetAllViewModels().SelectMany(viewModel => viewModel.TextEditors);
                     var (result, diffSourcePath, diffDestinationPath) = await this.DialogService.SelectDiffFiles(textEditors.Select(e => e.FileName), this.ActiveTextEditor.Value.FileName);
                     if (result == false)
                         return;
@@ -397,6 +403,10 @@ namespace MyPad.ViewModels
                 .WithSubscribe(() => this.IsOpenOptionContent.Value = true)
                 .AddTo(this.CompositeDisposable);
 
+            this.MaintenanceCommand = new ReactiveCommand()
+                .WithSubscribe(() => this.IsOpenMaintenanceContent.Value = true)
+                .AddTo(this.CompositeDisposable);
+
             this.AboutCommand = new ReactiveCommand()
                 .WithSubscribe(() => this.IsOpenAboutContent.Value = true)
                 .AddTo(this.CompositeDisposable);
@@ -447,12 +457,13 @@ namespace MyPad.ViewModels
                 .AddTo(this.CompositeDisposable);
 
             this.DropHandler = new ReactiveCommand<DragEventArgs>()
-                .WithSubscribe(e =>
+                .WithSubscribe(async e =>
                 {
                     if (e.Data.GetData(DataFormats.FileDrop) is IEnumerable<string> paths && paths.Any())
                     {
                         this.Logger.Log($"ファイルがドロップされました。: Paths=[{string.Join(", ", paths)}]", Category.Info);
-                        this.LoadCommand.Execute(paths);
+                        var results = await this.LoadTextEditor(paths);
+                        this.WakeUpTextEditor(results.LastOrDefault(tuple => tuple.textEditor != null).textEditor);
                         e.Handled = true;
                     }
                 })
@@ -467,14 +478,14 @@ namespace MyPad.ViewModels
                 .AddTo(this.CompositeDisposable);
 
             this.ClosingHandler = new ReactiveCommand<CancelEventArgs>()
-                .WithSubscribe(e =>
+                .WithSubscribe(async e =>
                 {
                     // NOTE: Closing イベント内で非同期処理後にイベントをキャンセルできなくなる問題 (ViewModel)
                     // 最初にイベントはキャンセルしてから非同期処理を行う。
                     // 閉じる条件を満たした場合は Dispose メソッドを実行する。
                     // (ViewModel の Dispose をトリガーに、View が Close メソッドを実行する。)
                     e.Cancel = true;
-                    this.ExitCommand.Execute();
+                    await this.InvokeExit();
                 })
                 .AddTo(this.CompositeDisposable);
         }
@@ -769,13 +780,9 @@ namespace MyPad.ViewModels
             else
             {
                 // 他のウィンドウが同名ファイルを占有している場合は処理を委譲する
-                foreach (var view in this.GetViews())
+                foreach (var viewModel in this.GetAllViewModels())
                 {
-                    var viewModel = (MainWindowViewModel)view.DataContext;
-                    if (viewModel == this)
-                        continue;
-
-                    var existTextEditor = viewModel.TextEditors.FirstOrDefault(e => e.FileName == path);
+                    var existTextEditor = viewModel?.TextEditors.FirstOrDefault(e => e.FileName == path);
                     if (existTextEditor == null)
                         continue;
 
@@ -786,7 +793,7 @@ namespace MyPad.ViewModels
 
                 // ファイルサイズを確認する
                 var info = new FileInfo(path);
-                if (AppSettings.FileSizeThreshold <= info.Length &&
+                if (AppSettings.EditorFileSizeThreshold <= info.Length &&
                     this.DialogService.Confirm(Resources.Message_ConfirmOpenLargeFile) == false)
                 {
                     return (false, null);
@@ -896,13 +903,9 @@ namespace MyPad.ViewModels
             else
             {
                 // 他のウィンドウが同名ファイルを占有している場合は、保存せずに終了する
-                foreach (var view in this.GetViews())
+                foreach (var viewModel in this.GetAllViewModels())
                 {
-                    var viewModel = (MainWindowViewModel)view.DataContext;
-                    if (viewModel == this)
-                        continue;
-
-                    var existTextEditor = viewModel.TextEditors.FirstOrDefault(e => e.FileName == path);
+                    var existTextEditor = viewModel?.TextEditors.FirstOrDefault(e => e.FileName == path);
                     if (existTextEditor == null)
                         continue;
 

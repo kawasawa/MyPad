@@ -765,4 +765,16 @@ Please check and delete unnecessary files.</value>
   <data name="LabelText_SetExplorerRoot" xml:space="preserve">
     <value>Set the root directory of explorer.</value>
   </data>
+  <data name="Command_Maintenance" xml:space="preserve">
+    <value>Maintenance</value>
+  </data>
+  <data name="Label_LogViewer" xml:space="preserve">
+    <value>Log viewer</value>
+  </data>
+  <data name="Label_PerformanceMonitor" xml:space="preserve">
+    <value>Performance monitor</value>
+  </data>
+  <data name="Command_Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
 </root>

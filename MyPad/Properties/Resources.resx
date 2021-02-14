@@ -805,4 +805,16 @@
   <data name="Markdown" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\markdown.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="Command_Maintenance" xml:space="preserve">
+    <value>メンテナンス</value>
+  </data>
+  <data name="Label_LogViewer" xml:space="preserve">
+    <value>ログビューワー</value>
+  </data>
+  <data name="Label_PerformanceMonitor" xml:space="preserve">
+    <value>パフォーマンスモニター</value>
+  </data>
+  <data name="Command_Refresh" xml:space="preserve">
+    <value>再読み込み</value>
+  </data>
 </root>

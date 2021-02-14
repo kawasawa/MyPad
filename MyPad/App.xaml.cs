@@ -53,7 +53,7 @@ namespace MyPad
                     ConfigurationFactory = () =>
                     {
                         var headerText = new StringBuilder();
-                        headerText.AppendLine($"# {this.ProductInfo.Product} {this.ProductInfo.Version}");
+                        headerText.AppendLine($"# {this.ProductInfo.Product} ${{var:CTG}} Log");
                         headerText.AppendLine($"# {Environment.OSVersion} - CLR {Environment.Version}");
                         headerText.AppendLine("# ${environment:PROCESSOR_ARCHITECTURE} - ${environment:PROCESSOR_IDENTIFIER}");
                         headerText.AppendLine("# ${environment:COMPUTERNAME}");
@@ -70,23 +70,29 @@ namespace MyPad
                         layout.Header = header;
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${longdate}"));
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${environment-user}"));
+                        layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, $"{this.ProductInfo.Version}"));
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${processid}"));
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${threadid}"));
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${message}"));
 
-                        var target = new NLog.Targets.FileTarget("log");
-                        target.Encoding = Encoding.UTF8;
-                        target.Footer = "${newline}";
-                        target.FileName = "${var:DIR}/${var:CTG}.log";
-                        target.ArchiveFileName = "${var:DIR}/archive/{#}.${var:CTG}.log";
-                        target.ArchiveEvery = NLog.Targets.FileArchivePeriod.Day;
-                        target.ArchiveNumbering = NLog.Targets.ArchiveNumberingMode.Date;
-                        target.MaxArchiveFiles = 10;
-                        target.Layout = layout;
+                        var file = new NLog.Targets.FileTarget();
+                        file.Encoding = Encoding.UTF8;
+                        file.Footer = "${newline}";
+                        file.FileName = "${var:DIR}/${var:CTG}.log";
+                        file.ArchiveFileName = "${var:DIR}/archive/{#}.${var:CTG}.log";
+                        file.ArchiveEvery = NLog.Targets.FileArchivePeriod.Day;
+                        file.ArchiveNumbering = NLog.Targets.ArchiveNumberingMode.Date;
+                        file.MaxArchiveFiles = 10;
+                        file.Layout = layout;
+
+                        var memory = new NLog.Targets.MemoryTarget();
+                        memory.Layout = layout;
 
                         var config = new NLog.Config.LoggingConfiguration();
-                        config.AddTarget(target);
-                        config.LoggingRules.Add(new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, target));
+                        config.AddTarget(nameof(file), file);
+                        config.AddTarget(nameof(memory), memory);
+                        config.LoggingRules.Add(new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, file));
+                        config.LoggingRules.Add(new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, memory));
                         config.Variables.Add("DIR", this.SharedDataService.LogDirectoryPath);
                         return config;
                     },
@@ -401,12 +407,20 @@ namespace MyPad
         {
             IDialogResult IDialogWindow.Result { get; set; }
 
+            /// <summary>
+            /// このクラスの新しいインスタンスを生成します。
+            /// </summary>
             [LogInterceptor]
             public PrismDialogWindowWrapper()
             {
                 this.Loaded += this.Window_Loaded;
             }
 
+            /// <summary>
+            /// ウィンドウがロードされたときに行う処理を定義します。
+            /// </summary>
+            /// <param name="sender">イベントの発生源</param>
+            /// <param name="e">イベントの情報</param>
             [LogInterceptor]
             private void Window_Loaded(object sender, RoutedEventArgs e)
             {

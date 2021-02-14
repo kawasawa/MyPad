@@ -10,11 +10,11 @@
     <Authors>Kazuki Awasawa</Authors>
     <Copyright>© Kazuki Awasawa All Rights Reserved.</Copyright>
     <Description></Description>
-    <Version>1.10.5</Version>
+    <Version>1.11.0</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Deterministic>true</Deterministic>
     <DeterministicSourceRoot>/_/</DeterministicSourceRoot>
-    <RepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..\'))</RepoRoot>
+    <RepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\'))</RepoRoot>
     <PathMap>$(RepoRoot)=$(DeterministicSourceRoot)</PathMap>
     <EnableSourceLink>true</EnableSourceLink>
   </PropertyGroup>
@@ -35,6 +35,7 @@
     <PackageReference Include="Dragablz" Version="0.0.3.223" />
     <PackageReference Include="GridExtra" Version="0.4.0" />
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf.NetCore" Version="1.0.18" />
+    <PackageReference Include="LiveCharts.Wpf.Core" Version="0.9.8" />
     <PackageReference Include="LivetCask.Messaging" Version="3.2.3.2" />
     <PackageReference Include="MahApps.Metro" Version="2.4.3" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="4.8.0" />
@@ -52,8 +53,8 @@
     <PackageReference Include="System.Interactive" Version="5.0.0" />
     <PackageReference Include="ToastNotifications.Messages" Version="2.5.1" />
     <PackageReference Include="Ude.NetStandard" Version="1.2.0" />
-    <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.3.2" />
-    <PackageReference Include="Vanara.PInvoke.User32" Version="3.3.2" />
+    <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.3.4" />
+    <PackageReference Include="Vanara.PInvoke.User32" Version="3.3.4" />
     <PackageReference Include="WinCopies.PushBinding" Version="1.2.2" />
     <PackageReference Include="WpfLocalizeExtension" Version="3.8.0" />
   </ItemGroup>
@@ -88,6 +89,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Dialogs\NotifyDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Regions\MaintenanceContentView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Regions\TerminalView.xaml.cs">
@@ -138,6 +142,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Dialogs\NotifyDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Regions\MaintenanceContentView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Regions\TerminalView.xaml">

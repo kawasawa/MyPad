@@ -208,8 +208,8 @@
                 <Grid ge:GridEx.RowDefinition="Auto, *">
                     <Label    Grid.Row="0" Content="{le:Loc LabelText_SetExplorerRoot}"/>
                     <DataGrid Grid.Row="1" ItemsSource="{Binding ExplorerRoots, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}"
+                              AutoGenerateColumns="False" HeadersVisibility="All" RowHeaderWidth="50" ColumnWidth="*"
                               CanUserResizeRows="False" CanUserResizeColumns="False" CanUserSortColumns="False" CanUserAddRows="True" CanUserDeleteRows="True"
-                              HeadersVisibility="All" RowHeaderWidth="50" ColumnWidth="*" AutoGenerateColumns="False"
                               SelectionUnit="Cell" KeyboardNavigation.ControlTabNavigation="None">
                         <DataGrid.Resources>
                             <!-- 全選択ボタンを置き換える -->
@@ -256,12 +256,6 @@
                             <DataGridTemplateColumn IsReadOnly="True" Width="30" CellStyle="{StaticResource TemplateColumnDataGridCell}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <DataTemplate.Triggers>
-                                            <!-- プレースホルダーには表示しない -->
-                                            <DataTrigger Binding="{Binding}" Value="{x:Static helpers:DataGridHelper.NewItemPlaceholder}">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                            </DataTrigger>
-                                        </DataTemplate.Triggers>
                                         <Button Command="{Binding DataContext.SelectDirectoryCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding Mode=OneWay}" ToolTip="{le:Loc Command_Select}" Style="{DynamicResource Common.ChromelessButton}">
                                             <mi:Material Kind="FolderOpen"/>
                                         </Button>
@@ -347,11 +341,6 @@
                                 </Button>
                                 <m:DropDownButton Grid.Row="2" Grid.Column="4" Style="{StaticResource IconDropDownButton}" BorderThickness="0 1 1 1" Height="27">
                                     <m:DropDownButton.Items>
-                                        <MenuItem Command="{Binding ExportLogArchiveCommand, Mode=OneTime}" Header="{le:Loc Command_ExportLog}">
-                                            <MenuItem.Icon>
-                                                <mi:Material Kind="ArchiveArrowDown"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
                                         <MenuItem Command="{Binding InitializeSyntaxCommand, Mode=OneTime}" Header="{le:Loc Command_InitializeSyntax}">
                                             <MenuItem.Icon>
                                                 <mi:Material Kind="FileRefreshOutline"/>

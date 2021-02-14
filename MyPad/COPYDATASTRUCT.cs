@@ -9,8 +9,19 @@ namespace MyPad
     [StructLayout(LayoutKind.Sequential)]
     public struct COPYDATASTRUCT
     {
+        /// <summary>
+        /// 送信するデータの値を表します。
+        /// </summary>
         public IntPtr dwData;
+
+        /// <summary>
+        /// <see cref="lpData"/> のデータサイズを表します。
+        /// </summary>
         public int cbData;
+
+        /// <summary>
+        /// 送信するデータのポインタを表します。
+        /// </summary>
         public string lpData;
     }
 }
