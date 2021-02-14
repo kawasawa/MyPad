@@ -49,6 +49,7 @@ namespace MyPad.ViewModels.Regions
         public ReactiveProperty<bool> IsWorking { get; }
 
         public ReactiveCommand ExportLogArchiveCommand { get; }
+        public ReactiveCommand RefreshLogsCommand { get; }
         public ReactiveCommand<DependencyPropertyChangedEventArgs> IsVisibleChangedHandler { get; }
 
         [InjectionConstructor]
@@ -93,20 +94,12 @@ namespace MyPad.ViewModels.Regions
                })
                .AddTo(this.CompositeDisposable);
 
-            this.IsVisibleChangedHandler = new ReactiveCommand<DependencyPropertyChangedEventArgs>()
-                .WithSubscribe(e =>
-                {
-                    IEnumerable<string> getLogs(NLog.ILogger coreLogger, int startAt)
-                        => coreLogger.Factory.Configuration.ConfiguredNamedTargets.OfType<NLog.Targets.MemoryTarget>().FirstOrDefault()?.Logs.Skip(startAt) ?? Enumerable.Empty<string>();
+            this.RefreshLogsCommand = new ReactiveCommand()
+                .WithSubscribe(() => this.RefreshLogs())
+                .AddTo(this.CompositeDisposable);
 
-                    this.IsWorking.Value = true;
-                    var nlogger = ((CompositeLogger)this.Logger).OfType<NLogger>().First();
-                    this.TraceLogs.AddRangeOnScheduler(getLogs(nlogger.TraceCoreLogger.Value, this.TraceLogs.Count));
-                    this.DebugLogs.AddRangeOnScheduler(getLogs(nlogger.DebugCoreLogger.Value, this.DebugLogs.Count));
-                    this.InfoLogs.AddRangeOnScheduler(getLogs(nlogger.InfoCoreLogger.Value, this.InfoLogs.Count));
-                    this.WarnLogs.AddRangeOnScheduler(getLogs(nlogger.WarnCoreLogger.Value, this.WarnLogs.Count));
-                    this.IsWorking.Value = false;
-                })
+            this.IsVisibleChangedHandler = new ReactiveCommand<DependencyPropertyChangedEventArgs>()
+                .WithSubscribe(e => this.RefreshLogs())
                 .AddTo(this.CompositeDisposable);
 
             // ----- PUB/SUB メッセージ ------------------------------
@@ -170,8 +163,23 @@ namespace MyPad.ViewModels.Regions
             return true;
         }
 
+        [LogInterceptor]
+        private void RefreshLogs()
+        {
+            static IEnumerable<string> getLogs(NLog.ILogger coreLogger, int startAt)
+                        => coreLogger.Factory.Configuration.ConfiguredNamedTargets.OfType<NLog.Targets.MemoryTarget>().FirstOrDefault()?.Logs.Skip(startAt) ?? Enumerable.Empty<string>();
+
+            this.IsWorking.Value = true;
+            var nlogger = ((CompositeLogger)this.Logger).OfType<NLogger>().First();
+            this.TraceLogs.AddRangeOnScheduler(getLogs(nlogger.TraceCoreLogger.Value, this.TraceLogs.Count));
+            this.DebugLogs.AddRangeOnScheduler(getLogs(nlogger.DebugCoreLogger.Value, this.DebugLogs.Count));
+            this.InfoLogs.AddRangeOnScheduler(getLogs(nlogger.InfoCoreLogger.Value, this.InfoLogs.Count));
+            this.WarnLogs.AddRangeOnScheduler(getLogs(nlogger.WarnCoreLogger.Value, this.WarnLogs.Count));
+            this.IsWorking.Value = false;
+        }
+
         // NOTE: このメソッドは頻発するためトレースしない
-        public void UpdatedPerformanceInfo(double? processorTime, double? workingSetPrivate)
+        private void UpdatedPerformanceInfo(double? processorTime, double? workingSetPrivate)
         {
             if (processorTime.HasValue)
                 this.CpuUsage.Add(new ObservableValue(processorTime.Value));

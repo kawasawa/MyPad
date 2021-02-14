@@ -774,4 +774,7 @@ Please check and delete unnecessary files.</value>
   <data name="Label_PerformanceMonitor" xml:space="preserve">
     <value>Performance monitor</value>
   </data>
+  <data name="Command_Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
 </root>

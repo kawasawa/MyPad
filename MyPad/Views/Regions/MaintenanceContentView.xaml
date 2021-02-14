@@ -73,9 +73,15 @@
                         </TabItem>
                     </TabControl>
 
-                    <Button Command="{Binding ExportLogArchiveCommand, Mode=OneTime}" Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_ExportLog}" Margin="0 -40 30 0" HorizontalAlignment="Right" VerticalAlignment="Top" IsTabStop="False">
-                        <mi:Material Kind="ArchiveArrowDown"/>
-                    </Button>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 -40 30 0">
+                        <Button Command="{Binding RefreshLogsCommand, Mode=OneTime}" Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_Refresh}" IsTabStop="False">
+                            <mi:Material Kind="Refresh"/>
+                        </Button>
+                        <Border Width="10"/>
+                        <Button Command="{Binding ExportLogArchiveCommand, Mode=OneTime}" Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_ExportLog}" IsTabStop="False">
+                            <mi:Material Kind="ArchiveArrowDown"/>
+                        </Button>
+                    </StackPanel>
                 </Grid>
             </TabItem>
 

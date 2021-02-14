@@ -692,6 +692,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   再読み込み に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Refresh {
+            get {
+                return ResourceManager.GetString("Command_Refresh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   置換 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Replace {

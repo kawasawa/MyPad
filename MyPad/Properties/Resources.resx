@@ -814,4 +814,7 @@
   <data name="Label_PerformanceMonitor" xml:space="preserve">
     <value>パフォーマンスモニター</value>
   </data>
+  <data name="Command_Refresh" xml:space="preserve">
+    <value>再読み込み</value>
+  </data>
 </root>
