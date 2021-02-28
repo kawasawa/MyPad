@@ -1,6 +1,6 @@
-﻿using NLog;
+﻿using MyBase.Logging;
+using NLog;
 using NLog.Config;
-using Plow.Logging;
 using System;
 
 namespace MyPad

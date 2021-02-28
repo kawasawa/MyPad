@@ -2,10 +2,10 @@
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Utils;
+using MyBase.Logging;
 using MyPad.Models;
 using MyPad.Properties;
 using MyPad.PubSub;
-using Plow.Logging;
 using Prism.Events;
 using Prism.Ioc;
 using System;

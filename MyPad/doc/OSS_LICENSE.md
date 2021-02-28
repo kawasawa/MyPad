@@ -64,14 +64,6 @@ Copyright (c) 2007 James Newton-King
 Copyright (c) 2004-2020 Jaroslaw Kowalski <jaak@jkowalski.net>, Kim Christensen, Julian Verdurmen  
 [MIT License](https://github.com/NLog/NLog/blob/dev/LICENSE.txt)  
 
-### Plow
-Copyright (c) 2020 Kazuki Awasawa  
-[MIT License](https://github.com/kawasawa/Plow/blob/master/LICENSE.txt)  
-
-### Plow.Wpf
-Copyright (c) 2020 Kazuki Awasawa  
-[MIT License](https://github.com/kawasawa/Plow.Wpf/blob/master/LICENSE.txt)  
-
 ### Prism.Unity
 Copyright (c) .NET Foundation  
 [MIT License](https://github.com/PrismLibrary/Prism/blob/master/LICENSE)  

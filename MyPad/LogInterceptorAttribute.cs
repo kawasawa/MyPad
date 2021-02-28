@@ -1,4 +1,4 @@
-﻿using Plow.Logging;
+﻿using MyBase.Logging;
 using System;
 using System.Reflection;
 using System.Windows;

@@ -1,5 +1,4 @@
-﻿using Plow.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -22,7 +21,7 @@ namespace MyPad.Views.Regions
     public partial class AboutContentView : UserControl
     {
         [Dependency]
-        public ILoggerFacade Logger { get; set; }
+        public MyBase.Logging.ILoggerFacade Logger { get; set; }
 
         [LogInterceptor]
         public AboutContentView()
@@ -35,12 +34,12 @@ namespace MyPad.Views.Regions
         {
             try
             {
-                this.Logger.Log($"ハイパーリンクを開きます。: Hyperlink={e.Parameter}", Category.Info);
+                this.Logger.Log($"ハイパーリンクを開きます。: Hyperlink={e.Parameter}", MyBase.Logging.Category.Info);
                 Process.Start(new ProcessStartInfo("cmd", $"/c start {e.Parameter}") { CreateNoWindow = true });
             }
             catch (Exception ex)
             {
-                this.Logger.Log($"ハイパーリンクを開けませんでした。: Hyperlink={e.Parameter}", Category.Warn, ex);
+                this.Logger.Log($"ハイパーリンクを開けませんでした。: Hyperlink={e.Parameter}", MyBase.Logging.Category.Warn, ex);
             }
         }
     }
