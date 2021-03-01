@@ -130,6 +130,7 @@ namespace MyPad.Views.Controls
 
         static TextArea()
         {
+            ApplicationCommands.Redo.InputGestures.Add(new KeyGesture(Key.Z, ModifierKeys.Control | ModifierKeys.Shift));
             AvalonEditCommands.DeleteLine.InputGestures.Clear();
             AvalonEditCommands.ConvertToLowercase.InputGestures.Add(new KeyGesture(Key.U, ModifierKeys.Control | ModifierKeys.Shift));
             AvalonEditCommands.ConvertToUppercase.InputGestures.Add(new KeyGesture(Key.U, ModifierKeys.Control));
@@ -647,10 +648,10 @@ namespace MyPad.Views.Controls
                 => new RoutedCommand(commandName, typeof(TextArea), inputGestures);
 
             public static readonly ICommand ConvertToNarrow
-                = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.W, ModifierKeys.Control | ModifierKeys.Shift) });
+                = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.F10) });
 
             public static readonly ICommand ConvertToWide
-                = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.W, ModifierKeys.Control) });
+                = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.F9) });
 
             public static readonly ICommand ZoomIn
                 = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.OemPlus, ModifierKeys.Control) });
