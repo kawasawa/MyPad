@@ -28,14 +28,14 @@ MyPad は簡単操作ですぐに使えるシンプルなテキストエディ�
 - プログラミング言語別のカラー表示とキーワード補完
 - ソースコードの折り畳み表示
 
-![mypad](./images/mypad.jpg)
+![mypad](./.images/mypad.jpg)
 
 ### お好みにカスタマイズ
 
 - テーマカラーや表示言語の変更
 - テキストエディターの細かな動作を変更
 
-![mypad](./images/mypad-option.jpg)
+![mypad](./.images/mypad-option.jpg)
 
 ## 開発情報
 
