@@ -1,9 +1,10 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
+using Microsoft.Win32;
+using MyBase;
+using MyBase.Logging;
 using MyPad.Models;
 using MyPad.PubSub;
 using MyPad.ViewModels;
-using Plow;
-using Plow.Logging;
 using Prism.Events;
 using Prism.Ioc;
 using Prism.Regions;
@@ -75,6 +76,7 @@ namespace MyPad.Views
         [LogInterceptor]
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            SystemEvents.SessionEnding += this.SystemEvents_SessionEnding;
             this._handleSource = (HwndSource)PresentationSource.FromVisual(this);
             this._handleSource.AddHook(this.WndProc);
             this.Hide();
@@ -121,6 +123,7 @@ namespace MyPad.Views
         [LogInterceptor]
         private void Window_Closed(object sender, EventArgs e)
         {
+            SystemEvents.SessionEnding -= this.SystemEvents_SessionEnding;
             this._handleSource.RemoveHook(this.WndProc);
             this.Descendants().OfType<TaskbarIcon>().ForEach(t => t.Dispose());
         }
@@ -171,6 +174,20 @@ namespace MyPad.Views
         private void WindowItem_Click(object sender, RoutedEventArgs e)
         {
             ((sender as FrameworkElement)?.DataContext as Window)?.SetForegroundWindow();
+        }
+
+        [LogInterceptor]
+        private void SystemEvents_SessionEnding(object sender, SessionEndingEventArgs e)
+        {
+            switch (e.Reason)
+            {
+                case SessionEndReasons.Logoff:
+                    this.Logger.Log($"ユーザが OS からサインアウトしようとしています。", Category.Info);
+                    break;
+                case SessionEndReasons.SystemShutdown:
+                    this.Logger.Log($"ユーザが OS をシャットダウンしようとしています。", Category.Info);
+                    break;
+            }
         }
 
         // NOTE: このメソッドは頻発するためトレースしない

@@ -1,6 +1,6 @@
-﻿using Plow;
-using Plow.Logging;
-using Plow.Wpf.CommonDialogs;
+﻿using MyBase;
+using MyBase.Logging;
+using MyBase.Wpf.CommonDialogs;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;

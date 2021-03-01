@@ -70,7 +70,7 @@ namespace MyPad.Test
                 System.Threading.Thread.Sleep(100);
         }
 
-        private void Log(string message, Plow.Logging.Category category)
+        private void Log(string message, MyBase.Logging.Category category)
         {
             this.Logger.Log(message, category);
 
@@ -88,32 +88,32 @@ namespace MyPad.Test
 
         [TestCaseSource(typeof(Source), nameof(Source.Messages))]
         public void Trace(string message)
-            => this.Log(message, Plow.Logging.Category.Trace);
+            => this.Log(message, MyBase.Logging.Category.Trace);
 
         [TestCaseSource(typeof(Source), nameof(Source.Messages))]
         public void Debug(string message)
-            => this.Log(message, Plow.Logging.Category.Debug);
+            => this.Log(message, MyBase.Logging.Category.Debug);
 
         [TestCaseSource(typeof(Source), nameof(Source.Messages))]
         public void Info(string message)
-            => this.Log(message, Plow.Logging.Category.Info);
+            => this.Log(message, MyBase.Logging.Category.Info);
 
         [TestCaseSource(typeof(Source), nameof(Source.Messages))]
         public void Warn(string message)
-            => this.Log(message, Plow.Logging.Category.Warn);
+            => this.Log(message, MyBase.Logging.Category.Warn);
 
         [TestCaseSource(typeof(Source), nameof(Source.Messages))]
         public void Error(string message)
-            => this.Log(message, Plow.Logging.Category.Error);
+            => this.Log(message, MyBase.Logging.Category.Error);
 
         [TestCaseSource(typeof(Source), nameof(Source.Messages))]
         public void Fatal(string message)
-            => this.Log(message, Plow.Logging.Category.Fatal);
+            => this.Log(message, MyBase.Logging.Category.Fatal);
 
         [TestCaseSource(typeof(Source), nameof(Source.Messages))]
         public async Task StressTest(string message)
         {
-            IEnumerable<Task> createTasks(int taskCount, int lineCount, Plow.Logging.Category category)
+            IEnumerable<Task> createTasks(int taskCount, int lineCount, MyBase.Logging.Category category)
             {
                 for (var i = 1; i <= taskCount; i++)
                 {
@@ -128,7 +128,7 @@ namespace MyPad.Test
 
             const int TASK_COUNT = 10;
             const int LINE_COUNT = 1000;
-            const Plow.Logging.Category CATEGORY = Plow.Logging.Category.Trace;
+            const MyBase.Logging.Category CATEGORY = MyBase.Logging.Category.Trace;
 
             await Task.WhenAll(createTasks(TASK_COUNT, LINE_COUNT, CATEGORY));
 

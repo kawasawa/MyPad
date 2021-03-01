@@ -1,10 +1,10 @@
 ﻿using MahApps.Metro.Controls.Dialogs;
+using MyBase.Logging;
 using MyPad.Models;
 using MyPad.Properties;
 using MyPad.ViewModels.Dialogs;
 using MyPad.Views;
 using MyPad.Views.Dialogs;
-using Plow.Logging;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
 using System;

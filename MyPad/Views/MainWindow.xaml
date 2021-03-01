@@ -83,7 +83,9 @@
         <KeyBinding Command="{Binding SaveAllCommand,              Mode=OneTime}" Key="K"        Modifiers="Ctrl+Shift"/>
         <KeyBinding Command="{Binding ExitApplicationCommand,      Mode=OneTime}" Key="F4"       Modifiers="Ctrl+Alt"/>
         <KeyBinding Command="{Binding CloseCommand,                Mode=OneTime}" Key="F4"       Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding CloseCommand,                Mode=OneTime}" Key="W"        Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding CloseAllCommand,             Mode=OneTime}" Key="F4"       Modifiers="Ctrl+Shift"/>
+        <KeyBinding Command="{Binding CloseAllCommand,             Mode=OneTime}" Key="W"        Modifiers="Ctrl+Shift"/>
         <KeyBinding Command="{Binding CloseOtherCommand,           Mode=OneTime}" Key="F4"       Modifiers="Shift"/>
         <KeyBinding Command="{Binding PrintCommand,                Mode=OneTime}" Key="P"        Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding PrintPreviewCommand,         Mode=OneTime}" Key="P"        Modifiers="Ctrl+Shift"/>
