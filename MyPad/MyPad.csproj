@@ -37,11 +37,11 @@
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf.NetCore" Version="1.0.18" />
     <PackageReference Include="LiveCharts.Wpf.Core" Version="0.9.8" />
     <PackageReference Include="LivetCask.Messaging" Version="3.2.3.2" />
-    <PackageReference Include="MahApps.Metro" Version="2.4.3" />
+    <PackageReference Include="MahApps.Metro" Version="2.4.4" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="4.8.0" />
     <PackageReference Include="Markdig.Wpf" Version="0.5.0.1" />
     <PackageReference Include="MethodDecorator.Fody" Version="1.1.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.9.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
     <PackageReference Include="MyBase" Version="0.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
@@ -52,9 +52,9 @@
     <PackageReference Include="System.Interactive" Version="5.0.0" />
     <PackageReference Include="ToastNotifications.Messages" Version="2.5.1" />
     <PackageReference Include="Ude.NetStandard" Version="1.2.0" />
-    <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.3.4" />
-    <PackageReference Include="Vanara.PInvoke.User32" Version="3.3.4" />
-    <PackageReference Include="WinCopies.PushBinding" Version="1.2.2" />
+    <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.3.5" />
+    <PackageReference Include="Vanara.PInvoke.User32" Version="3.3.5" />
+    <PackageReference Include="WinCopies.Util.Desktop" Version="2.8.0" />
     <PackageReference Include="WpfLocalizeExtension" Version="3.8.0" />
   </ItemGroup>
 
