@@ -170,15 +170,6 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   コンテンツ に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Command_Contents {
-            get {
-                return ResourceManager.GetString("Command_Contents", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   空白をタブに変換 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ConvertSpacesToTabs {
@@ -994,15 +985,6 @@ namespace MyPad.Properties {
         public static string Command_WindowList {
             get {
                 return ResourceManager.GetString("Command_WindowList", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   画面構成 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Command_WindowStructure {
-            get {
-                return ResourceManager.GetString("Command_WindowStructure", resourceCulture);
             }
         }
         

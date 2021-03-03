@@ -213,7 +213,7 @@
             </MenuItem>
             <MenuItem Header="{le:Loc Command_Coding}">
                 <MenuItem Command="controls:TextArea+Commands.Completion"
-                      Header="{le:Loc Command_Completion}">
+                          Header="{le:Loc Command_Completion}">
                     <MenuItem.Icon>
                         <mi:Material Kind="AutoFix"/>
                     </MenuItem.Icon>
@@ -269,51 +269,6 @@
             </MenuItem>
         </MenuItem>
         <MenuItem Header="{le:Loc Command_View}">
-            <MenuItem Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                      Header="{le:Loc Command_SwitchFullScreenMode}"
-                      InputGestureText="F11">
-                <MenuItem.Icon>
-                    <mi:Modern Kind="Fullscreen"/>
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem IsCheckable="True" IsChecked="{Binding Topmost, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}" Header="{le:Loc Command_Topmost}"/>
-            <Separator/>
-            <MenuItem Header="{le:Loc Command_WindowStructure}">
-                <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowMenuBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowMenuBar}"/>
-                <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowToolBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowToolBar}"/>
-                <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowSideBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowSideBar}"/>
-                <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowStatusBar, Mode=TwoWay}" Header="{le:Loc Command_ShowStatusBar}"/>
-            </MenuItem>
-            <MenuItem Header="{le:Loc Command_Contents}">
-                <MenuItem Command="{x:Static views:MainWindow.ActivateFileExplorerCommand}"
-                          Header="{le:Loc Command_Explorer}"
-                          InputGestureText="Ctrl+Shift+E">
-                    <MenuItem.Icon>
-                        <mi:Material Kind="FileTree"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="{x:Static views:MainWindow.ActivatePropertyCommand}"
-                          Header="{le:Loc Command_Property}"
-                          InputGestureText="Alt+Enter">
-                    <MenuItem.Icon>
-                        <mi:Material Kind="FileOutline"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="{x:Static views:MainWindow.ActivateTerminalCommand}"
-                          Header="{le:Loc Command_Terminal}"
-                          InputGestureText="Ctrl+@">
-                    <MenuItem.Icon>
-                        <mi:Material Kind="Console"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="{x:Static views:MainWindow.ActivateScriptRunnerCommand}"
-                          Header="{le:Loc Command_ScriptRunner}"
-                          InputGestureText="Ctrl+Shift+@">
-                    <MenuItem.Icon>
-                        <mi:Material Kind="Xml"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-            </MenuItem>
             <MenuItem Header="{le:Loc Command_Zoom}">
                 <MenuItem Command="controls:TextArea+Commands.ZoomIn"
                           Header="{le:Loc Command_ZoomIn}"
@@ -337,6 +292,48 @@
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
+            <MenuItem IsCheckable="True" IsChecked="{Binding Topmost, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}" Header="{le:Loc Command_Topmost}"/>
+            <MenuItem Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                      Header="{le:Loc Command_SwitchFullScreenMode}"
+                      InputGestureText="F11">
+                <MenuItem.Icon>
+                    <mi:Modern Kind="Fullscreen"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator/>
+            <MenuItem Command="{x:Static views:MainWindow.ActivateFileExplorerCommand}"
+                      Header="{le:Loc Command_Explorer}"
+                      InputGestureText="Ctrl+Shift+E">
+                <MenuItem.Icon>
+                    <mi:Material Kind="FileTree"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Command="{x:Static views:MainWindow.ActivatePropertyCommand}"
+                      Header="{le:Loc Command_Property}"
+                      InputGestureText="Alt+Enter">
+                <MenuItem.Icon>
+                    <mi:Material Kind="FileOutline"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Command="{x:Static views:MainWindow.ActivateTerminalCommand}"
+                      Header="{le:Loc Command_Terminal}"
+                      InputGestureText="Ctrl+@">
+                <MenuItem.Icon>
+                    <mi:Material Kind="Console"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Command="{x:Static views:MainWindow.ActivateScriptRunnerCommand}"
+                      Header="{le:Loc Command_ScriptRunner}"
+                      InputGestureText="Ctrl+Shift+@">
+                <MenuItem.Icon>
+                    <mi:Material Kind="Xml"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator/>
+            <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowMenuBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowMenuBar}"/>
+            <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowToolBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowToolBar}"/>
+            <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowSideBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowSideBar}"/>
+            <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowStatusBar, Mode=TwoWay}" Header="{le:Loc Command_ShowStatusBar}"/>
         </MenuItem>
         <MenuItem Header="{le:Loc Command_Tools}">
             <MenuItem Command="{Binding OptionCommand, Mode=OneTime}"

@@ -81,7 +81,7 @@ Copyright (c) .NET Foundation and Contributors
 [MIT License](https://github.com/dotnet/reactive/blob/main/LICENSE)  
 
 ### ToastNotifications.Messages
-Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>  
+Copyright (C) 2007 Free Software Foundation, Inc.  
 [GNU Lesser General Public License v3.0](https://github.com/rafallopatka/ToastNotifications/blob/master-v2/license)  
 
 ### Ude.NetStandard
@@ -96,9 +96,9 @@ Copyright (c) 2017 David Hall
 Copyright (c) 2017 David Hall  
 [MIT License](https://github.com/dahall/Vanara/blob/master/LICENSE)  
 
-### WinCopies.PushBinding
-Copyright (c) Fredrik Hedblad,Pierre Sprimont  
-[The Unlicense](https://github.com/pierresprim/PushBinding/blob/master/LICENSE)  
+### WinCopies.Util.Desktop
+Copyright (C) 2007 Free Software Foundation, Inc.  
+[GNU General Public License v3.0](https://github.com/pierresprim/WinCopies/blob/master/LICENSE)  
 
 ### WPFLocalizeExtension
 Copyright (c) Bernhard Millauer,Uwe Mayer, Konrad Mattheis  
