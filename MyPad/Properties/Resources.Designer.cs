@@ -1840,7 +1840,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   アプリ内のトースト通知を使用にする。 に類似しているローカライズされた文字列を検索します。
+        ///   重要度の低い通知を目立たない形で表示する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_UseInAppToastNotifications {
             get {

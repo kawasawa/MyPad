@@ -44,14 +44,18 @@
         <Setter Property="AllowsTransparency" Value="True"/>
         <Setter Property="Opacity" Value="0.9"/>
         <Style.Resources>
+            <Style TargetType="{x:Type aec:CompletionList}">
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}"/>
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Control.Background}"/>
+            </Style>
             <Style TargetType="{x:Type aec:CompletionListBox}" BasedOn="{StaticResource Default.ListBox}">
                 <Setter Property="ItemContainerStyle" Value="{StaticResource Default.ListBoxItem}"/>
-                <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.ComboBox.PopupBorder}"/>
                 <Setter Property="BorderThickness" Value="1"/>
             </Style>
         </Style.Resources>
     </Style>
+    
 
     <Style x:Key="Default.FoldingMargin" TargetType="{x:Type aef:FoldingMargin}">
         <Setter Property="FoldingMarkerBrush"                   Value="{DynamicResource MahApps.Brushes.CheckBox}"/>

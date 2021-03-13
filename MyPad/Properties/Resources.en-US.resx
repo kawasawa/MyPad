@@ -697,7 +697,7 @@ Please check and delete unnecessary files.</value>
     <value>Column ruler position</value>
   </data>
   <data name="LabelText_UseInAppToastNotifications" xml:space="preserve">
-    <value>Use in-app toast notifications.</value>
+    <value>Use quiet notifications for low importance.</value>
   </data>
   <data name="Command_ExportSettings" xml:space="preserve">
     <value>Export settings</value>
