@@ -18,11 +18,8 @@
         <Style TargetType="{x:Type StatusBarItem}" BasedOn="{StaticResource Default.StatusBarItem}">
             <Setter Property="Padding" Value="0"/>
             <Style.Resources>
-                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
-                    <Setter Property="Focusable" Value="False"/>
-                    <Setter Property="Padding" Value="5 0"/>
-                    <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
-                    <Setter Property="Background" Value="{x:Null}"/>
+                <Style TargetType="{x:Type m:TransitioningContentControl}">
+                    <Setter Property="Margin" Value="5 0"/>
                 </Style>
                 <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
                     <Setter Property="Focusable" Value="False"/>
@@ -95,6 +92,33 @@
                 </MultiDataTrigger>
             </Style.Triggers>
         </Style>
+
+        <Storyboard x:Key="QuietlyAnimation">
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="CurrentContentPresentationSite">
+                <SplineDoubleKeyFrame KeyTime="00:00:00"   Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.7" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="PreviousContentPresentationSite">
+                <SplineDoubleKeyFrame KeyTime="00:00:00"   Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.7" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <Storyboard x:Key="BlinkingAnimation">
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="CurrentContentPresentationSite">
+                <SplineDoubleKeyFrame KeyTime="00:00:00"   Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.5" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:01"   Value="1">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <SineEase/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="PreviousContentPresentationSite">
+                <SplineDoubleKeyFrame KeyTime="00:00:00"   Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.5" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
     </UserControl.Resources>
 
     <StatusBar>
@@ -104,8 +128,14 @@
             </ItemsPanelTemplate>
         </StatusBar.ItemsPanel>
         <StatusBarItem Grid.Column="0">
-            <TextBlock DataContext="{Binding ActiveTextEditor.Value, Mode=OneWay}"
-                       Text="{qc:MultiBinding '$P0 + \' chars (\' + $P1 + \' lines) selected\'', P0={Binding SelectionLength, Mode=OneWay}, P1={Binding SelectionLineCount, Mode=OneWay}}" Visibility="{qc:Binding '$P == 0 ? Visibility.Collapsed : Visibility.Visible', P={Binding SelectionLength, Mode=OneWay}}"/>
+            <m:TransitioningContentControl
+                DataContext="{Binding ActiveTextEditor.Value, Mode=OneWay}"
+                Content="{qc:MultiBinding '$P0 == 0 ? string.Empty : $P0 + \' chars (\' + $P1 + \' lines) selected\'', P0={Binding SelectionLength, Mode=OneWay}, P1={Binding SelectionLineCount, Mode=OneWay}}"
+                Transition="Custom" CustomVisualStatesName="Transition0">
+                <m:TransitioningContentControl.CustomVisualStates>
+                    <VisualState x:Name="Transition0" Storyboard="{StaticResource QuietlyAnimation}"/>
+                </m:TransitioningContentControl.CustomVisualStates>
+            </m:TransitioningContentControl>
         </StatusBarItem>
         <StatusBarItem Grid.Column="1">
             <Button>
@@ -115,8 +145,14 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <Button.Content>
-                    <TextBlock DataContext="{Binding ActiveTextEditor.Value, Mode=OneWay}"
-                               Text="{qc:MultiBinding '\'Ln \' + $P0 + \', Col \' + $P1 + \' (\' + $P2 + \')\'', P0={Binding Line, Mode=OneWay}, P1={Binding Column, Mode=OneWay}, P2={Binding CharName, Mode=OneWay}}"/>
+                    <m:TransitioningContentControl
+                        DataContext="{Binding ActiveTextEditor.Value, Mode=OneWay}"
+                        Content="{qc:MultiBinding '\'Ln \' + $P0 + \', Col \' + $P1 + \' (\' + $P2 + \')\'', P0={Binding Line, Mode=OneWay}, P1={Binding Column, Mode=OneWay}, P2={Binding CharName, Mode=OneWay}}"
+                        Transition="Custom" CustomVisualStatesName="Transition1">
+                        <m:TransitioningContentControl.CustomVisualStates>
+                            <VisualState x:Name="Transition1" Storyboard="{StaticResource QuietlyAnimation}"/>
+                        </m:TransitioningContentControl.CustomVisualStates>
+                    </m:TransitioningContentControl>
                 </Button.Content>
             </Button>
         </StatusBarItem>
@@ -128,8 +164,14 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <Button.Content>
-                    <TextBlock DataContext="{Binding ActiveTextEditor.Value, Mode=OneWay}"
-                               Text="{qc:Binding '$P.EncodingName', P={Binding Encoding, Mode=OneWay}}"/>
+                    <m:TransitioningContentControl
+                        DataContext="{Binding ActiveTextEditor.Value, Mode=OneWay}"
+                        Content="{qc:Binding '$P.EncodingName', P={Binding Encoding, Mode=OneWay}}"
+                        Transition="Custom" CustomVisualStatesName="Transition2">
+                        <m:TransitioningContentControl.CustomVisualStates>
+                            <VisualState x:Name="Transition2" Storyboard="{StaticResource BlinkingAnimation}"/>
+                        </m:TransitioningContentControl.CustomVisualStates>
+                    </m:TransitioningContentControl>
                 </Button.Content>
             </Button>
         </StatusBarItem>
@@ -141,16 +183,28 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <Button.Content>
-                    <TextBlock DataContext="{Binding ActiveTextEditor.Value, Mode=OneWay}"
-                               Text="{qc:Binding '$P?.Name ?? \'Plain Text\'', P={Binding SyntaxDefinition, Mode=OneWay}}"/>
+                    <m:TransitioningContentControl
+                        DataContext="{Binding ActiveTextEditor.Value, Mode=OneWay}"
+                        Content="{qc:Binding '$P?.Name ?? \'Plain Text\'', P={Binding SyntaxDefinition, Mode=OneWay}}"
+                        Transition="Custom" CustomVisualStatesName="Transition3">
+                        <m:TransitioningContentControl.CustomVisualStates>
+                            <VisualState x:Name="Transition3" Storyboard="{StaticResource BlinkingAnimation}"/>
+                        </m:TransitioningContentControl.CustomVisualStates>
+                    </m:TransitioningContentControl>
                 </Button.Content>
             </Button>
         </StatusBarItem>
         <StatusBarItem Grid.Column="4">
             <ToggleButton IsChecked="{Binding ActiveTextEditor.Value.OverstrikeMode, Mode=TwoWay}">
                 <ToggleButton.Content>
-                    <TextBlock DataContext="{Binding ActiveTextEditor.Value, Mode=OneWay}"
-                               Text="{qc:Binding '$P ? \'OVER\' : \'INS\'', P={Binding OverstrikeMode, Mode=OneWay}}"/>
+                    <m:TransitioningContentControl
+                        DataContext="{Binding ActiveTextEditor.Value, Mode=OneWay}"
+                        Content="{qc:Binding '$P ? \'OVER\' : \'INS\'', P={Binding OverstrikeMode, Mode=OneWay}}"
+                        Transition="Custom" CustomVisualStatesName="Transition4">
+                        <m:TransitioningContentControl.CustomVisualStates>
+                            <VisualState x:Name="Transition4" Storyboard="{StaticResource BlinkingAnimation}"/>
+                        </m:TransitioningContentControl.CustomVisualStates>
+                    </m:TransitioningContentControl>
                 </ToggleButton.Content>
             </ToggleButton>
         </StatusBarItem>
