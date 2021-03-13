@@ -31,7 +31,7 @@
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.1.0" />
     <PackageReference Include="CaseExtensions" Version="1.1.0" />
-    <PackageReference Include="DiffPlex.Wpf" Version="1.1.1" />
+    <PackageReference Include="DiffPlex.Wpf" Version="1.2.0" />
     <PackageReference Include="Dragablz" Version="0.0.3.223" />
     <PackageReference Include="GridExtra" Version="0.4.0" />
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf.NetCore" Version="1.0.18" />
@@ -48,7 +48,7 @@
     <PackageReference Include="NLog" Version="4.7.8" />
     <PackageReference Include="Prism.Unity" Version="8.0.0.1909" />
     <PackageReference Include="QuickConverter" Version="1.2.5" />
-    <PackageReference Include="ReactiveProperty" Version="7.8.0" />
+    <PackageReference Include="ReactiveProperty" Version="7.8.1" />
     <PackageReference Include="System.Interactive" Version="5.0.0" />
     <PackageReference Include="ToastNotifications.Messages" Version="2.5.1" />
     <PackageReference Include="Ude.NetStandard" Version="1.2.0" />
