@@ -731,7 +731,7 @@
     <value>目安線の位置</value>
   </data>
   <data name="LabelText_UseInAppToastNotifications" xml:space="preserve">
-    <value>アプリ内のトースト通知を使用にする。</value>
+    <value>重要度の低い通知を目立たない形で表示する。</value>
   </data>
   <data name="Command_ExportSettings" xml:space="preserve">
     <value>設定のエクスポート</value>

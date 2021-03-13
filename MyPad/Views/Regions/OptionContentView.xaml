@@ -121,8 +121,8 @@
                             <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
                                 <StackPanel>
                                     <CheckBox IsChecked="{Binding SaveWindowPlacement, Mode=TwoWay}"        Content="{le:Loc LabelText_SaveWindowPlacement}"/>
-                                    <CheckBox IsChecked="{Binding UseInAppToastNotifications, Mode=TwoWay}" Content="{le:Loc LabelText_UseInAppToastNotifications}"/>
                                     <CheckBox IsChecked="{Binding UseOverlayDialog, Mode=TwoWay}"           Content="{le:Loc LabelText_UseOverlayDialog}"/>
+                                    <CheckBox IsChecked="{Binding UseInAppToastNotifications, Mode=TwoWay}" Content="{le:Loc LabelText_UseInAppToastNotifications}"/>
                                     <CheckBox IsChecked="{Binding ShowFullName, Mode=TwoWay}"               Content="{le:Loc LabelText_ShowFullName}"/>
                                     <CheckBox IsChecked="{Binding ShowFileIcon, Mode=TwoWay}"               Content="{le:Loc LabelText_ShowFileIcon}"/>
                                     <CheckBox IsChecked="{Binding ShowSingleTab, Mode=TwoWay}"              Content="{le:Loc LabelText_ShowSingleTab}"/>
