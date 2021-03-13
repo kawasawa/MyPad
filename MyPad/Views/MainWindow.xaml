@@ -315,7 +315,7 @@
                                         <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="{x:Type viewModels:FileExplorerViewModel+FileTreeNode}">
                                             <Border Background="Transparent" ToolTip="{Binding FileName, Mode=OneWay}" ToolTipService.IsEnabled="{qc:Binding '!$P', P={Binding IsEmpty, Mode=OneWay}}">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <Image Source="{Binding Image, Mode=OneWay}" Opacity="{qc:Binding '$P ? 0.5 : 1.0', P={Binding IsHidden}}" Margin="0 0 3 0"/>
+                                                    <Image Source="{Binding Image, Mode=OneWay}" Opacity="{qc:Binding '$P ? 0.5 : 1.0', P={Binding IsHidden, Mode=OneWay}}" Height="20" Margin="0 0 3 0"/>
                                                     <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsEmpty, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" VerticalAlignment="Center"/>
                                                 </StackPanel>
                                             </Border>
