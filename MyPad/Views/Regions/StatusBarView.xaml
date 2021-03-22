@@ -96,27 +96,27 @@
         <Storyboard x:Key="QuietlyAnimation">
             <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="CurrentContentPresentationSite">
                 <SplineDoubleKeyFrame KeyTime="00:00:00"   Value="0"/>
-                <SplineDoubleKeyFrame KeyTime="00:00:00.7" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.5" Value="1"/>
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="PreviousContentPresentationSite">
                 <SplineDoubleKeyFrame KeyTime="00:00:00"   Value="1"/>
-                <SplineDoubleKeyFrame KeyTime="00:00:00.7" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.5" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
 
         <Storyboard x:Key="BlinkingAnimation">
             <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="CurrentContentPresentationSite">
-                <SplineDoubleKeyFrame KeyTime="00:00:00"   Value="0"/>
-                <SplineDoubleKeyFrame KeyTime="00:00:00.5" Value="0"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:01"   Value="1">
+                <SplineDoubleKeyFrame KeyTime="00:00:00"    Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.25" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.5"  Value="1">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <SineEase/>
                     </EasingDoubleKeyFrame.EasingFunction>
                 </EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="PreviousContentPresentationSite">
-                <SplineDoubleKeyFrame KeyTime="00:00:00"   Value="1"/>
-                <SplineDoubleKeyFrame KeyTime="00:00:00.5" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00"    Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.25" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
     </UserControl.Resources>
