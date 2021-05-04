@@ -37,7 +37,6 @@ namespace MyPad.ViewModels.Regions
         public ReactiveCommand<object> SelectDirectoryCommand { get; }
         public ReactiveCommand<object> RemoveDirectoryCommand { get; }
         public ReactiveCommand RefreshExplorerCommand { get; }
-        public ReactiveCommand OpenAppDataDirectoryCommand { get; }
         public ReactiveCommand InitializeSyntaxCommand { get; }
         public ReactiveCommand ImportSettingsFileCommand { get; }
         public ReactiveCommand ExportSettingsFileCommand { get; }
@@ -78,10 +77,6 @@ namespace MyPad.ViewModels.Regions
 
             this.RefreshExplorerCommand = this.IsWorking.Inverse().ToReactiveCommand()
                 .WithSubscribe(() => this.EventAggregator?.GetEvent<RefreshExplorerEvent>().Publish())
-                .AddTo(this.CompositeDisposable);
-
-            this.OpenAppDataDirectoryCommand = this.IsWorking.Inverse().ToReactiveCommand()
-                .WithSubscribe(() => this.OpenAppDataDirectory())
                 .AddTo(this.CompositeDisposable);
 
             this.InitializeSyntaxCommand = this.IsWorking.Inverse().ToReactiveCommand()
@@ -137,31 +132,6 @@ namespace MyPad.ViewModels.Regions
                         this.SettingsService.Initialize(true);
                 })
                 .AddTo(this.CompositeDisposable);
-        }
-
-        [LogInterceptor]
-        private void OpenAppDataDirectory()
-        {
-            try
-            {
-                var path = string.Empty;
-                try
-                {
-                    path = Windows.Storage.ApplicationData.Current.LocalCacheFolder.Path;
-                    this.Logger.Debug($"ストアアプリのデータ領域にアクセスしました。: Path={path}");
-                }
-                catch
-                {
-                    path = this.ProductInfo.Roaming;
-                }
-                Process.Start("explorer.exe", path);
-                this.Logger.Log($"データフォルダをオープンしました。: Path={path}", Category.Info);
-            }
-            catch (Exception e)
-            {
-                this.Logger.Log($"データフォルダのオープンに失敗しました。", Category.Error, e);
-                this.DialogService.Warn(e.Message);
-            }
         }
 
         [LogInterceptor]
