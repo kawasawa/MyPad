@@ -67,7 +67,7 @@ namespace MyPad.ViewModels
             this.ProcessorTimeCounter = new PerformanceCounter("Process", "% Processor Time", processName, true).AddTo(this.CompositeDisposable);
             this.WorkingSetPrivateCounter = new PerformanceCounter("Process", "Working Set - Private", processName, true).AddTo(this.CompositeDisposable);
 
-            this.UpdatePerformanceInfoTimer = new DispatcherTimer();
+            this.UpdatePerformanceInfoTimer = new();
             this.UpdatePerformanceInfoTimer.Tick += this.UpdatePerformanceInfoTimer_Tick;
             this.UpdatePerformanceInfoTimer.Interval = TimeSpan.FromMilliseconds(AppSettings.PerformanceCheckInterval);
             this.UpdatePerformanceInfoTimer.Start();

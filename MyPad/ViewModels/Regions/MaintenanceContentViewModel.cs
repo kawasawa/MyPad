@@ -43,6 +43,7 @@ namespace MyPad.ViewModels.Regions
         public ReactiveCollection<string> DebugLogs { get; }
         public ReactiveCollection<string> InfoLogs { get; }
         public ReactiveCollection<string> WarnLogs { get; }
+
         public ChartValues<ObservableValue> CpuUsage { get; }
         public ChartValues<ObservableValue> MemoryUsage { get; }
 
@@ -70,8 +71,8 @@ namespace MyPad.ViewModels.Regions
             this.WarnLogs = new ReactiveCollection<string>().AddTo(this.CompositeDisposable);
             BindingOperations.EnableCollectionSynchronization(this.WarnLogs, new object());
 
-            this.CpuUsage = new ChartValues<ObservableValue>();
-            this.MemoryUsage = new ChartValues<ObservableValue>();
+            this.CpuUsage = new();
+            this.MemoryUsage = new();
 
             this.IsWorking = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
 

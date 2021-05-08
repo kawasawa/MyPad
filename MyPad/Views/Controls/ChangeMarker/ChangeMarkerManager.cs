@@ -13,7 +13,7 @@ namespace MyPad.Views.Controls.ChangeMarker
         private ChangeMarkerManager(TextArea textArea)
         {
             this._textArea = textArea;
-            this._margin = new ChangeMarkerMargin();
+            this._margin = new();
             // 行番号と罫線の右隣に描画されるように調整する
             var index = this._textArea.LeftMargins.FirstOrDefault() is LineNumberMargin ? 2 : 0;
             this._textArea.LeftMargins.Insert(index, this._margin);

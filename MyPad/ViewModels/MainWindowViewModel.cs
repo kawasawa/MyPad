@@ -131,7 +131,7 @@ namespace MyPad.ViewModels
         public Delegate ClosingTextEditorHandler
            => new ItemActionCallback(async e =>
            {
-               if (e.IsCancelled || !(e.DragablzItem?.DataContext is TextEditorViewModel textEditor))
+               if (e.IsCancelled || e.DragablzItem?.DataContext is not TextEditorViewModel textEditor)
                    return;
 
                e.Cancel();
@@ -152,7 +152,7 @@ namespace MyPad.ViewModels
 
             // ----- プロパティの定義 ------------------------------
 
-            this.Messenger = new InteractionMessenger();
+            this.Messenger = new();
 
             this.TextEditors = new ReactiveCollection<TextEditorViewModel>().AddTo(this.CompositeDisposable);
             BindingOperations.EnableCollectionSynchronization(this.TextEditors, new object());
@@ -921,7 +921,7 @@ namespace MyPad.ViewModels
                 {
                     this.IsWorking.Value = true;
                     Directory.CreateDirectory(Path.GetDirectoryName(path));
-                    stream = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.Read);
+                    stream = new(path, FileMode.Create, FileAccess.ReadWrite, FileShare.Read);
                     await textEditor.SaveAs(stream, encoding);
                     this.Logger.Log($"ファイルを新規保存しました。tab#{textEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding.EncodingName}", Category.Info);
                 }

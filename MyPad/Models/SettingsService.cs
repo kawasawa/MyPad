@@ -63,15 +63,15 @@ namespace MyPad.Models
         {
             if (force)
             {
-                this.System = new SystemSettings();
-                this.TextEditor = new TextEditorSettings();
-                this.OtherTools = new ToolSettings();
+                this.System = new();
+                this.TextEditor = new();
+                this.OtherTools = new();
             }
             else
             {
-                this.System ??= new SystemSettings();
-                this.TextEditor ??= new TextEditorSettings();
-                this.OtherTools ??= new ToolSettings();
+                this.System ??= new();
+                this.TextEditor ??= new();
+                this.OtherTools ??= new();
             }
         }
 

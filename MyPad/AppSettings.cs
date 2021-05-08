@@ -10,7 +10,7 @@ namespace MyPad
     public static class AppSettings
     {
         private static readonly Lazy<IConfigurationRoot> _lazyConfiguration
-            = new Lazy<IConfigurationRoot>(() =>
+            = new(() =>
             {
                 var builder = new ConfigurationBuilder();
                 builder.SetBasePath(AppDomain.CurrentDomain.BaseDirectory);

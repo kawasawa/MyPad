@@ -17,7 +17,7 @@ namespace MyPad.Views.Controls
         {
             // NOTE: 依存関係プロパティ ColumnRulerPen の設定
             // おそらく SearchPanel.MarkerBrush と似たような理由だと思われる。
-            this.ColumnRulerPen = new Pen(Brushes.Gray, 1);
+            this.ColumnRulerPen = new(Brushes.Gray, 1);
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -56,7 +56,7 @@ namespace MyPad.Views.Controls
             var lf = FormattedTextElement.PrepareText(formatter, this.VisualCharacterLF, elementProperties);
             var crlf = FormattedTextElement.PrepareText(formatter, this.VisualCharacterCRLF, elementProperties);
 
-            nonPrintableCharacterTexts ??= new Dictionary<string, TextLine>();
+            nonPrintableCharacterTexts ??= new();
             nonPrintableCharacterTexts["\\r"] = cr;
             nonPrintableCharacterTexts["\\n"] = lf;
             nonPrintableCharacterTexts["¶"] = crlf;

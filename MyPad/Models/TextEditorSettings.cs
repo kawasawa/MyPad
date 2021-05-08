@@ -9,7 +9,7 @@ namespace MyPad.Models
         [JsonIgnore]
         public FontFamily FontFamily
         {
-            get => new FontFamily(this.FontFamilyName);
+            get => new(this.FontFamilyName);
             set
             {
                 if (this.SetProperty(ref this._fontFamilyName, value.Source, nameof(this.FontFamilyName)))

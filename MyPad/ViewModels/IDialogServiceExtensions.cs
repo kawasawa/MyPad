@@ -65,7 +65,7 @@ namespace MyPad.ViewModels
             };
 
         private static MessageOptions CreateToastMessageOptions(Action<bool?> callback = null)
-            => new MessageOptions
+            => new()
             {
                 // NOTE: ToastNotifications の明示的なクローズ
                 // Close() を使用すると、CloseClickAction が呼び出されてしまう
@@ -79,7 +79,7 @@ namespace MyPad.ViewModels
             };
 
         private static MetroDialogSettings CreateMetroDialogSettings()
-            => new MetroDialogSettings
+            => new()
             {
                 DialogTitleFontSize = 16,
                 AffirmativeButtonText = Resources.Command_OK,

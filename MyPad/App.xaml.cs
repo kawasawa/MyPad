@@ -104,7 +104,7 @@ namespace MyPad
                     },
                 });
             this.ProductInfo = new ProductInfo();
-            this.SharedDataService = new Models.SharedDataService(this.Logger, this.ProductInfo, Process.GetCurrentProcess());
+            this.SharedDataService = new(this.Logger, this.ProductInfo, Process.GetCurrentProcess());
             UnhandledExceptionObserver.Observe(this, this.Logger, this.ProductInfo);
         }
 
@@ -319,7 +319,7 @@ namespace MyPad
             if (result)
                 this.Logger.Debug($"起動中の同一アプリケーションは存在しませんでした。: ProcessName={sourceProcess?.ProcessName}");
             else
-                this.Logger.Debug($"起動中の同一アプリケーションのウィンドウハンドルを取得しました。: ProcessName={sourceProcess?.ProcessName}, lpdwProcessID={lpdwProcessId}, hWnd=0x{hWnd.DangerousGetHandle().ToString("X")}");
+                this.Logger.Debug($"起動中の同一アプリケーションのウィンドウハンドルを取得しました。: ProcessName={sourceProcess?.ProcessName}, lpdwProcessID={lpdwProcessId}, hWnd=0x{hWnd.DangerousGetHandle():X)}");
             return hWnd;
         }
 
@@ -345,7 +345,7 @@ namespace MyPad
             var lParam = Marshal.AllocHGlobal(Marshal.SizeOf(structure));
             Marshal.StructureToPtr(structure, lParam, false);
             var msg = User32.WindowMessage.WM_COPYDATA;
-            this.Logger.Debug($"ウィンドウメッセージを送信します。: hWnd=0x{destinationHandle.DangerousGetHandle().ToString("X")}, msg={msg}, data=[{string.Join(", ", data)}]");
+            this.Logger.Debug($"ウィンドウメッセージを送信します。: hWnd=0x{destinationHandle.DangerousGetHandle():X}, msg={msg}, data=[{string.Join(", ", data)}]");
 
             return User32.SendMessage(destinationHandle, (uint)msg, sourceProcess.Handle, lParam);
         }

@@ -84,7 +84,7 @@ namespace MyPad.ViewModels.Regions
         [LogInterceptor]
         private void StartTerminal()
         {
-            this._terminalProcess = new Process();
+            this._terminalProcess = new();
             this._terminalProcess.StartInfo.FileName = Environment.GetEnvironmentVariable(COMSPEC);
             this._terminalProcess.StartInfo.WorkingDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             this._terminalProcess.StartInfo.CreateNoWindow = true;

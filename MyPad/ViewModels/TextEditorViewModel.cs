@@ -320,8 +320,8 @@ namespace MyPad.ViewModels
         [LogInterceptor]
         public TextEditorViewModel()
         {
-            this.Document = new TextDocument();
-            this.AutoSaveTimer = new DispatcherTimer();
+            this.Document = new();
+            this.AutoSaveTimer = new();
             this.AutoSaveTimer.Tick += this.AutoSaveTimer_Tick;
             this.Clear();
             this._isInitialized = true;
@@ -433,7 +433,7 @@ namespace MyPad.ViewModels
                 // ストリームからバイト配列を読み取る
                 var bytes = new byte[this.FileStream.Length];
                 this.FileStream.Position = 0;
-                await this.FileStream.ReadAsync(bytes, 0, bytes.Length);
+                await this.FileStream.ReadAsync(bytes.AsMemory(0, bytes.Length));
 
                 // 文字コードを推定する
                 if (encoding == null)
@@ -483,7 +483,7 @@ namespace MyPad.ViewModels
                 // ストリームに書き込む
                 this.FileStream.Position = 0;
                 this.FileStream.SetLength(0);
-                await this.FileStream.WriteAsync(bytes, 0, bytes.Length);
+                await this.FileStream.WriteAsync(bytes.AsMemory(0, bytes.Length));
                 this.FileStream.Flush();
 
                 // 関連要素を設定する
@@ -522,12 +522,12 @@ namespace MyPad.ViewModels
                 await Application.Current.Dispatcher.InvokeAsync(() =>
                 {
                     var block = DocumentPrinter.ConvertTextDocumentToBlock(this.Document, highlighter);
-                    flowDocument = new FlowDocument(block);
+                    flowDocument = new(block);
                     flowDocument.FontFamily = this.SettingsService.TextEditor.FontFamily;
                     flowDocument.FontSize = this.SettingsService.TextEditor.ActualFontSize;
                     flowDocument.Background = Brushes.White;
                     flowDocument.Foreground = Brushes.Black;
-                    flowDocument.PagePadding = new Thickness(50);
+                    flowDocument.PagePadding = new(50);
                     flowDocument.ColumnGap = 0;
                 });
                 highlighter?.Dispose();
@@ -573,7 +573,7 @@ namespace MyPad.ViewModels
             await func.Invoke();
             Mouse.OverrideCursor = null;
 
-            this.AutoSaveTimer.Interval = new TimeSpan(0, this.SettingsService.System.AutoSaveInterval, 0);
+            this.AutoSaveTimer.Interval = new(0, this.SettingsService.System.AutoSaveInterval, 0);
             this.AutoSaveTimer.Start();
         }
     }
