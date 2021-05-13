@@ -38,7 +38,7 @@ namespace MyPad.ViewModels
         [Dependency]
         public ILoggerFacade Logger { get; set; }
         [Dependency]
-        public SharedDataService SharedDataService { get; set; }
+        public SharedDataStore SharedDataStore { get; set; }
         [Dependency]
         public SettingsService SettingsService { get; set; }
         [Dependency]
@@ -546,10 +546,10 @@ namespace MyPad.ViewModels
 
             await this.Interrupt(async () =>
             {
-                var path = Path.Combine(this.SharedDataService.TempDirectoryPath, this.Sequense.ToString());
+                var path = Path.Combine(this.SharedDataStore.TempDirectoryPath, this.Sequense.ToString());
                 try
                 {
-                    this.SharedDataService.CreateTempDirectory();
+                    this.SharedDataStore.CreateTempDirectory();
                     var bytes = await Application.Current.Dispatcher.InvokeAsync(() => this.Encoding.GetBytes(this.Document.Text));
                     await File.WriteAllBytesAsync(path, bytes);
                     this.Logger.Log($"ファイルを自動保存しました。: Path={path}", Category.Info);

@@ -38,7 +38,7 @@ namespace MyPad.Views
         [Dependency]
         public IProductInfo ProductInfo { get; set; }
         [Dependency]
-        public SharedDataService SharedDataService { get; set; }
+        public SharedDataStore SharedDataStore { get; set; }
 
         #endregion
 
@@ -100,7 +100,7 @@ namespace MyPad.Views
             }
 
             // 残存する一時フォルダをチェックする
-            if (this.SharedDataService.CachedDirectories.Any())
+            if (this.SharedDataStore.CachedDirectories.Any())
             {
                 void view_ContentRendered(object sender, EventArgs e)
                 {
@@ -112,7 +112,7 @@ namespace MyPad.Views
             }
 
             // コマンドライン引数を渡す
-            var args = this.SharedDataService.CommandLineArgs;
+            var args = this.SharedDataStore.CommandLineArgs;
             if (args.Any())
                 view.ViewModel.LoadCommand.Execute(args);
 

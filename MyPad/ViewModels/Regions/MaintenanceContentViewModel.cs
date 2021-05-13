@@ -37,7 +37,7 @@ namespace MyPad.ViewModels.Regions
         [Dependency]
         public IProductInfo ProductInfo { get; set; }
         [Dependency]
-        public SharedDataService SharedDataService { get; set; }
+        public SharedDataStore SharedDataStore { get; set; }
 
         public ReactiveCollection<string> TraceLogs { get; }
         public ReactiveCollection<string> DebugLogs { get; }
@@ -115,21 +115,21 @@ namespace MyPad.ViewModels.Regions
         {
             const int LOOP_DELAY = 500;
 
-            var tempPath = Path.Combine(this.SharedDataService.TempDirectoryPath, Path.GetFileNameWithoutExtension(path));
+            var tempPath = Path.Combine(this.SharedDataStore.TempDirectoryPath, Path.GetFileNameWithoutExtension(path));
 
             try
             {
                 this.IsWorking.Value = true;
 
-                this.SharedDataService.CreateTempDirectory();
+                this.SharedDataStore.CreateTempDirectory();
 
                 // 一時フォルダに複製する
                 if (Directory.Exists(tempPath))
                     await Task.Run(() => Directory.Delete(tempPath, true));
                 while (Directory.Exists(tempPath))
                     await Task.Delay(LOOP_DELAY);
-                await Task.Run(() => Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(this.SharedDataService.LogDirectoryPath, tempPath, Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.ThrowException));
-                this.Logger.Debug($"ログファイルを一時フォルダに複製しました。: Source={this.SharedDataService.LogDirectoryPath}, Dest={tempPath}");
+                await Task.Run(() => Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(this.SharedDataStore.LogDirectoryPath, tempPath, Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.ThrowException));
+                this.Logger.Debug($"ログファイルを一時フォルダに複製しました。: Source={this.SharedDataStore.LogDirectoryPath}, Dest={tempPath}");
 
                 // 複製したファイルを圧縮して出力する
                 if (File.Exists(path))
