@@ -14,14 +14,14 @@ namespace MyPad
     {
         private readonly ILoggerFacade _logger;
         private readonly IProductInfo _productInfo;
+        private readonly Process _process;
 
-        public Process Process { get; }
         public IEnumerable<string> CommandLineArgs { get; set; } = Enumerable.Empty<string>();
         public IEnumerable<string> CachedDirectories { get; set; } = Enumerable.Empty<string>();
 
         public string Identifier => $"__{this._productInfo.Company}:{this._productInfo.Product}:{this._productInfo.Version}__";
         public string LogDirectoryPath => Path.Combine(this._productInfo.Local, "log");
-        public string TempDirectoryPath => Path.Combine(this._productInfo.Temporary, this.Process.StartTime.ToString("yyyyMMddHHmmssfff"));
+        public string TempDirectoryPath => Path.Combine(this._productInfo.Temporary, this._process.StartTime.ToString("yyyyMMddHHmmssfff"));
 
         /// <summary>
         /// このクラスの新しいインスタンスを生成します。
@@ -33,7 +33,7 @@ namespace MyPad
         {
             this._logger = logger;
             this._productInfo = productInfo;
-            this.Process = process;
+            this._process = process;
         }
 
         /// <summary>

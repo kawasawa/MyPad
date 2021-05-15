@@ -118,19 +118,19 @@ namespace MyPad
             this.Logger.Log($"アプリケーションを開始しました。", Category.Info);
             this.Logger.Debug($" アプリケーションを開始しました。: Args=[{string.Join(", ", e.Args)}]");
 
-            Initializer.InitEncoding();
-            Initializer.InitQuickConverter();
-
-            this.SharedDataStore.CommandLineArgs = e.Args;
-
-            var handle = this.GetOtherProcessHandle(this.SharedDataStore.Process);
+            var process = Process.GetCurrentProcess();
+            var handle = this.GetOtherProcessHandle(process);
             if (handle.IsNull == false)
             {
-                this.SendData(this.SharedDataStore.Process, handle, this.SharedDataStore.CommandLineArgs);
+                this.SendData(process, handle, e.Args);
                 this.Shutdown(0);
                 return;
             }
 
+            Initializer.InitQuickConverter();
+            Initializer.InitEncoding();
+
+            this.SharedDataStore.CommandLineArgs = e.Args;
             this.SharedDataStore.CreateTempDirectory();
 
             var cachedDirectories = new DirectoryInfo(this.ProductInfo.Temporary)
@@ -153,7 +153,7 @@ namespace MyPad
                         info.Attributes &= ~FileAttributes.Hidden;
 
                     // 残存する一時フォルダのうち、指定の期間を超えたものを削除する
-                    var basis = this.SharedDataStore.Process.StartTime.AddDays(-1 * AppSettingsReader.CacheLifetime);
+                    var basis = process.StartTime.AddDays(-1 * AppSettingsReader.CacheLifetime);
                     foreach (var info in cachedDirectories
                         .Where(t => t.result == false || t.value < basis || t.info.EnumerateFileSystemInfos().Any() == false)
                         .Select(t => t.info))
@@ -203,15 +203,9 @@ namespace MyPad
             containerRegistry.RegisterInstance(this.Logger);
             containerRegistry.RegisterInstance(this.ProductInfo);
             containerRegistry.RegisterInstance(this.SharedDataStore);
-            containerRegistry.RegisterSingleton<ICommonDialogService, CommonDialogService>();
             containerRegistry.RegisterSingleton<Models.Settings>();
             containerRegistry.RegisterSingleton<Models.SyntaxService>();
-
-            // ファクトリー
-            containerRegistry.Register<ViewModels.TextEditorViewModel>();
-            containerRegistry.Register<ViewModels.FileExplorerViewModel>();
-            containerRegistry.Register<ViewModels.FileExplorerViewModel.FileTreeNode>();
-            containerRegistry.Register<Views.MainWindow.InterTabClientWrapper>();
+            containerRegistry.RegisterSingleton<ICommonDialogService, CommonDialogService>();
 
             // ダイアログ
             containerRegistry.RegisterDialogWindow<PrismDialogWindowWrapper>();
@@ -223,6 +217,12 @@ namespace MyPad
             containerRegistry.RegisterDialog<Views.Dialogs.ChangeEncodingDialog, ViewModels.Dialogs.ChangeEncodingDialogViewModel>();
             containerRegistry.RegisterDialog<Views.Dialogs.ChangeSyntaxDialog, ViewModels.Dialogs.ChangeSyntaxDialogViewModel>();
             containerRegistry.RegisterDialog<Views.Dialogs.SelectDiffFilesDialog, ViewModels.Dialogs.SelectDiffFilesDialogViewModel>();
+
+            // ファクトリー
+            containerRegistry.Register<ViewModels.TextEditorViewModel>();
+            containerRegistry.Register<ViewModels.FileExplorerViewModel>();
+            containerRegistry.Register<ViewModels.FileExplorerViewModel.FileTreeNode>();
+            containerRegistry.Register<Views.MainWindow.InterTabClientWrapper>();
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace MyPad
 
             var shell = this.Container.Resolve<Views.Workspace>();
             shell.Title = this.SharedDataStore.Identifier;
-            shell.Closed += (sender, e) => this.Container?.Resolve<Models.Settings>()?.Save();
+            shell.Closed += (sender, e) => settings.Save();
             return shell;
         }
 
@@ -355,12 +355,15 @@ namespace MyPad
         private static class Initializer
         {
             /// <summary>
-            /// 文字コードの初期設定を行います。
+            /// 指定された View のインスタンスに対する <see cref="WPFLocalizeExtension"/> の初期設定を行います。
             /// </summary>
+            /// <param name="view">View のインスタンス</param>
             [LogInterceptor]
-            public static void InitEncoding()
+            public static void InitWPFLocalizeExtension(DependencyObject view)
             {
-                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                var assemblyName = view.GetType().Assembly.GetName().Name;
+                ResxLocalizationProvider.SetDefaultAssembly(view, assemblyName);
+                ResxLocalizationProvider.SetDefaultDictionary(view, $"{assemblyName}.Properties.Resources");
             }
 
             /// <summary>
@@ -388,14 +391,13 @@ namespace MyPad
             }
 
             /// <summary>
-            /// 指定された View のインスタンスに対する <see cref="WPFLocalizeExtension"/> の初期設定を行います。
+            /// 文字コードの初期設定を行います。
             /// </summary>
-            /// <param name="view">View のインスタンス</param>
             [LogInterceptor]
-            public static void InitWPFLocalizeExtension(DependencyObject view)
+            public static void InitEncoding()
             {
-                ResxLocalizationProvider.SetDefaultAssembly(view, nameof(MyPad));
-                ResxLocalizationProvider.SetDefaultDictionary(view, nameof(MyPad.Properties.Resources));
+                // SJIS を追加する
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             }
         }
 
