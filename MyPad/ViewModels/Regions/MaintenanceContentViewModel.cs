@@ -184,12 +184,12 @@ namespace MyPad.ViewModels.Regions
         {
             if (processorTime.HasValue)
                 this.CpuUsage.Add(new ObservableValue(processorTime.Value));
-            if (AppSettings.PerformanceGraphLimit < this.CpuUsage.Count)
+            if (AppSettingsReader.PerformanceGraphLimit < this.CpuUsage.Count)
                 this.CpuUsage.RemoveAt(0);
 
             if (workingSetPrivate.HasValue)
                 this.MemoryUsage.Add(new ObservableValue(workingSetPrivate.Value));
-            if (AppSettings.PerformanceGraphLimit < this.MemoryUsage.Count)
+            if (AppSettingsReader.PerformanceGraphLimit < this.MemoryUsage.Count)
                 this.MemoryUsage.RemoveAt(0);
         }
     }

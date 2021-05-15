@@ -69,7 +69,7 @@ namespace MyPad.ViewModels
 
             this.UpdatePerformanceInfoTimer = new();
             this.UpdatePerformanceInfoTimer.Tick += this.UpdatePerformanceInfoTimer_Tick;
-            this.UpdatePerformanceInfoTimer.Interval = TimeSpan.FromMilliseconds(AppSettings.PerformanceCheckInterval);
+            this.UpdatePerformanceInfoTimer.Interval = TimeSpan.FromMilliseconds(AppSettingsReader.PerformanceCheckInterval);
             this.UpdatePerformanceInfoTimer.Start();
 
             async void exitApplication() => await this.ExitApplication();
@@ -137,7 +137,7 @@ namespace MyPad.ViewModels
         {
             this.UpdatePerformanceInfoTimer.Stop();
             await func.Invoke();
-            this.UpdatePerformanceInfoTimer.Interval = TimeSpan.FromMilliseconds(AppSettings.PerformanceCheckInterval);
+            this.UpdatePerformanceInfoTimer.Interval = TimeSpan.FromMilliseconds(AppSettingsReader.PerformanceCheckInterval);
             this.UpdatePerformanceInfoTimer.Start();
         }
     }

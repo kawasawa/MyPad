@@ -167,7 +167,7 @@ namespace MyPad.ViewModels.Regions
                 this.OutputLastLine.Value = $"{this._terminalProcess.StartInfo.WorkingDirectory}>";
             }
 
-            while (AppSettings.TerminalBufferSize < this.ResultHistories.Count)
+            while (AppSettingsReader.TerminalBufferSize < this.ResultHistories.Count)
                 this.ResultHistories.RemoveAt(0);
         }
     }

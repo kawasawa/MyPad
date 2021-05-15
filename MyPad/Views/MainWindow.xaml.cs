@@ -167,7 +167,7 @@ namespace MyPad.Views
             this.InterTabClient = this.ContainerExtension.Resolve<InterTabClientWrapper>();
             this.Notifier = new(config =>
             {
-                config.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromSeconds(AppSettings.ToastLifetime), MaximumNotificationCount.FromCount(AppSettings.ToastCountLimit));
+                config.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromSeconds(AppSettingsReader.ToastLifetime), MaximumNotificationCount.FromCount(AppSettingsReader.ToastCountLimit));
                 config.PositionProvider = new WindowPositionProvider(this, Corner.BottomRight, 5, 0);
                 config.Dispatcher = Application.Current.Dispatcher;
                 config.DisplayOptions.Width = 280;
