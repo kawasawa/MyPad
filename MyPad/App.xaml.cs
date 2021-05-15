@@ -204,7 +204,7 @@ namespace MyPad
             containerRegistry.RegisterInstance(this.ProductInfo);
             containerRegistry.RegisterInstance(this.SharedDataStore);
             containerRegistry.RegisterSingleton<ICommonDialogService, CommonDialogService>();
-            containerRegistry.RegisterSingleton<Models.SettingsService>();
+            containerRegistry.RegisterSingleton<Models.Settings>();
             containerRegistry.RegisterSingleton<Models.SyntaxService>();
 
             // ファクトリー
@@ -232,16 +232,16 @@ namespace MyPad
         [LogInterceptor]
         protected override Window CreateShell()
         {
-            var settingsService = this.Container.Resolve<Models.SettingsService>();
-            settingsService.Load();
-            this.Container.Resolve<Models.SyntaxService>().Initialize(settingsService.IsDifferentVersion());
+            var settings = this.Container.Resolve<Models.Settings>();
+            settings.Load();
+            this.Container.Resolve<Models.SyntaxService>().Initialize(settings.IsDifferentVersion());
 
-            if (settingsService.IsDifferentVersion())
-                this.Logger.Debug($"アプリケーションのバージョンが更新されました。: Old={settingsService.Version}, New={this.ProductInfo.Version}");
+            if (settings.IsDifferentVersion())
+                this.Logger.Debug($"アプリケーションのバージョンが更新されました。: Old={settings.Version}, New={this.ProductInfo.Version}");
 
             var shell = this.Container.Resolve<Views.Workspace>();
             shell.Title = this.SharedDataStore.Identifier;
-            shell.Closed += (sender, e) => this.Container?.Resolve<Models.SettingsService>()?.Save();
+            shell.Closed += (sender, e) => this.Container?.Resolve<Models.Settings>()?.Save();
             return shell;
         }
 

@@ -330,10 +330,10 @@
                 </MenuItem.Icon>
             </MenuItem>
             <Separator/>
-            <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowMenuBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowMenuBar}"/>
-            <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowToolBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowToolBar}"/>
-            <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowSideBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowSideBar}"/>
-            <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowStatusBar, Mode=TwoWay}" Header="{le:Loc Command_ShowStatusBar}"/>
+            <MenuItem IsCheckable="True" IsChecked="{Binding Settings.System.ShowMenuBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowMenuBar}"/>
+            <MenuItem IsCheckable="True" IsChecked="{Binding Settings.System.ShowToolBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowToolBar}"/>
+            <MenuItem IsCheckable="True" IsChecked="{Binding Settings.System.ShowSideBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowSideBar}"/>
+            <MenuItem IsCheckable="True" IsChecked="{Binding Settings.System.ShowStatusBar, Mode=TwoWay}" Header="{le:Loc Command_ShowStatusBar}"/>
         </MenuItem>
         <MenuItem Header="{le:Loc Command_Tools}">
             <MenuItem Command="{Binding OptionCommand, Mode=OneTime}"

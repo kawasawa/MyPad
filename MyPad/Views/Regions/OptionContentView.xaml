@@ -54,7 +54,7 @@
             </TabControl.Resources>
 
             <!-- ********** システム ********** -->
-            <TabItem DataContext="{Binding SettingsService.System, Mode=OneWay}" Header="{le:Loc Label_System}">
+            <TabItem DataContext="{Binding Settings.System, Mode=OneWay}" Header="{le:Loc Label_System}">
                 <ScrollViewer>
                     <StackPanel>
                         <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto">
@@ -103,7 +103,7 @@
                             <Label    Grid.Row="4" Grid.Column="0" Content="{le:Loc Label_Font}"/>
                             <ComboBox Grid.Row="4" Grid.Column="1" 
                                       ItemsSource="{x:Static root:Constants.FONT_FAMILIES}"
-                                      SelectedValue="{Binding DataContext.SettingsService.TextEditor.FontFamily, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                                      SelectedValue="{Binding DataContext.Settings.TextEditor.FontFamily, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Converter={helpers:FontFamilyToNameConverter}}" FontFamily="{Binding}"/>
@@ -112,7 +112,7 @@
                             </ComboBox>
                             <ComboBox Grid.Row="4" Grid.Column="3"
                                       ItemsSource="{x:Static root:Constants.FONT_SIZES}"
-                                      SelectedValue="{Binding DataContext.SettingsService.TextEditor.ActualFontSize, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"/>
+                                      SelectedValue="{Binding DataContext.Settings.TextEditor.ActualFontSize, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"/>
                         </Grid>
 
                         <Border Height="10"/>
@@ -149,7 +149,7 @@
             </TabItem>
 
             <!-- ********** テキストエディタ ********** -->
-            <TabItem DataContext="{Binding SettingsService.TextEditor, Mode=OneWay}" Header="{le:Loc Label_TextEditor}">
+            <TabItem DataContext="{Binding Settings.TextEditor, Mode=OneWay}" Header="{le:Loc Label_TextEditor}">
                 <ScrollViewer>
                     <StackPanel>
                         <ge:ResponsiveGrid>
@@ -204,7 +204,7 @@
             </TabItem>
 
             <!-- ********** エクスプローラー ********** -->
-            <TabItem DataContext="{Binding SettingsService.OtherTools, Mode=OneWay}" Header="{le:Loc Command_Explorer}">
+            <TabItem DataContext="{Binding Settings.OtherTools, Mode=OneWay}" Header="{le:Loc Command_Explorer}">
                 <Grid ge:GridEx.RowDefinition="Auto, *">
                     <Label    Grid.Row="0" Content="{le:Loc LabelText_SetExplorerRoot}"/>
                     <DataGrid Grid.Row="1" ItemsSource="{Binding ExplorerRoots, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}"

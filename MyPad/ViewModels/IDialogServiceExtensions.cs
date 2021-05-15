@@ -108,8 +108,8 @@ namespace MyPad.ViewModels
             if (containerExtension == null)
                 return false;
 
-            var settingsService = containerExtension.Resolve<SettingsService>();
-            return settingsService?.System?.UseInAppToastNotifications ?? false;
+            var settings = containerExtension.Resolve<Settings>();
+            return settings?.System?.UseInAppToastNotifications ?? false;
         }
 
         private static bool UseOverlayDialog(IDialogService dialogService, out MainWindow window)
@@ -122,8 +122,8 @@ namespace MyPad.ViewModels
             if (containerExtension == null)
                 return false;
 
-            var settingsService = containerExtension.Resolve<SettingsService>();
-            return settingsService?.System?.UseOverlayDialog ?? false;
+            var settings = containerExtension.Resolve<Settings>();
+            return settings?.System?.UseOverlayDialog ?? false;
         }
 
         [LogInterceptor]

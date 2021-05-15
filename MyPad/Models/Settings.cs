@@ -8,7 +8,7 @@ using Unity;
 
 namespace MyPad.Models
 {
-    public sealed class SettingsService : ModelBase
+    public class Settings : ModelBase
     {
         #region インジェクション
 

@@ -83,7 +83,7 @@ namespace MyPad.Views
 
             // 初期ウィンドウを生成する
             var view = this.CreateWindow(this.RegionManager);
-            if (view.ViewModel.SettingsService.IsDifferentVersion())
+            if (view.ViewModel.Settings.IsDifferentVersion())
             {
                 void view_ContentRendered(object sender, EventArgs e)
                 {

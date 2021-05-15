@@ -32,7 +32,7 @@ namespace MyPad.ViewModels
         [Dependency]
         public ILoggerFacade Logger { get; set; }
         [Dependency]
-        public SettingsService SettingsService { get; set; }
+        public Settings Settings { get; set; }
 
         public ReactiveCollection<FileTreeNode> FileTreeNodes { get; }
 
@@ -58,7 +58,7 @@ namespace MyPad.ViewModels
         [LogInterceptor]
         public void RefreshExplorer()
         {
-            var roots = this.SettingsService.OtherTools?.ExplorerRoots?.Where(i => string.IsNullOrEmpty(i.Path) == false && i.IsEnabled);
+            var roots = this.Settings.OtherTools?.ExplorerRoots?.Where(i => string.IsNullOrEmpty(i.Path) == false && i.IsEnabled);
             var rootPath = roots?.Any() == true ? roots.Select(i => i.Path) : new[] { Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) };
             var isExpanded = rootPath.Count() == 1;
 

@@ -25,7 +25,7 @@ namespace MyPad.ViewModels
         // Dependency Injection
         private ILoggerFacade _logger;
         private IProductInfo _productInfo;
-        private SettingsService _settingsService;
+        private Settings _settings;
         [Dependency]
         public ILoggerFacade Logger
         {
@@ -39,10 +39,10 @@ namespace MyPad.ViewModels
             set => this.SetProperty(ref this._productInfo, value);
         }
         [Dependency]
-        public SettingsService SettingsService
+        public Settings Settings
         {
-            get => this._settingsService;
-            set => this.SetProperty(ref this._settingsService, value);
+            get => this._settings;
+            set => this.SetProperty(ref this._settings, value);
         }
 
         #endregion
