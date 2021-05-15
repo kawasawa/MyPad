@@ -232,10 +232,9 @@ namespace MyPad
         [LogInterceptor]
         protected override Window CreateShell()
         {
-            var settings = this.Container.Resolve<Models.Settings>();
-            settings.Load();
-            this.Container.Resolve<Models.SyntaxService>().Initialize(settings.IsDifferentVersion());
+            var (_, settings) = this.Container.Resolve<Models.Settings>().Load();
 
+            this.Container.Resolve<Models.SyntaxService>().Initialize(settings.IsDifferentVersion());
             if (settings.IsDifferentVersion())
                 this.Logger.Debug($"アプリケーションのバージョンが更新されました。: Old={settings.Version}, New={this.ProductInfo.Version}");
 
