@@ -16,7 +16,6 @@
                xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
                xmlns:s="clr-namespace:System;assembly=System.Runtime"
                xmlns:viewModels="clr-namespace:MyPad.ViewModels"
-               xmlns:views="clr-namespace:MyPad.Views"
                xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
                xmlns:controls="clr-namespace:MyPad.Views.Controls"
                xmlns:helpers="clr-namespace:MyPad.Views.Helpers"
@@ -24,12 +23,12 @@
                p:ViewModelLocator.AutoWireViewModel="True"
                Style="{StaticResource App.Window}"
                Title="{qc:MultiBinding '($P0 ? $P1 : Path.GetFileName($P1)) + ($P2 ? \'*\' : null) + \' \- \' + $P3',
-                       P0={Binding SettingsService.System.ShowFullName, Mode=OneWay},
+                       P0={Binding Settings.System.ShowFullName, Mode=OneWay},
                        P1={Binding ActiveTextEditor.Value.FileName, Mode=OneWay},
                        P2={Binding ActiveTextEditor.Value.IsModified, Mode=OneWay},
                        P3={Binding ProductInfo.Product, Mode=OneWay}}"
                Cursor="{qc:Binding '$P ? Cursors.Wait : Cursors.Arrow', P={Binding IsWorking.Value, Mode=TwoWay}}"
-               ResizeMode="{qc:Binding '$P ? ResizeMode.CanResizeWithGrip : ResizeMode.CanResize', P={Binding SettingsService.System.ShowStatusBar, Mode=TwoWay}}" 
+               ResizeMode="{qc:Binding '$P ? ResizeMode.CanResizeWithGrip : ResizeMode.CanResize', P={Binding Settings.System.ShowStatusBar, Mode=TwoWay}}" 
                Height="525" Width="850" WindowStartupLocation="CenterScreen" AllowDrop="True"
                Loaded="Window_Loaded" Closing="Window_Closing" Closed="Window_Closed" DataContextChanged="Window_DataContextChanged">
 
@@ -47,10 +46,10 @@
             <Setter Property="CloseButtonIsCancel" Value="True"/>
         </Style>
         <ContextMenu x:Key="ContextMenu">
-            <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowMenuBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowMenuBar}"/>
-            <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowToolBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowToolBar}"/>
-            <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowSideBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowSideBar}"/>
-            <MenuItem IsCheckable="True" IsChecked="{Binding SettingsService.System.ShowStatusBar, Mode=TwoWay}" Header="{le:Loc Command_ShowStatusBar}"/>
+            <MenuItem IsCheckable="True" IsChecked="{Binding Settings.System.ShowMenuBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowMenuBar}"/>
+            <MenuItem IsCheckable="True" IsChecked="{Binding Settings.System.ShowToolBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowToolBar}"/>
+            <MenuItem IsCheckable="True" IsChecked="{Binding Settings.System.ShowSideBar,   Mode=TwoWay}" Header="{le:Loc Command_ShowSideBar}"/>
+            <MenuItem IsCheckable="True" IsChecked="{Binding Settings.System.ShowStatusBar, Mode=TwoWay}" Header="{le:Loc Command_ShowStatusBar}"/>
         </ContextMenu>
     </Window.Resources>
 
@@ -131,7 +130,7 @@
     <m:MetroWindow.LeftWindowCommands>
         <m:WindowCommands Margin="0 2 0 0">
             <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="MenuBarRegion1"
-                            Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding SettingsService.System.ShowMenuBar, Mode=OneWay}}"/>
+                            Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowMenuBar, Mode=OneWay}}"/>
         </m:WindowCommands>
     </m:MetroWindow.LeftWindowCommands>
 
@@ -161,28 +160,28 @@
         <ContentControl Grid.Row="0" Style="{StaticResource RegionContent}" p:RegionManager.RegionName="MenuBarRegion2"
                         Visibility="{qc:MultiBinding '!$P0 ## $P1 ? Visibility.Visible : Visibility.Collapsed',
                                      P0={Binding ShowTitleBar, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}},
-                                     P1={Binding SettingsService.System.ShowMenuBar, Mode=OneWay}}"
+                                     P1={Binding Settings.System.ShowMenuBar, Mode=OneWay}}"
                         ContextMenu="{StaticResource ContextMenu}"/>
         <ContentControl Grid.Row="1" Style="{StaticResource RegionContent}" p:RegionManager.RegionName="ToolBarRegion"
-                        Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding SettingsService.System.ShowToolBar, Mode=OneWay}}"
+                        Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowToolBar, Mode=OneWay}}"
                         ContextMenu="{StaticResource ContextMenu}"/>
         <ContentControl Grid.Row="3" Style="{StaticResource RegionContent}" p:RegionManager.RegionName="StatusBarRegion"
-                        Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding SettingsService.System.ShowStatusBar, Mode=OneWay}}"
+                        Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowStatusBar, Mode=OneWay}}"
                         ContextMenu="{StaticResource ContextMenu}"/>
 
         <Button Grid.Row="0" Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}" Focusable="False"
                 Style="{DynamicResource Common.ChromelessButton}" Padding="10 5" VerticalAlignment="Top" HorizontalAlignment="Right"
                 Visibility="{qc:MultiBinding '!$P0 ## $P1 ? Visibility.Visible : Visibility.Collapsed',
                              P0={Binding ShowTitleBar, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}},
-                             P1={Binding SettingsService.System.ShowMenuBar, Mode=OneWay}}">
+                             P1={Binding Settings.System.ShowMenuBar, Mode=OneWay}}">
             <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
         </Button>
         <Button Grid.Row="1" Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}" Focusable="False"
                 Style="{DynamicResource Common.ChromelessButton}" Padding="10 5" VerticalAlignment="Top" HorizontalAlignment="Right"
                 Visibility="{qc:MultiBinding '!$P0 ## !$P1 ## $P2 ? Visibility.Visible : Visibility.Collapsed',
                              P0={Binding ShowTitleBar, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}},
-                             P1={Binding SettingsService.System.ShowMenuBar, Mode=OneWay},
-                             P2={Binding SettingsService.System.ShowToolBar, Mode=OneWay}}">
+                             P1={Binding Settings.System.ShowMenuBar, Mode=OneWay},
+                             P2={Binding Settings.System.ShowToolBar, Mode=OneWay}}">
             <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
         </Button>
 
@@ -195,7 +194,7 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" x:Name="SideContentColumn"
-                                  MinWidth="{qc:MultiBinding '$P0 ? $P1 : 0', P0={Binding SettingsService.System.ShowSideBar, Mode=OneWay}, P1={Binding Source={StaticResource HamburgerWidth}}}"
+                                  MinWidth="{qc:MultiBinding '$P0 ? $P1 : 0', P0={Binding Settings.System.ShowSideBar, Mode=OneWay}, P1={Binding Source={StaticResource HamburgerWidth}}}"
                                   MaxWidth="{qc:MultiBinding '$P0 - $P1', P0={Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}, P1={Binding Source={StaticResource HamburgerWidth}}}"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*" x:Name="MainContentColumn"/>
@@ -211,7 +210,7 @@
                              Width="{StaticResource HamburgerWidth}"
                              HamburgerWidth="{StaticResource HamburgerWidth}"
                              HamburgerVisibility="Collapsed"
-                             Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding SettingsService.System.ShowSideBar, Mode=OneWay}}"
+                             Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowSideBar, Mode=OneWay}}"
                              IsTabStop="False"
                              ContextMenu="{StaticResource ContextMenu}"
                              IsVisibleChanged="SideContent_IsVisibleChanged"
@@ -400,7 +399,7 @@
                                           SelectedItem="{Binding ActiveTextEditor.Value, Mode=TwoWay}"
                                           NewItemFactory="{Binding TextEditorFactory, Mode=OneTime}"
                                           ClosingItemCallback="{Binding ClosingTextEditorHandler, Mode=OneTime}"
-                                          IsHeaderPanelVisible="{qc:MultiBinding '$P0 || $P1.CompareTo(1) == 1', P0={Binding SettingsService.System.ShowSingleTab, Mode=OneWay}, P1={Binding Items.Count, RelativeSource={RelativeSource Self}, Mode=OneWay}}"
+                                          IsHeaderPanelVisible="{qc:MultiBinding '$P0 || $P1.CompareTo(1) == 1', P0={Binding Settings.System.ShowSingleTab, Mode=OneWay}, P1={Binding Items.Count, RelativeSource={RelativeSource Self}, Mode=OneWay}}"
                                           ShowDefaultAddButton="False"
                                           ShowDefaultCloseButton="True"
                                           SelectionChanged="DraggableTabControl_SelectionChanged">
@@ -437,7 +436,7 @@
                 <dr:TabablzControl.HeaderItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="{Binding FileIcon, Mode=OneWay}" Height="15" Margin="0 0 5 0" Visibility="{qc:MultiBinding '$P0 != null ## $P1 ? Visibility.Visible : Visibility.Collapsed', P0={Binding FileIcon, Mode=OneWay}, P1={Binding DataContext.SettingsService.System.ShowFileIcon, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}"/>
+                            <Image Source="{Binding FileIcon, Mode=OneWay}" Height="15" Margin="0 0 5 0" Visibility="{qc:MultiBinding '$P0 != null ## $P1 ? Visibility.Visible : Visibility.Collapsed', P0={Binding FileIcon, Mode=OneWay}, P1={Binding DataContext.Settings.System.ShowFileIcon, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}"/>
                             <TextBlock DataContext="{Binding Mode=OneWay}" Text="{qc:MultiBinding 'string.Concat(Path.GetFileName($P0), $P1 ? \'*\' : null)', P0={Binding FileName, Mode=OneWay}, P1={Binding IsModified, Mode=OneWay}}" VerticalAlignment="Center"/>
                         </StackPanel>
                     </DataTemplate>
@@ -522,7 +521,7 @@
                             <controls:TextEditor.Style>
                                 <Style TargetType="{x:Type controls:TextEditor}" BasedOn="{StaticResource Default.TextEditor}">
                                     <EventSetter Event="Loaded" Handler="TextEditor_Loaded"/>
-                                    <Setter Property="Settings"         Value="{Binding DataContext.SettingsService.TextEditor, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
+                                    <Setter Property="Settings"         Value="{Binding DataContext.Settings.TextEditor, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
                                     <Setter Property="Document"         Value="{Binding Document, Mode=OneWay}"/>
                                     <Setter Property="IsReadOnly"       Value="{Binding IsReadOnly, Mode=TwoWay}"/>
                                     <Setter Property="IsModified"       Value="{Binding IsModified, Mode=TwoWay}"/>

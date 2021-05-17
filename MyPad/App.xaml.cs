@@ -39,7 +39,7 @@ namespace MyPad
         /// <summary>
         /// アプリケーションの共有情報を取得します。
         /// </summary>
-        public Models.SharedDataService SharedDataService { get; }
+        public SharedDataStore SharedDataStore { get; }
 
         /// <summary>
         /// このクラスの新しいインスタンスを生成します。
@@ -93,7 +93,7 @@ namespace MyPad
                         config.AddTarget(nameof(memory), memory);
                         config.LoggingRules.Add(new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, file));
                         config.LoggingRules.Add(new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, memory));
-                        config.Variables.Add("DIR", this.SharedDataService.LogDirectoryPath);
+                        config.Variables.Add("DIR", this.SharedDataStore.LogDirectoryPath);
                         return config;
                     },
                     CreateLoggerHook = (logger, category) =>
@@ -104,7 +104,7 @@ namespace MyPad
                     },
                 });
             this.ProductInfo = new ProductInfo();
-            this.SharedDataService = new Models.SharedDataService(this.Logger, this.ProductInfo, Process.GetCurrentProcess());
+            this.SharedDataStore = new(this.Logger, this.ProductInfo, Process.GetCurrentProcess());
             UnhandledExceptionObserver.Observe(this, this.Logger, this.ProductInfo);
         }
 
@@ -118,24 +118,24 @@ namespace MyPad
             this.Logger.Log($"アプリケーションを開始しました。", Category.Info);
             this.Logger.Debug($" アプリケーションを開始しました。: Args=[{string.Join(", ", e.Args)}]");
 
-            Initializer.InitEncoding();
-            Initializer.InitQuickConverter();
-
-            this.SharedDataService.CommandLineArgs = e.Args;
-
-            var handle = this.GetOtherProcessHandle(this.SharedDataService.Process);
+            var process = Process.GetCurrentProcess();
+            var handle = this.GetOtherProcessHandle(process);
             if (handle.IsNull == false)
             {
-                this.SendData(this.SharedDataService.Process, handle, this.SharedDataService.CommandLineArgs);
+                this.SendData(process, handle, e.Args);
                 this.Shutdown(0);
                 return;
             }
 
-            this.SharedDataService.CreateTempDirectory();
+            Initializer.InitQuickConverter();
+            Initializer.InitEncoding();
+
+            this.SharedDataStore.CommandLineArgs = e.Args;
+            this.SharedDataStore.CreateTempDirectory();
 
             var cachedDirectories = new DirectoryInfo(this.ProductInfo.Temporary)
                 .EnumerateDirectories()
-                .Where(i => i.FullName != this.SharedDataService.TempDirectoryPath)
+                .Where(i => i.FullName != this.SharedDataStore.TempDirectoryPath)
                 .Select(i =>
                 {
                     var result = DateTime.TryParseExact(Path.GetFileName(i.FullName), "yyyyMMddHHmmssfff", CultureInfo.CurrentCulture, DateTimeStyles.None, out var value);
@@ -153,7 +153,7 @@ namespace MyPad
                         info.Attributes &= ~FileAttributes.Hidden;
 
                     // 残存する一時フォルダのうち、指定の期間を超えたものを削除する
-                    var basis = this.SharedDataService.Process.StartTime.AddDays(-1 * AppSettings.CacheLifetime);
+                    var basis = process.StartTime.AddDays(-1 * AppSettingsReader.CacheLifetime);
                     foreach (var info in cachedDirectories
                         .Where(t => t.result == false || t.value < basis || t.info.EnumerateFileSystemInfos().Any() == false)
                         .Select(t => t.info))
@@ -169,7 +169,7 @@ namespace MyPad
                     this.Logger.Log("保存期限を過ぎた不要な一時フォルダの削除に失敗しました。", Category.Warn, ex);
                 }
 
-                this.SharedDataService.CachedDirectories = cachedDirectories.Select(t => t.info.FullName).ToList();
+                this.SharedDataStore.CachedDirectories = cachedDirectories.Select(t => t.info.FullName).ToList();
             }
 
             base.OnStartup(e);
@@ -202,16 +202,10 @@ namespace MyPad
             // シングルトン
             containerRegistry.RegisterInstance(this.Logger);
             containerRegistry.RegisterInstance(this.ProductInfo);
-            containerRegistry.RegisterInstance(this.SharedDataService);
-            containerRegistry.RegisterSingleton<ICommonDialogService, CommonDialogService>();
-            containerRegistry.RegisterSingleton<Models.SettingsService>();
+            containerRegistry.RegisterInstance(this.SharedDataStore);
+            containerRegistry.RegisterSingleton<Models.Settings>();
             containerRegistry.RegisterSingleton<Models.SyntaxService>();
-
-            // ファクトリー
-            containerRegistry.Register<ViewModels.TextEditorViewModel>();
-            containerRegistry.Register<ViewModels.FileExplorerViewModel>();
-            containerRegistry.Register<ViewModels.FileExplorerViewModel.FileTreeNode>();
-            containerRegistry.Register<Views.MainWindow.InterTabClientWrapper>();
+            containerRegistry.RegisterSingleton<ICommonDialogService, CommonDialogService>();
 
             // ダイアログ
             containerRegistry.RegisterDialogWindow<PrismDialogWindowWrapper>();
@@ -223,6 +217,12 @@ namespace MyPad
             containerRegistry.RegisterDialog<Views.Dialogs.ChangeEncodingDialog, ViewModels.Dialogs.ChangeEncodingDialogViewModel>();
             containerRegistry.RegisterDialog<Views.Dialogs.ChangeSyntaxDialog, ViewModels.Dialogs.ChangeSyntaxDialogViewModel>();
             containerRegistry.RegisterDialog<Views.Dialogs.SelectDiffFilesDialog, ViewModels.Dialogs.SelectDiffFilesDialogViewModel>();
+
+            // ファクトリー
+            containerRegistry.Register<ViewModels.TextEditorViewModel>();
+            containerRegistry.Register<ViewModels.FileExplorerViewModel>();
+            containerRegistry.Register<ViewModels.FileExplorerViewModel.FileTreeNode>();
+            containerRegistry.Register<Views.MainWindow.InterTabClientWrapper>();
         }
 
         /// <summary>
@@ -232,16 +232,15 @@ namespace MyPad
         [LogInterceptor]
         protected override Window CreateShell()
         {
-            var settingsService = this.Container.Resolve<Models.SettingsService>();
-            settingsService.Load();
-            this.Container.Resolve<Models.SyntaxService>().Initialize(settingsService.IsDifferentVersion());
+            var (_, settings) = this.Container.Resolve<Models.Settings>().Load();
 
-            if (settingsService.IsDifferentVersion())
-                this.Logger.Debug($"アプリケーションのバージョンが更新されました。: Old={settingsService.Version}, New={this.ProductInfo.Version}");
+            this.Container.Resolve<Models.SyntaxService>().Initialize(settings.IsDifferentVersion());
+            if (settings.IsDifferentVersion())
+                this.Logger.Debug($"アプリケーションのバージョンが更新されました。: Old={settings.Version}, New={this.ProductInfo.Version}");
 
             var shell = this.Container.Resolve<Views.Workspace>();
-            shell.Title = this.SharedDataService.Identifier;
-            shell.Closed += (sender, e) => this.Container?.Resolve<Models.SettingsService>()?.Save();
+            shell.Title = this.SharedDataStore.Identifier;
+            shell.Closed += (sender, e) => settings.Save();
             return shell;
         }
 
@@ -254,18 +253,18 @@ namespace MyPad
         {
             const int LOOP_DELAY = 500;
 
-            if (Directory.Exists(this.SharedDataService.TempDirectoryPath))
+            if (Directory.Exists(this.SharedDataStore.TempDirectoryPath))
             {
                 try
                 {
-                    Directory.Delete(this.SharedDataService.TempDirectoryPath, true);
-                    while (Directory.Exists(this.SharedDataService.TempDirectoryPath))
+                    Directory.Delete(this.SharedDataStore.TempDirectoryPath, true);
+                    while (Directory.Exists(this.SharedDataStore.TempDirectoryPath))
                         Thread.Sleep(LOOP_DELAY);
-                    this.Logger.Debug($"一時フォルダを削除しました。: Path={this.SharedDataService.TempDirectoryPath}");
+                    this.Logger.Debug($"一時フォルダを削除しました。: Path={this.SharedDataStore.TempDirectoryPath}");
                 }
                 catch (Exception ex)
                 {
-                    this.Logger.Log($"一時フォルダの削除に失敗しました。: Path={this.SharedDataService.TempDirectoryPath}", Category.Warn, ex);
+                    this.Logger.Log($"一時フォルダの削除に失敗しました。: Path={this.SharedDataStore.TempDirectoryPath}", Category.Warn, ex);
                 }
             }
 
@@ -303,7 +302,7 @@ namespace MyPad
                     // 本アプリケーションでは実質的に識別子として使用される
                     var lpString = new StringBuilder(256);
                     User32.GetWindowText(_hWnd, lpString, lpString.Capacity);
-                    if (lpString.ToString().Contains(this.SharedDataService.Identifier) == false)
+                    if (lpString.ToString().Contains(this.SharedDataStore.Identifier) == false)
                         return true;
 
                     // ハンドルを保持する
@@ -319,7 +318,7 @@ namespace MyPad
             if (result)
                 this.Logger.Debug($"起動中の同一アプリケーションは存在しませんでした。: ProcessName={sourceProcess?.ProcessName}");
             else
-                this.Logger.Debug($"起動中の同一アプリケーションのウィンドウハンドルを取得しました。: ProcessName={sourceProcess?.ProcessName}, lpdwProcessID={lpdwProcessId}, hWnd=0x{hWnd.DangerousGetHandle().ToString("X")}");
+                this.Logger.Debug($"起動中の同一アプリケーションのウィンドウハンドルを取得しました。: ProcessName={sourceProcess?.ProcessName}, lpdwProcessID={lpdwProcessId}, hWnd=0x{hWnd.DangerousGetHandle():X)}");
             return hWnd;
         }
 
@@ -345,7 +344,7 @@ namespace MyPad
             var lParam = Marshal.AllocHGlobal(Marshal.SizeOf(structure));
             Marshal.StructureToPtr(structure, lParam, false);
             var msg = User32.WindowMessage.WM_COPYDATA;
-            this.Logger.Debug($"ウィンドウメッセージを送信します。: hWnd=0x{destinationHandle.DangerousGetHandle().ToString("X")}, msg={msg}, data=[{string.Join(", ", data)}]");
+            this.Logger.Debug($"ウィンドウメッセージを送信します。: hWnd=0x{destinationHandle.DangerousGetHandle():X}, msg={msg}, data=[{string.Join(", ", data)}]");
 
             return User32.SendMessage(destinationHandle, (uint)msg, sourceProcess.Handle, lParam);
         }
@@ -356,12 +355,15 @@ namespace MyPad
         private static class Initializer
         {
             /// <summary>
-            /// 文字コードの初期設定を行います。
+            /// 指定された View のインスタンスに対する <see cref="WPFLocalizeExtension"/> の初期設定を行います。
             /// </summary>
+            /// <param name="view">View のインスタンス</param>
             [LogInterceptor]
-            public static void InitEncoding()
+            public static void InitWPFLocalizeExtension(DependencyObject view)
             {
-                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                var assemblyName = view.GetType().Assembly.GetName().Name;
+                ResxLocalizationProvider.SetDefaultAssembly(view, assemblyName);
+                ResxLocalizationProvider.SetDefaultDictionary(view, $"{assemblyName}.Properties.Resources");
             }
 
             /// <summary>
@@ -389,14 +391,13 @@ namespace MyPad
             }
 
             /// <summary>
-            /// 指定された View のインスタンスに対する <see cref="WPFLocalizeExtension"/> の初期設定を行います。
+            /// 文字コードの初期設定を行います。
             /// </summary>
-            /// <param name="view">View のインスタンス</param>
             [LogInterceptor]
-            public static void InitWPFLocalizeExtension(DependencyObject view)
+            public static void InitEncoding()
             {
-                ResxLocalizationProvider.SetDefaultAssembly(view, nameof(MyPad));
-                ResxLocalizationProvider.SetDefaultDictionary(view, nameof(MyPad.Properties.Resources));
+                // SJIS を追加する
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             }
         }
 

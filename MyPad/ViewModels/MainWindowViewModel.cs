@@ -39,7 +39,7 @@ namespace MyPad.ViewModels
         // Dependency Injection
         private ILoggerFacade _logger;
         private IProductInfo _productInfo;
-        private SettingsService _settingsService;
+        private Settings _settings;
         private SyntaxService _syntaxService;
         [Dependency]
         public IContainerExtension ContainerExtension { get; set; }
@@ -60,10 +60,10 @@ namespace MyPad.ViewModels
             set => this.SetProperty(ref this._productInfo, value);
         }
         [Dependency]
-        public SettingsService SettingsService
+        public Settings Settings
         {
-            get => this._settingsService;
-            set => this.SetProperty(ref this._settingsService, value);
+            get => this._settings;
+            set => this.SetProperty(ref this._settings, value);
         }
         [Dependency]
         public SyntaxService SyntaxService
@@ -131,7 +131,7 @@ namespace MyPad.ViewModels
         public Delegate ClosingTextEditorHandler
            => new ItemActionCallback(async e =>
            {
-               if (e.IsCancelled || !(e.DragablzItem?.DataContext is TextEditorViewModel textEditor))
+               if (e.IsCancelled || e.DragablzItem?.DataContext is not TextEditorViewModel textEditor)
                    return;
 
                e.Cancel();
@@ -152,7 +152,7 @@ namespace MyPad.ViewModels
 
             // ----- プロパティの定義 ------------------------------
 
-            this.Messenger = new InteractionMessenger();
+            this.Messenger = new();
 
             this.TextEditors = new ReactiveCollection<TextEditorViewModel>().AddTo(this.CompositeDisposable);
             BindingOperations.EnableCollectionSynchronization(this.TextEditors, new object());
@@ -593,7 +593,7 @@ namespace MyPad.ViewModels
                     {
                         // 文字コードの選択欄を追加する
                         var d = (CommonFileDialog)dialog;
-                        var encodingComboBox = CommonDialogHelper.ConvertToComboBox(this.SettingsService.System.AutoDetectEncoding ? null : this.SettingsService.System.Encoding);
+                        var encodingComboBox = CommonDialogHelper.ConvertToComboBox(this.Settings.System.AutoDetectEncoding ? null : this.Settings.System.Encoding);
                         encodingComboBox.Items.Insert(0, new CommonDialogHelper.EncodingComboBoxItem(null, Resources.Label_AutoDetect));
                         encodingComboBox.SelectedIndex++;
                         var encodingGroupBox = new CommonFileDialogGroupBox($"{Resources.Label_Encoding}(&E):");
@@ -646,7 +646,7 @@ namespace MyPad.ViewModels
                 var results = new List<(bool result, TextEditorViewModel textEditor)>();
                 foreach (var path in paths.Where(path => File.Exists(path)))
                 {
-                    var encoding = this.SettingsService.System.AutoDetectEncoding ? null : this.SettingsService.System.Encoding;
+                    var encoding = this.Settings.System.AutoDetectEncoding ? null : this.Settings.System.Encoding;
                     var definition = this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetExtensions().Contains(Path.GetExtension(path)));
                     results.Add(await this.ReadFile(path, encoding, definition));
                 }
@@ -793,7 +793,7 @@ namespace MyPad.ViewModels
 
                 // ファイルサイズを確認する
                 var info = new FileInfo(path);
-                if (AppSettings.EditorFileSizeThreshold <= info.Length &&
+                if (AppSettingsReader.EditorFileSizeThreshold <= info.Length &&
                     this.DialogService.Confirm(Resources.Message_ConfirmOpenLargeFile) == false)
                 {
                     return (false, null);
@@ -921,7 +921,7 @@ namespace MyPad.ViewModels
                 {
                     this.IsWorking.Value = true;
                     Directory.CreateDirectory(Path.GetDirectoryName(path));
-                    stream = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.Read);
+                    stream = new(path, FileMode.Create, FileAccess.ReadWrite, FileShare.Read);
                     await textEditor.SaveAs(stream, encoding);
                     this.Logger.Log($"ファイルを新規保存しました。tab#{textEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding.EncodingName}", Category.Info);
                 }

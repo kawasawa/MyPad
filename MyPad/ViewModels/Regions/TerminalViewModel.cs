@@ -84,7 +84,7 @@ namespace MyPad.ViewModels.Regions
         [LogInterceptor]
         private void StartTerminal()
         {
-            this._terminalProcess = new Process();
+            this._terminalProcess = new();
             this._terminalProcess.StartInfo.FileName = Environment.GetEnvironmentVariable(COMSPEC);
             this._terminalProcess.StartInfo.WorkingDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             this._terminalProcess.StartInfo.CreateNoWindow = true;
@@ -167,7 +167,7 @@ namespace MyPad.ViewModels.Regions
                 this.OutputLastLine.Value = $"{this._terminalProcess.StartInfo.WorkingDirectory}>";
             }
 
-            while (AppSettings.TerminalBufferSize < this.ResultHistories.Count)
+            while (AppSettingsReader.TerminalBufferSize < this.ResultHistories.Count)
                 this.ResultHistories.RemoveAt(0);
         }
     }

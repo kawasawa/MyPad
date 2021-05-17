@@ -37,12 +37,13 @@ namespace MyPad.ViewModels.Regions
         [Dependency]
         public IProductInfo ProductInfo { get; set; }
         [Dependency]
-        public SharedDataService SharedDataService { get; set; }
+        public SharedDataStore SharedDataStore { get; set; }
 
         public ReactiveCollection<string> TraceLogs { get; }
         public ReactiveCollection<string> DebugLogs { get; }
         public ReactiveCollection<string> InfoLogs { get; }
         public ReactiveCollection<string> WarnLogs { get; }
+
         public ChartValues<ObservableValue> CpuUsage { get; }
         public ChartValues<ObservableValue> MemoryUsage { get; }
 
@@ -70,8 +71,8 @@ namespace MyPad.ViewModels.Regions
             this.WarnLogs = new ReactiveCollection<string>().AddTo(this.CompositeDisposable);
             BindingOperations.EnableCollectionSynchronization(this.WarnLogs, new object());
 
-            this.CpuUsage = new ChartValues<ObservableValue>();
-            this.MemoryUsage = new ChartValues<ObservableValue>();
+            this.CpuUsage = new();
+            this.MemoryUsage = new();
 
             this.IsWorking = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
 
@@ -114,21 +115,21 @@ namespace MyPad.ViewModels.Regions
         {
             const int LOOP_DELAY = 500;
 
-            var tempPath = Path.Combine(this.SharedDataService.TempDirectoryPath, Path.GetFileNameWithoutExtension(path));
+            var tempPath = Path.Combine(this.SharedDataStore.TempDirectoryPath, Path.GetFileNameWithoutExtension(path));
 
             try
             {
                 this.IsWorking.Value = true;
 
-                this.SharedDataService.CreateTempDirectory();
+                this.SharedDataStore.CreateTempDirectory();
 
                 // 一時フォルダに複製する
                 if (Directory.Exists(tempPath))
                     await Task.Run(() => Directory.Delete(tempPath, true));
                 while (Directory.Exists(tempPath))
                     await Task.Delay(LOOP_DELAY);
-                await Task.Run(() => Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(this.SharedDataService.LogDirectoryPath, tempPath, Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.ThrowException));
-                this.Logger.Debug($"ログファイルを一時フォルダに複製しました。: Source={this.SharedDataService.LogDirectoryPath}, Dest={tempPath}");
+                await Task.Run(() => Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(this.SharedDataStore.LogDirectoryPath, tempPath, Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.ThrowException));
+                this.Logger.Debug($"ログファイルを一時フォルダに複製しました。: Source={this.SharedDataStore.LogDirectoryPath}, Dest={tempPath}");
 
                 // 複製したファイルを圧縮して出力する
                 if (File.Exists(path))
@@ -183,12 +184,12 @@ namespace MyPad.ViewModels.Regions
         {
             if (processorTime.HasValue)
                 this.CpuUsage.Add(new ObservableValue(processorTime.Value));
-            if (AppSettings.PerformanceGraphLimit < this.CpuUsage.Count)
+            if (AppSettingsReader.PerformanceGraphLimit < this.CpuUsage.Count)
                 this.CpuUsage.RemoveAt(0);
 
             if (workingSetPrivate.HasValue)
                 this.MemoryUsage.Add(new ObservableValue(workingSetPrivate.Value));
-            if (AppSettings.PerformanceGraphLimit < this.MemoryUsage.Count)
+            if (AppSettingsReader.PerformanceGraphLimit < this.MemoryUsage.Count)
                 this.MemoryUsage.RemoveAt(0);
         }
     }

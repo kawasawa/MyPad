@@ -8,7 +8,7 @@ using Unity;
 
 namespace MyPad.Models
 {
-    public sealed class SettingsService : ModelBase
+    public class Settings : ModelBase
     {
         #region インジェクション
 
@@ -63,15 +63,15 @@ namespace MyPad.Models
         {
             if (force)
             {
-                this.System = new SystemSettings();
-                this.TextEditor = new TextEditorSettings();
-                this.OtherTools = new ToolSettings();
+                this.System = new();
+                this.TextEditor = new();
+                this.OtherTools = new();
             }
             else
             {
-                this.System ??= new SystemSettings();
-                this.TextEditor ??= new TextEditorSettings();
-                this.OtherTools ??= new ToolSettings();
+                this.System ??= new();
+                this.TextEditor ??= new();
+                this.OtherTools ??= new();
             }
         }
 
@@ -90,17 +90,17 @@ namespace MyPad.Models
             }
         }
 
-        public bool Load()
+        public (bool, Settings) Load()
             => this.Load(this.FilePath);
 
-        public bool Load(string path)
+        public (bool, Settings) Load(string path)
         {
             try
             {
                 if (File.Exists(path) == false)
                 {
                     this.InitializeInternal(true);
-                    return true;
+                    return (true, this);
                 }
 
                 var json = string.Empty;
@@ -114,12 +114,12 @@ namespace MyPad.Models
                 this.InitializeInternal(false);
 
                 this.Logger.Debug($"設定ファイルを読み込みました。: Path={path}");
-                return true;
+                return (true, this);
             }
             catch (Exception e)
             {
                 this.Logger.Log($"設定ファイルの読み込みに失敗しました。: Path={path}", Category.Warn, e);
-                return false;
+                return (false, this);
             }
         }
 

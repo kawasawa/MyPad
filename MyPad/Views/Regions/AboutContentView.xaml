@@ -36,7 +36,7 @@
                 <Button Grid.Column="4" Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_Repository}" VerticalAlignment="Center" IsTabStop="False">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <behaviors:ProcessStartAction FileName="cmd.exe" Arguments="{qc:Binding '\'/c start \' + $P', P={Binding Source={x:Static root:AppSettings.ProjectSite}, Mode=OneWay}}" CreateNoWindow="True" ThrowException="False"/>
+                            <behaviors:ProcessStartAction FileName="cmd.exe" Arguments="{qc:Binding '\'/c start \' + $P', P={Binding Source={x:Static root:AppSettingsReader.ProjectSite}, Mode=OneWay}}" CreateNoWindow="True" ThrowException="False"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <mi:Material Kind="Github"/>
@@ -44,7 +44,7 @@
                 <Button Grid.Column="6" Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_Creator}" VerticalAlignment="Center" IsTabStop="False">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <behaviors:ProcessStartAction FileName="cmd.exe" Arguments="{qc:Binding '\'/c start \' + $P', P={Binding Source={x:Static root:AppSettings.CreatorSite}, Mode=OneWay}}" CreateNoWindow="True" ThrowException="False"/>
+                            <behaviors:ProcessStartAction FileName="cmd.exe" Arguments="{qc:Binding '\'/c start \' + $P', P={Binding Source={x:Static root:AppSettingsReader.CreatorSite}, Mode=OneWay}}" CreateNoWindow="True" ThrowException="False"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <mi:FontAwesome Kind="AddressCardRegular"/>
@@ -59,7 +59,7 @@
                     </Button.ToolTip>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <behaviors:ProcessStartAction FileName="cmd.exe" Arguments="{qc:Binding '\'/c start \' + $P', P={Binding Source={x:Static root:AppSettings.DonationSite}, Mode=OneWay}}" CreateNoWindow="True" ThrowException="False"/>
+                            <behaviors:ProcessStartAction FileName="cmd.exe" Arguments="{qc:Binding '\'/c start \' + $P', P={Binding Source={x:Static root:AppSettingsReader.DonationSite}, Mode=OneWay}}" CreateNoWindow="True" ThrowException="False"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <mi:FontAwesome Kind="SmileRegular"/>

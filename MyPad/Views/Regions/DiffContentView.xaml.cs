@@ -23,7 +23,7 @@ namespace MyPad.Views.Regions
         #region インジェクション
 
         [Dependency]
-        public SettingsService SettingsService { get; set; }
+        public Settings Settings { get; set; }
 
         #endregion
 
@@ -38,7 +38,7 @@ namespace MyPad.Views.Regions
         {
             if (e.NewValue is bool isVisible && isVisible)
             {
-                if (this.SettingsService.OtherTools?.ShowInlineDiffViewer == true)
+                if (this.Settings.OtherTools?.ShowInlineDiffViewer == true)
                     this.DiffViewer.ShowInline();
                 else
                     this.DiffViewer.ShowSideBySide();

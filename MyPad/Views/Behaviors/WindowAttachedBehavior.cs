@@ -16,7 +16,7 @@ namespace MyPad.Views.Behaviors
 
         private static void OnCloseByEscChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            if (!(sender is Window window))
+            if (sender is not Window window)
                 return;
 
             if ((bool)e.OldValue)
@@ -27,7 +27,7 @@ namespace MyPad.Views.Behaviors
 
         private static void PreviewKeyDown4CloseByEsc(object sender, KeyEventArgs e)
         {
-            if (!(sender is Window window) || window.IsMouseCaptureWithin == true)
+            if (sender is not Window window || window.IsMouseCaptureWithin == true)
                 return;
             if (e.Key != Key.Escape || Keyboard.Modifiers != ModifierKeys.None)
                 return;
@@ -49,7 +49,7 @@ namespace MyPad.Views.Behaviors
 
         private static void OnDraggableAnywhereChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            if (!(sender is Window window))
+            if (sender is not Window window)
                 return;
 
             if ((bool)e.OldValue)
@@ -60,7 +60,7 @@ namespace MyPad.Views.Behaviors
 
         private static void MouseLeftButtonDown4DraggableAnywhere(object sender, MouseButtonEventArgs e)
         {
-            if (!(sender is Window window))
+            if (sender is not Window window)
                 return;
             if (e.ButtonState != MouseButtonState.Pressed)
                 return;

@@ -26,7 +26,7 @@ namespace MyPad.Views.Controls
         private const double MAX_FONT_SIZE = 99;
         private const double UPDATE_FOLDINGS_INTERVAL = 2;
 
-        private static readonly SolidColorBrush SEARCH_RESULTS_MARKER_BRUSH = new SolidColorBrush(Colors.RosyBrown);
+        private static readonly SolidColorBrush SEARCH_RESULTS_MARKER_BRUSH = new(Colors.RosyBrown);
 
         public static readonly DependencyProperty ReplaceAreaExpandedProperty = DependencyPropertyExtensions.RegisterAttached();
         public static readonly DependencyProperty ReplacePatternProperty = DependencyPropertyExtensions.RegisterAttached();
@@ -63,7 +63,7 @@ namespace MyPad.Views.Controls
             = DependencyPropertyExtensions.Register(new PropertyMetadata(true));
 
         private readonly Lazy<Func<SearchPanel, IEnumerable<TextSegment>>> _searchedTextSegments
-            = new Lazy<Func<SearchPanel, IEnumerable<TextSegment>>>(() =>
+            = new(() =>
             {
                 // HACK: SearchResultBackgroundRenderer.CurrentResults プロパティから検索テキストを取得
                 // たしかに取得できるがほかに方法はないのか。
@@ -219,7 +219,7 @@ namespace MyPad.Views.Controls
                 )
             ));
 
-            this._updateFoldingsTimer = new DispatcherTimer();
+            this._updateFoldingsTimer = new();
             this._updateFoldingsTimer.Tick += this.FoldingsTimer_Tick;
 
             // NOTE: SearchPanel の依存関係プロパティ MarkerBrush の設定
@@ -417,7 +417,7 @@ namespace MyPad.Views.Controls
             if (this.CanShowCompletionList() == false)
                 return;
 
-            this.CompletionWindow = new CompletionWindow(this, this._completionData);
+            this.CompletionWindow = new(this, this._completionData);
             this.CompletionWindow.Closed += this.CompletionWindow_Closed;
             this.CompletionWindow.Show();
         }

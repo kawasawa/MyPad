@@ -4,7 +4,7 @@ namespace MyPad.Views.Controls.ChangeMarker
 {
     public struct LineChangeInfo : IEquatable<LineChangeInfo>
     {
-        public static readonly LineChangeInfo Empty = new LineChangeInfo(ChangeKind.None, 1, 1);
+        public static readonly LineChangeInfo Empty = new(ChangeKind.None, 1, 1);
 
         public ChangeKind ChangeType { get; set; }
         public int StartLine { get; }

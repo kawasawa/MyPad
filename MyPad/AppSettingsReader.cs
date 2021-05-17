@@ -5,12 +5,12 @@ using System;
 namespace MyPad
 {
     /// <summary>
-    /// アプリケーションの構成情報を表します。
+    /// アプリケーション構成ファイルの情報を読み込みます。
     /// </summary>
-    public static class AppSettings
+    public static class AppSettingsReader
     {
         private static readonly Lazy<IConfigurationRoot> _lazyConfiguration
-            = new Lazy<IConfigurationRoot>(() =>
+            = new(() =>
             {
                 var builder = new ConfigurationBuilder();
                 builder.SetBasePath(AppDomain.CurrentDomain.BaseDirectory);

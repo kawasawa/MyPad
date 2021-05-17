@@ -25,7 +25,7 @@ namespace MyPad.ViewModels
         // Dependency Injection
         private ILoggerFacade _logger;
         private IProductInfo _productInfo;
-        private SettingsService _settingsService;
+        private Settings _settings;
         [Dependency]
         public ILoggerFacade Logger
         {
@@ -39,10 +39,10 @@ namespace MyPad.ViewModels
             set => this.SetProperty(ref this._productInfo, value);
         }
         [Dependency]
-        public SettingsService SettingsService
+        public Settings Settings
         {
-            get => this._settingsService;
-            set => this.SetProperty(ref this._settingsService, value);
+            get => this._settings;
+            set => this.SetProperty(ref this._settings, value);
         }
 
         #endregion
@@ -67,9 +67,9 @@ namespace MyPad.ViewModels
             this.ProcessorTimeCounter = new PerformanceCounter("Process", "% Processor Time", processName, true).AddTo(this.CompositeDisposable);
             this.WorkingSetPrivateCounter = new PerformanceCounter("Process", "Working Set - Private", processName, true).AddTo(this.CompositeDisposable);
 
-            this.UpdatePerformanceInfoTimer = new DispatcherTimer();
+            this.UpdatePerformanceInfoTimer = new();
             this.UpdatePerformanceInfoTimer.Tick += this.UpdatePerformanceInfoTimer_Tick;
-            this.UpdatePerformanceInfoTimer.Interval = TimeSpan.FromMilliseconds(AppSettings.PerformanceCheckInterval);
+            this.UpdatePerformanceInfoTimer.Interval = TimeSpan.FromMilliseconds(AppSettingsReader.PerformanceCheckInterval);
             this.UpdatePerformanceInfoTimer.Start();
 
             async void exitApplication() => await this.ExitApplication();
@@ -137,7 +137,7 @@ namespace MyPad.ViewModels
         {
             this.UpdatePerformanceInfoTimer.Stop();
             await func.Invoke();
-            this.UpdatePerformanceInfoTimer.Interval = TimeSpan.FromMilliseconds(AppSettings.PerformanceCheckInterval);
+            this.UpdatePerformanceInfoTimer.Interval = TimeSpan.FromMilliseconds(AppSettingsReader.PerformanceCheckInterval);
             this.UpdatePerformanceInfoTimer.Start();
         }
     }

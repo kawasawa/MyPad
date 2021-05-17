@@ -28,7 +28,7 @@ namespace MyPad.ViewModels.Regions
         [Dependency]
         public IProductInfo ProductInfo { get; set; }
         [Dependency]
-        public SettingsService SettingsService { get; set; }
+        public Settings Settings { get; set; }
         [Dependency]
         public SyntaxService SyntaxService { get; set; }
 
@@ -63,7 +63,7 @@ namespace MyPad.ViewModels.Regions
                     if (info != null)
                         info.Path = parameter.FileName;
                     else
-                        this.SettingsService.OtherTools.ExplorerRoots.Add(new ToolSettings.PathInfo() { Path = parameter.FileName });
+                        this.Settings.OtherTools.ExplorerRoots.Add(new ToolSettings.PathInfo() { Path = parameter.FileName });
                 })
                 .AddTo(this.CompositeDisposable);
 
@@ -71,7 +71,7 @@ namespace MyPad.ViewModels.Regions
                 .WithSubscribe(args =>
                 {
                     var info = (ToolSettings.PathInfo)args;
-                    this.SettingsService.OtherTools.ExplorerRoots.Remove(info);
+                    this.Settings.OtherTools.ExplorerRoots.Remove(info);
                 })
                 .AddTo(this.CompositeDisposable);
 
@@ -90,8 +90,8 @@ namespace MyPad.ViewModels.Regions
             this.ImportSettingsFileCommand = this.IsWorking.Inverse().ToReactiveCommand()
                 .WithSubscribe(() =>
                 {
-                    var fileName = Path.GetFileNameWithoutExtension(this.SettingsService.FilePath);
-                    var extension = Path.GetExtension(this.SettingsService.FilePath);
+                    var fileName = Path.GetFileNameWithoutExtension(this.Settings.FilePath);
+                    var extension = Path.GetExtension(this.Settings.FilePath);
                     var parameters = new OpenFileDialogParameters()
                     {
                         Filter = $"{Resources.Label_SettingFile}|*{extension}|{Resources.Label_AllFiles}|*.*",
@@ -109,8 +109,8 @@ namespace MyPad.ViewModels.Regions
             this.ExportSettingsFileCommand = this.IsWorking.Inverse().ToReactiveCommand()
                 .WithSubscribe(() =>
                 {
-                    var fileName = Path.GetFileNameWithoutExtension(this.SettingsService.FilePath);
-                    var extension = Path.GetExtension(this.SettingsService.FilePath);
+                    var fileName = Path.GetFileNameWithoutExtension(this.Settings.FilePath);
+                    var extension = Path.GetExtension(this.Settings.FilePath);
                     var parameters = new SaveFileDialogParameters()
                     {
                         DefaultFileName = $"{fileName} ({DateTime.Now:yyyyMMddHHmmss})",
@@ -129,7 +129,7 @@ namespace MyPad.ViewModels.Regions
                 .WithSubscribe(() =>
                 {
                     if (this.DialogService.Confirm(Resources.Message_ConfirmInitializeSettings))
-                        this.SettingsService.Initialize(true);
+                        this.Settings.Initialize(true);
                 })
                 .AddTo(this.CompositeDisposable);
         }
@@ -140,8 +140,8 @@ namespace MyPad.ViewModels.Regions
             try
             {
                 this.IsWorking.Value = true;
-                this.SettingsService.Load(path);
-                this.SettingsService.Save();
+                this.Settings.Load(path);
+                this.Settings.Save();
                 this.Logger.Log($"設定ファイルをインポートしました。: Path={path}", Category.Info);
             }
             catch (Exception e)
@@ -163,7 +163,7 @@ namespace MyPad.ViewModels.Regions
             try
             {
                 this.IsWorking.Value = true;
-                this.SettingsService.Save(path);
+                this.Settings.Save(path);
                 Process.Start("explorer.exe", $"/select, {path}");
                 this.Logger.Log($"設定ファイルをエクスポートしました。: Path={path}", Category.Info);
             }

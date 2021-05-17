@@ -38,9 +38,9 @@ namespace MyPad.ViewModels
         [Dependency]
         public ILoggerFacade Logger { get; set; }
         [Dependency]
-        public SharedDataService SharedDataService { get; set; }
+        public SharedDataStore SharedDataStore { get; set; }
         [Dependency]
-        public SettingsService SettingsService { get; set; }
+        public Settings Settings { get; set; }
         [Dependency]
         public SyntaxService SyntaxService { get; set; }
 
@@ -320,8 +320,8 @@ namespace MyPad.ViewModels
         [LogInterceptor]
         public TextEditorViewModel()
         {
-            this.Document = new TextDocument();
-            this.AutoSaveTimer = new DispatcherTimer();
+            this.Document = new();
+            this.AutoSaveTimer = new();
             this.AutoSaveTimer.Tick += this.AutoSaveTimer_Tick;
             this.Clear();
             this._isInitialized = true;
@@ -367,13 +367,13 @@ namespace MyPad.ViewModels
 
                 // 関連要素をクリアする
                 this.Document.FileName = string.Empty;
-                this.Encoding = this.SettingsService.System.Encoding;
+                this.Encoding = this.Settings.System.Encoding;
                 this.IsReadOnly = false;
                 this.IsModified = false;
                 this.SyntaxDefinition =
-                    string.IsNullOrEmpty(this.SettingsService.System.SyntaxDefinitionName) ? null :
-                    this.SyntaxService.Definitions.ContainsKey(this.SettingsService.System.SyntaxDefinitionName) ?
-                    this.SyntaxService.Definitions[this.SettingsService.System.SyntaxDefinitionName] :
+                    string.IsNullOrEmpty(this.Settings.System.SyntaxDefinitionName) ? null :
+                    this.SyntaxService.Definitions.ContainsKey(this.Settings.System.SyntaxDefinitionName) ?
+                    this.SyntaxService.Definitions[this.Settings.System.SyntaxDefinitionName] :
                     null;
 
                 // 一時ファイルを削除する
@@ -433,11 +433,11 @@ namespace MyPad.ViewModels
                 // ストリームからバイト配列を読み取る
                 var bytes = new byte[this.FileStream.Length];
                 this.FileStream.Position = 0;
-                await this.FileStream.ReadAsync(bytes, 0, bytes.Length);
+                await this.FileStream.ReadAsync(bytes.AsMemory(0, bytes.Length));
 
                 // 文字コードを推定する
                 if (encoding == null)
-                    encoding = await Task.Run(() => TextHelper.DetectEncodingSimple(bytes) ?? this.SettingsService.System.Encoding);
+                    encoding = await Task.Run(() => TextHelper.DetectEncodingSimple(bytes) ?? this.Settings.System.Encoding);
 
                 // バイト配列をテキストを変換する
                 var text = await Task.Run(() => encoding.GetString(bytes));
@@ -483,7 +483,7 @@ namespace MyPad.ViewModels
                 // ストリームに書き込む
                 this.FileStream.Position = 0;
                 this.FileStream.SetLength(0);
-                await this.FileStream.WriteAsync(bytes, 0, bytes.Length);
+                await this.FileStream.WriteAsync(bytes.AsMemory(0, bytes.Length));
                 this.FileStream.Flush();
 
                 // 関連要素を設定する
@@ -522,12 +522,12 @@ namespace MyPad.ViewModels
                 await Application.Current.Dispatcher.InvokeAsync(() =>
                 {
                     var block = DocumentPrinter.ConvertTextDocumentToBlock(this.Document, highlighter);
-                    flowDocument = new FlowDocument(block);
-                    flowDocument.FontFamily = this.SettingsService.TextEditor.FontFamily;
-                    flowDocument.FontSize = this.SettingsService.TextEditor.ActualFontSize;
+                    flowDocument = new(block);
+                    flowDocument.FontFamily = this.Settings.TextEditor.FontFamily;
+                    flowDocument.FontSize = this.Settings.TextEditor.ActualFontSize;
                     flowDocument.Background = Brushes.White;
                     flowDocument.Foreground = Brushes.Black;
-                    flowDocument.PagePadding = new Thickness(50);
+                    flowDocument.PagePadding = new(50);
                     flowDocument.ColumnGap = 0;
                 });
                 highlighter?.Dispose();
@@ -539,17 +539,17 @@ namespace MyPad.ViewModels
         [LogInterceptor]
         private async void AutoSaveTimer_Tick(object sender, EventArgs e)
         {
-            if (this.SettingsService.System.EnableAutoSave == false)
+            if (this.Settings.System.EnableAutoSave == false)
                 return;
             if (this.IsModified == false || this.Document.Version == this.Temporary.version)
                 return;
 
             await this.Interrupt(async () =>
             {
-                var path = Path.Combine(this.SharedDataService.TempDirectoryPath, this.Sequense.ToString());
+                var path = Path.Combine(this.SharedDataStore.TempDirectoryPath, this.Sequense.ToString());
                 try
                 {
-                    this.SharedDataService.CreateTempDirectory();
+                    this.SharedDataStore.CreateTempDirectory();
                     var bytes = await Application.Current.Dispatcher.InvokeAsync(() => this.Encoding.GetBytes(this.Document.Text));
                     await File.WriteAllBytesAsync(path, bytes);
                     this.Logger.Log($"ファイルを自動保存しました。: Path={path}", Category.Info);
@@ -573,7 +573,7 @@ namespace MyPad.ViewModels
             await func.Invoke();
             Mouse.OverrideCursor = null;
 
-            this.AutoSaveTimer.Interval = new TimeSpan(0, this.SettingsService.System.AutoSaveInterval, 0);
+            this.AutoSaveTimer.Interval = new(0, this.Settings.System.AutoSaveInterval, 0);
             this.AutoSaveTimer.Start();
         }
     }

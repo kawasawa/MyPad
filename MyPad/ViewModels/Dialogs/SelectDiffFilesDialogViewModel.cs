@@ -16,7 +16,7 @@ namespace MyPad.ViewModels.Dialogs
         [Dependency]
         public ICommonDialogService CommonDialogService { get; set; }
         [Dependency]
-        public SettingsService SettingsService { get; set; }
+        public Settings Settings { get; set; }
         [Dependency]
         public SyntaxService SyntaxService { get; set; }
 

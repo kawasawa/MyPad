@@ -44,7 +44,7 @@ namespace MyPad.Views.Controls.ChangeMarker
 
         public ChangeMarkerMargin()
         {
-            this._changeWatcher = new ChangeWatcher();
+            this._changeWatcher = new();
             this._changeWatcher.ChangeOccurred += this.ChangeWatcher_ChangeOccurred;
         }
 
@@ -120,7 +120,7 @@ namespace MyPad.Views.Controls.ChangeMarker
         }
 
         protected override Size MeasureOverride(Size availableSize)
-            => new Size(MARGIN_WIDTH, 0);
+            => new(MARGIN_WIDTH, 0);
 
         private void ChangeWatcher_ChangeOccurred(object sender, EventArgs e)
             => this.InvalidateVisual();

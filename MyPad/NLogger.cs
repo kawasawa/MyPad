@@ -42,12 +42,12 @@ namespace MyPad
         /// </summary>
         public NLogger()
         {
-            this.TraceCoreLogger = new Lazy<ILogger>(() => this.CreateLogger(Category.Trace));
-            this.DebugCoreLogger = new Lazy<ILogger>(() => this.CreateLogger(Category.Debug));
-            this.InfoCoreLogger = new Lazy<ILogger>(() => this.CreateLogger(Category.Info));
-            this.WarnCoreLogger = new Lazy<ILogger>(() => this.CreateLogger(Category.Warn));
-            this.ErrorCoreLogger = new Lazy<ILogger>(() => this.CreateLogger(Category.Error));
-            this.FatalCoreLogger = new Lazy<ILogger>(() => this.CreateLogger(Category.Fatal));
+            this.TraceCoreLogger = new(() => this.CreateLogger(Category.Trace));
+            this.DebugCoreLogger = new(() => this.CreateLogger(Category.Debug));
+            this.InfoCoreLogger = new(() => this.CreateLogger(Category.Info));
+            this.WarnCoreLogger = new(() => this.CreateLogger(Category.Warn));
+            this.ErrorCoreLogger = new(() => this.CreateLogger(Category.Error));
+            this.FatalCoreLogger = new(() => this.CreateLogger(Category.Fatal));
             this.PublisherType = this.GetType();
         }
 

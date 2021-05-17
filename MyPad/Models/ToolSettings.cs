@@ -5,7 +5,7 @@ namespace MyPad.Models
 {
     public class ToolSettings : ModelBase
     {
-        private ObservableCollection<PathInfo> _explorerRoots = new ObservableCollection<PathInfo>();
+        private ObservableCollection<PathInfo> _explorerRoots = new();
         public ObservableCollection<PathInfo> ExplorerRoots
         {
             get => this._explorerRoots;

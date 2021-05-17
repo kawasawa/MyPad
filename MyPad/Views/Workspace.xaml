@@ -19,7 +19,7 @@
     <t:TaskbarIcon x:Name="TaskbarIcon"
                    IconSource="/Resources/app.ico"
                    ToolTipText="{Binding ProductInfo.Product, Mode=OneWay}"
-                   Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding SettingsService.System.EnableNotificationIcon, Mode=OneWay}}"
+                   Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.EnableNotificationIcon, Mode=OneWay}}"
                    TrayContextMenuOpen="TaskbarIcon_TrayContextMenuOpen"
                    TrayMouseDoubleClick="TaskbarIcon_TrayMouseDoubleClick">
         <t:TaskbarIcon.ContextMenu>

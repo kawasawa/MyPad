@@ -40,7 +40,7 @@ namespace MyPad.Views
         [Dependency]
         public IRegionManager RegionManager { get; set; }
         [Dependency]
-        public SettingsService SettingsService { get; set; }
+        public Settings Settings { get; set; }
 
         #endregion
 
@@ -79,12 +79,12 @@ namespace MyPad.Views
                     var self = (MainWindow)obj;
                     if (e.NewValue is bool value && value)
                     {
-                        self.BottomContentRow.Height = new GridLength(150);
+                        self.BottomContentRow.Height = new(150);
                         self.FocusBottomContent();
                     }
                     else
                     {
-                        self.BottomContentRow.Height = new GridLength(0);
+                        self.BottomContentRow.Height = new(0);
                         self.FocusTextEditor();
                     }
                 }));
@@ -165,9 +165,9 @@ namespace MyPad.Views
             this.ContainerExtension = containerExtension;
             this.Localization = new LocalizationWrapper();
             this.InterTabClient = this.ContainerExtension.Resolve<InterTabClientWrapper>();
-            this.Notifier = new Notifier(config =>
+            this.Notifier = new(config =>
             {
-                config.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromSeconds(AppSettings.ToastLifetime), MaximumNotificationCount.FromCount(AppSettings.ToastCountLimit));
+                config.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromSeconds(AppSettingsReader.ToastLifetime), MaximumNotificationCount.FromCount(AppSettingsReader.ToastCountLimit));
                 config.PositionProvider = new WindowPositionProvider(this, Corner.BottomRight, 5, 0);
                 config.Dispatcher = Application.Current.Dispatcher;
                 config.DisplayOptions.Width = 280;
@@ -240,7 +240,7 @@ namespace MyPad.Views
 
             var sequence = 0u;
             User32.MENUITEMINFO createMenuItem(bool isSeparator = false)
-                => new User32.MENUITEMINFO
+                => new()
                 {
                     cbSize = (uint)Marshal.SizeOf(typeof(User32.MENUITEMINFO)),
                     fMask = isSeparator ? User32.MenuItemInfoMask.MIIM_FTYPE : User32.MenuItemInfoMask.MIIM_STATE | User32.MenuItemInfoMask.MIIM_ID | User32.MenuItemInfoMask.MIIM_STRING,
@@ -251,7 +251,7 @@ namespace MyPad.Views
                     hbmpChecked = IntPtr.Zero,
                     hbmpUnchecked = IntPtr.Zero,
                     dwItemData = IntPtr.Zero,
-                    dwTypeData = new StrPtrAuto(string.Empty), // 必ず文字列で初期化するように
+                    dwTypeData = new(string.Empty), // 必ず文字列で初期化するように
                     cch = 0,
                     hbmpItem = IntPtr.Zero
                 };
@@ -271,7 +271,7 @@ namespace MyPad.Views
         [LogInterceptor]
         private void FocusBottomContent()
         {
-            if (!((((this.BottomContent.SelectedItem as TabItem)?.Content as ContentControl)?.Content as UserControl)?.FindName("ScriptInputField") is FrameworkElement element))
+            if ((((this.BottomContent.SelectedItem as TabItem)?.Content as ContentControl)?.Content as UserControl)?.FindName("ScriptInputField") is not FrameworkElement element)
                 return;
 
             if (element.IsLoaded)
@@ -291,7 +291,7 @@ namespace MyPad.Views
         [LogInterceptor]
         private void FocusSideContent()
         {
-            if (!((this.SideContent.Content as HamburgerMenuItem)?.Tag is FrameworkElement element))
+            if ((this.SideContent.Content as HamburgerMenuItem)?.Tag is not FrameworkElement element)
                 return;
 
             void elementLoaded(object sender, EventArgs e)
@@ -310,8 +310,8 @@ namespace MyPad.Views
             this.SideContent.Width = double.NaN;
 
             // グリッドの列構成を調整する
-            this.SideContentColumn.Width = new GridLength(this._columnWidthCache.sideBarWidth, GridUnitType.Star);
-            this.MainContentColumn.Width = new GridLength(this._columnWidthCache.contentAreaWidth, GridUnitType.Star);
+            this.SideContentColumn.Width = new(this._columnWidthCache.sideBarWidth, GridUnitType.Star);
+            this.MainContentColumn.Width = new(this._columnWidthCache.contentAreaWidth, GridUnitType.Star);
         }
 
         [LogInterceptor]
@@ -324,7 +324,7 @@ namespace MyPad.Views
             // グリッドの列構成を調整する
             this._columnWidthCache = (this.SideContentColumn.Width.Value, this.MainContentColumn.Width.Value);
             this.SideContentColumn.Width = GridLength.Auto;
-            this.MainContentColumn.Width = new GridLength(1, GridUnitType.Star);
+            this.MainContentColumn.Width = new(1, GridUnitType.Star);
         }
 
         [LogInterceptor]
@@ -336,7 +336,7 @@ namespace MyPad.Views
         [LogInterceptor]
         private void PerformInvokeSideContent(object targetItem)
         {
-            this.SettingsService.System.ShowSideBar = true;
+            this.Settings.System.ShowSideBar = true;
 
             if (this.IsClosedSideContent())
             {
@@ -389,9 +389,9 @@ namespace MyPad.Views
             if (this.IsNewTabHost == false)
             {
                 // 表示位置を復元する
-                if (this.SettingsService.System.SaveWindowPlacement && this.SettingsService.System.WindowPlacement.HasValue)
+                if (this.Settings.System.SaveWindowPlacement && this.Settings.System.WindowPlacement.HasValue)
                 {
-                    var lpwndpl = this.SettingsService.System.WindowPlacement.Value;
+                    var lpwndpl = this.Settings.System.WindowPlacement.Value;
                     if (lpwndpl.showCmd == ShowWindowCommand.SW_SHOWMINIMIZED)
                         lpwndpl.showCmd = ShowWindowCommand.SW_SHOWNORMAL;
                     User32.SetWindowPlacement(this._handleSource.Handle, ref lpwndpl);
@@ -456,11 +456,11 @@ namespace MyPad.Views
             this.Logger.Log($"ウィンドウを破棄しました。win#{this.ViewModel.Sequense}", Category.Info);
 
             // 表示位置を退避する
-            if (this.SettingsService.System.SaveWindowPlacement && this._handleSource.IsDisposed == false)
+            if (this.Settings.System.SaveWindowPlacement && this._handleSource.IsDisposed == false)
             {
                 var lpwndpl = new User32.WINDOWPLACEMENT();
                 User32.GetWindowPlacement(this._handleSource.Handle, ref lpwndpl);
-                this.SettingsService.System.WindowPlacement = lpwndpl;
+                this.Settings.System.WindowPlacement = lpwndpl;
             }
 
             // フックメソッドを解除する
@@ -471,8 +471,8 @@ namespace MyPad.Views
 
             // 他のウィンドウが存在せず、タスクトレイに存在しない場合はアプリケーションを終了する
             if (Application.Current.Windows.OfType<MainWindow>().Any() == false &&
-                (this.SettingsService.System.EnableNotificationIcon == false ||
-                 this.SettingsService.System.EnableResident == false))
+                (this.Settings.System.EnableNotificationIcon == false ||
+                 this.Settings.System.EnableResident == false))
             {
                 Application.Current.Windows.OfType<Workspace>().ForEach(w => w.Close());
             }
@@ -508,7 +508,7 @@ namespace MyPad.Views
         [LogInterceptor]
         private void SideContent_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (!(e.NewValue is bool visible) || visible)
+            if (e.NewValue is not bool visible || visible)
                 return;
             if (this.IsClosedSideContent())
                 return;
@@ -530,7 +530,7 @@ namespace MyPad.Views
             if (e.Handled)
                 return;
 
-            if (!((e.OriginalSource as DependencyObject)?.Ancestor().FirstOrDefault(d => d is TreeViewItem) is TreeViewItem item))
+            if ((e.OriginalSource as DependencyObject)?.Ancestor().FirstOrDefault(d => d is TreeViewItem) is not TreeViewItem item)
                 return;
 
             item.IsSelected = true;
@@ -625,8 +625,8 @@ namespace MyPad.Views
             if (this.SideContentColumn.Width.Value != this.SideContentColumn.MinWidth)
                 return;
 
-            this.SideContentColumn.Width = new GridLength(this._columnWidthCache.sideBarWidth, GridUnitType.Star);
-            this.MainContentColumn.Width = new GridLength(this._columnWidthCache.contentAreaWidth, GridUnitType.Star);
+            this.SideContentColumn.Width = new(this._columnWidthCache.sideBarWidth, GridUnitType.Star);
+            this.MainContentColumn.Width = new(this._columnWidthCache.contentAreaWidth, GridUnitType.Star);
             this.CloseSideContent();
         }
 
@@ -651,10 +651,10 @@ namespace MyPad.Views
                     this._miiShowToolBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowToolBar);
                     this._miiShowSideBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowSideBar);
                     this._miiShowStatusBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowStatusBar);
-                    this._miiShowMenuBar.lpmii.fState = this.SettingsService.System.ShowMenuBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
-                    this._miiShowToolBar.lpmii.fState = this.SettingsService.System.ShowToolBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
-                    this._miiShowSideBar.lpmii.fState = this.SettingsService.System.ShowSideBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
-                    this._miiShowStatusBar.lpmii.fState = this.SettingsService.System.ShowStatusBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
+                    this._miiShowMenuBar.lpmii.fState = this.Settings.System.ShowMenuBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
+                    this._miiShowToolBar.lpmii.fState = this.Settings.System.ShowToolBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
+                    this._miiShowSideBar.lpmii.fState = this.Settings.System.ShowSideBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
+                    this._miiShowStatusBar.lpmii.fState = this.Settings.System.ShowStatusBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
                     User32.SetMenuItemInfo(hMenu, this._miiShowMenuBar.fByPosition, true, in this._miiShowMenuBar.lpmii);
                     User32.SetMenuItemInfo(hMenu, this._miiShowToolBar.fByPosition, true, in this._miiShowToolBar.lpmii);
                     User32.SetMenuItemInfo(hMenu, this._miiShowSideBar.fByPosition, true, in this._miiShowSideBar.lpmii);
@@ -664,7 +664,7 @@ namespace MyPad.Views
 
                 case User32.WindowMessage.WM_SYSCOMMAND:
                 {
-                    var settings = this.SettingsService.System;
+                    var settings = this.Settings.System;
                     var wID = wParam.ToInt32();
                     if (this._miiShowMenuBar.lpmii.wID == wID)
                         settings.ShowMenuBar = !settings.ShowMenuBar;
@@ -706,15 +706,15 @@ namespace MyPad.Views
                 //
                 // Dragablz/Dragablz/TabablzControl.cs | 6311e72 on 16 Aug 2017 | Line 1330:
                 //   _dragablzItemsControl.InstigateDrag(interTabTransfer.Item, newContainer =>
-                if (view.SettingsService.System.ShowSingleTab == false)
+                if (view.Settings.System.ShowSingleTab == false)
                 {
                     void windowMoveEnd(object sender, EventArgs e)
                     {
-                        view.SettingsService.System.ShowSingleTab = false;
+                        view.Settings.System.ShowSingleTab = false;
                         ((Window)sender).PreviewMouseLeftButtonUp -= windowMoveEnd;
                         ((Window)sender).Closed -= windowMoveEnd;
                     }
-                    view.SettingsService.System.ShowSingleTab = true;
+                    view.Settings.System.ShowSingleTab = true;
                     view.PreviewMouseLeftButtonUp += windowMoveEnd;
                     view.Closed += windowMoveEnd;
                 }

@@ -18,7 +18,7 @@ namespace MyPad.Views.Controls.ChangeMarker
 
         public ChangeWatcher()
         {
-            this.ChangeList = new CompressingTreeList<LineChangeInfo>((x, y) => x.Equals(y));
+            this.ChangeList = new((x, y) => x.Equals(y));
         }
 
         public void Dispose()
@@ -44,7 +44,7 @@ namespace MyPad.Views.Controls.ChangeMarker
             }
 
             this._document = document;
-            this._baseDocument = new TextDocument(document);
+            this._baseDocument = new(document);
 
             this.ChangeList.Clear();
             this.ChangeList.InsertRange(0, document.LineCount + 1, LineChangeInfo.Empty);
@@ -64,7 +64,7 @@ namespace MyPad.Views.Controls.ChangeMarker
                     // HACK: UndoStack のサイズ変更を起点にファイルのリロードを検知
                     // たまたま ViewModel 側でサスペンドしているため実現できるが、
                     // 内部実装レベルで依存しており条件として非常に脆い。
-                    this._baseDocument = new TextDocument(this._document);
+                    this._baseDocument = new(this._document);
                     break;
                 case nameof(this._document.UndoStack.IsOriginalFile) when this._document.UndoStack.IsOriginalFile:
                     break;
@@ -146,12 +146,12 @@ namespace MyPad.Views.Controls.ChangeMarker
 
             public MyersDiffAlgorithm(TextDocument documentA, TextDocument documentB)
             {
-                this.Edits = new List<Edit>();
+                this.Edits = new();
 
                 var hashDick = new Dictionary<string, int>();
                 var sequenceA = new Sequence(documentA, ref hashDick);
                 var sequenceB = new Sequence(documentB, ref hashDick);
-                this._middleEdit = new MiddleEdit(sequenceA, sequenceB);
+                this._middleEdit = new(sequenceA, sequenceB);
                 if (this._middleEdit.EndA <= this._middleEdit.BeginA && this._middleEdit.EndB <= this._middleEdit.BeginB)
                     return;
 
@@ -321,8 +321,8 @@ namespace MyPad.Views.Controls.ChangeMarker
 
                 public abstract class EditPath
                 {
-                    private readonly List<int> _xList = new List<int>();
-                    private readonly List<long> _snakeList = new List<long>();
+                    private readonly List<int> _xList = new();
+                    private readonly List<long> _snakeList = new();
 
                     protected MiddleEdit MiddleEdit { get; }
                     protected int MinK { get; set; }
@@ -441,7 +441,7 @@ namespace MyPad.Views.Controls.ChangeMarker
                         var y1 = snake2y(snake1);
                         var y2 = snake2y(snake2);
 
-                        this.MiddleEdit.Edit = (x2 < x1 || y2 < y1) ? new Edit(x2, x2, y2, y2) : new Edit(x1, x2, y1, y2);
+                        this.MiddleEdit.Edit = (x2 < x1 || y2 < y1) ? new(x2, x2, y2, y2) : new(x1, x2, y1, y2);
                     }
                 }
 

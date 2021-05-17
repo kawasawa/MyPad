@@ -16,7 +16,7 @@ namespace MyPad.Views.Helpers
 
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(value is FontFamily fontFamily))
+            if (value is not FontFamily fontFamily)
                 return string.Empty;
 
             var language = XmlLanguage.GetLanguage(culture.IetfLanguageTag);

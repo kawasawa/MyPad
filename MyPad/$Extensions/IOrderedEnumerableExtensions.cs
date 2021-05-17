@@ -22,7 +22,7 @@ namespace MyPad
         public class NaturalComparer : IComparer, IComparer<string>
         {
             private static NaturalComparer _default = null;
-            public static NaturalComparer Default => _default ??= new NaturalComparer();
+            public static NaturalComparer Default => _default ??= new();
 
             int IComparer.Compare(object x, object y)
             {
