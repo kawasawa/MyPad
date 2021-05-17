@@ -287,7 +287,7 @@
                 <ScrollViewer>
                     <StackPanel>
                         <GroupBox Header="{le:Loc Label_SystemDirectory}">
-                            <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto">
+                            <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, 5" ge:GridEx.RowDefinition="Auto, Auto, Auto">
                                 <Grid.Resources>
                                     <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
                                         <Setter Property="Margin" Value="5"/>
