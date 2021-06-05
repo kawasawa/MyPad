@@ -10,7 +10,6 @@
              xmlns:le="http://wpflocalizeextension.codeplex.com"
              xmlns:qc="http://QuickConverter.CodePlex.com/"
              xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
-             xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
              mc:Ignorable="d"
              p:ViewModelLocator.AutoWireViewModel="True">
 
@@ -28,7 +27,7 @@
             <TextBlock Grid.Column="2" Text="{Binding Message.Value, Mode=OneWay}"/>
         </Grid>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Command="{Binding YesCommand, Mode=Onetime}" Content="{le:Loc Command_Yes}"/>
+            <Button Command="{Binding YesCommand, Mode=Onetime}" Content="{le:Loc Command_Yes}" IsDefault="True"/>
             <Border Width="10"/>
             <Button Command="{Binding NoCommand, Mode=OneTime}" Content="{le:Loc Command_No}"/>
         </StackPanel>

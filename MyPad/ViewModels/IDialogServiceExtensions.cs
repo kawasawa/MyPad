@@ -22,6 +22,8 @@ namespace MyPad.ViewModels
 {
     public static class IDialogExtensions
     {
+        #region ヘルパーメソッド
+
         private static T GetActiveWindow<T>()
             where T : Window
             => Application.Current.Windows.OfType<T>().FirstOrDefault(x => x.IsActive);
@@ -126,6 +128,10 @@ namespace MyPad.ViewModels
             return settings?.System?.UseOverlayDialog ?? false;
         }
 
+        #endregion
+
+        #region トースト
+
         [LogInterceptor]
         public static void ToastNotify(this IDialogService self, string message)
         {
@@ -138,6 +144,10 @@ namespace MyPad.ViewModels
         {
             GetActiveWindow<MainWindow>()?.Notifier.ShowWarning(message, CreateToastMessageOptions());
         }
+
+        #endregion
+
+        #region メッセージボックス
 
         [LogInterceptor]
         public static void Notify(this IDialogService self, string message)
@@ -231,6 +241,10 @@ namespace MyPad.ViewModels
                 return result.ConvertToTernary();
             }
         }
+
+        #endregion
+
+        #region ダイアログ
 
         [LogInterceptor]
         public async static Task<(bool result, int line)> ChangeLine(this IDialogService self, TextEditorViewModel textEditor)
@@ -422,5 +436,7 @@ namespace MyPad.ViewModels
                 return result;
             }
         }
+
+        #endregion
     }
 }
