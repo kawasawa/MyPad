@@ -10,7 +10,6 @@
              xmlns:le="http://wpflocalizeextension.codeplex.com"
              xmlns:qc="http://QuickConverter.CodePlex.com/"
              xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
-             xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
              mc:Ignorable="d"
              p:ViewModelLocator.AutoWireViewModel="True">
 
@@ -18,7 +17,6 @@
         <Style TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource App.Dialog}">
             <Setter Property="BorderBrush" Value="{DynamicResource RedColorBrush}"/>
             <Setter Property="GlowBrush" Value="{DynamicResource RedColorBrush}"/>
-            <Setter Property="behaviors:WindowAttachedBehavior.CloseByEsc" Value="True"/>
         </Style>
     </p:Dialog.WindowStyle>
 
@@ -28,7 +26,7 @@
             <TextBlock Grid.Column="2" Text="{Binding Message.Value, Mode=OneWay}"/>
         </Grid>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="{le:Loc Command_OK}" Command="{Binding OKCommand, Mode=Onetime}"/>
+            <Button Content="{le:Loc Command_OK}" Command="{Binding OKCommand, Mode=Onetime}" IsDefault="True" IsCancel="True"/>
         </StackPanel>
     </Grid>
     

@@ -10,25 +10,13 @@
              xmlns:le="http://wpflocalizeextension.codeplex.com"
              xmlns:qc="http://QuickConverter.CodePlex.com/"
              xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
-             xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
              mc:Ignorable="d"
              p:ViewModelLocator.AutoWireViewModel="True"
              Loaded="Dialog_Loaded">
 
     <p:Dialog.WindowStyle>
-        <Style TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource App.Dialog}">
-            <Setter Property="behaviors:WindowAttachedBehavior.CloseByEsc" Value="True"/>
-        </Style>
+        <Style TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource App.Dialog}"/>
     </p:Dialog.WindowStyle>
-
-    <i:Interaction.Triggers>
-        <i:KeyTrigger Key="Enter">
-            <i:InvokeCommandAction Command="{Binding OKCommand, Mode=OneTime}"/>
-        </i:KeyTrigger>
-        <i:KeyTrigger Key="Esc">
-            <i:InvokeCommandAction Command="{Binding CancelCommand, Mode=OneTime}"/>
-        </i:KeyTrigger>
-    </i:Interaction.Triggers>
 
     <Grid Margin="20 10 20 15" ge:GridEx.RowDefinition="*, 10, Auto">
         <Grid Grid.Row="0" ge:GridEx.ColumnDefinition="*, 15, Auto, 15, *" VerticalAlignment="Center">
@@ -51,9 +39,9 @@
             </ComboBox>
         </Grid>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="{le:Loc Command_OK}" Command="{Binding OKCommand, Mode=Onetime}" Style="{StaticResource Common.AccentButton}" MinWidth="80"/>
+            <Button Content="{le:Loc Command_OK}" Command="{Binding OKCommand, Mode=Onetime}" Style="{StaticResource Common.AccentButton}" MinWidth="80" IsDefault="True"/>
             <Border Width="10"/>
-            <Button Content="{le:Loc Command_Cancel}" Command="{Binding CancelCommand, Mode=Onetime}" MinWidth="80"/>
+            <Button Content="{le:Loc Command_Cancel}" Command="{Binding CancelCommand, Mode=Onetime}" MinWidth="80" IsCancel="True"/>
         </StackPanel>
     </Grid>
 
