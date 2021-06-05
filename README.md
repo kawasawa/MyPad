@@ -46,6 +46,6 @@ MyPad は簡単操作ですぐに使えるシンプルなテキストエディ�
 | UI プラットフォーム    | WPF                    | -            |
 | フレームワーク         | .NET                   | 5.0          |
 | プログラミング言語     | C#                     | 9.0          |
-| MVVM インフラ          | Prism                  | 8.0          |
-| デザインテンプレート   | MahApps.Metro          | 2.5          |
+| MVVM / DI インフラ     | Prism.Unity            | 8.1          |
+| デザインテンプレート   | MahApps.Metro          | 2.4          |
 | エディタコンポーネント | ICSharpCode.AvalonEdit | 6.1          |
