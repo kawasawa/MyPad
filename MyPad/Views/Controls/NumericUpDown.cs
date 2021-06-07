@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace MyPad.Views.Controls
 {
-    public class NumericUpDownEx : MahApps.Metro.Controls.NumericUpDown
+    public class NumericUpDown : MahApps.Metro.Controls.NumericUpDown
     {
         public static readonly DependencyProperty ReverseOnMouseWheelProperty = DependencyPropertyExtensions.Register();
 

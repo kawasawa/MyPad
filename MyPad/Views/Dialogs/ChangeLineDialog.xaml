@@ -21,14 +21,14 @@
 
     <Grid Margin="20 10 20 15" ge:GridEx.RowDefinition="*, 10, Auto">
         <Grid Grid.Row="0" VerticalAlignment="Center">
-            <controls:NumericUpDownEx x:Name="Line"
-                                      Value="{Binding Line.Value, Mode=TwoWay}"
-                                      Minimum="1"
-                                      Maximum="{Binding MaxLine.Value, Mode=OneWay}"
-                                      m:TextBoxHelper.Watermark="{le:Loc Label_LineMumber}" 
-                                      m:TextBoxHelper.UseFloatingWatermark="True"
-                                      m:TextBoxHelper.SelectAllOnFocus="True"
-                                      ReverseOnMouseWheel="True"/>
+            <controls:NumericUpDown x:Name="Line"
+                                    Value="{Binding Line.Value, Mode=TwoWay}"
+                                    Minimum="1"
+                                    Maximum="{Binding MaxLine.Value, Mode=OneWay}"
+                                    m:TextBoxHelper.Watermark="{le:Loc Label_LineMumber}" 
+                                    m:TextBoxHelper.UseFloatingWatermark="True"
+                                    m:TextBoxHelper.SelectAllOnFocus="True"
+                                    ReverseOnMouseWheel="True"/>
         </Grid>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="{le:Loc Command_OK}" Command="{Binding OKCommand, Mode=Onetime}" Style="{StaticResource Common.AccentButton}" MinWidth="80" IsDefault="True"/>
