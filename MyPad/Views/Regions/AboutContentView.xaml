@@ -10,7 +10,7 @@
              xmlns:le="http://wpflocalizeextension.codeplex.com"
              xmlns:qc="http://QuickConverter.CodePlex.com/"
              xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
-             xmlns:md="clr-namespace:Markdig.Wpf;assembly=Markdig.Wpf"
+             xmlns:mw="clr-namespace:Markdig.Wpf;assembly=Markdig.Wpf"
              xmlns:root="clr-namespace:MyPad"
              xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
              xmlns:controls="clr-namespace:MyPad.Views.Controls"
@@ -71,7 +71,7 @@
 
         <m:FlipView Grid.Row="4" CircularNavigation="True" NavigationButtonsPosition="Outside" IsBannerEnabled="False" MouseHoverBorderEnabled="False">
             <m:FlipView.CommandBindings>
-                <CommandBinding Command="{x:Static md:Commands.Hyperlink}" Executed="Hyperlink_Executed"/>
+                <CommandBinding Command="{x:Static mw:Commands.Hyperlink}" Executed="Hyperlink_Executed"/>
             </m:FlipView.CommandBindings>
             <controls:MarkdownViewer Markdown="{Binding History.Value, Mode=OneWay}"       IsTabStop="False"/>
             <controls:MarkdownViewer Markdown="{Binding Disclaimer.Value, Mode=OneWay}"    IsTabStop="False"/>
