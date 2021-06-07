@@ -407,7 +407,7 @@ namespace MyPad.Views
             // リージョンにビューを設定する
             void injectRegionContent<T>(string suffix = null)
             {
-                var regionName = $"{PrismNamingConverter.ConvertToRegionName<T>()}{suffix}";
+                var regionName = $"{PrismConvertHelper.ConvertToRegionName<T>()}{suffix}";
                 var content = this.ContainerExtension.Resolve<T>();
 
                 try
