@@ -56,11 +56,15 @@ namespace MyPad.Views.Controls
         public static readonly DependencyProperty ShowChangeMarkerProperty
             = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(true, (obj, e) => ((TextArea)obj).ResetChangeMarker()));
+        public static readonly DependencyProperty CutCopyHtmlFormatProperty
+            = DependencyPropertyExtensions.Register(
+                new PropertyMetadata(false));
         public static readonly DependencyProperty EnableFoldingsProperty
             = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(true, (obj, e) => ((TextArea)obj).UpdateFoldings()));
         public static readonly DependencyProperty EnableAutoCompletionProperty
-            = DependencyPropertyExtensions.Register(new PropertyMetadata(true));
+            = DependencyPropertyExtensions.Register(
+                new PropertyMetadata(true));
 
         private readonly Lazy<Func<SearchPanel, IEnumerable<TextSegment>>> _searchedTextSegments
             = new(() =>
@@ -112,6 +116,12 @@ namespace MyPad.Views.Controls
         {
             get => (bool)this.GetValue(ShowChangeMarkerProperty);
             set => this.SetValue(ShowChangeMarkerProperty, value);
+        }
+
+        public bool CutCopyHtmlFormat
+        {
+            get => (bool)this.GetValue(CutCopyHtmlFormatProperty);
+            set => this.SetValue(CutCopyHtmlFormatProperty, value);
         }
 
         public bool EnableFoldings
@@ -246,6 +256,7 @@ namespace MyPad.Views.Controls
             this.SearchPanel.Loaded += this.SearchPanel_Loaded;
             this.Loaded += this.TextArea_Loaded;
             this.Unloaded += this.TextArea_Unloaded;
+            DataObject.AddSettingDataHandler(this, this.OnAddSettingData);
         }
 
         public void Redraw()
@@ -577,6 +588,13 @@ namespace MyPad.Views.Controls
             base.OnPreviewMouseWheel(e);
         }
 
+        private void OnAddSettingData(object sender, DataObjectSettingDataEventArgs e)
+        {
+            if (this.CutCopyHtmlFormat || e.Format != DataFormats.Html)
+                return;
+            e.CancelCommand();
+        }
+
         private void CompletionWindow_Closed(object sender, EventArgs e)
         {
             this.CompletionWindow.Closed -= this.CompletionWindow_Closed;
@@ -610,6 +628,7 @@ namespace MyPad.Views.Controls
             this.SearchPanel.Loaded -= this.SearchPanel_Loaded;
             this.Loaded -= this.TextArea_Loaded;
             this.Unloaded -= this.TextArea_Unloaded;
+            DataObject.RemoveSettingDataHandler(this, this.OnAddSettingData);
 
             this._updateFoldingsTimer.Tick -= this.FoldingsTimer_Tick;
             this._updateFoldingsTimer.Stop();

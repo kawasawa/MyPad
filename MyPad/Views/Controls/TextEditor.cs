@@ -89,7 +89,11 @@ namespace MyPad.Views.Controls
         public static readonly DependencyProperty ShowChangeMarkerProperty
             = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(TextArea.ShowChangeMarkerProperty.DefaultMetadata.DefaultValue),
-                TextArea.ShowChangeMarkerProperty.IsValidValue); 
+                TextArea.ShowChangeMarkerProperty.IsValidValue);
+        public static readonly DependencyProperty CutCopyHtmlFormatProperty
+            = DependencyPropertyExtensions.Register(
+                new PropertyMetadata(TextArea.CutCopyHtmlFormatProperty.DefaultMetadata.DefaultValue),
+                TextArea.CutCopyHtmlFormatProperty.IsValidValue);
         public static readonly DependencyProperty EnableFoldingsProperty
             = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(TextArea.EnableFoldingsProperty.DefaultMetadata.DefaultValue),
@@ -229,6 +233,12 @@ namespace MyPad.Views.Controls
             set => this.SetValue(ShowChangeMarkerProperty, value);
         }
 
+        public bool CutCopyHtmlFormat
+        {
+            get => (bool)this.GetValue(CutCopyHtmlFormatProperty);
+            set => this.SetValue(CutCopyHtmlFormatProperty, value);
+        }
+
         public bool EnableFoldings
         {
             get => (bool)this.GetValue(EnableFoldingsProperty);
@@ -333,6 +343,9 @@ namespace MyPad.Views.Controls
                     break;
                 case nameof(this.ShowChangeMarker):
                     this.TextArea.ShowChangeMarker = (bool)e.NewValue;
+                    break;
+                case nameof(this.CutCopyHtmlFormat):
+                    this.TextArea.CutCopyHtmlFormat = (bool)e.NewValue;
                     break;
                 case nameof(this.EnableFoldings):
                     this.TextArea.EnableFoldings = (bool)e.NewValue;
