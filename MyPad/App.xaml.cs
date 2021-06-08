@@ -176,26 +176,51 @@ namespace MyPad
         }
 
         /// <summary>
-        /// View から ViewModel を生成するための規則を定義します。
+        /// View と ViewModel のワイヤリングを構成します。
         /// </summary>
+        /// <remarks>
+        /// ViewModelLocator は ViewModelLocationProvider を利用し ViewModel のインスタンスの取得を試行します。
+        ///   1. ViewModel のインスタンスを取得
+        ///   -> _factories に登録された ViewModel のインスタンスを取得する。
+        ///   2. ViewModel の型を取得しインスタンスを生成
+        ///      ・_typeFactories に登録された ViewModel の型を取得する。
+        ///      ・_defaultViewTypeToViewModelTypeResolver によって ViewModel の型を推定する。
+        ///   -> _defaultViewModelFactoryWithViewParameter または _defaultViewModelFactory によって ViewModel のインスタンスを生成する。
+        /// </remarks>
         [LogInterceptor]
         protected override void ConfigureViewModelLocator()
         {
-            ViewModelLocationProvider.SetDefaultViewModelFactory((view, viewModelType) => {
-                // 多言語化の初期設定を行う
+            base.ConfigureViewModelLocator();
+
+            // ViewModel のタイプリゾルバ
+            //
+            // ViewModelLocationProvider._defaultViewTypeToViewModelTypeResolver に既定のリゾルバが用意されているが、
+            // これを上書きし、デバッグのため独自のリゾルバを設定する
+            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver(PrismConvertHelper.ViewTypeToViewModelType);
+
+            // ViewModel のファクトリ
+            //
+            // base.ConfigureViewModelLocator() で既定のファクトリが設定されるが、
+            // これを上書きし、View の多言語化の設定を一元化するため独自のファクトリを設定する
+            ViewModelLocationProvider.SetDefaultViewModelFactory((view, viewModelType) =>
+            {
+                // View に対して多言語化の初期設定を行う
                 if (view is DependencyObject obj)
                     Initializer.InitWPFLocalizeExtension(obj);
 
                 // ViewModel のインスタンスを生成する
-                var viewModel = this.Container.Resolve(viewModelType);
-                return viewModel;
+                return this.Container.Resolve(viewModelType);
             });
         }
 
         /// <summary>
-        /// DI コンテナに登録される型とインスタンスを定義します。
+        /// DI コンテナにオブジェクトを追加します。
         /// </summary>
         /// <param name="containerRegistry">DI コンテナ</param>
+        /// <remarks>
+        /// 既定のシングルトンや型マッピングは PrismInitializationExtensions.RegisterRequiredTypes にて設定されます。
+        /// 本メソッドでは上記以外に必要なアプリケーション固有のオブジェクトを追加することができます。
+        /// </remarks>
         [LogInterceptor]
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
@@ -218,7 +243,7 @@ namespace MyPad
             containerRegistry.RegisterDialog<Views.Dialogs.ChangeSyntaxDialog, ViewModels.Dialogs.ChangeSyntaxDialogViewModel>();
             containerRegistry.RegisterDialog<Views.Dialogs.SelectDiffFilesDialog, ViewModels.Dialogs.SelectDiffFilesDialogViewModel>();
 
-            // ファクトリー
+            // ファクトリ
             containerRegistry.Register<ViewModels.TextEditorViewModel>();
             containerRegistry.Register<ViewModels.FileExplorerViewModel>();
             containerRegistry.Register<ViewModels.FileExplorerViewModel.FileTreeNode>();
@@ -229,6 +254,9 @@ namespace MyPad
         /// アプリケーションのメインウィンドウを生成します。
         /// </summary>
         /// <returns>ウィンドウのインスタンス</returns>
+        /// <remarks>
+        /// 本メソッドで返却されるインスタンスが MainWindow に設定されます。
+        /// </remarks>
         [LogInterceptor]
         protected override Window CreateShell()
         {

@@ -1570,6 +1570,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   書式を保持したコピーと切り取りを可能にする。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string LabelText_EnableCutCopyHtmlFormat {
+            get {
+                return ResourceManager.GetString("LabelText_EnableCutCopyHtmlFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   未選択状態でのコピーと切り取りを可能にする。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableCutCopyWholeLine {

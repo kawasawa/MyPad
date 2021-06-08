@@ -194,6 +194,7 @@
                                     <CheckBox IsChecked="{Binding RequireControlModifierForHyperlinkClick, Mode=TwoWay}" Content="{le:Loc LabelText_RequireControlModifierForHyperlinkClick}"/>
                                     <CheckBox IsChecked="{Binding HideCursorWhileTyping, Mode=TwoWay}"                   Content="{le:Loc LabelText_HideCursorWhileTyping}"/>
                                     <CheckBox IsChecked="{Binding CutCopyWholeLine, Mode=TwoWay}"                        Content="{le:Loc LabelText_EnableCutCopyWholeLine}"/>
+                                    <CheckBox IsChecked="{Binding CutCopyHtmlFormat, Mode=TwoWay}"                       Content="{le:Loc LabelText_EnableCutCopyHtmlFormat}"/>
                                     <CheckBox IsChecked="{Binding AllowToggleOverstrikeMode, Mode=TwoWay}"               Content="{le:Loc LabelText_AllowToggleOverstrikeMode}"/>
                                     <CheckBox IsChecked="{Binding AllowScrollBelowDocument, Mode=TwoWay}"                Content="{le:Loc LabelText_AllowScrollBelowDocument}"/>
                                 </StackPanel>

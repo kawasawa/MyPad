@@ -129,6 +129,13 @@ namespace MyPad.Models
             set => this.SetProperty(ref this._cutCopyWholeLine, value);
         }
 
+        private bool _cutCopyHtmlFormat;
+        public bool CutCopyHtmlFormat
+        {
+            get => this._cutCopyHtmlFormat;
+            set => this.SetProperty(ref this._cutCopyHtmlFormat, value);
+        }
+
         private bool _wordWrap;
         public bool WordWrap
         {

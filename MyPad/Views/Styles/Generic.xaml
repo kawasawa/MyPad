@@ -22,7 +22,7 @@
     <s:Double x:Key="App.Font.Size.Dialog.Message">14</s:Double>
     <s:Double x:Key="App.Font.Size.Overlay.Message">20</s:Double>
 
-    <Style TargetType="{x:Type controls:NumericUpDownEx}" BasedOn="{StaticResource Default.NumericUpDown}"/>
+    <Style TargetType="{x:Type controls:NumericUpDown}" BasedOn="{StaticResource Default.NumericUpDown}"/>
 
     <m:WindowButtonCommands x:Key="_windowButtonCommands" x:Shared="False">
         <m:WindowButtonCommands.Style>

@@ -7,7 +7,7 @@ using System;
 
 namespace MyPad.Test
 {
-    public class PrismNamingConverterTest
+    public class PrismConvertHelperTest
     {
         [TestCase("Workspace", typeof(WorkspaceViewModel))]
         [TestCase("MainWindow", typeof(MainWindowViewModel))]
@@ -23,7 +23,7 @@ namespace MyPad.Test
         [TestCase("ToolBar", typeof(ToolBarView))]
         [TestCase("StatusBar", typeof(StatusBarView))]
         public void ConvertToCoreName(string expected, Type actual)
-            => Assert.That(PrismNamingConverter.ConvertToCoreName(actual), Is.EqualTo(expected));
+            => Assert.That(PrismConvertHelper.ConvertToCoreName(actual), Is.EqualTo(expected));
         
         [TestCase("AboutContentRegion",        typeof(AboutContentView))]
         [TestCase("OptionContentRegion",       typeof(OptionContentView))]
@@ -33,20 +33,20 @@ namespace MyPad.Test
         [TestCase("ToolBarRegion",             typeof(ToolBarView))]
         [TestCase("StatusBarRegion",           typeof(StatusBarView))]
         public void ConvertToRegionName(string expected, Type actual)
-            => Assert.That(PrismNamingConverter.ConvertToRegionName(actual), Is.EqualTo(expected));
+            => Assert.That(PrismConvertHelper.ConvertToRegionName(actual), Is.EqualTo(expected));
 
         [TestCase(typeof(Workspace),         typeof(WorkspaceViewModel))]
         [TestCase(typeof(MainWindow),        typeof(MainWindowViewModel))]
         [TestCase(typeof(AboutContentView),  typeof(AboutContentViewModel))]
         [TestCase(typeof(OptionContentView), typeof(OptionContentViewModel))]
         public void ViewModelTypeToViewType(Type expected, Type actual)
-            => Assert.That(PrismNamingConverter.ViewModelTypeToViewType(actual), Is.EqualTo(expected));
+            => Assert.That(PrismConvertHelper.ViewModelTypeToViewType(actual), Is.EqualTo(expected));
 
         [TestCase(typeof(WorkspaceViewModel),     typeof(Workspace))]
         [TestCase(typeof(MainWindowViewModel),    typeof(MainWindow))]
         [TestCase(typeof(AboutContentViewModel),  typeof(AboutContentView))]
         [TestCase(typeof(OptionContentViewModel), typeof(OptionContentView))]
         public void ViewTypeToViewModelType(Type expected, Type actual)
-            => Assert.That(PrismNamingConverter.ViewTypeToViewModelType(actual), Is.EqualTo(expected));
+            => Assert.That(PrismConvertHelper.ViewTypeToViewModelType(actual), Is.EqualTo(expected));
     }
 }

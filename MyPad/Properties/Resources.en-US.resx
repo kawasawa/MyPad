@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Command_About" xml:space="preserve">
     <value>About</value>
@@ -770,5 +770,8 @@ Please check and delete unnecessary files.</value>
   </data>
   <data name="Command_Refresh" xml:space="preserve">
     <value>Refresh</value>
+  </data>
+  <data name="LabelText_EnableCutCopyHtmlFormat" xml:space="preserve">
+    <value>Enable cut and copy with HTML format.</value>
   </data>
 </root>
