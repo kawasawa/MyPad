@@ -1,4 +1,5 @@
-﻿using MyBase;
+﻿using Microsoft.Win32;
+using MyBase;
 using MyBase.Logging;
 using MyBase.Wpf.CommonDialogs;
 using Prism.Ioc;
@@ -106,6 +107,7 @@ namespace MyPad
             this.ProductInfo = new ProductInfo();
             this.SharedDataStore = new(this.Logger, this.ProductInfo, Process.GetCurrentProcess());
             UnhandledExceptionObserver.Observe(this, this.Logger, this.ProductInfo);
+            SystemEvents.SessionEnding += this.SystemEvents_SessionEnding;
         }
 
         /// <summary>
@@ -297,8 +299,29 @@ namespace MyPad
             }
 
             base.OnExit(e);
+            SystemEvents.SessionEnding -= this.SystemEvents_SessionEnding;
             this.Logger.Log($"アプリケーションを終了しました。", Category.Info);
             this.Logger.Debug($"アプリケーションを終了しました。: ExitCode={e.ApplicationExitCode}");
+        }
+
+        /// <summary>
+        /// ユーザがサインアウトまたはシャットダウンするときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
+        [LogInterceptor]
+        private void SystemEvents_SessionEnding(object sender, SessionEndingEventArgs e)
+        {
+            switch (e.Reason)
+            {
+                case SessionEndReasons.Logoff:
+                    this.Logger.Log($"ユーザがサインアウトしようとしています。OS によってアプリケーションは強制終了されます。", Category.Info);
+                    break;
+                case SessionEndReasons.SystemShutdown:
+                    this.Logger.Log($"ユーザがシャットダウンしようとしています。OS によってアプリケーションは強制終了されます。", Category.Info);
+                    break;
+            }
+            this.Logger.Debug($"ユーザが OS のセッションを終了しようとしています。OS によってアプリケーションは強制終了されます。: SessionEndReasons={e.Reason}");
         }
 
         /// <summary>
