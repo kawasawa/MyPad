@@ -3,7 +3,6 @@ using LiveCharts.Defaults;
 using MyBase;
 using MyBase.Logging;
 using MyBase.Wpf.CommonDialogs;
-using MyPad.Models;
 using MyPad.PubSub;
 using Prism.Events;
 using Prism.Services.Dialogs;

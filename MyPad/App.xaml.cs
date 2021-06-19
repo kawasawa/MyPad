@@ -235,7 +235,7 @@ namespace MyPad
             containerRegistry.RegisterSingleton<ICommonDialogService, CommonDialogService>();
 
             // ダイアログ
-            containerRegistry.RegisterDialogWindow<PrismDialogWindowWrapper>();
+            containerRegistry.RegisterDialogWindow<DialogWindowWrapper>();
             containerRegistry.RegisterDialog<Views.Dialogs.NotifyDialog, ViewModels.Dialogs.NotifyDialogViewModel>();
             containerRegistry.RegisterDialog<Views.Dialogs.WarnDialog, ViewModels.Dialogs.WarnDialogViewModel>();
             containerRegistry.RegisterDialog<Views.Dialogs.ConfirmDialog, ViewModels.Dialogs.ConfirmDialogViewModel>();
@@ -455,7 +455,10 @@ namespace MyPad
         /// <summary>
         /// Prism によって表示されるダイアログウィンドウの基底クラスを置き換えます。
         /// </summary>
-        private class PrismDialogWindowWrapper : MahApps.Metro.Controls.MetroWindow, IDialogWindow
+        /// <remarks>
+        /// 継承元にカスタムウィンドウを指定することで、ダイアログにデザインテンプレートを適用します。
+        /// </remarks>
+        private class DialogWindowWrapper : MahApps.Metro.Controls.MetroWindow, IDialogWindow
         {
             IDialogResult IDialogWindow.Result { get; set; }
 
@@ -463,7 +466,7 @@ namespace MyPad
             /// このクラスの新しいインスタンスを生成します。
             /// </summary>
             [LogInterceptor]
-            public PrismDialogWindowWrapper()
+            public DialogWindowWrapper()
             {
                 this.Loaded += this.Window_Loaded;
             }
