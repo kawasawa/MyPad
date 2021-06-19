@@ -31,8 +31,10 @@ namespace MyPad.ViewModels
     {
         #region インジェクション
 
-        [Dependency]
+        // Constructor Injection
         public IEventAggregator EventAggregator { get; set; }
+
+        // Dependency Injection
         [Dependency]
         public IContainerExtension ContainerExtension { get; set; }
         [Dependency]
@@ -318,13 +320,18 @@ namespace MyPad.ViewModels
 
         [InjectionConstructor]
         [LogInterceptor]
-        public TextEditorViewModel()
+        public TextEditorViewModel(IEventAggregator eventAggregator)
         {
+            this.EventAggregator = eventAggregator;
+
             this.Document = new();
             this.AutoSaveTimer = new();
             this.AutoSaveTimer.Tick += this.AutoSaveTimer_Tick;
             this.Clear();
             this._isInitialized = true;
+
+            void saveTemporary() => _ = this.SaveTemporary();
+            this.EventAggregator.GetEvent<SaveTemporaryEvent>().Subscribe(saveTemporary);
         }
 
         [LogInterceptor]
@@ -379,36 +386,6 @@ namespace MyPad.ViewModels
                 // 一時ファイルを削除する
                 await Task.Run(() => this.DeleteTemporary());
             });
-        }
-
-        [LogInterceptor]
-        public async Task<TextEditorViewModel> CloneUnmodified()
-        {
-            var clone = this.ContainerExtension.Resolve<TextEditorViewModel>();
-            if (this.IsNewFile)
-            {
-                clone.Sequense = this.Sequense;
-            }
-            else
-            {
-                var stream = File.Open(this.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                await clone.Load(stream, this.Encoding);
-            }
-            return clone;
-        }
-
-        [LogInterceptor]
-        private void DeleteTemporary()
-        {
-            try
-            {
-                if (File.Exists(this.Temporary.path))
-                    File.Delete(this.Temporary.path);
-            }
-            catch (Exception e)
-            {
-                this.Logger.Log($"一時ファイルの削除に失敗しました。: Path={this.Temporary.path}", Category.Warn, e);
-            }
         }
 
         [LogInterceptor]
@@ -508,6 +485,64 @@ namespace MyPad.ViewModels
         }
 
         [LogInterceptor]
+        private async Task<bool> SaveTemporary()
+        {
+            if (this.IsModified == false || this.Document.Version == this.Temporary.version)
+                return false;
+
+            var result = false;
+            await this.Interrupt(async () =>
+            {
+                var path = Path.Combine(this.SharedDataStore.TempDirectoryPath, this.Sequense.ToString());
+                try
+                {
+                    this.SharedDataStore.CreateTempDirectory();
+                    var bytes = await Application.Current.Dispatcher.InvokeAsync(() => this.Encoding.GetBytes(this.Document.Text));
+                    await File.WriteAllBytesAsync(path, bytes);
+                    this.Logger.Log($"一時ファイルへ保存しました。: Path={path}", Category.Info);
+                }
+                catch (Exception ex)
+                {
+                    this.Logger.Log($"一時ファイルへの保存に失敗しました。: Path={path}", Category.Warn, ex);
+                    return;
+                }
+                this.Temporary = (path, this.Document.Version);
+                result = true;
+            });
+            return result;
+        }
+
+        [LogInterceptor]
+        private void DeleteTemporary()
+        {
+            try
+            {
+                if (File.Exists(this.Temporary.path))
+                    File.Delete(this.Temporary.path);
+            }
+            catch (Exception e)
+            {
+                this.Logger.Log($"一時ファイルの削除に失敗しました。: Path={this.Temporary.path}", Category.Warn, e);
+            }
+        }
+
+        [LogInterceptor]
+        public async Task<TextEditorViewModel> CloneUnmodified()
+        {
+            var clone = this.ContainerExtension.Resolve<TextEditorViewModel>();
+            if (this.IsNewFile)
+            {
+                clone.Sequense = this.Sequense;
+            }
+            else
+            {
+                var stream = File.Open(this.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                await clone.Load(stream, this.Encoding);
+            }
+            return clone;
+        }
+
+        [LogInterceptor]
         public async Task<FlowDocument> CreateFlowDocument()
         {
             FlowDocument flowDocument = null;
@@ -537,34 +572,6 @@ namespace MyPad.ViewModels
         }
 
         [LogInterceptor]
-        private async void AutoSaveTimer_Tick(object sender, EventArgs e)
-        {
-            if (this.Settings.System.EnableAutoSave == false)
-                return;
-            if (this.IsModified == false || this.Document.Version == this.Temporary.version)
-                return;
-
-            await this.Interrupt(async () =>
-            {
-                var path = Path.Combine(this.SharedDataStore.TempDirectoryPath, this.Sequense.ToString());
-                try
-                {
-                    this.SharedDataStore.CreateTempDirectory();
-                    var bytes = await Application.Current.Dispatcher.InvokeAsync(() => this.Encoding.GetBytes(this.Document.Text));
-                    await File.WriteAllBytesAsync(path, bytes);
-                    this.Logger.Log($"ファイルを自動保存しました。: Path={path}", Category.Info);
-                }
-                catch (Exception ex)
-                {
-                    this.Logger.Log($"ファイルの自動保存に失敗しました。: Path={path}", Category.Warn, ex);
-                    return;
-                }
-                this.Temporary = (path, this.Document.Version);
-                this.EventAggregator.GetEvent<RaiseBalloonEvent>().Publish((Resources.Message_NotifyAutoSaved, Path.GetFileName(this.FileName)));
-            });
-        }
-
-        [LogInterceptor]
         private async Task Interrupt(Func<Task> func)
         {
             this.AutoSaveTimer.Stop();
@@ -575,6 +582,17 @@ namespace MyPad.ViewModels
 
             this.AutoSaveTimer.Interval = new(0, this.Settings.System.AutoSaveInterval, 0);
             this.AutoSaveTimer.Start();
+        }
+
+        [LogInterceptor]
+        private async void AutoSaveTimer_Tick(object sender, EventArgs e)
+        {
+            if (this.Settings.System.EnableAutoSave == false)
+                return;
+
+            var result = await this.SaveTemporary();
+            if (result)
+                this.EventAggregator.GetEvent<RaiseBalloonEvent>().Publish((Resources.Message_NotifyAutoSaved, Path.GetFileName(this.FileName)));
         }
     }
 }
