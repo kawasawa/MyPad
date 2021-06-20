@@ -4,20 +4,19 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <RuntimeIdentifiers>win-x86</RuntimeIdentifiers>
-    <LangVersion>9.0</LangVersion>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>Resources\app.ico</ApplicationIcon>
+    <Version>1.12.3</Version>
     <Authors>Kazuki Awasawa</Authors>
     <Copyright>© Kazuki Awasawa All Rights Reserved.</Copyright>
-    <Description></Description>
-    <Version>1.12.3</Version>
+    <NeutralLanguage>ja-JP</NeutralLanguage>
+    <ApplicationIcon>Resources\app.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <LangVersion>9.0</LangVersion>
     <Deterministic>true</Deterministic>
     <DeterministicSourceRoot>/_/</DeterministicSourceRoot>
     <RepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\'))</RepoRoot>
     <PathMap>$(RepoRoot)=$(DeterministicSourceRoot)</PathMap>
     <EnableSourceLink>true</EnableSourceLink>
-    <NeutralLanguage>ja-JP</NeutralLanguage>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -69,27 +68,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Update="Views\Dialogs\CancelableConfirmDialog.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\Dialogs\ChangeEncodingDialog.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\Dialogs\ChangeLineDialog.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\Dialogs\WarnDialog.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\Dialogs\NotifyDialog.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\Regions\MaintenanceContentView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\Regions\TerminalView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -119,32 +97,6 @@
     <None Update="doc\PRIVACY_POLICY.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Views\Dialogs\CancelableConfirmDialog.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Dialogs\ChangeEncodingDialog.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Dialogs\ChangeLineDialog.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Dialogs\WarnDialog.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Dialogs\NotifyDialog.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Regions\MaintenanceContentView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Regions\TerminalView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
