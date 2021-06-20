@@ -35,7 +35,7 @@ namespace MyPad.Views.Regions
             try
             {
                 this.Logger.Log($"ハイパーリンクを開きます。: Hyperlink={e.Parameter}", MyBase.Logging.Category.Info);
-                Process.Start(new ProcessStartInfo("cmd", $"/c start {e.Parameter}") { CreateNoWindow = true });
+                Process.Start(new ProcessStartInfo("cmd", $"/c start \"\" \"{e.Parameter}\"") { CreateNoWindow = true });
             }
             catch (Exception ex)
             {
