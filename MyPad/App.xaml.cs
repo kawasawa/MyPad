@@ -412,9 +412,8 @@ namespace MyPad
             [LogInterceptor]
             public static void InitWPFLocalizeExtension(DependencyObject view)
             {
-                var assemblyName = view.GetType().Assembly.GetName().Name;
-                ResxLocalizationProvider.SetDefaultAssembly(view, assemblyName);
-                ResxLocalizationProvider.SetDefaultDictionary(view, $"{assemblyName}.Properties.Resources");
+                ResxLocalizationProvider.SetDefaultAssembly(view, view.GetType().Assembly.GetName().Name);
+                ResxLocalizationProvider.SetDefaultDictionary(view, "Resources");
             }
 
             /// <summary>
