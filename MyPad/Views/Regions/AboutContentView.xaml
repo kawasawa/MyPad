@@ -72,9 +72,6 @@
         <Border Grid.Row="2" Height="1" Margin="20 0" Background="{DynamicResource MahApps.Brushes.Gray2}"/>
 
         <m:FlipView Grid.Row="4" CircularNavigation="True" NavigationButtonsPosition="Outside" IsBannerEnabled="False" MouseHoverBorderEnabled="False">
-            <m:FlipView.CommandBindings>
-                <CommandBinding Command="{x:Static mw:Commands.Hyperlink}" Executed="Hyperlink_Executed"/>
-            </m:FlipView.CommandBindings>
             <controls:MarkdownViewer Markdown="{Binding History.Value, Mode=OneWay}"       IsTabStop="False"/>
             <controls:MarkdownViewer Markdown="{Binding Disclaimer.Value, Mode=OneWay}"    IsTabStop="False"/>
             <controls:MarkdownViewer Markdown="{Binding PrivacyPolicy.Value, Mode=OneWay}" IsTabStop="False"/>

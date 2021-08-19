@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,7 +10,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Unity;
 
 namespace MyPad.Views.Regions
 {
@@ -20,27 +18,10 @@ namespace MyPad.Views.Regions
     /// </summary>
     public partial class AboutContentView : UserControl
     {
-        [Dependency]
-        public MyBase.Logging.ILoggerFacade Logger { get; set; }
-
         [LogInterceptor]
         public AboutContentView()
         {
             InitializeComponent();
-        }
-
-        [LogInterceptor]
-        private void Hyperlink_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            try
-            {
-                this.Logger.Log($"ハイパーリンクを開きます。: Hyperlink={e.Parameter}", MyBase.Logging.Category.Info);
-                Process.Start(new ProcessStartInfo("cmd", $"/c start \"\" \"{e.Parameter}\"") { CreateNoWindow = true });
-            }
-            catch (Exception ex)
-            {
-                this.Logger.Log($"ハイパーリンクを開けませんでした。: Hyperlink={e.Parameter}", MyBase.Logging.Category.Warn, ex);
-            }
         }
     }
 }
