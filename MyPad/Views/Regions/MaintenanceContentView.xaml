@@ -43,8 +43,8 @@
                                 <Setter Property="ColumnWidth" Value="*"/>
                             </Style>
                         </TabControl.Resources>
-                        <TabItem Header="Trace">
-                            <DataGrid ItemsSource="{Binding TraceLogs, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}">
+                        <TabItem Header="Info">
+                            <DataGrid ItemsSource="{Binding InfoLogs, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Binding="{Binding Mode=OneWay}"/>
                                 </DataGrid.Columns>
@@ -57,8 +57,8 @@
                                 </DataGrid.Columns>
                             </DataGrid>
                         </TabItem>
-                        <TabItem Header="Info">
-                            <DataGrid ItemsSource="{Binding InfoLogs, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}">
+                        <TabItem Header="Trace">
+                            <DataGrid ItemsSource="{Binding TraceLogs, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Binding="{Binding Mode=OneWay}"/>
                                 </DataGrid.Columns>
