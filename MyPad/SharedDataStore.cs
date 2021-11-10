@@ -46,7 +46,7 @@ namespace MyPad
             info.Create();
             info.Attributes |= FileAttributes.Hidden;
 
-            this._logger.Debug($"一時フォルダを作成し、隠し属性を付与しました。: Path={this.TempDirectoryPath}");
+            this._logger.Debug($"実行中のプロセスが使用する一時フォルダを作成しました。: Path={this.TempDirectoryPath}");
         }
     }
 }
