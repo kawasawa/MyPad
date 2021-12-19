@@ -32,7 +32,9 @@ namespace MyPad.Views.Controls.ChangeMarker
                     this._document.LineTrackers.Remove(this);
                 this._document.UndoStack.PropertyChanged -= this.UndoStack_PropertyChanged;
             }
+
             this._disposed = true;
+            GC.SuppressFinalize(this);
         }
 
         public void Initialize(TextDocument document)

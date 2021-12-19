@@ -15,7 +15,7 @@ namespace MyPad
             if (dependencyPropertyName.EndsWith(DEPENDENCY_PROPERTY_SUFFIX) == false)
                 throw new ArgumentException($"依存関係プロパティの変数名は {DEPENDENCY_PROPERTY_SUFFIX} で終わるように定義してください。", dependencyPropertyName);
 
-            var name = dependencyPropertyName.Substring(0, dependencyPropertyName.Length - DEPENDENCY_PROPERTY_SUFFIX.Length);
+            var name = dependencyPropertyName[..^DEPENDENCY_PROPERTY_SUFFIX.Length];
             var ownerType = new StackFrame(1).GetMethod().ReflectedType;
             var propertyType = ownerType.GetProperty(name)?.PropertyType;
             if (propertyType == null)
@@ -34,7 +34,7 @@ namespace MyPad
             if (dependencyPropertyName.EndsWith(DEPENDENCY_PROPERTY_SUFFIX) == false)
                 throw new ArgumentException($"依存関係プロパティの変数名は {DEPENDENCY_PROPERTY_SUFFIX} で終わるように定義してください。", dependencyPropertyName);
 
-            var name = dependencyPropertyName.Substring(0, dependencyPropertyName.Length - DEPENDENCY_PROPERTY_SUFFIX.Length);
+            var name = dependencyPropertyName[..^DEPENDENCY_PROPERTY_SUFFIX.Length];
             var ownerType = new StackFrame(1).GetMethod().ReflectedType;
             var propertyType = ownerType.GetMethod($"Get{name}")?.ReturnType;
             if (propertyType == null)
@@ -53,7 +53,7 @@ namespace MyPad
             if (dependencyPropertyName.EndsWith(DEPENDENCY_PROPERTY_KEY_SUFFIX) == false)
                 throw new ArgumentException($"依存関係プロパティの識別子は {DEPENDENCY_PROPERTY_KEY_SUFFIX} で終わるように定義してください。", dependencyPropertyName);
 
-            var name = dependencyPropertyName.Substring(0, dependencyPropertyName.Length - DEPENDENCY_PROPERTY_KEY_SUFFIX.Length);
+            var name = dependencyPropertyName[..^DEPENDENCY_PROPERTY_KEY_SUFFIX.Length];
             var ownerType = new StackFrame(1).GetMethod().ReflectedType;
             var propertyType = ownerType.GetProperty(name)?.PropertyType;
             if (propertyType == null)
@@ -72,7 +72,7 @@ namespace MyPad
             if (dependencyPropertyName.EndsWith(DEPENDENCY_PROPERTY_KEY_SUFFIX) == false)
                 throw new ArgumentException($"依存関係プロパティの識別子は {DEPENDENCY_PROPERTY_KEY_SUFFIX} で終わるように定義してください。", dependencyPropertyName);
 
-            var name = dependencyPropertyName.Substring(0, dependencyPropertyName.Length - DEPENDENCY_PROPERTY_KEY_SUFFIX.Length);
+            var name = dependencyPropertyName[..^DEPENDENCY_PROPERTY_KEY_SUFFIX.Length];
             var ownerType = new StackFrame(1).GetMethod().ReflectedType;
             var propertyType = ownerType.GetProperty(name)?.PropertyType;
             if (propertyType == null)

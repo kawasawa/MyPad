@@ -54,7 +54,9 @@ namespace MyPad.Views.Controls.ChangeMarker
                 return;
 
             this._changeWatcher.ChangeOccurred -= this.ChangeWatcher_ChangeOccurred;
+            
             this._disposed = true;
+            GC.SuppressFinalize(this);
         }
 
         protected override void OnDocumentChanged(TextDocument oldDocument, TextDocument newDocument)

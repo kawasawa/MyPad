@@ -39,8 +39,7 @@ namespace MyPad.Views.Behaviors
         {
             try
             {
-                var info = new ProcessStartInfo(this.FileName, this.Arguments);
-                info.CreateNoWindow = this.CreateNoWindow;
+                var info = new ProcessStartInfo(this.FileName, this.Arguments) { CreateNoWindow = this.CreateNoWindow };
                 Process.Start(info);
             }
             catch when (this.ThrowException == false)

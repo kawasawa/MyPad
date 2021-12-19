@@ -40,9 +40,9 @@ namespace MyPad
         {
             var coreName = objectType.Name;
             if (coreName.EndsWith("Model"))
-                coreName = coreName.Substring(0, coreName.Length - "Model".Length);
+                coreName = coreName[..^"Model".Length];
             if (coreName.EndsWith("View"))
-                coreName = coreName.Substring(0, coreName.Length - "View".Length);
+                coreName = coreName[..^"View".Length];
             return coreName;
         }
 
@@ -120,11 +120,11 @@ namespace MyPad
                 throw new ArgumentException("ViewModel のクラス名は \"ViewModel\" で終わるように定義してください。");
 
             var viewName = viewModelName.Replace(".ViewModels.", ".Views.");
-            viewName = viewName.Substring(0, viewName.Length - "Model".Length);
+            viewName = viewName[..^"Model".Length];
             var viewType = Type.GetType($"{viewName}, {assemblyName}");
             if (viewType == null)
             {
-                viewName = viewName.Substring(0, viewName.Length - "View".Length);
+                viewName = viewName[..^"View".Length];
                 viewType = Type.GetType($"{viewName}, {assemblyName}");
             }
             return viewType;

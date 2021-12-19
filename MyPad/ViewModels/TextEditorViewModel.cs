@@ -112,7 +112,7 @@ namespace MyPad.ViewModels
             get
             {
                 var lpszShortPath = new StringBuilder(1024);
-                Kernel32.GetShortPathName(this.FileName, lpszShortPath, (uint)lpszShortPath.Capacity);
+                _ = Kernel32.GetShortPathName(this.FileName, lpszShortPath, (uint)lpszShortPath.Capacity);
                 return string.Join(string.Empty, lpszShortPath).TrimEnd(char.MinValue);
             }
         }

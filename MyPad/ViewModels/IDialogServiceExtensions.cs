@@ -1,5 +1,4 @@
 ﻿using MahApps.Metro.Controls.Dialogs;
-using MyBase.Logging;
 using MyPad.Models;
 using MyPad.Properties;
 using MyPad.ViewModels.Dialogs;
@@ -42,20 +41,20 @@ namespace MyPad.ViewModels
             // ・RetryCancel     : [再試行] [キャンセル]
             // ・AbortRetryIgnore: [中止] [再試行] [無視]
 
-            switch (self)
+            return self switch
             {
-                case ButtonResult.OK:     // OK
-                case ButtonResult.Yes:    // はい
-                case ButtonResult.Retry:  // 再試行
-                    return true;
-                case ButtonResult.No:     // いいえ
-                case ButtonResult.Abort:  // 中止
-                    return false;
-                case ButtonResult.Cancel: // キャンセル
-                case ButtonResult.Ignore: // 無視
-                default:                  // 上記以外 ([×]ボタン押下など)
-                    return null;
-            }
+                // OK
+                // はい
+                // 再試行
+                ButtonResult.OK or ButtonResult.Yes or ButtonResult.Retry => true,
+                // いいえ
+                // 中止
+                ButtonResult.No or ButtonResult.Abort => false,
+                // キャンセル
+                // 無視
+                // 上記以外 ([×]ボタン押下など)
+                _ => null,
+            };
         }
 
         private static bool? ConvertToTernary(this MessageDialogResult self)
@@ -90,15 +89,6 @@ namespace MyPad.ViewModels
 
         private static IContainerExtension GetContainerExtension(this IDialogService self)
             => self.GetType().GetField("_containerExtension", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(self) as IContainerExtension;
-
-        private static ILoggerFacade GetLogger(this IDialogService self)
-        {
-            var containerExtension = self.GetContainerExtension();
-            if (containerExtension == null)
-                return null;
-
-            return containerExtension.Resolve<ILoggerFacade>();
-        }
 
         private static bool UseInAppToastNotifications(IDialogService dialogService, out MainWindow window)
         {

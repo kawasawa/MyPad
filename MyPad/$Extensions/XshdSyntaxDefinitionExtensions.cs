@@ -6,15 +6,8 @@ namespace MyPad
 {
     public static class XshdSyntaxDefinitionExtensions
     {
-        public static IList<string> GetExtensions(this XshdSyntaxDefinition self)
-            => (self.Extensions?.Select(e =>
-            {
-                // 拡張子がドット始まりになるように整形する
-                if (e.StartsWith("*."))
-                    e = e[1..];
-                if (e.StartsWith('.') == false)
-                    e = $".{e}";
-                return e;
-            }) ?? Enumerable.Empty<string>()).ToList();
+        public static IEnumerable<string> GetExtensions(this XshdSyntaxDefinition self)
+            // 拡張子がドット始まりになるように整形する
+            => self.Extensions?.Select(e => e.StartsWith("*.") ? e[1..] : e.StartsWith('.') == false ? $".{e}" : e) ?? Enumerable.Empty<string>();
     }
 }

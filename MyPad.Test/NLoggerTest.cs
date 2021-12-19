@@ -28,22 +28,26 @@ namespace MyPad.Test
             {
                 ConfigurationFactory = () =>
                 {
-                    var layout = new NLog.Layouts.CsvLayout();
-                    layout.Delimiter = NLog.Layouts.CsvColumnDelimiterMode.Tab;
-                    layout.Quoting = NLog.Layouts.CsvQuotingMode.Nothing;
-                    layout.WithHeader = false;
+                    var layout = new NLog.Layouts.CsvLayout
+                    {
+                        Delimiter = NLog.Layouts.CsvColumnDelimiterMode.Tab,
+                        Quoting = NLog.Layouts.CsvQuotingMode.Nothing,
+                        WithHeader = false
+                    };
                     layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${longdate}"));
                     layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${message}"));
 
-                    var target = new NLog.Targets.FileTarget("log");
-                    target.Encoding = Encoding.UTF8;
-                    target.Footer = "${newline}";
-                    target.FileName = "${var:DIR}/${var:CTG}.log";
-                    target.ArchiveFileName = "${var:DIR}/archive/{#}.${var:CTG}.log";
-                    target.ArchiveEvery = NLog.Targets.FileArchivePeriod.Day;
-                    target.ArchiveNumbering = NLog.Targets.ArchiveNumberingMode.Date;
-                    target.MaxArchiveFiles = 10;
-                    target.Layout = layout;
+                    var target = new NLog.Targets.FileTarget("log")
+                    {
+                        Encoding = Encoding.UTF8,
+                        Footer = "${newline}",
+                        FileName = "${var:DIR}/${var:CTG}.log",
+                        ArchiveFileName = "${var:DIR}/archive/{#}.${var:CTG}.log",
+                        ArchiveEvery = NLog.Targets.FileArchivePeriod.Day,
+                        ArchiveNumbering = NLog.Targets.ArchiveNumberingMode.Date,
+                        MaxArchiveFiles = 10,
+                        Layout = layout
+                    };
 
                     var config = new NLog.Config.LoggingConfiguration();
                     config.AddTarget(target);

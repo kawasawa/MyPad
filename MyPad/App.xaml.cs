@@ -60,15 +60,19 @@ namespace MyPad
                         headerText.AppendLine("# ${environment:COMPUTERNAME}");
                         headerText.Append("##");
 
-                        var header = new NLog.Layouts.CsvLayout();
-                        header.Delimiter = NLog.Layouts.CsvColumnDelimiterMode.Tab;
-                        header.Quoting = NLog.Layouts.CsvQuotingMode.Nothing;
+                        var header = new NLog.Layouts.CsvLayout
+                        {
+                            Delimiter = NLog.Layouts.CsvColumnDelimiterMode.Tab,
+                            Quoting = NLog.Layouts.CsvQuotingMode.Nothing
+                        };
                         header.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, headerText.ToString()));
 
-                        var layout = new NLog.Layouts.CsvLayout();
-                        layout.Delimiter = NLog.Layouts.CsvColumnDelimiterMode.Tab;
-                        layout.Quoting = NLog.Layouts.CsvQuotingMode.Nothing;
-                        layout.Header = header;
+                        var layout = new NLog.Layouts.CsvLayout
+                        {
+                            Delimiter = NLog.Layouts.CsvColumnDelimiterMode.Tab,
+                            Quoting = NLog.Layouts.CsvQuotingMode.Nothing,
+                            Header = header
+                        };
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${longdate}"));
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${environment-user}"));
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, $"{this.ProductInfo.Version}"));
@@ -76,18 +80,22 @@ namespace MyPad
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${threadid}"));
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${message}"));
 
-                        var file = new NLog.Targets.FileTarget();
-                        file.Encoding = Encoding.UTF8;
-                        file.Footer = "${newline}";
-                        file.FileName = "${var:DIR}/${var:CTG}.log";
-                        file.ArchiveFileName = "${var:DIR}/archive/{#}.${var:CTG}.log";
-                        file.ArchiveEvery = NLog.Targets.FileArchivePeriod.Day;
-                        file.ArchiveNumbering = NLog.Targets.ArchiveNumberingMode.Date;
-                        file.MaxArchiveFiles = 10;
-                        file.Layout = layout;
+                        var file = new NLog.Targets.FileTarget
+                        {
+                            Encoding = Encoding.UTF8,
+                            Footer = "${newline}",
+                            FileName = "${var:DIR}/${var:CTG}.log",
+                            ArchiveFileName = "${var:DIR}/archive/{#}.${var:CTG}.log",
+                            ArchiveEvery = NLog.Targets.FileArchivePeriod.Day,
+                            ArchiveNumbering = NLog.Targets.ArchiveNumberingMode.Date,
+                            MaxArchiveFiles = 10,
+                            Layout = layout
+                        };
 
-                        var memory = new NLog.Targets.MemoryTarget();
-                        memory.Layout = layout;
+                        var memory = new NLog.Targets.MemoryTarget
+                        {
+                            Layout = layout
+                        };
 
                         var config = new NLog.Config.LoggingConfiguration();
                         config.AddTarget(nameof(file), file);
@@ -337,12 +345,12 @@ namespace MyPad
             // すべてのハンドルを列挙し、ウィンドウテキストが一致するハンドルから特定する。
 
             var (hWnd, lpdwProcessId) = (HWND.NULL, 0u);
-            var result = User32.EnumWindows(new User32.EnumWindowsProc((_hWnd, _) =>
+            var result = User32.EnumWindows(new User32.EnumWindowsProc((_hWnd, _lParam) =>
             {
                 try
                 {
                     // プロセスの情報を比較する
-                    User32.GetWindowThreadProcessId(_hWnd, out var _lpdwProcessId);
+                    _ = User32.GetWindowThreadProcessId(_hWnd, out var _lpdwProcessId);
                     var process = Process.GetProcessById((int)_lpdwProcessId);
                     if (sourceProcess.Id == _lpdwProcessId)
                         return true;
@@ -352,7 +360,7 @@ namespace MyPad
                     // ウィンドウテキストを比較する
                     // 本アプリケーションでは実質的に識別子として使用される
                     var lpString = new StringBuilder(256);
-                    User32.GetWindowText(_hWnd, lpString, lpString.Capacity);
+                    _ = User32.GetWindowText(_hWnd, lpString, lpString.Capacity);
                     if (lpString.ToString().Contains(this.SharedDataStore.Identifier) == false)
                         return true;
 
