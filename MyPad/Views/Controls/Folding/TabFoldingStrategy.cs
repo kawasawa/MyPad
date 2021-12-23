@@ -5,16 +5,9 @@ using System.Linq;
 
 namespace MyPad.Views.Controls.Folding
 {
-    public class TabFoldingStrategy
+    public class TabFoldingStrategy : FoldingStrategyBase
     {
-        public void UpdateFoldings(FoldingManager manager, TextDocument document)
-        {
-            var newFoldings = this.CreateNewFoldings(document);
-            var firstErrorOffset = -1;
-            manager.UpdateFoldings(newFoldings, firstErrorOffset);
-        }
-
-        public IEnumerable<NewFolding> CreateNewFoldings(TextDocument document)
+        public override IEnumerable<NewFolding> CreateFoldings(TextDocument document)
         {
             var newFoldings = new List<NewFolding>();
             var tabIndents = new List<TabIndent>();

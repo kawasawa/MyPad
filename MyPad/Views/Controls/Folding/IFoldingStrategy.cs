@@ -27,7 +27,7 @@ namespace MyPad.Views.Controls.Folding
         // XmlFoldingStrategy
         public static implicit operator IFoldingStrategy(XmlFoldingStrategy strategy) => new(strategy);
         public static explicit operator XmlFoldingStrategy(in IFoldingStrategy self) => (XmlFoldingStrategy)self._strategy;
-        
+
         private IFoldingStrategy(XmlFoldingStrategy strategy)
         {
             this._strategy = strategy;

@@ -61,7 +61,11 @@ namespace MyPad.Views.Controls
                 new PropertyMetadata(false));
         public static readonly DependencyProperty EnableFoldingsProperty
             = DependencyPropertyExtensions.Register(
-                new PropertyMetadata(true, (obj, e) => ((TextArea)obj).UpdateFoldings()));
+                new PropertyMetadata(true, (obj, e) =>
+                {
+                    ((TextArea)obj).UpdateFoldings();
+                    ((TextArea)obj).UpdateBracketHighlight();
+                }));
         public static readonly DependencyProperty EnableAutoCompletionProperty
             = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(true));
@@ -84,6 +88,7 @@ namespace MyPad.Views.Controls
         public ChangeMarkerManager ChangeMarkerManager { get; private set; }
         public FoldingManager FoldingManager { get; private set; }
         public IFoldingStrategy FoldingStrategy { get; private set; }
+        public BracketHighlighter BracketHighlighter { get; private set; }
         public SearchPanel SearchPanel { get; private set; }
         public CompletionWindow CompletionWindow { get; private set; }
 
@@ -232,6 +237,8 @@ namespace MyPad.Views.Controls
             this._updateFoldingsTimer = new();
             this._updateFoldingsTimer.Tick += this.FoldingsTimer_Tick;
 
+            this.BracketHighlighter = new BracketHighlighter(this.TextView);
+
             // NOTE: SearchPanel の依存関係プロパティ MarkerBrush の設定
             // SearchPanel は Install メソッドで自身のインスタンスを作成後、
             // SearchResultBackgroundRenderer のインスタンスを作成して内部に保持している。
@@ -253,6 +260,7 @@ namespace MyPad.Views.Controls
                 (sender, e) => this.ReplaceAll(),
                 (sender, e) => e.CanExecute = this.CanReplaceAll()));
 
+            this.Caret.PositionChanged += this.Caret_PositionChanged;
             this.SearchPanel.Loaded += this.SearchPanel_Loaded;
             this.Loaded += this.TextArea_Loaded;
             this.Unloaded += this.TextArea_Unloaded;
@@ -465,6 +473,7 @@ namespace MyPad.Views.Controls
                 _ => null,
             };
             this.UpdateFoldings();
+            this.UpdateBracketHighlight();
         }
 
         public void ResetChangeMarker()
@@ -480,6 +489,18 @@ namespace MyPad.Views.Controls
             }
 
             this.ChangeMarkerManager ??= ChangeMarkerManager.Install(this);
+        }
+
+        public void UpdateBracketHighlight()
+        {
+            if (this.EnableFoldings == false || this.FoldingStrategy == null)
+            {
+                this.BracketHighlighter.ClearHighlight();
+                return;
+            }
+
+            var section = this.GetFoldingSection(this.Caret);
+            this.BracketHighlighter.Highlight(section);
         }
 
         public void UpdateFoldings()
@@ -501,7 +522,7 @@ namespace MyPad.Views.Controls
 
         public FoldingSection GetFoldingSection(ICSharpCode.AvalonEdit.Editing.Caret caret)
         {
-            return this.FoldingManager.AllFoldings
+            return this.FoldingManager?.AllFoldings
                 .Where(s =>
                 {
                     var startLine = this.Document.GetLineByOffset(s.StartOffset);
@@ -611,6 +632,12 @@ namespace MyPad.Views.Controls
         {
             this._updateFoldingsTimer.Stop();
             this.UpdateFoldings();
+            this.UpdateBracketHighlight();
+        }
+
+        private void Caret_PositionChanged(object sender, EventArgs e)
+        {
+            this.UpdateBracketHighlight();
         }
 
         private void SearchPanel_Loaded(object sender, RoutedEventArgs e)

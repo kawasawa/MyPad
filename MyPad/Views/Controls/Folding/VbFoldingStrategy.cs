@@ -5,22 +5,16 @@ using System.Linq;
 
 namespace MyPad.Views.Controls.Folding
 {
-    public class VbFoldingStrategy
+    public class VbFoldingStrategy : FoldingStrategyBase
     {
-        public void UpdateFoldings(FoldingManager manager, TextDocument document)
-        {
-            var newFoldings = this.CreateNewFoldings(document);
-            var firstErrorOffset = -1;
-            manager.UpdateFoldings(newFoldings, firstErrorOffset);
-        }
+        public IEnumerable<string> Keywords { get; set; } = new[] { "namespace", "interface", "class", "structure", "module", "enum", "function", "sub" };
 
-        public IEnumerable<NewFolding> CreateNewFoldings(TextDocument document)
+        public override IEnumerable<NewFolding> CreateFoldings(TextDocument document)
         {
             var newFoldings = new List<NewFolding>();
             var text = document.Text;
 
-            foreach (var (keyword, closingKeyword) in new[] { "namespace", "interface", "class", "structure", "module", "enum", "function", "sub", }
-                .Select(w => (keyword: $"{w} ", closingKeyword: $"end {w}")))
+            foreach (var (keyword, closingKeyword) in this.Keywords.Select(w => (keyword: $"{w} ", closingKeyword: $"end {w}")))
             {
                 var startOffsets = new Stack<int>();
 
