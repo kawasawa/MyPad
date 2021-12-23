@@ -17,6 +17,7 @@
     <RepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\'))</RepoRoot>
     <PathMap>$(RepoRoot)=$(DeterministicSourceRoot)</PathMap>
     <EnableSourceLink>true</EnableSourceLink>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

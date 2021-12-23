@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace MyPad.Views.Controls.Folding
 {
-    public class VbFoldingStrategy : IFoldingStrategy
+    public class VbFoldingStrategy
     {
         public void UpdateFoldings(FoldingManager manager, TextDocument document)
         {

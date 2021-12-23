@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace MyPad.Views.Controls.Folding
 {
-    public class BraceFoldingStrategy : IFoldingStrategy
+    public class BraceFoldingStrategy
     {
         public char OpeningBrace { get; set; } = '{';
         public char ClosingBrace { get; set; } = '}';

@@ -461,7 +461,7 @@ namespace MyPad.Views.Controls
                 FoldingStrategyKind.Brace => new BraceFoldingStrategy(),
                 FoldingStrategyKind.Tab => new TabFoldingStrategy(),
                 FoldingStrategyKind.Vb => new VbFoldingStrategy(),
-                FoldingStrategyKind.Xml => new WrappedXmlFoldingStrategy(),
+                FoldingStrategyKind.Xml => new XmlFoldingStrategy(),
                 _ => null,
             };
             this.UpdateFoldings();
@@ -496,7 +496,7 @@ namespace MyPad.Views.Controls
             }
 
             this.FoldingManager ??= FoldingManager.Install(this);
-            this.FoldingStrategy.UpdateFoldings(this.FoldingManager, this.Document);
+            this.FoldingStrategy?.UpdateFoldings(this.FoldingManager, this.Document);
         }
 
         public FoldingSection GetFoldingSection(ICSharpCode.AvalonEdit.Editing.Caret caret)
