@@ -585,12 +585,6 @@ namespace MyPad.Views.Controls
             {
                 this.ShowCompletionList();
             }
-
-            // 入力中に再計算が連発するのを避けるため、最後の入力から一定時間待つ
-            this._updateFoldingsTimer.Stop();
-            this._updateFoldingsTimer.Interval = TimeSpan.FromSeconds(UPDATE_FOLDINGS_INTERVAL);
-            this._updateFoldingsTimer.Start();
-
             base.OnTextEntered(e);
         }
 
@@ -637,6 +631,11 @@ namespace MyPad.Views.Controls
 
         private void Caret_PositionChanged(object sender, EventArgs e)
         {
+            // フォールディングの再解析の連発を避けるため一定時間待つ
+            this._updateFoldingsTimer.Stop();
+            this._updateFoldingsTimer.Interval = TimeSpan.FromSeconds(UPDATE_FOLDINGS_INTERVAL);
+            this._updateFoldingsTimer.Start();
+
             this.UpdateBracketHighlight();
         }
 
