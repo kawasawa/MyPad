@@ -216,7 +216,7 @@
                              IsVisibleChanged="SideContent_IsVisibleChanged"
                              ItemInvoked="SideContent_ItemInvoked">
                 <i:Interaction.Triggers>
-                    <i:PropertyChangedTrigger Binding="{Binding Visibility, ElementName=HamburgerMenu, Mode=OneWay}">
+                    <i:PropertyChangedTrigger Binding="{Binding Visibility, ElementName=SideContent, Mode=OneWay}">
                         <i:ChangePropertyAction TargetName="SideContentColumn" PropertyName="Width" Value="Auto"/>
                     </i:PropertyChangedTrigger>
                 </i:Interaction.Triggers>
@@ -248,7 +248,7 @@
                 </m:HamburgerMenu.OptionsItemTemplate>
                 <m:HamburgerMenu.ContentTemplate>
                     <DataTemplate DataType="{x:Type m:HamburgerMenuIconItem}">
-                        <Grid ge:GridEx.RowDefinition="10, Auto, 10, *" Width="{qc:MultiBinding '$P0 - $P1', P0={Binding ActualWidth, ElementName=HamburgerMenu, Mode=OneWay}, P1={Binding Source={StaticResource HamburgerWidth}}}">
+                        <Grid ge:GridEx.RowDefinition="10, Auto, 10, *" Width="{qc:MultiBinding '$P0 - $P1', P0={Binding ActualWidth, ElementName=SideContent, Mode=OneWay}, P1={Binding Source={StaticResource SideContentWidth}}}">
                             <Grid.ContextMenu>
                                 <ContextMenu/>
                             </Grid.ContextMenu>
