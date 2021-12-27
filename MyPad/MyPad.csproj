@@ -11,7 +11,7 @@
     <NeutralLanguage>ja-JP</NeutralLanguage>
     <ApplicationIcon>Resources\app.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>10.0</LangVersion>
     <Deterministic>true</Deterministic>
     <DeterministicSourceRoot>/_/</DeterministicSourceRoot>
     <RepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\'))</RepoRoot>
