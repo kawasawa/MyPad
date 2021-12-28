@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -28,17 +29,17 @@ namespace MyPad
     public partial class App : PrismApplication
     {
         /// <summary>
-        /// ロガーを取得します。
+        /// ロガー
         /// </summary>
         public ILoggerFacade Logger { get; }
 
         /// <summary>
-        /// プロダクト情報を取得します。
+        /// プロダクト情報
         /// </summary>
         public IProductInfo ProductInfo { get; }
 
         /// <summary>
-        /// アプリケーションの共有情報を取得します。
+        /// アプリケーションの共有情報
         /// </summary>
         public SharedDataStore SharedDataStore { get; }
 
@@ -49,7 +50,8 @@ namespace MyPad
         {
             this.Logger = new CompositeLogger(
                 new DebugLogger(),
-                new NLogger() {
+                new NLogger()
+                {
                     PublisherType = typeof(ILoggerFacadeExtension),
                     ConfigurationFactory = () =>
                     {
@@ -137,9 +139,6 @@ namespace MyPad
                 return;
             }
 
-            Initializer.InitQuickConverter();
-            Initializer.InitEncoding();
-
             this.SharedDataStore.CommandLineArgs = e.Args;
             this.SharedDataStore.CreateTempDirectory();
 
@@ -216,7 +215,10 @@ namespace MyPad
             {
                 // View に対して多言語化の初期設定を行う
                 if (view is DependencyObject obj)
-                    Initializer.InitWPFLocalizeExtension(obj);
+                {
+                    ResxLocalizationProvider.SetDefaultAssembly(obj, obj.GetType().Assembly.GetName().Name);
+                    ResxLocalizationProvider.SetDefaultDictionary(obj, "Resources");
+                }
 
                 // ViewModel のインスタンスを生成する
                 return this.Container.Resolve(viewModelType);
@@ -272,8 +274,8 @@ namespace MyPad
         {
             var (_, settings) = this.Container.Resolve<Models.Settings>().Load();
 
-            this.Container.Resolve<Models.SyntaxService>().Initialize(settings.IsDifferentVersion());
-            if (settings.IsDifferentVersion())
+            this.Container.Resolve<Models.SyntaxService>().CreateDefinitionFiles(settings.IsDifferentVersion);
+            if (settings.IsDifferentVersion)
                 this.Logger.Debug($"アプリケーションのバージョンが更新されました。: Old={settings.Version}, New={this.ProductInfo.Version}");
 
             var shell = this.Container.Resolve<Views.Workspace>();
@@ -409,26 +411,12 @@ namespace MyPad
         }
 
         /// <summary>
-        /// 初期化処理を行うためのメソッドを提供します。
+        /// <see cref="QuickConverter"/> の初期設定を行います。
         /// </summary>
-        private static class Initializer
+        [ModuleInitializer]
+        public static void InitQuickConverter()
         {
-            /// <summary>
-            /// 指定された View のインスタンスに対する <see cref="WPFLocalizeExtension"/> の初期設定を行います。
-            /// </summary>
-            /// <param name="view">View のインスタンス</param>
-            [LogInterceptor]
-            public static void InitWPFLocalizeExtension(DependencyObject view)
-            {
-                ResxLocalizationProvider.SetDefaultAssembly(view, view.GetType().Assembly.GetName().Name);
-                ResxLocalizationProvider.SetDefaultDictionary(view, "Resources");
-            }
-
-            /// <summary>
-            /// <see cref="QuickConverter"/> の初期設定を行います。
-            /// </summary>
-            [LogInterceptor]
-            public static void InitQuickConverter()
+            try
             {
 #pragma warning disable IDE0049
                 EquationTokenizer.AddNamespace(typeof(System.Object));                           // System                  : System.Runtime.dll
@@ -447,15 +435,10 @@ namespace MyPad
                 EquationTokenizer.AddExtensionMethods(typeof(System.Linq.Enumerable));           // System.Linq             : System.Linq.dll
 #pragma warning restore IDE0049
             }
-
-            /// <summary>
-            /// 文字コードの初期設定を行います。
-            /// </summary>
-            [LogInterceptor]
-            public static void InitEncoding()
+            catch (Exception e)
             {
-                // SJIS を追加する
-                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                Debug.WriteLine($"ERROR: QuickConverter の初期設定に失敗しました。: Message={e.Message}");
+                throw;
             }
         }
 

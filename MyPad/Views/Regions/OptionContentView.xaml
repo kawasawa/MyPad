@@ -16,7 +16,7 @@
              mc:Ignorable="d" 
              p:ViewModelLocator.AutoWireViewModel="True"
              d:DesignHeight="450" d:DesignWidth="800"
-             Cursor="{qc:Binding '$P ? Cursors.Wait : Cursors.Arrow', P={Binding IsWorking.Value, Mode=TwoWay}}">
+             Cursor="{qc:Binding '$P ? Cursors.Wait : Cursors.Arrow', P={Binding IsPending.Value, Mode=TwoWay}}">
 
     <Grid Margin="20 0 20 20">
         <TabControl Padding="5 10 0 0" m:HeaderedControlHelper.HeaderFontWeight="Bold">
@@ -218,7 +218,7 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type Button}">
-                                            <Button Command="{Binding DataContext.RefreshExplorerCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" ToolTip="{le:Loc Command_Apply}" Style="{DynamicResource Common.ChromelessButton}">
+                                            <Button Command="{Binding DataContext.RecreateExplorerCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" ToolTip="{le:Loc Command_Apply}" Style="{DynamicResource Common.ChromelessButton}">
                                                 <mi:Material Kind="Refresh"/>
                                             </Button>
                                         </ControlTemplate>
@@ -398,7 +398,7 @@
             </TabItem>
         </TabControl>
 
-        <Border d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsWorking.Value, Mode=OneWay}}">
+        <Border d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
             <StackPanel Margin="5 0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                 <TextBlock Text="{le:Loc Text_Working}" HorizontalAlignment="Center" TextAlignment="Center"/>
                 <Border Height="10"/>

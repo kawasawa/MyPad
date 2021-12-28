@@ -27,6 +27,10 @@ using Vanara.PInvoke;
 
 namespace MyPad.ViewModels
 {
+    /// <summary>
+    /// <see cref="Views.Controls.TextEditor"/> に対応する ViewModel を表します。
+    /// このクラスはテキストエディターに占有されるファイルストリームとそのドキュメントモデルを保持します。
+    /// </summary>
     public class TextEditorViewModel : ViewModelBase
     {
         #region インジェクション
@@ -36,7 +40,7 @@ namespace MyPad.ViewModels
 
         // Dependency Injection
         [Dependency]
-        public IContainerExtension ContainerExtension { get; set; }
+        public IContainerExtension Container { get; set; }
         [Dependency]
         public ILoggerFacade Logger { get; set; }
         [Dependency]
@@ -96,7 +100,7 @@ namespace MyPad.ViewModels
         private int? _sequense;
         public int Sequense
         {
-            // NOTE: 初期化が完了するまでは採番しない
+            // 初期化が完了するまで採番しない
             get => this._isInitialized ? this._sequense ??= ++GlobalSequence : -1;
             private set => this._sequense = value;
         }
@@ -204,14 +208,14 @@ namespace MyPad.ViewModels
             set => this.SetProperty(ref this._zoomIncrement, value);
         }
 
-        private int _line = 1; // 初期値
+        private int _line = 1;
         public int Line
         {
             get => this._line;
             set => this.SetProperty(ref this._line, value);
         }
 
-        private int _column = 1; // 初期値
+        private int _column = 1;
         public int Column
         {
             get => this._column;
@@ -318,6 +322,10 @@ namespace MyPad.ViewModels
 
         #endregion
 
+        /// <summary>
+        /// このクラスの新しいインスタンスを生成します。
+        /// </summary>
+        /// <param name="eventAggregator">イベントアグリゲーター</param>
         [InjectionConstructor]
         [LogInterceptor]
         public TextEditorViewModel(IEventAggregator eventAggregator)
@@ -330,10 +338,14 @@ namespace MyPad.ViewModels
             this.Clear();
             this._isInitialized = true;
 
-            void saveTemporary() => _ = this.SaveTemporary();
-            this.EventAggregator.GetEvent<SaveTemporaryEvent>().Subscribe(saveTemporary);
+            void saveToTemporary() => _ = this.SaveToTemporary();
+            this.EventAggregator.GetEvent<SaveToTemporaryEvent>().Subscribe(saveToTemporary);
         }
 
+        /// <summary>
+        /// このインスタンスが保持するリソースを解放します。
+        /// </summary>
+        /// <param name="disposing">マネージリソースを解放するかどうかを示す値</param>
         [LogInterceptor]
         protected override void Dispose(bool disposing)
         {
@@ -359,6 +371,9 @@ namespace MyPad.ViewModels
             base.Dispose(disposing);
         }
 
+        /// <summary>
+        /// このインスタンスが占有するファイルストリームを解放し、ドキュメントデータをクリアします。
+        /// </summary>
         [LogInterceptor]
         public async void Clear()
         {
@@ -388,6 +403,12 @@ namespace MyPad.ViewModels
             });
         }
 
+        /// <summary>
+        /// 指定されたファイルストリームを占有し、テキストを読み込みます。
+        /// </summary>
+        /// <param name="stream">ファイルストリーム</param>
+        /// <param name="encoding">文字コード</param>
+        /// <returns>非同期タスク</returns>
         [LogInterceptor]
         public async Task Load(FileStream stream, Encoding encoding = null)
         {
@@ -399,6 +420,12 @@ namespace MyPad.ViewModels
             await this.Reload(encoding);
         }
 
+        /// <summary>
+        /// このインスタンスが占有するファイルストリームからテキストを読み込みます。
+        /// </summary>
+        /// <param name="encoding">文字コード</param>
+        /// <returns>非同期タスク</returns>
+        /// <exception cref="InvalidOperationException"></exception>
         [LogInterceptor]
         public async Task Reload(Encoding encoding = null)
         {
@@ -421,14 +448,18 @@ namespace MyPad.ViewModels
 
                 // テキストを設定する
                 //
-                // NOTE: 非同期処理でのテキストの設定
-                // TextDocument.Text へ代入後に ClearAll() を実行すると IsModified の変更が通知されなくなる。
-                // 正確には、ClearAll() 時に UndoStack 内の未変更点が更新されていないようだ。
-                // 代入前に UndoStack をクリアしてサスペンド、代入後にレジュームする。
-                // (なお、同期処理ではこの対応は不要である。TextDocument はスレッドを監視しており、この辺りも怪しい気がする。)
+                // INFO: 非同期処理で TextDocument.Text へ代入後に ClearAll() を実行すると IsModified の変更が通知されなくなる問題への対応
+                // ClearAll() で UndoStack は空になるが、未変更点が更新されていないように見える。
+                // 試行錯誤の末、下記の流れでは IsModiried は正しく発火することが判明した。
+                // 1. 事前に UndoStack をクリアしてしまい、リミットを 0 にして変更履歴が残さないようにする。
+                // 2. TextDocument.Text にテキストを代入する。
+                // 3. UndoStack のサイズリミットを復元する。
+                // (なお、同期処理ではこの対応は必要ない。TextDocument はスレッドを監視しており、この辺りも怪しい気がする。)
                 //
-                // HACK: Views.ChangeWatcher が UndoStack.SizeLimit の変更を監視
-                // 詳細は ChangeWatcher の実装を参照。本処理の実装に依存している。
+                // HACK: ChangeTracker の処理が UndoStack.SizeLimit に依存
+                // ChangeTracker は UndoStack.SizeLimit の変更をトリガーにファイルのロード（およびリロード）を検知している。
+                // これ以外の方法として Document.FileName を意図的に変更させるなどが考えられるが、
+                // TextArea はリロードを無視するために Document.FileName を監視しているため採用できない。
                 this.Document.UndoStack.ClearAll();
                 var buffer = this.Document.UndoStack.SizeLimit;
                 this.Document.UndoStack.SizeLimit = 0;
@@ -446,6 +477,12 @@ namespace MyPad.ViewModels
             });
         }
 
+        /// <summary>
+        /// ドキュメントデータをこのインスタンスが占有するファイルストリームに書き込みます。
+        /// </summary>
+        /// <param name="encoding">文字コード</param>
+        /// <returns>非同期タスク</returns>
+        /// <exception cref="InvalidOperationException"></exception>
         [LogInterceptor]
         public async Task Save(Encoding encoding)
         {
@@ -473,6 +510,12 @@ namespace MyPad.ViewModels
             });
         }
 
+        /// <summary>
+        /// 指定されたファイルストリームを占有し、ドキュメントデータを書き込みます。
+        /// </summary>
+        /// <param name="stream">ファイルストリーム</param>
+        /// <param name="encoding">文字コード</param>
+        /// <returns>非同期タスク</returns>
         [LogInterceptor]
         public async Task SaveAs(FileStream stream, Encoding encoding)
         {
@@ -484,8 +527,12 @@ namespace MyPad.ViewModels
             await this.Save(encoding);
         }
 
+        /// <summary>
+        /// ドキュメントデータを一時ファイルに書き出します。
+        /// </summary>
+        /// <returns>正常に処理され方どうかを示す値</returns>
         [LogInterceptor]
-        private async Task<bool> SaveTemporary()
+        private async Task<bool> SaveToTemporary()
         {
             if (this.IsModified == false || this.Document.Version == this.Temporary.version)
                 return false;
@@ -512,6 +559,9 @@ namespace MyPad.ViewModels
             return result;
         }
 
+        /// <summary>
+        /// 一時ファイルを削除します。
+        /// </summary>
         [LogInterceptor]
         private void DeleteTemporary()
         {
@@ -526,10 +576,14 @@ namespace MyPad.ViewModels
             }
         }
 
+        /// <summary>
+        /// ディスク上の元ファイルから新たに <see cref="TextEditorViewModel"/> クラスのインスタンスを生成します。
+        /// </summary>
+        /// <returns>新たに生成されたインスタンス</returns>
         [LogInterceptor]
-        public async Task<TextEditorViewModel> CloneUnmodified()
+        public async Task<TextEditorViewModel> CloneFromFile()
         {
-            var clone = this.ContainerExtension.Resolve<TextEditorViewModel>();
+            var clone = this.Container.Resolve<TextEditorViewModel>();
             if (this.IsNewFile)
             {
                 clone.Sequense = this.Sequense;
@@ -542,6 +596,10 @@ namespace MyPad.ViewModels
             return clone;
         }
 
+        /// <summary>
+        /// このインスタンスが保持するドキュメントデータをもとに <see cref="FlowDocument"/> を生成します。
+        /// </summary>
+        /// <returns><see cref="FlowDocument"/> のインスタンス</returns>
         [LogInterceptor]
         public async Task<FlowDocument> CreateFlowDocument()
         {
@@ -571,6 +629,11 @@ namespace MyPad.ViewModels
             return flowDocument;
         }
 
+        /// <summary>
+        /// オートセーブタイマーに割り込んで処理を実行させます。
+        /// </summary>
+        /// <param name="func">割り込み処理</param>
+        /// <returns>非同期タスク</returns>
         [LogInterceptor]
         private async Task Interrupt(Func<Task> func)
         {
@@ -584,13 +647,18 @@ namespace MyPad.ViewModels
             this.AutoSaveTimer.Start();
         }
 
+        /// <summary>
+        /// オートセーブタイマーのインターバルが経過したときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
         [LogInterceptor]
         private async void AutoSaveTimer_Tick(object sender, EventArgs e)
         {
             if (this.Settings.System.EnableAutoSave == false)
                 return;
 
-            var result = await this.SaveTemporary();
+            var result = await this.SaveToTemporary();
             if (result)
                 this.EventAggregator.GetEvent<RaiseBalloonEvent>().Publish((Resources.Message_NotifyAutoSaved, Path.GetFileName(this.FileName)));
         }

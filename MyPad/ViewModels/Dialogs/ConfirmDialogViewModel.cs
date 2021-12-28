@@ -5,11 +5,17 @@ using Unity;
 
 namespace MyPad.ViewModels.Dialogs
 {
+    /// <summary>
+    /// <see cref="Views.Dialogs.ConfirmDialog"/> に対応する ViewModel を表します。
+    /// </summary>
     public class ConfirmDialogViewModel : MessageBoxViewModelBase
     {
         public ReactiveCommand YesCommand { get; }
         public ReactiveCommand NoCommand { get; }
 
+        /// <summary>
+        /// このクラスの新しいインスタンスを生成します。
+        /// </summary>
         [InjectionConstructor]
         [LogInterceptor]
         public ConfirmDialogViewModel()

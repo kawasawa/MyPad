@@ -5,10 +5,16 @@ using Unity;
 
 namespace MyPad.ViewModels.Dialogs
 {
+    /// <summary>
+    /// <see cref="Views.Dialogs.WarnDialog"/> に対応する ViewModel を表します。
+    /// </summary>
     public class WarnDialogViewModel : MessageBoxViewModelBase
     {
         public ReactiveCommand OKCommand { get; }
 
+        /// <summary>
+        /// このクラスの新しいインスタンスを生成します。
+        /// </summary>
         [InjectionConstructor]
         [LogInterceptor]
         public WarnDialogViewModel()

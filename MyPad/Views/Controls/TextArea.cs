@@ -48,7 +48,6 @@ namespace MyPad.Views.Controls
         public static bool GetReplaceAreaExpanded(DependencyObject obj) => (bool)obj.GetValue(ReplaceAreaExpandedProperty);
         [AttachedPropertyBrowsableForType(typeof(SearchPanel))]
         public static void SetReplaceAreaExpanded(DependencyObject obj, bool value) => obj.SetValue(ReplaceAreaExpandedProperty, value);
-
         [AttachedPropertyBrowsableForType(typeof(SearchPanel))]
         public static string GetReplacePattern(DependencyObject obj) => (string)obj.GetValue(ReplacePatternProperty);
         [AttachedPropertyBrowsableForType(typeof(SearchPanel))]
@@ -77,7 +76,7 @@ namespace MyPad.Views.Controls
                 new PropertyMetadata(true, (obj, e) =>
                 {
                     ((TextArea)obj).RefreshFoldings();
-                    ((TextArea)obj).RefreshBracketHighlight();
+                    ((TextArea)obj).HighlightPairBrackets();
                 }));
         public static readonly DependencyProperty EnableAutoCompletionProperty
             = DependencyPropertyExtensions.Register(
@@ -95,21 +94,130 @@ namespace MyPad.Views.Controls
                 return (Func<SearchPanel, IEnumerable<TextSegment>>)lambda.Compile();
             });
 
-        private readonly DispatcherTimer _updateFoldingsTimer;
+        private readonly DispatcherTimer _refreshFoldingsTimer;
         private IEnumerable<CompletionData> _completionData = Enumerable.Empty<CompletionData>();
 
+        /// <summary>
+        /// 入力補完ウィンドウ
+        /// </summary>
         public CompletionWindow CompletionWindow { get; private set; }
+
+        /// <summary>
+        /// 検索パネル
+        /// </summary>
         public SearchPanel SearchPanel { get; private set; }
+
+        /// <summary>
+        /// 変更通知マーカー
+        /// </summary>
         public ChangeMarkerMargin ChangeMarkerMargin { get; private set; }
+
+        /// <summary>
+        /// フォールディングマネージャー
+        /// </summary>
         public FoldingManager FoldingManager { get; private set; }
+
+        /// <summary>
+        /// フォールディングストラテジー
+        /// </summary>
         public IFoldingStrategy FoldingStrategy { get; private set; }
 
+        /// <summary>
+        /// 内包するテキストビュー
+        /// </summary>
         public new TextView TextView => (TextView)base.TextView;
+
+        /// <summary>
+        /// 読み取り専用であるかどうかを示す値
+        /// </summary>
         public bool IsReadOnly => this.ReadOnlySectionProvider.CanInsert(this.Caret.Offset) == false;
+
+        /// <summary>
+        /// 行番号のマージンが表示されているかどうかを示す値
+        /// </summary>
         public bool IsShowLineNumberMargin => this.LeftMargins.OfType<LineNumberMargin>().Any();
+
+        /// <summary>
+        /// 変更状態のマージンが表示されているかどうかを示す値
+        /// </summary>
         public bool IsShowChangeMarkerMargin => this.LeftMargins.OfType<ChangeMarkerMargin>().Any();
+
+        /// <summary>
+        /// 折り畳みのマージンが表示されているかどうかを示す値
+        /// </summary>
         public bool IsShowFoldingMargin => this.LeftMargins.OfType<FoldingMargin>().Any();
 
+        /// <summary>
+        /// 拡大率の上げられるかどうかを示す値
+        /// </summary>
+        public bool CanZoomIn => this.FontSize < MAX_FONT_SIZE;
+
+        /// <summary>
+        /// 拡大率の下げられるかどうかを示す値
+        /// </summary>
+        public bool CanZoomOut => MIN_FONT_SIZE < this.FontSize;
+
+        /// <summary>
+        /// 拡大率のリセットが可能かどうかを示す値
+        /// </summary>
+        public bool CanZoomReset => this.FontSize != this.ActualFontSize;
+
+        /// <summary>
+        /// 次に出現する検索語句を置換できるかどうかを示す値
+        /// </summary>
+        public bool CanReplaceNext => !this.IsReadOnly;
+
+        /// <summary>
+        /// 検索語句をすべて置換であるかどうかを示す値
+        /// </summary>
+        public bool CanReplaceAll => !this.IsReadOnly;
+
+        /// <summary>
+        /// 現在のキャレット位置でテキストの折り畳みが可能かどうかを示す値
+        /// </summary>
+        public bool CanFolding
+        {
+            get
+            {
+                if (this.EnableFoldings == false || this.FoldingManager == null)
+                    return false;
+                var section = this.GetFoldingSection(this.Caret);
+                return section?.IsFolded == false;
+            }
+        }
+
+        /// <summary>
+        /// 現在のキャレット位置で折り畳まれたテキストの展開が可能かどうかを示す値
+        /// </summary>
+        public bool CanUnfolding
+        {
+            get
+            {
+                if (this.EnableFoldings == false || this.FoldingManager == null)
+                    return false;
+                var section = this.GetFoldingSection(this.Caret);
+                return section?.IsFolded == true;
+            }
+        }
+
+        /// <summary>
+        /// 入力補完ウィンドウが表示可能かどうかを示す値
+        /// </summary>
+        public bool CanShowCompletionWindow
+        {
+            get
+            {
+                if (this.IsReadOnly)
+                    return false;
+                if (this.CompletionWindow != null || this._completionData.Any() == false)
+                    return false;
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// 見た目のフォントサイズ
+        /// </summary>
         public new double FontSize
         {
             get => base.FontSize;
@@ -120,44 +228,68 @@ namespace MyPad.Views.Controls
             }
         }
 
+        /// <summary>
+        /// 拡大率を考慮しない実際のフォントサイズ
+        /// </summary>
         public double ActualFontSize
         {
             get => (double)this.GetValue(ActualFontSizeProperty);
             set => this.SetValue(ActualFontSizeProperty, value);
         }
 
+        /// <summary>
+        /// 拡大率の増減値
+        /// </summary>
         public int ZoomIncrement
         {
             get => (int)this.GetValue(ZoomIncrementProperty);
             set => this.SetValue(ZoomIncrementProperty, value);
         }
 
+        /// <summary>
+        /// 変更状態を示すマーカーを表示するかどうかを示す値
+        /// </summary>
         public bool ShowChangeMarker
         {
             get => (bool)this.GetValue(ShowChangeMarkerProperty);
             set => this.SetValue(ShowChangeMarkerProperty, value);
         }
 
+        /// <summary>
+        /// HTML 書式を保持したまま切り取り、コピーを行うかどうかを示す値
+        /// </summary>
         public bool CutCopyHtmlFormat
         {
             get => (bool)this.GetValue(CutCopyHtmlFormatProperty);
             set => this.SetValue(CutCopyHtmlFormatProperty, value);
         }
 
+        /// <summary>
+        /// テキストの折り畳みを有効化するかどうかを示す値
+        /// </summary>
         public bool EnableFoldings
         {
             get => (bool)this.GetValue(EnableFoldingsProperty);
             set => this.SetValue(EnableFoldingsProperty, value);
         }
 
+        /// <summary>
+        /// 入力補完を有効化するかどうかを示す値
+        /// </summary>
         public bool EnableAutoCompletion
         {
             get => (bool)this.GetValue(EnableAutoCompletionProperty);
             set => this.SetValue(EnableAutoCompletionProperty, value);
         }
 
+        /// <summary>
+        /// <see cref="ICSharpCode.AvalonEdit.Editing.TextArea.OverstrikeMode"/> が変更されたときに呼び出されます。
+        /// </summary>
         public event EventHandler OverstrikeModeChanged;
 
+        /// <summary>
+        /// 一度だけ呼び出され、静的フィールドを初期化します。
+        /// </summary>
         static TextArea()
         {
             ApplicationCommands.Redo.InputGestures.Add(new KeyGesture(Key.Z, ModifierKeys.Control | ModifierKeys.Shift));
@@ -169,6 +301,9 @@ namespace MyPad.Views.Controls
             AvalonEditCommands.ConvertSpacesToTabs.InputGestures.Add(new KeyGesture(Key.T, ModifierKeys.Control));
         }
 
+        /// <summary>
+        /// このクラスの新しいインスタンスを生成します。
+        /// </summary>
         public TextArea()
             : base(new TextView())
         {
@@ -188,27 +323,27 @@ namespace MyPad.Views.Controls
             bindings.Add(new CommandBinding(
                 Commands.ZoomIn,
                 (sender, e) => this.ZoomIn(),
-                (sender, e) => e.CanExecute = this.CanZoomIn()));
+                (sender, e) => e.CanExecute = this.CanZoomIn));
             bindings.Add(new CommandBinding(
                 Commands.ZoomOut,
                 (sender, e) => this.ZoomOut(),
-                (sender, e) => e.CanExecute = this.CanZoomOut()));
+                (sender, e) => e.CanExecute = this.CanZoomOut));
             bindings.Add(new CommandBinding(
                 Commands.ZoomReset,
                 (sender, e) => this.ZoomReset(),
-                (sender, e) => e.CanExecute = this.CanZoomReset()));
+                (sender, e) => e.CanExecute = this.CanZoomReset));
             bindings.Add(new CommandBinding(
                 Commands.Folding,
                 (sender, e) => this.Folding(),
-                (sender, e) => e.CanExecute = this.CanFolding()));
+                (sender, e) => e.CanExecute = this.CanFolding));
             bindings.Add(new CommandBinding(
                 Commands.Unfolding,
                 (sender, e) => this.Unfolding(),
-                (sender, e) => e.CanExecute = this.CanUnfolding()));
+                (sender, e) => e.CanExecute = this.CanUnfolding));
             bindings.Add(new CommandBinding(
                 Commands.Completion,
-                (sender, e) => this.ShowCompletionList(),
-                (sender, e) => e.CanExecute = this.CanShowCompletionList()));
+                (sender, e) => this.ShowCompletionWindow(),
+                (sender, e) => e.CanExecute = this.CanShowCompletionWindow));
             bindings.Add(new CommandBinding(
                 Commands.ConvertToNarrow,
                 (sender, e) => InvokeTransformSelectedSegments(
@@ -225,7 +360,9 @@ namespace MyPad.Views.Controls
                                     ),
                                     OffsetChangeMappingType.CharacterReplace)
                         ),
-                        sender, e, 1,
+                        sender,
+                        e,
+                        1,
                     }
                 )
             ));
@@ -244,21 +381,24 @@ namespace MyPad.Views.Controls
                                 ),
                                 OffsetChangeMappingType.CharacterReplace)
                         ),
-                        sender, e, 1,
+                        sender,
+                        e,
+                        1,
                     }
                 )
             ));
 
-            this._updateFoldingsTimer = new();
-            this._updateFoldingsTimer.Tick += this.FoldingsTimer_Tick;
+            this._refreshFoldingsTimer = new();
+            this._refreshFoldingsTimer.Tick += this.RefreshFoldingsTimer_Tick;
 
             this.ChangeMarkerMargin = new();
 
-            // NOTE: SearchPanel の依存関係プロパティ MarkerBrush の設定
-            // SearchPanel は Install メソッドで自身のインスタンスを作成後、
-            // SearchResultBackgroundRenderer のインスタンスを作成して内部に保持している。
-            // MarkerBrush の実体は上記レンダラであり、スタイルで上書きすると例外になる。
+            // INFO: Style で MarkerCornerRadius, MarkerBrush を設定できない問題への対応
+            // MarkerBrush や MarkerCornerRadius は SearchPanel.SearchResultBackgroundRenderer のプロパティに設定される。
+            // SearchResultBackgroundRenderer は Install メソッドの実行時に初期化されるため、
+            // Style 等で設定するとインスタンスが存在せず、Null 参照の例外になる。
             this.SearchPanel = SearchPanel.Install(this);
+            this.SearchPanel.MarkerCornerRadius = 0;
             this.SearchPanel.MarkerBrush = SEARCH_RESULTS_MARKER_BRUSH;
             this.SearchPanel.CommandBindings.Add(new CommandBinding(
                 ApplicationCommands.Find,
@@ -269,38 +409,48 @@ namespace MyPad.Views.Controls
             this.SearchPanel.CommandBindings.Add(new CommandBinding(
                 Commands.ReplaceNext,
                 (sender, e) => this.ReplaceNext(),
-                (sender, e) => e.CanExecute = this.CanReplaceNext()));
+                (sender, e) => e.CanExecute = this.CanReplaceNext));
             this.SearchPanel.CommandBindings.Add(new CommandBinding(
                 Commands.ReplaceAll,
                 (sender, e) => this.ReplaceAll(),
-                (sender, e) => e.CanExecute = this.CanReplaceAll()));
+                (sender, e) => e.CanExecute = this.CanReplaceAll));
 
-            this.Caret.PositionChanged += this.Caret_PositionChanged;
-            this.SearchPanel.Loaded += this.SearchPanel_Loaded;
             this.Loaded += this.TextArea_Loaded;
+            this.SearchPanel.Loaded += this.SearchPanel_Loaded;
+            this.Caret.PositionChanged += this.Caret_PositionChanged;
             DataObject.AddSettingDataHandler(this, this.OnAddSettingData);
         }
 
+        /// <summary>
+        /// このインスタンスが破棄されるときに呼び出されます。
+        /// </summary>
         ~TextArea()
         {
             this.Dispose(false);
         }
 
+        /// <summary>
+        /// このインスタンスが保持するリソースを解放します。
+        /// </summary>
         public void Dispose()
         {
             this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// このインスタンスが保持するリソースを解放します。
+        /// </summary>
+        /// <param name="disposing">マネージリソースを破棄するかどうかを示す値</param>
         protected virtual void Dispose(bool disposing)
         {
-            this._updateFoldingsTimer.Tick -= this.FoldingsTimer_Tick;
-            this._updateFoldingsTimer.Stop();
+            this._refreshFoldingsTimer.Tick -= this.RefreshFoldingsTimer_Tick;
+            this._refreshFoldingsTimer.Stop();
 
-            this.Caret.PositionChanged -= this.Caret_PositionChanged;
+            this.Loaded -= this.TextArea_Loaded;
             this.SearchPanel.Loaded -= this.SearchPanel_Loaded;
+            this.Caret.PositionChanged -= this.Caret_PositionChanged;
             DataObject.RemoveSettingDataHandler(this, this.OnAddSettingData);
-
 
             if (this.FoldingManager != null)
             {
@@ -314,18 +464,20 @@ namespace MyPad.Views.Controls
             this.TextView.Dispose();
         }
 
+        /// <summary>
+        /// 可視範囲を再描画します。
+        /// </summary>
         public void Redraw()
         {
             this.TextView.Redraw();
         }
 
-        public bool CanZoomIn()
-        {
-            return this.FontSize < MAX_FONT_SIZE;
-        }
+        /// <summary>
+        /// 拡大率を一段階上げます。
+        /// </summary>
         public void ZoomIn()
         {
-            if (this.CanZoomIn() == false)
+            if (this.CanZoomIn == false)
                 return;
 
             // フォントサイズの変更によるスクロール位置をずれを補正する
@@ -335,14 +487,12 @@ namespace MyPad.Views.Controls
             ((IScrollInfo)this).SetVerticalOffset(lineOffset * this.TextView.DefaultLineHeight);
         }
 
-        public bool CanZoomOut()
-        {
-            return MIN_FONT_SIZE < this.FontSize;
-        }
-
+        /// <summary>
+        /// 拡大率を一段階下げます。
+        /// </summary>
         public void ZoomOut()
         {
-            if (this.CanZoomOut() == false)
+            if (this.CanZoomOut == false)
                 return;
 
             // フォントサイズの変更によるスクロール位置をずれを補正する
@@ -352,14 +502,12 @@ namespace MyPad.Views.Controls
             ((IScrollInfo)this).SetVerticalOffset(lineOffset * this.TextView.DefaultLineHeight);
         }
 
-        public bool CanZoomReset()
-        {
-            return this.FontSize != this.ActualFontSize;
-        }
-
+        /// <summary>
+        /// 拡大率を既定値に戻します。
+        /// </summary>
         public void ZoomReset()
         {
-            if (this.CanZoomReset() == false)
+            if (this.CanZoomReset == false)
                 return;
 
             // フォントサイズの変更によるスクロール位置をずれを補正する
@@ -368,11 +516,18 @@ namespace MyPad.Views.Controls
             ((IScrollInfo)this).SetVerticalOffset(lineOffset * this.TextView.DefaultLineHeight);
         }
 
+        /// <summary>
+        /// 検索パネルを表示します。
+        /// </summary>
         public void OpenSearchPanel()
         {
             this.OpenSearchPanel(false);
         }
 
+        /// <summary>
+        /// 検索パネルを表示します。
+        /// </summary>
+        /// <param name="replaceAreaExpanded">置換エリアを展開するかどうかを示す値</param>
         public void OpenSearchPanel(bool replaceAreaExpanded)
         {
             SetReplaceAreaExpanded(this.SearchPanel, replaceAreaExpanded);
@@ -382,26 +537,30 @@ namespace MyPad.Views.Controls
             this.Dispatcher.InvokeAsync(() => this.SearchPanel.Reactivate());
         }
 
+        /// <summary>
+        /// キャレットを次に出現する検索語句の位置に移動させます。
+        /// </summary>
         public void FindNext()
         {
             this.SearchPanel.Open();
             this.SearchPanel.FindNext();
         }
 
+        /// <summary>
+        /// キャレットを一つ前に出現する検索語句の位置に移動させます。
+        /// </summary>
         public void FindPrevious()
         {
             this.SearchPanel.Open();
             this.SearchPanel.FindPrevious();
         }
 
-        public bool CanReplaceNext()
-        {
-            return !this.IsReadOnly;
-        }
-
+        /// <summary>
+        /// 次に出現する検索語句を置換します。
+        /// </summary>
         public void ReplaceNext()
         {
-            if (this.CanReplaceNext() == false)
+            if (this.CanReplaceNext == false)
                 return;
 
             var text = GetReplacePattern(this.SearchPanel) ?? string.Empty;
@@ -412,14 +571,12 @@ namespace MyPad.Views.Controls
             this.Selection.ReplaceSelectionWithText(text);
         }
 
-        public bool CanReplaceAll()
-        {
-            return !this.IsReadOnly;
-        }
-
+        /// <summary>
+        /// 検索語句をすべて置換します。
+        /// </summary>
         public void ReplaceAll()
         {
-            if (this.CanReplaceAll() == false)
+            if (this.CanReplaceAll == false)
                 return;
 
             var text = GetReplacePattern(this.SearchPanel) ?? string.Empty;
@@ -432,18 +589,12 @@ namespace MyPad.Views.Controls
             }
         }
 
-        public bool CanFolding()
-        {
-            if (this.EnableFoldings == false || this.FoldingManager == null)
-                return false;
-
-            var section = this.GetFoldingSection(this.Caret);
-            return section?.IsFolded == false;
-        }
-
+        /// <summary>
+        /// キャレット位置を含んだ最小の範囲でテキストを折り畳みます。
+        /// </summary>
         public void Folding()
         {
-            if (this.CanFolding() == false)
+            if (this.CanFolding == false)
                 return;
 
             var section = this.GetFoldingSection(this.Caret);
@@ -457,18 +608,12 @@ namespace MyPad.Views.Controls
                 ((IScrollInfo)this).SetVerticalOffset(lineOffset);
         }
 
-        public bool CanUnfolding()
-        {
-            if (this.EnableFoldings == false || this.FoldingManager == null)
-                return false;
-
-            var section = this.GetFoldingSection(this.Caret);
-            return section?.IsFolded == true;
-        }
-
+        /// <summary>
+        /// キャレット位置にある折り畳まれたテキストを展開します。
+        /// </summary>
         public void Unfolding()
         {
-            if (this.CanUnfolding() == false)
+            if (this.CanUnfolding == false)
                 return;
 
             var section = this.GetFoldingSection(this.Caret);
@@ -482,18 +627,12 @@ namespace MyPad.Views.Controls
                 ((IScrollInfo)this).SetVerticalOffset(lineOffset);
         }
 
-        public bool CanShowCompletionList()
+        /// <summary>
+        /// 入力補完ウィンドウを表示します。
+        /// </summary>
+        public void ShowCompletionWindow()
         {
-            if (this.IsReadOnly)
-                return false;
-            if (this.CompletionWindow != null || this._completionData.Any() == false)
-                return false;
-            return true;
-        }
-
-        public void ShowCompletionList()
-        {
-            if (this.CanShowCompletionList() == false)
+            if (this.CanShowCompletionWindow == false)
                 return;
 
             this.CompletionWindow = new(this, this._completionData);
@@ -501,6 +640,10 @@ namespace MyPad.Views.Controls
             this.CompletionWindow.Show();
         }
 
+        /// <summary>
+        /// シンタックス定義を適用します。
+        /// </summary>
+        /// <param name="syntaxDefinition">シンタックス定義</param>
         public void ApplySyntaxDefinition(XshdSyntaxDefinition syntaxDefinition)
         {
             // 入力補完候補を構築する
@@ -535,9 +678,12 @@ namespace MyPad.Views.Controls
 
             // ビューを更新する
             this.RefreshFoldings();
-            this.RefreshBracketHighlight();
+            this.HighlightPairBrackets();
         }
 
+        /// <summary>
+        /// 変更マーカーの状態をリフレッシュします。
+        /// </summary>
         public void RefreshChangeMarker()
         {
             if (this.ShowChangeMarker == false)
@@ -554,6 +700,9 @@ namespace MyPad.Views.Controls
             this.LeftMargins.Insert(index, this.ChangeMarkerMargin);
         }
 
+        /// <summary>
+        /// フォールディングの状態をリフレッシュします。
+        /// </summary>
         public void RefreshFoldings()
         {
             if (this.EnableFoldings == false || this.FoldingStrategy == null)
@@ -571,7 +720,10 @@ namespace MyPad.Views.Controls
             this.FoldingStrategy?.UpdateFoldings(this.FoldingManager, this.Document);
         }
 
-        public void RefreshBracketHighlight()
+        /// <summary>
+        /// 対となるブラケットをハイライトします。
+        /// </summary>
+        public void HighlightPairBrackets()
         {
             if (this.EnableFoldings == false || this.FoldingStrategy == null)
             {
@@ -579,53 +731,135 @@ namespace MyPad.Views.Controls
                 return;
             }
 
-            var section = this.GetFoldingSection(this.Caret);
+            var section = this.GetFoldingSection(this.Caret, true);
             this.TextView.HighlightPairBrackets(section);
         }
 
-        public FoldingSection GetFoldingSection(Caret caret)
+        /// <summary>
+        /// キャレット位置を含んだ最小の折り畳み範囲を取得します。
+        /// </summary>
+        /// <param name="caret">キャレット</param>
+        /// <param name="strict">キャレット位置がブラケット上であるかどうかで判定する場合は <see cref="true"/> を指定する</param>
+        /// <returns>セクション</returns>
+        public FoldingSection GetFoldingSection(Caret caret, bool strict = false)
         {
+            Func<FoldingSection, bool> whereFunc = strict ?
+                (s) => (s.StartOffset <= caret.Offset && caret.Offset <= s.StartOffset + 1) ||
+                       (s.EndOffset - 1 <= caret.Offset && caret.Offset <= s.EndOffset) :
+                (s) => (this.Document.GetLineByOffset(s.StartOffset).LineNumber <= caret.Line) &&
+                       (caret.Line <= this.Document.GetLineByOffset(s.EndOffset).LineNumber);
+
             return this.FoldingManager?.AllFoldings
-                .Where(s =>
-                {
-                    var startLine = this.Document.GetLineByOffset(s.StartOffset);
-                    var endLine = this.Document.GetLineByOffset(s.EndOffset);
-                    return startLine.LineNumber <= caret.Line && caret.Line <= endLine.LineNumber;
-                })
+                .Where(whereFunc)
                 .OrderBy(s => s.Length)
                 .FirstOrDefault();
         }
 
+        /// <summary>
+        /// 選択状態の文字列に対して指定の編集処理を実行します。
+        /// (<see cref="EditingCommandHandler"/> の private メソッド TransformSelectedSegments を呼び出します。)
+        /// </summary>
+        /// <param name="parameters">TransformSelectedSegments に渡される引数のリスト</param>
+        /// <remarks>
+        /// <paramref name="parameters"/> は下記の順に指定します。
+        /// <para>[0] <see cref="Action"/>&lt;<see cref="TextArea"/>, <see cref="ISegment"/>&gt; transformSegment</para>
+        /// <para>[1] <see cref="object"/> target</para>
+        /// <para>[2] <see cref="ExecutedRoutedEventArgs"/> args</para>
+        /// <para>[3] <see cref="int"/> defaultSegmentType (0: None, 1: WholeDocument, 2: CurrentLine)</para>
+        /// </remarks>
         private static void InvokeTransformSelectedSegments(object[] parameters)
         {
-            // HACK: EditingCommandHandler.TransformSelectedSegments メソッドで選択テキストを編集
-            // private クラスの静的メソッドを呼び出している。仕様が変更される可能性もあるため危険。
             typeof(ICSharpCode.AvalonEdit.Editing.TextArea).Assembly
                 ?.GetType("ICSharpCode.AvalonEdit.Editing.EditingCommandHandler")
                 ?.GetMethod("TransformSelectedSegments", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.InvokeMethod)
                 ?.Invoke(null, parameters);
         }
 
-        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        /// <summary>
+        /// <see cref="TextArea"/> がロードされたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
+        private void TextArea_Loaded(object sender, RoutedEventArgs e)
         {
-            switch (e.Property.Name)
-            {
-                case nameof(this.Document):
-                    if (e.OldValue != null)
-                        ((TextDocument)e.OldValue).FileNameChanged -= this.TextDocument_FileNameChanged;
-                    if (e.NewValue != null)
-                        ((TextDocument)e.NewValue).FileNameChanged += this.TextDocument_FileNameChanged;
-                    break;
-                case nameof(this.ActualFontSize):
-                    this.ZoomReset();
-                    break;
-                case nameof(this.OverstrikeMode):
-                    this.OverstrikeModeChanged?.Invoke(this, EventArgs.Empty);
-                    break;
-            }
-            base.OnPropertyChanged(e);
+            this.RefreshChangeMarker();
         }
 
+        /// <summary>
+        /// <see cref="SearchPanel"/> がロードされたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
+        private void SearchPanel_Loaded(object sender, RoutedEventArgs e)
+        {
+            (sender as SearchPanel)?.Reactivate();
+        }
+
+        /// <summary>
+        /// 入力補完ウィンドウが閉じられたあとに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
+        private void CompletionWindow_Closed(object sender, EventArgs e)
+        {
+            this.CompletionWindow.Closed -= this.CompletionWindow_Closed;
+            this.CompletionWindow = null;
+        }
+
+        /// <summary>
+        /// キャレットの位置が変更されたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
+        private void Caret_PositionChanged(object sender, EventArgs e)
+        {
+            // フォールディングの再解析の連発を避けるため一定時間待つ
+            this._refreshFoldingsTimer.Stop();
+            this._refreshFoldingsTimer.Interval = TimeSpan.FromSeconds(UPDATE_FOLDINGS_INTERVAL);
+            this._refreshFoldingsTimer.Start();
+
+            this.HighlightPairBrackets();
+        }
+
+        /// <summary>
+        /// ドキュメントのファイル名が変更されたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
+        private void Document_FileNameChanged(object sender, EventArgs e)
+        {
+            this.Caret.Line = 1;
+            this.Caret.Column = 1;
+        }
+
+        /// <summary>
+        /// ホールディングのリフレッシュタイマーのインターバルが経過したときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
+        private void RefreshFoldingsTimer_Tick(object sender, EventArgs e)
+        {
+            this._refreshFoldingsTimer.Stop();
+            this.RefreshFoldings();
+            this.HighlightPairBrackets();
+        }
+
+        /// <summary>
+        /// クリップボードにデータが追加されるときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
+        private void OnAddSettingData(object sender, DataObjectSettingDataEventArgs e)
+        {
+            if (this.CutCopyHtmlFormat || e.Format != DataFormats.Html)
+                return;
+            e.CancelCommand();
+        }
+
+        /// <summary>
+        /// キーが入力さたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="e">イベントの情報</param>
         protected override void OnKeyDown(KeyEventArgs e)
         {
             switch (e.Key)
@@ -640,17 +874,25 @@ namespace MyPad.Views.Controls
             base.OnKeyDown(e);
         }
 
+        /// <summary>
+        /// テキストが入力されたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="e">イベントの情報</param>
         protected override void OnTextEntered(TextCompositionEventArgs e)
         {
             if (this.EnableAutoCompletion &&
                 e.Text.Length == 1 &&
                 TextUtilities.GetCharacterClass(e.Text.First()) == CharacterClass.IdentifierPart)
             {
-                this.ShowCompletionList();
+                this.ShowCompletionWindow();
             }
             base.OnTextEntered(e);
         }
 
+        /// <summary>
+        /// マウスホイールの移動が処理される前に行う処理を定義します。
+        /// </summary>
+        /// <param name="e">イベントの情報</param>
         protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
         {
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) &&
@@ -666,52 +908,33 @@ namespace MyPad.Views.Controls
             base.OnPreviewMouseWheel(e);
         }
 
-        private void OnAddSettingData(object sender, DataObjectSettingDataEventArgs e)
+        /// <summary>
+        /// 依存関係プロパティが変更されたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="e">イベントの情報</param>
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
-            if (this.CutCopyHtmlFormat || e.Format != DataFormats.Html)
-                return;
-            e.CancelCommand();
+            switch (e.Property.Name)
+            {
+                case nameof(this.Document):
+                    if (e.OldValue != null)
+                        ((TextDocument)e.OldValue).FileNameChanged -= this.Document_FileNameChanged;
+                    if (e.NewValue != null)
+                        ((TextDocument)e.NewValue).FileNameChanged += this.Document_FileNameChanged;
+                    break;
+                case nameof(this.ActualFontSize):
+                    this.ZoomReset();
+                    break;
+                case nameof(this.OverstrikeMode):
+                    this.OverstrikeModeChanged?.Invoke(this, EventArgs.Empty);
+                    break;
+            }
+            base.OnPropertyChanged(e);
         }
 
-        private void CompletionWindow_Closed(object sender, EventArgs e)
-        {
-            this.CompletionWindow.Closed -= this.CompletionWindow_Closed;
-            this.CompletionWindow = null;
-        }
-
-        private void TextDocument_FileNameChanged(object sender, EventArgs e)
-        {
-            this.Caret.Line = 1;
-            this.Caret.Column = 1;
-        }
-
-        private void FoldingsTimer_Tick(object sender, EventArgs e)
-        {
-            this._updateFoldingsTimer.Stop();
-            this.RefreshFoldings();
-            this.RefreshBracketHighlight();
-        }
-
-        private void Caret_PositionChanged(object sender, EventArgs e)
-        {
-            // フォールディングの再解析の連発を避けるため一定時間待つ
-            this._updateFoldingsTimer.Stop();
-            this._updateFoldingsTimer.Interval = TimeSpan.FromSeconds(UPDATE_FOLDINGS_INTERVAL);
-            this._updateFoldingsTimer.Start();
-
-            this.RefreshBracketHighlight();
-        }
-
-        private void SearchPanel_Loaded(object sender, RoutedEventArgs e)
-        {
-            (sender as SearchPanel)?.Reactivate();
-        }
-
-        private void TextArea_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.RefreshChangeMarker();
-        }
-
+        /// <summary>
+        /// <see cref="TextArea"/> 用のコマンドを提供します。
+        /// </summary>
         public static class Commands
         {
             private static ICommand CreateRoutedCommand(InputGestureCollection inputGestures = null, [CallerMemberName] string commandName = "")

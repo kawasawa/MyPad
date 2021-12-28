@@ -15,6 +15,9 @@ using Unity;
 
 namespace MyPad.ViewModels
 {
+    /// <summary>
+    /// アプリケーションのメインプロセスを制御する ViewModel を表します。
+    /// </summary>
     public class WorkspaceViewModel : ViewModelBase
     {
         #region インジェクション
@@ -51,12 +54,17 @@ namespace MyPad.ViewModels
 
         private PerformanceCounter ProcessorTimeCounter { get; }
         private PerformanceCounter WorkingSetPrivateCounter { get; }
-        private DispatcherTimer UpdatePerformanceInfoTimer { get; }
+        private DispatcherTimer PerformanceCheckTimer { get; }
 
+        public ReactiveCommand NewWindowCommand { get; }
         public ReactiveCommand ExitApplicationCommand { get; }
 
         #endregion
 
+        /// <summary>
+        /// このクラスの新しいインスタンスを生成します。
+        /// </summary>
+        /// <param name="eventAggregator">イベントアグリゲーター</param>
         [InjectionConstructor]
         [LogInterceptor]
         public WorkspaceViewModel(IEventAggregator eventAggregator)
@@ -67,27 +75,40 @@ namespace MyPad.ViewModels
             this.ProcessorTimeCounter = new PerformanceCounter("Process", "% Processor Time", processName, true).AddTo(this.CompositeDisposable);
             this.WorkingSetPrivateCounter = new PerformanceCounter("Process", "Working Set - Private", processName, true).AddTo(this.CompositeDisposable);
 
-            this.UpdatePerformanceInfoTimer = new();
-            this.UpdatePerformanceInfoTimer.Tick += this.UpdatePerformanceInfoTimer_Tick;
-            this.UpdatePerformanceInfoTimer.Interval = TimeSpan.FromMilliseconds(AppSettingsReader.PerformanceCheckInterval);
-            this.UpdatePerformanceInfoTimer.Start();
+            this.PerformanceCheckTimer = new();
+            this.PerformanceCheckTimer.Tick += this.PerformanceCheckTimer_Tick;
+            this.PerformanceCheckTimer.Interval = TimeSpan.FromMilliseconds(AppSettingsReader.PerformanceCheckInterval);
+            this.PerformanceCheckTimer.Start();
 
             async void exitApplication() => await this.ExitApplication();
             this.EventAggregator.GetEvent<ExitApplicationEvent>().Subscribe(exitApplication);
+
+            this.NewWindowCommand = new ReactiveCommand()
+                .WithSubscribe(() => this.EventAggregator.GetEvent<CreateWindowEvent>().Publish())
+                .AddTo(this.CompositeDisposable);
 
             this.ExitApplicationCommand = new ReactiveCommand()
                 .WithSubscribe(() => exitApplication())
                 .AddTo(this.CompositeDisposable);
         }
 
+        /// <summary>
+        /// このインスタンスが保持するリソースを解放します。
+        /// </summary>
+        /// <param name="disposing">マネージリソースを破棄するかどうかを示す値</param>
         [LogInterceptor]
         protected override void Dispose(bool disposing)
         {
-            this.UpdatePerformanceInfoTimer.Tick -= this.UpdatePerformanceInfoTimer_Tick;
-            this.UpdatePerformanceInfoTimer.Stop();
+            this.PerformanceCheckTimer.Tick -= this.PerformanceCheckTimer_Tick;
+            this.PerformanceCheckTimer.Stop();
             base.Dispose(disposing);
         }
 
+        /// <summary>
+        /// アプリケーションの終了を試行します。
+        /// 内包するすべての <see cref="MainWindowViewModel"/> が終了要求に応じた場合、アプリケーションは終了します。
+        /// </summary>
+        /// <returns>非同期タスク</returns>
         [LogInterceptor]
         private async Task ExitApplication()
         {
@@ -97,18 +118,38 @@ namespace MyPad.ViewModels
             {
                 var viewModel = viewModels.ElementAt(i);
                 viewModel.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
-                if (await viewModel.InvokeExit() == false)
+                if (await viewModel.TryClose() == false)
                     return;
             }
             this.Dispose();
         }
 
-        // NOTE: このメソッドは頻発するためトレースしない
-        private async void UpdatePerformanceInfoTimer_Tick(object sender, EventArgs e)
+        /// <summary>
+        /// パフォーマンス計測タイマーに割り込んで処理を実行させます。
+        /// </summary>
+        /// <param name="func">割り込み処理</param>
+        /// <returns>非同期タスク</returns>
+        [LogInterceptorIgnore]
+        private async Task Interrupt(Func<Task> func)
+        {
+            this.PerformanceCheckTimer.Stop();
+            await func.Invoke();
+            this.PerformanceCheckTimer.Interval = TimeSpan.FromMilliseconds(AppSettingsReader.PerformanceCheckInterval);
+            this.PerformanceCheckTimer.Start();
+        }
+
+        /// <summary>
+        /// パフォーマンス再計測タイマーのインターバルが経過したときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
+        [LogInterceptorIgnore]
+        private async void PerformanceCheckTimer_Tick(object sender, EventArgs e)
         {
             await this.Interrupt(async () =>
             {
-                await Task.Run(() => {
+                await Task.Run(() =>
+                {
                     float? processorTime = null;
                     float? workingSetPrivate = null;
                     try
@@ -127,18 +168,9 @@ namespace MyPad.ViewModels
                     {
                         this.Logger.Log($"パフォーマンスカウンタの値を取得できませんでした。: Category={this.WorkingSetPrivateCounter.CategoryName}, Counter={this.WorkingSetPrivateCounter.CounterName}, Instance={this.WorkingSetPrivateCounter.InstanceName}, Machine={this.WorkingSetPrivateCounter.MachineName}", Category.Warn);
                     }
-                    this.EventAggregator.GetEvent<UpdatedPerformanceInfoEvent>().Publish((processorTime, workingSetPrivate));
+                    this.EventAggregator.GetEvent<PerformanceCheckedEvent>().Publish((processorTime, workingSetPrivate));
                 });
             });
-        }
-
-        // NOTE: このメソッドは頻発するためトレースしない
-        private async Task Interrupt(Func<Task> func)
-        {
-            this.UpdatePerformanceInfoTimer.Stop();
-            await func.Invoke();
-            this.UpdatePerformanceInfoTimer.Interval = TimeSpan.FromMilliseconds(AppSettingsReader.PerformanceCheckInterval);
-            this.UpdatePerformanceInfoTimer.Start();
         }
     }
 }

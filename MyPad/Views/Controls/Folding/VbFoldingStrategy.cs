@@ -10,8 +10,16 @@ namespace MyPad.Views.Controls.Folding
     /// </summary>
     public class VbFoldingStrategy : FoldingStrategyBase
     {
+        /// <summary>
+        /// フォールディングの基準となるキーワード
+        /// </summary>
         public IEnumerable<string> Keywords { get; set; } = new[] { "namespace", "interface", "class", "structure", "module", "enum", "function", "sub" };
 
+        /// <summary>
+        /// フォールディングに必要な情報を構築します。
+        /// </summary>
+        /// <param name="document">ドキュメント</param>
+        /// <returns>フォールディングに必要な情報</returns>
         public override IEnumerable<NewFolding> CreateFoldings(TextDocument document)
         {
             var newFoldings = new List<NewFolding>();

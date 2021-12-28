@@ -6,6 +6,9 @@ using Unity;
 
 namespace MyPad.ViewModels.Dialogs
 {
+    /// <summary>
+    /// <see cref="Views.Dialogs.ChangeLineDialog"/> に対応する ViewModel を表します。
+    /// </summary>
     public class ChangeLineDialogViewModel : DialogViewModelBase
     {
         [Required]
@@ -14,6 +17,9 @@ namespace MyPad.ViewModels.Dialogs
         public ReactiveCommand OKCommand { get; }
         public ReactiveCommand CancelCommand { get; }
 
+        /// <summary>
+        /// このクラスの新しいインスタンスを生成します。
+        /// </summary>
         [InjectionConstructor]
         [LogInterceptor]
         public ChangeLineDialogViewModel()
@@ -27,7 +33,7 @@ namespace MyPad.ViewModels.Dialogs
             this.OKCommand = this.Line.ObserveHasErrors.Inverse()
                 .ToReactiveCommand()
                 .WithSubscribe(() => this.OnRequestClose(
-                    new DialogResult(ButtonResult.OK, new DialogParameters { 
+                    new DialogResult(ButtonResult.OK, new DialogParameters {
                         { nameof(this.Line), this.Line.Value },
                     })))
                 .AddTo(this.CompositeDisposable);
@@ -37,6 +43,10 @@ namespace MyPad.ViewModels.Dialogs
                 .AddTo(this.CompositeDisposable);
         }
 
+        /// <summary>
+        /// ダイアログが表示されたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="parameters">ダイアログのパラメータ</param>
         [LogInterceptor]
         public override void OnDialogOpened(IDialogParameters parameters)
         {

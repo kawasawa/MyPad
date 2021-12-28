@@ -81,10 +81,10 @@ namespace MyPad.Views.Controls.ChangeMarker
 
         public class Edit
         {
-            public int BeginA { get; private set; }
-            public int EndA { get; private set; }
-            public int BeginB { get; private set; }
-            public int EndB { get; private set; }
+            public int BeginA { get; }
+            public int EndA { get; }
+            public int BeginB { get; }
+            public int EndB { get; }
 
             public ChangeKind Change
             {
@@ -96,7 +96,6 @@ namespace MyPad.Views.Controls.ChangeMarker
                         return ChangeKind.Added;
                     if (this.BeginA < this.EndA && this.BeginB == this.EndB)
                         return ChangeKind.Deleted;
-
                     return ChangeKind.Modified;
                 }
             }
@@ -132,8 +131,8 @@ namespace MyPad.Views.Controls.ChangeMarker
         {
             public Sequence SequenceA { get; }
             public Sequence SequenceB { get; }
-            public EditPath Forward { get; private set; }
-            public EditPath Backward { get; private set; }
+            public EditPath Forward { get; }
+            public EditPath Backward { get; }
             public int BeginA { get; private set; }
             public int EndA { get; private set; }
             public int BeginB { get; private set; }
@@ -219,7 +218,7 @@ namespace MyPad.Views.Controls.ChangeMarker
                     this._xList.Clear();
                     this._xList.Add(x);
                     this._snakeList.Clear();
-                    this._snakeList.Add(this.NewSnake(k, x));
+                    this._snakeList.Add(CreateNewSnake(k, x));
                 }
 
                 public bool Calculate(int d)
@@ -247,7 +246,7 @@ namespace MyPad.Views.Controls.ChangeMarker
                             var i = this.GetIndex(d - 1, k - 1);
                             left = this._xList[i];
                             var x = this.Snake(k - 1, left);
-                            leftSnake = left == x ? this._snakeList[i] : this.NewSnake(k - 1, x);
+                            leftSnake = left == x ? this._snakeList[i] : CreateNewSnake(k - 1, x);
                             if (this.Meets(d, k - 1, x, leftSnake))
                                 return true;
                             left = this.GetLeft(x);
@@ -257,7 +256,7 @@ namespace MyPad.Views.Controls.ChangeMarker
                             var i = this.GetIndex(d - 1, k + 1);
                             right = this._xList[i];
                             var x = this.Snake(k + 1, right);
-                            rightSnake = right == x ? this._snakeList[i] : this.NewSnake(k + 1, x);
+                            rightSnake = right == x ? this._snakeList[i] : CreateNewSnake(k + 1, x);
                             if (this.Meets(d, k + 1, x, rightSnake))
                                 return true;
                             right = this.GetRight(x);
@@ -293,7 +292,7 @@ namespace MyPad.Views.Controls.ChangeMarker
                 private int GetIndex(int d, int k)
                     => (d + k - this.MiddleK) / 2;
 
-                private long NewSnake(int k, int x)
+                private static long CreateNewSnake(int k, int x)
                     => ((long)x << 32) | (long)(k + x);
 
                 protected void MakeEdit(long snake1, long snake2)

@@ -15,6 +15,9 @@ using Unity;
 
 namespace MyPad.ViewModels.Regions
 {
+    /// <summary>
+    /// <see cref="Views.Regions.OptionContentView"/> に対応する ViewModel を表します。
+    /// </summary>
     public class OptionContentViewModel : ViewModelBase
     {
         [Dependency]
@@ -32,34 +35,37 @@ namespace MyPad.ViewModels.Regions
         [Dependency]
         public SyntaxService SyntaxService { get; set; }
 
-        public ReactiveProperty<bool> IsWorking { get; }
+        public ReactiveProperty<bool> IsPending { get; }
 
         public ReactiveCommand<object> SelectDirectoryCommand { get; }
         public ReactiveCommand<object> RemoveDirectoryCommand { get; }
-        public ReactiveCommand RefreshExplorerCommand { get; }
+        public ReactiveCommand RecreateExplorerCommand { get; }
         public ReactiveCommand InitializeSyntaxCommand { get; }
         public ReactiveCommand ImportSettingsFileCommand { get; }
         public ReactiveCommand ExportSettingsFileCommand { get; }
         public ReactiveCommand InitializeSettingsCommand { get; }
 
+        /// <summary>
+        /// このクラスの新しいインスタンスを生成します。
+        /// </summary>
         [InjectionConstructor]
         [LogInterceptor]
         public OptionContentViewModel()
         {
-            this.IsWorking = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
+            this.IsPending = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
 
-            this.SelectDirectoryCommand = this.IsWorking.Inverse().ToReactiveCommand<object>()
+            this.SelectDirectoryCommand = this.IsPending.Inverse().ToReactiveCommand<object>()
                 .WithSubscribe(args =>
                 {
                     var parameter = new FolderBrowserDialogParameters();
                     var info = args as ToolSettings.PathInfo;
                     if (string.IsNullOrEmpty(info?.Path) == false)
                         parameter.InitialDirectory = info.Path;
-                    
+
                     var ready = this.CommonDialogService.ShowDialog(parameter);
                     if (ready == false)
                         return;
-                    
+
                     if (info != null)
                         info.Path = parameter.FileName;
                     else
@@ -67,7 +73,7 @@ namespace MyPad.ViewModels.Regions
                 })
                 .AddTo(this.CompositeDisposable);
 
-            this.RemoveDirectoryCommand = this.IsWorking.Inverse().ToReactiveCommand<object>()
+            this.RemoveDirectoryCommand = this.IsPending.Inverse().ToReactiveCommand<object>()
                 .WithSubscribe(args =>
                 {
                     var info = (ToolSettings.PathInfo)args;
@@ -75,19 +81,19 @@ namespace MyPad.ViewModels.Regions
                 })
                 .AddTo(this.CompositeDisposable);
 
-            this.RefreshExplorerCommand = this.IsWorking.Inverse().ToReactiveCommand()
-                .WithSubscribe(() => this.EventAggregator?.GetEvent<RefreshExplorerEvent>().Publish())
+            this.RecreateExplorerCommand = this.IsPending.Inverse().ToReactiveCommand()
+                .WithSubscribe(() => this.EventAggregator?.GetEvent<RecreateExplorerEvent>().Publish())
                 .AddTo(this.CompositeDisposable);
 
-            this.InitializeSyntaxCommand = this.IsWorking.Inverse().ToReactiveCommand()
+            this.InitializeSyntaxCommand = this.IsPending.Inverse().ToReactiveCommand()
                 .WithSubscribe(() =>
                 {
                     if (this.DialogService.Confirm(Resources.Message_ConfirmInitializeSyntax))
-                        this.SyntaxService.Initialize(true);
+                        this.SyntaxService.CreateDefinitionFiles(true);
                 })
                 .AddTo(this.CompositeDisposable);
 
-            this.ImportSettingsFileCommand = this.IsWorking.Inverse().ToReactiveCommand()
+            this.ImportSettingsFileCommand = this.IsPending.Inverse().ToReactiveCommand()
                 .WithSubscribe(() =>
                 {
                     var fileName = Path.GetFileNameWithoutExtension(this.Settings.FilePath);
@@ -106,7 +112,7 @@ namespace MyPad.ViewModels.Regions
                 })
                 .AddTo(this.CompositeDisposable);
 
-            this.ExportSettingsFileCommand = this.IsWorking.Inverse().ToReactiveCommand()
+            this.ExportSettingsFileCommand = this.IsPending.Inverse().ToReactiveCommand()
                 .WithSubscribe(() =>
                 {
                     var fileName = Path.GetFileNameWithoutExtension(this.Settings.FilePath);
@@ -125,7 +131,7 @@ namespace MyPad.ViewModels.Regions
                 })
                 .AddTo(this.CompositeDisposable);
 
-            this.InitializeSettingsCommand = this.IsWorking.Inverse().ToReactiveCommand()
+            this.InitializeSettingsCommand = this.IsPending.Inverse().ToReactiveCommand()
                 .WithSubscribe(() =>
                 {
                     if (this.DialogService.Confirm(Resources.Message_ConfirmInitializeSettings))
@@ -134,12 +140,17 @@ namespace MyPad.ViewModels.Regions
                 .AddTo(this.CompositeDisposable);
         }
 
+        /// <summary>
+        /// 指定されたパスのファイルを読み込み、設定情報をインポートします。
+        /// </summary>
+        /// <param name="path">ファイルパス</param>
+        /// <returns>正常に処理されたかどうかを示す値</returns>
         [LogInterceptor]
         private bool ImportSettingsFile(string path)
         {
             try
             {
-                this.IsWorking.Value = true;
+                this.IsPending.Value = true;
                 this.Settings.Load(path);
                 this.Settings.Save();
                 this.Logger.Log($"設定ファイルをインポートしました。: Path={path}", Category.Info);
@@ -152,17 +163,22 @@ namespace MyPad.ViewModels.Regions
             }
             finally
             {
-                this.IsWorking.Value = false;
+                this.IsPending.Value = false;
             }
             return true;
         }
-        
+
+        /// <summary>
+        /// 設定情報を指定のファイルのエクスポートします。
+        /// </summary>
+        /// <param name="path">ファイルパス</param>
+        /// <returns>正常に処理されたかどうかを示す値</returns>
         [LogInterceptor]
         private bool ExportSettingsFile(string path)
         {
             try
             {
-                this.IsWorking.Value = true;
+                this.IsPending.Value = true;
                 this.Settings.Save(path);
                 Process.Start("explorer.exe", $"/select, {path}");
                 this.Logger.Log($"設定ファイルをエクスポートしました。: Path={path}", Category.Info);
@@ -175,7 +191,7 @@ namespace MyPad.ViewModels.Regions
             }
             finally
             {
-                this.IsWorking.Value = false;
+                this.IsPending.Value = false;
             }
             return true;
         }

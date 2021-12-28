@@ -10,7 +10,7 @@ namespace MyPad.ViewModels
         /// <summary>
         /// このクラスの新しいインスタンスを生成します。
         /// </summary>
-        // NOTE: このメソッドは頻発するためトレースしない
+        [LogInterceptorIgnore]
         public ViewModelBase()
         {
             this.ValidateProperties();

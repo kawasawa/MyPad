@@ -8,9 +8,12 @@ using Unity;
 
 namespace MyPad.Models
 {
+    /// <summary>
+    /// 個々の設定クラスのインスタンスをまとめて保持するモデルを表します。
+    /// </summary>
     public class Settings : ModelBase
     {
-        #region インジェクション
+        private static readonly Encoding FILE_ENCODING = new UTF8Encoding(true);
 
         [Dependency]
         [JsonIgnore]
@@ -20,14 +23,11 @@ namespace MyPad.Models
         [JsonIgnore]
         public IProductInfo ProductInfo { get; set; }
 
-        #endregion
-
-        #region プロパティ
-
-        private static readonly Encoding FILE_ENCODING = new UTF8Encoding(true);
-
         [JsonIgnore]
         public string FilePath => Path.Combine(this.ProductInfo.Roaming, "settings.json");
+
+        [JsonIgnore]
+        public bool IsDifferentVersion => this.Version != this.ProductInfo.Version.ToString();
 
         private string _version;
         public string Version
@@ -57,9 +57,31 @@ namespace MyPad.Models
             set => this.SetProperty(ref this._otherTools, value);
         }
 
-        #endregion
+        /// <summary>
+        /// 初期化処理を行います。
+        /// </summary>
+        /// <param name="force"><see cref="true"/> が指定された場合、すでにインスタンスが存在していても新たに生成しなおします。</param>
+        /// <returns>正常に処理されたかどうかを示す値</returns>
+        public bool Initialize(bool force)
+        {
+            try
+            {
+                this.InitializeInternalSettings(force);
+                this.Logger.Debug($"システム設定を初期化しました。");
+                return true;
+            }
+            catch (Exception e)
+            {
+                this.Logger.Log($"システム設定の初期化に失敗しました。", Category.Warn, e);
+                return false;
+            }
+        }
 
-        private void InitializeInternal(bool force)
+        /// <summary>
+        /// 内包する設定クラスのインスタンスを生成します。
+        /// </summary>
+        /// <param name="force"><see cref="true"/> が指定された場合、すでにインスタンスが存在していても新たに生成しなおします。</param>
+        private void InitializeInternalSettings(bool force)
         {
             if (force)
             {
@@ -75,31 +97,27 @@ namespace MyPad.Models
             }
         }
 
-        public bool Initialize(bool force)
+        /// <summary>
+        /// 既定の設定ファイルから設定情報を読み込みます。
+        /// </summary>
+        /// <returns>正常に処理されたかどうかを示す値とこのインスタンスの組</returns>
+        public (bool, Settings) Load()
         {
-            try
-            {
-                this.InitializeInternal(force);
-                this.Logger.Debug($"システム設定を初期化しました。");
-                return true;
-            }
-            catch (Exception e)
-            {
-                this.Logger.Log($"システム設定の初期化に失敗しました。", Category.Warn, e);
-                return false;
-            }
+            return this.Load(this.FilePath);
         }
 
-        public (bool, Settings) Load()
-            => this.Load(this.FilePath);
-
+        /// <summary>
+        /// 指定されたパスのファイルから設定情報を読み込みます。
+        /// </summary>
+        /// <param name="path">ファイルパス</param>
+        /// <returns>正常に処理されたかどうかを示す値とこのインスタンスの組</returns>
         public (bool, Settings) Load(string path)
         {
             try
             {
                 if (File.Exists(path) == false)
                 {
-                    this.InitializeInternal(true);
+                    this.InitializeInternalSettings(true);
                     return (true, this);
                 }
 
@@ -111,7 +129,7 @@ namespace MyPad.Models
                 }
 
                 JsonConvert.PopulateObject(json, this);
-                this.InitializeInternal(false);
+                this.InitializeInternalSettings(false);
 
                 this.Logger.Debug($"設定ファイルを読み込みました。: Path={path}");
                 return (true, this);
@@ -123,14 +141,31 @@ namespace MyPad.Models
             }
         }
 
+        /// <summary>
+        /// 既定の設定ファイルに設定情報を出力します。
+        /// </summary>
+        /// <returns>正常に処理されたかどうかを示す値</returns>
         public bool Save()
-            => this.Save(this.FilePath);
+        {
+            return this.Save(this.FilePath);
+        }
 
+        /// <summary>
+        /// 指定されたパスに設定情報を出力します。
+        /// </summary>
+        /// <param name="path">ファイルパス</param>
+        /// <returns>正常に処理されたかどうかを示す値</returns>
         public bool Save(string path)
         {
             try
             {
-                this.CleanUp();
+                this.Version = this.ProductInfo.Version.ToString();
+
+                for (var i = this.OtherTools.ExplorerRoots.Count - 1; 0 <= i; i--)
+                {
+                    if (string.IsNullOrEmpty(this.OtherTools.ExplorerRoots[i].Path))
+                        this.OtherTools.ExplorerRoots.RemoveAt(i);
+                }
 
                 var json = JsonConvert.SerializeObject(this, Formatting.Indented);
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
@@ -139,7 +174,7 @@ namespace MyPad.Models
                 {
                     writer.Write(json);
                 }
-                
+
                 this.Logger.Debug($"設定ファイルを保存しました。: Path={path}");
                 return true;
             }
@@ -149,18 +184,5 @@ namespace MyPad.Models
                 return false;
             }
         }
-
-        private void CleanUp()
-        {
-            this.Version = this.ProductInfo.Version.ToString();
-            for (var i = this.OtherTools.ExplorerRoots.Count - 1; 0 <= i; i--)
-            {
-                if (string.IsNullOrEmpty(this.OtherTools.ExplorerRoots[i].Path))
-                    this.OtherTools.ExplorerRoots.RemoveAt(i);
-            }
-        }
-
-        public bool IsDifferentVersion()
-            => this.Version != this.ProductInfo.Version.ToString();
     }
 }

@@ -10,9 +10,21 @@ namespace MyPad.Views.Controls.Folding
     /// </summary>
     public class BraceFoldingStrategy : FoldingStrategyBase
     {
-        public char OpeningBrace { get; set; } = '{';
-        public char ClosingBrace { get; set; } = '}';
+        /// <summary>
+        /// 始端括弧として扱う文字
+        /// </summary>
+        public char OpeningBrace { get; init; } = '{';
 
+        /// <summary>
+        /// 終端括弧として扱う文字
+        /// </summary>
+        public char ClosingBrace { get; init; } = '}';
+
+        /// <summary>
+        /// フォールディングに必要な情報を構築します。
+        /// </summary>
+        /// <param name="document">ドキュメント</param>
+        /// <returns>フォールディングに必要な情報</returns>
         public override IEnumerable<NewFolding> CreateFoldings(TextDocument document)
         {
             var newFoldings = new List<NewFolding>();

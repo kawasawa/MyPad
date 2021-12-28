@@ -21,6 +21,9 @@ using Unity;
 
 namespace MyPad.ViewModels.Regions
 {
+    /// <summary>
+    /// <see cref="Views.Regions.MaintenanceContentView"/> に対応する ViewModel を表します。
+    /// </summary>
     public class MaintenanceContentViewModel : ViewModelBase
     {
         // Constructor Injection
@@ -46,12 +49,16 @@ namespace MyPad.ViewModels.Regions
         public ChartValues<ObservableValue> CpuUsage { get; }
         public ChartValues<ObservableValue> MemoryUsage { get; }
 
-        public ReactiveProperty<bool> IsWorking { get; }
+        public ReactiveProperty<bool> IsPending { get; }
 
         public ReactiveCommand ExportLogArchiveCommand { get; }
-        public ReactiveCommand RefreshLogsCommand { get; }
+        public ReactiveCommand UpdateLogsCommand { get; }
         public ReactiveCommand<DependencyPropertyChangedEventArgs> IsVisibleChangedHandler { get; }
 
+        /// <summary>
+        /// このクラスの新しいインスタンスを生成します。
+        /// </summary>
+        /// <param name="eventAggregator"></param>
         [InjectionConstructor]
         [LogInterceptor]
         public MaintenanceContentViewModel(IEventAggregator eventAggregator)
@@ -73,11 +80,11 @@ namespace MyPad.ViewModels.Regions
             this.CpuUsage = new();
             this.MemoryUsage = new();
 
-            this.IsWorking = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
+            this.IsPending = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
 
             // ----- コマンドの定義 ------------------------------
 
-            this.ExportLogArchiveCommand = this.IsWorking.Inverse().ToReactiveCommand()
+            this.ExportLogArchiveCommand = this.IsPending.Inverse().ToReactiveCommand()
                .WithSubscribe(async () =>
                {
                    var parameters = new SaveFileDialogParameters()
@@ -94,21 +101,30 @@ namespace MyPad.ViewModels.Regions
                })
                .AddTo(this.CompositeDisposable);
 
-            this.RefreshLogsCommand = new ReactiveCommand()
-                .WithSubscribe(() => this.RefreshLogs())
+            this.UpdateLogsCommand = new ReactiveCommand()
+                .WithSubscribe(() => this.UpdateLogs())
                 .AddTo(this.CompositeDisposable);
 
             this.IsVisibleChangedHandler = new ReactiveCommand<DependencyPropertyChangedEventArgs>()
-                .WithSubscribe(e => this.RefreshLogs())
+                .WithSubscribe(e =>
+                {
+                    if (e.NewValue is bool isVisible && isVisible)
+                        this.UpdateLogs();
+                })
                 .AddTo(this.CompositeDisposable);
 
             // ----- PUB/SUB メッセージ ------------------------------
 
-            void updatedPerformanceInfo((double? processorTime, double? workingSetPrivate) payload)
-                => this.UpdatedPerformanceInfo(payload.processorTime, payload.workingSetPrivate);
-            this.EventAggregator.GetEvent<UpdatedPerformanceInfoEvent>().Subscribe(updatedPerformanceInfo);
+            void performanceChecked((double? processorTime, double? workingSetPrivate) payload)
+                => this.PerformanceChecked(payload.processorTime, payload.workingSetPrivate);
+            this.EventAggregator.GetEvent<PerformanceCheckedEvent>().Subscribe(performanceChecked);
         }
 
+        /// <summary>
+        /// ログファイルのアーカイブを指定のパスに出力します。
+        /// </summary>
+        /// <param name="path">ファイルパス</param>
+        /// <returns>正常に処理されたかどうかを示す値</returns>
         [LogInterceptor]
         private async Task<bool> ExportLogArchive(string path)
         {
@@ -118,7 +134,7 @@ namespace MyPad.ViewModels.Regions
 
             try
             {
-                this.IsWorking.Value = true;
+                this.IsPending.Value = true;
 
                 this.SharedDataStore.CreateTempDirectory();
 
@@ -158,28 +174,36 @@ namespace MyPad.ViewModels.Regions
             {
                 if (Directory.Exists(tempPath))
                     _ = Task.Run(() => { try { Directory.Delete(tempPath, true); } catch { } });
-                this.IsWorking.Value = false;
+                this.IsPending.Value = false;
             }
             return true;
         }
 
+        /// <summary>
+        /// 最新のログを取得します。
+        /// </summary>
         [LogInterceptor]
-        private void RefreshLogs()
+        private void UpdateLogs()
         {
             static IEnumerable<string> getLogs(NLog.ILogger coreLogger, int startAt)
                         => coreLogger.Factory.Configuration.ConfiguredNamedTargets.OfType<NLog.Targets.MemoryTarget>().FirstOrDefault()?.Logs.Skip(startAt) ?? Enumerable.Empty<string>();
 
-            this.IsWorking.Value = true;
+            this.IsPending.Value = true;
             var nlogger = ((CompositeLogger)this.Logger).OfType<NLogger>().First();
             this.TraceLogs.AddRangeOnScheduler(getLogs(nlogger.TraceCoreLogger.Value, this.TraceLogs.Count));
             this.DebugLogs.AddRangeOnScheduler(getLogs(nlogger.DebugCoreLogger.Value, this.DebugLogs.Count));
             this.InfoLogs.AddRangeOnScheduler(getLogs(nlogger.InfoCoreLogger.Value, this.InfoLogs.Count));
             this.WarnLogs.AddRangeOnScheduler(getLogs(nlogger.WarnCoreLogger.Value, this.WarnLogs.Count));
-            this.IsWorking.Value = false;
+            this.IsPending.Value = false;
         }
 
-        // NOTE: このメソッドは頻発するためトレースしない
-        private void UpdatedPerformanceInfo(double? processorTime, double? workingSetPrivate)
+        /// <summary>
+        /// 計測されたパフォーマンス情報を保管します。
+        /// </summary>
+        /// <param name="processorTime">CPU 時間</param>
+        /// <param name="workingSetPrivate">ワーキングメモリ</param>
+        [LogInterceptorIgnore]
+        private void PerformanceChecked(double? processorTime, double? workingSetPrivate)
         {
             if (processorTime.HasValue)
                 this.CpuUsage.Add(new ObservableValue(processorTime.Value));

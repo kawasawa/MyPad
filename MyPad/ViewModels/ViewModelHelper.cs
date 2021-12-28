@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 
 namespace MyPad.ViewModels
 {
+    /// <summary>
+    /// ViewModel に関連する汎用処理を提供します。
+    /// </summary>
     public static class ViewModelHelper
     {
         /// <summary>
@@ -12,6 +14,6 @@ namespace MyPad.ViewModels
         /// <returns><see cref="MainWindowViewModel"/> のインスタンス</returns>
         [LogInterceptor]
         public static IEnumerable<MainWindowViewModel> GetMainWindowViewModels()
-            => Application.Current?.Windows.OfType<Views.MainWindow>()?.Select(view => (MainWindowViewModel)view.DataContext) ?? Enumerable.Empty<MainWindowViewModel>();
+            => Views.ViewHelper.GetMainWindows().Select(view => (MainWindowViewModel)view.DataContext);
     }
 }

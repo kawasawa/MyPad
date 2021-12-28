@@ -1,5 +1,4 @@
 ﻿using Dragablz;
-using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Livet.Messaging;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.WindowsAPICodePack.Dialogs.Controls;
@@ -29,6 +28,10 @@ using Unity;
 
 namespace MyPad.ViewModels
 {
+    /// <summary>
+    /// アプリケーションのメインウィンドウを制御する ViewModel を表します。
+    /// このクラスは <see cref="TextEditorViewModel"/> を内包します。
+    /// </summary>
     public class MainWindowViewModel : ViewModelBase
     {
         #region インジェクション
@@ -42,7 +45,7 @@ namespace MyPad.ViewModels
         private Settings _settings;
         private SyntaxService _syntaxService;
         [Dependency]
-        public IContainerExtension ContainerExtension { get; set; }
+        public IContainerExtension Container { get; set; }
         [Dependency]
         public IDialogService DialogService { get; set; }
         [Dependency]
@@ -79,14 +82,13 @@ namespace MyPad.ViewModels
         private static int GlobalSequence = 0;
 
         private int? _sequense;
-        public int Sequense
-            => this._sequense ??= ++GlobalSequence;
+        public int Sequense => this._sequense ??= ++GlobalSequence;
 
         public InteractionMessenger Messenger { get; }
 
         public ReactiveCollection<TextEditorViewModel> TextEditors { get; }
 
-        public ReactiveProperty<bool> IsWorking { get; }
+        public ReactiveProperty<bool> IsPending { get; }
         public ReactiveProperty<TextEditorViewModel> ActiveTextEditor { get; }
         public ReactiveProperty<TextEditorViewModel> DiffSource { get; }
         public ReactiveProperty<TextEditorViewModel> DiffDestination { get; }
@@ -146,6 +148,10 @@ namespace MyPad.ViewModels
 
         #endregion
 
+        /// <summary>
+        /// このクラスの新しいインスタンスを生成します。
+        /// </summary>
+        /// <param name="eventAggregator">イベントアグリゲーター</param>
         [InjectionConstructor]
         [LogInterceptor]
         public MainWindowViewModel(IEventAggregator eventAggregator)
@@ -161,7 +167,7 @@ namespace MyPad.ViewModels
             this.TextEditors = new ReactiveCollection<TextEditorViewModel>().AddTo(this.CompositeDisposable);
             BindingOperations.EnableCollectionSynchronization(this.TextEditors, new object());
 
-            this.IsWorking = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
+            this.IsPending = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             this.ActiveTextEditor = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
             this.DiffSource = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
             this.DiffDestination = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
@@ -254,7 +260,7 @@ namespace MyPad.ViewModels
             this.LoadCommand = new ReactiveCommand<IEnumerable<string>>()
                 .WithSubscribe(async paths =>
                 {
-                    var results = await this.LoadTextEditor(paths);
+                    var results = await this.Load(paths);
                     this.WakeUpTextEditor(results.LastOrDefault(tuple => tuple.textEditor != null).textEditor);
                 })
                 .AddTo(this.CompositeDisposable);
@@ -262,7 +268,7 @@ namespace MyPad.ViewModels
             this.OpenCommand = new ReactiveCommand()
                 .WithSubscribe(async () =>
                 {
-                    var results = await this.LoadTextEditor();
+                    var results = await this.Load();
                     this.WakeUpTextEditor(results.LastOrDefault(tuple => tuple.textEditor != null).textEditor);
                 })
                 .AddTo(this.CompositeDisposable);
@@ -271,12 +277,12 @@ namespace MyPad.ViewModels
                 .WithSubscribe(async () =>
                 {
                     if (this.ActiveTextEditor.Value.IsModified || this.ActiveTextEditor.Value.IsNewFile)
-                        await this.SaveTextEditor(this.ActiveTextEditor.Value);
+                        await this.Save(this.ActiveTextEditor.Value);
                 })
                 .AddTo(this.CompositeDisposable);
 
             this.SaveAsCommand = new ReactiveCommand()
-                .WithSubscribe(async () => await this.SaveAsTextEditor(this.ActiveTextEditor.Value))
+                .WithSubscribe(async () => await this.SaveAs(this.ActiveTextEditor.Value))
                 .AddTo(this.CompositeDisposable);
 
             this.SaveAllCommand = new ReactiveCommand()
@@ -285,15 +291,14 @@ namespace MyPad.ViewModels
                     foreach (var target in this.TextEditors.Where(e => e.IsReadOnly == false))
                     {
                         this.WakeUpTextEditor(target);
-                        var (result, _) = await this.SaveTextEditor(target);
-                        if (result == false)
+                        if (await this.Save(target) == false)
                             return;
                     }
                 })
                 .AddTo(this.CompositeDisposable);
 
             this.ExitCommand = new ReactiveCommand()
-                .WithSubscribe(async () => await this.InvokeExit())
+                .WithSubscribe(async () => await this.TryClose())
                 .AddTo(this.CompositeDisposable);
 
             this.ExitApplicationCommand = new ReactiveCommand()
@@ -372,7 +377,7 @@ namespace MyPad.ViewModels
             this.DiffUnmodifiedCommand = new ReactiveCommand()
                 .WithSubscribe(async () =>
                 {
-                    this.DiffSource.Value = await this.ActiveTextEditor.Value.CloneUnmodified();
+                    this.DiffSource.Value = await this.ActiveTextEditor.Value.CloneFromFile();
                     this.DiffDestination.Value = this.ActiveTextEditor.Value;
                     this.IsOpenDiffContent.Value = true;
                 })
@@ -440,7 +445,7 @@ namespace MyPad.ViewModels
                     if (target.IsNewFile)
                         target.Encoding = encoding;
                     else
-                        await this.ReadFile(target.FileName, encoding, target.SyntaxDefinition, target.IsReadOnly);
+                        await this.Load(target.FileName, encoding, target.IsReadOnly);
                     this.Logger.Log($"文字コードを変更しました。tab#{target.Sequense} win#{this.Sequense}: Encoding={encoding.EncodingName}", Category.Info);
                 })
                 .AddTo(this.CompositeDisposable);
@@ -466,8 +471,10 @@ namespace MyPad.ViewModels
                     if (e.Data.GetData(DataFormats.FileDrop) is IEnumerable<string> paths && paths.Any())
                     {
                         this.Logger.Log($"ファイルがドロップされました。: Paths=[{string.Join(", ", paths)}]", Category.Info);
-                        var results = await this.LoadTextEditor(paths);
-                        this.WakeUpTextEditor(results.LastOrDefault(tuple => tuple.textEditor != null).textEditor);
+                        var results = await this.Load(paths);
+                        var textEditor = results.LastOrDefault(tuple => tuple.textEditor != null).textEditor;
+                        if (textEditor != null)
+                            this.WakeUpTextEditor(textEditor);
                         e.Handled = true;
                     }
                 })
@@ -476,26 +483,31 @@ namespace MyPad.ViewModels
             this.ContentRenderedHandler = new ReactiveCommand<EventArgs>()
                 .WithSubscribe(e =>
                 {
-                    this.FileExplorer.Value = this.ContainerExtension.Resolve<FileExplorerViewModel>();
-                    this.FileExplorer.Value.RefreshExplorer();
+                    this.FileExplorer.Value = this.Container.Resolve<FileExplorerViewModel>();
+                    this.FileExplorer.Value.RecreateExplorer();
                 })
                 .AddTo(this.CompositeDisposable);
 
             this.ClosingHandler = new ReactiveCommand<CancelEventArgs>()
                 .WithSubscribe(async e =>
                 {
-                    // NOTE: Closing イベント内で非同期処理後にイベントをキャンセルできなくなる問題 (ViewModel)
-                    // 最初にイベントはキャンセルしてから非同期処理を行う。
-                    // 閉じる条件を満たした場合は Dispose メソッドを実行する。
-                    // (ViewModel の Dispose をトリガーに、View が Close メソッドを実行する。)
+                    // INFO: Closing イベント内で非同期処理後にイベントをキャンセルできない問題への対応 (ViewModel)
+                    // 事前に View 側に ViewModel の Dispose を検知し Close する処理を組んでおく。
+                    // ViewModel は常にイベントをキャンセルした状態で処理を行っていく。
+                    // Close の要件を満たした場合は Dispose メソッドを実行する。
                     e.Cancel = true;
-                    await this.InvokeExit();
+                    await this.TryClose();
                 })
                 .AddTo(this.CompositeDisposable);
         }
 
+        /// <summary>
+        /// ウィンドウの終了を試行します。
+        /// 内包するすべての <see cref="TextEditorViewModel"/> が終了要求に応じた場合、ウィンドウは終了します。
+        /// </summary>
+        /// <returns>正常に処理されたかどうかを示す値</returns>
         [LogInterceptor]
-        public async Task<bool> InvokeExit()
+        public async Task<bool> TryClose()
         {
             for (var i = this.TextEditors.Count - 1; 0 <= i; i--)
             {
@@ -509,67 +521,31 @@ namespace MyPad.ViewModels
             return true;
         }
 
-        #region テキストエディターの制御
+        #region ファイル入出力
 
+        /// <summary>
+        /// ユーザインタラクションを介してパスを指定し、ファイルを読み込み <see cref="TextEditorViewModel"/> クラスのインスタンスを生成します。
+        /// </summary>
+        /// <returns>
+        /// ファイルが読み込まれてインスタンスが生成されたかどうかを示す値と <see cref="TextEditorViewModel"/> クラスのインスタンスをイテレータで返却します。
+        /// ファイルを読み込めない場合は (<see cref="false"/>, <see cref="null"/>) を返し、すでに他のタブまたはウィンドウで開かれているファイルであれば (<see cref="false"/>, 既存の <see cref="TextEditorViewModel"/> インスタンス) を返します。
+        /// </returns>
         [LogInterceptor]
-        public TextEditorViewModel CreateTextEditor()
+        private async Task<IEnumerable<(bool result, TextEditorViewModel textEditor)>> Load()
         {
-            var textEditor = this.ContainerExtension.Resolve<TextEditorViewModel>();
-            this.Logger.Log($"タブを生成しました。tab#{textEditor.Sequense} win#{this.Sequense}", Category.Info);
-            return textEditor;
+            return await this.Load(null);
         }
 
+        /// <summary>
+        /// 指定されたパスのファイルを読み込み <see cref="TextEditorViewModel"/> クラスのインスタンスを生成します。
+        /// </summary>
+        /// <param name="paths">ファイルパス</param>
+        /// <returns>
+        /// ファイルが読み込まれてインスタンスが生成されたかどうかを示す値と <see cref="TextEditorViewModel"/> クラスのインスタンスをイテレータで返却します。
+        /// ファイルを読み込めない場合は (<see cref="false"/>, <see cref="null"/>) を返し、すでに他のタブまたはウィンドウで開かれているファイルであれば (<see cref="false"/>, 既存の <see cref="TextEditorViewModel"/> インスタンス) を返します。
+        /// </returns>
         [LogInterceptor]
-        private TextEditorViewModel AddTextEditor()
-        {
-            var textEditor = this.CreateTextEditor();
-            this.TextEditors.Add(textEditor);
-            return textEditor;
-        }
-
-        [LogInterceptor]
-        private void RemoveTextEditor(TextEditorViewModel textEditor)
-        {
-            if (this.TextEditors.Contains(textEditor) == false)
-                return;
-
-            this.TextEditors.Remove(textEditor);
-            textEditor.Dispose();
-            this.Logger.Log($"タブを破棄しました。tab#{textEditor.Sequense} win#{this.Sequense}", Category.Info);
-        }
-
-        [LogInterceptor]
-        private async Task<bool> TryCloseTextEditor(TextEditorViewModel textEditor)
-        {
-            if (textEditor.IsModified)
-            {
-                var result = this.DialogService.CancelableConfirm($"{Resources.Message_ConfirmSaveChanges}{Environment.NewLine}{textEditor.FileName}");
-                switch (result)
-                {
-                    case true:
-                        if (await this.SaveTextEditor(textEditor) is (false, _))
-                            return false;
-                        break;
-                    case false:
-                        break;
-                    default:
-                        return false;
-                }
-            }
-
-            this.RemoveTextEditor(textEditor);
-            return true;
-        }
-
-        [LogInterceptor]
-        private void WakeUpTextEditor(TextEditorViewModel textEditor)
-        {
-            if (textEditor != null)
-                this.ActiveTextEditor.Value = textEditor;
-        }
-
-        [LogInterceptor]
-        private async Task<IEnumerable<(bool result, TextEditorViewModel textEditor)>> LoadTextEditor(IEnumerable<string> paths = null)
+        private async Task<IEnumerable<(bool result, TextEditorViewModel textEditor)>> Load(IEnumerable<string> paths)
         {
             (bool result, IEnumerable<string> fileNames, string filter, Encoding encoding, bool isReadOnly) decideConditions(string root)
             {
@@ -597,7 +573,7 @@ namespace MyPad.ViewModels
                     {
                         // 文字コードの選択欄を追加する
                         var d = (CommonFileDialog)dialog;
-                        var encodingComboBox = CommonDialogHelper.ConvertToComboBox(this.Settings.System.AutoDetectEncoding ? null : this.Settings.System.Encoding);
+                        var encodingComboBox = CommonDialogHelper.CreateEncodingComboBox(this.Settings.System.AutoDetectEncoding ? null : this.Settings.System.Encoding);
                         encodingComboBox.Items.Insert(0, new CommonDialogHelper.EncodingComboBoxItem(null, Resources.Label_AutoDetect));
                         encodingComboBox.SelectedIndex++;
                         var encodingGroupBox = new CommonFileDialogGroupBox($"{Resources.Label_Encoding}(&E):");
@@ -637,7 +613,13 @@ namespace MyPad.ViewModels
                     var definition = filter != null && this.SyntaxService.Definitions.ContainsKey(filter) ?
                         this.SyntaxService.Definitions[filter] :
                         this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetExtensions().Contains(Path.GetExtension(path)));
-                    results.Add(await this.ReadFile(path, encoding, definition, isReadOnly));
+                    var (r, t) = await this.Load(path, encoding, isReadOnly);
+                    if (r)
+                    {
+                        t.SyntaxDefinition = null;
+                        t.SyntaxDefinition = definition;
+                    }
+                    results.Add((r, t));
                 }
                 return results;
             }
@@ -652,7 +634,13 @@ namespace MyPad.ViewModels
                 {
                     var encoding = this.Settings.System.AutoDetectEncoding ? null : this.Settings.System.Encoding;
                     var definition = this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetExtensions().Contains(Path.GetExtension(path)));
-                    results.Add(await this.ReadFile(path, encoding, definition));
+                    var (r, t) = await this.Load(path, encoding);
+                    if (r)
+                    {
+                        t.SyntaxDefinition = null;
+                        t.SyntaxDefinition = definition;
+                    }
+                    results.Add((r, t));
                 }
                 foreach (var (result, fileNames, filter, encoding, isReadOnly) in paths.Where(path => Directory.Exists(path)).Select(path => decideConditions(path)))
                 {
@@ -664,79 +652,37 @@ namespace MyPad.ViewModels
                         var definition = filter != null && this.SyntaxService.Definitions.ContainsKey(filter) ?
                             this.SyntaxService.Definitions[filter] :
                             this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetExtensions().Contains(Path.GetExtension(path)));
-                        results.Add(await this.ReadFile(path, encoding, definition, isReadOnly));
+                        var (r, t) = await this.Load(path, encoding, isReadOnly);
+                        if (r)
+                        {
+                            t.SyntaxDefinition = null;
+                            t.SyntaxDefinition = definition;
+                        }
+                        results.Add((r, t));
                     }
                 }
                 return results;
             }
         }
 
+        /// <summary>
+        /// 指定されたパスのファイルを読み込み <see cref="TextEditorViewModel"/> クラスのインスタンスを生成します。
+        /// </summary>
+        /// <param name="path">ファイルパス</param>
+        /// <param name="encoding">文字コード</param>
+        /// <param name="isReadOnly">読み取り専用</param>
+        /// <returns>
+        /// ファイルが読み込まれてインスタンスが生成されたかどうかを示す値と <see cref="TextEditorViewModel"/> クラスのインスタンスをイテレータで返却します。
+        /// ファイルを読み込めない場合は (<see cref="false"/>, <see cref="null"/>) を返し、すでに他のタブまたはウィンドウで開かれているファイルであれば (<see cref="false"/>, 既存の <see cref="TextEditorViewModel"/> インスタンス) を返します。
+        /// </returns>
+        /// <exception cref="ArgumentNullException"></exception>
         [LogInterceptor]
-        private async Task<(bool result, TextEditorViewModel textEditor)> SaveTextEditor(TextEditorViewModel textEditor)
+        private async Task<(bool result, TextEditorViewModel textEditor)> Load(string path, Encoding encoding, bool isReadOnly = false)
         {
-            if (textEditor.IsNewFile || textEditor.IsReadOnly)
-                return await this.SaveAsTextEditor(textEditor);
-            else
-                return await this.WriteFile(textEditor, textEditor.FileName, textEditor.Encoding, textEditor.SyntaxDefinition);
-        }
-
-        [LogInterceptor]
-        private async Task<(bool result, TextEditorViewModel textEditor)> SaveAsTextEditor(TextEditorViewModel textEditor)
-        {
-            var path = textEditor.FileName;
-            var filterName = textEditor.SyntaxDefinition?.Name;
-            var encoding = textEditor.Encoding;
-
-            var ready = this.CommonDialogService.ShowDialog(
-                new SaveFileDialogParameters()
-                {
-                    InitialDirectory = textEditor.IsNewFile == false ? Path.GetDirectoryName(path) : null,
-                    DefaultFileName = Path.GetFileName(path),
-                    Filter = CommonDialogHelper.CreateFileFilter(this.SyntaxService),
-                    DefaultExtension = TextEditorViewModel.TEXT_EXTENSION,
-                },
-                (dialog, parameters) =>
-                {
-                    // 文字コードの選択欄を追加する
-                    var d = (CommonFileDialog)dialog;
-                    var encodingComboBox = CommonDialogHelper.ConvertToComboBox(encoding);
-                    var encodingGroupBox = new CommonFileDialogGroupBox($"{Resources.Label_Encoding}(&E):");
-                    encodingGroupBox.Items.Add(encodingComboBox);
-                    d.Controls.Add(encodingGroupBox);
-                },
-                (dialog, parameters, result) =>
-                {
-                    if (result == false)
-                        return;
-
-                    var d = (CommonFileDialog)dialog;
-                    var p = (SaveFileDialogParameters)parameters;
-                    path = p.FileName;
-                    filterName = p.FilterName;
-
-                    // 選択された文字コードを取得する
-                    var encodingGroupBox = (CommonFileDialogGroupBox)d.Controls.First();
-                    var encodingComboBox = (CommonFileDialogComboBox)encodingGroupBox.Items.First();
-                    encoding = ((CommonDialogHelper.EncodingComboBoxItem)encodingComboBox.Items[encodingComboBox.SelectedIndex]).Encoding;
-                });
-            if (ready == false)
-                return (false, textEditor);
-
-            var definition = this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetExtensions().Contains(Path.GetExtension(path)));
-            return await this.WriteFile(textEditor, path, encoding, definition);
-        }
-
-        #endregion
-
-        #region ファイル入出力
-
-        [LogInterceptor]
-        private async Task<(bool result, TextEditorViewModel textEditor)> ReadFile(string path, Encoding encoding, XshdSyntaxDefinition definition, bool isReadOnly = false)
-        {
-            this.Logger.Debug($"ファイルを読み込みます。: Path={path}, Encoding={encoding?.EncodingName ?? "<null>"}, Definition={definition?.Name ?? "<null>"}, IsReadOnly={isReadOnly}");
+            this.Logger.Debug($"ファイルを読み込みます。: Path={path}, Encoding={encoding?.EncodingName ?? "<null>"}, IsReadOnly={isReadOnly}");
 
             if (string.IsNullOrEmpty(path))
-                throw new ArgumentException("空のパスが指定されています。", nameof(path));
+                throw new ArgumentNullException(nameof(path));
 
             var sameTextEditor = this.TextEditors.Where(m => m.IsNewFile == false).FirstOrDefault(m => m.FileName == path);
             if (sameTextEditor != null)
@@ -757,7 +703,7 @@ namespace MyPad.ViewModels
                     // 指定された文字コードでリロードする
                     try
                     {
-                        this.IsWorking.Value = true;
+                        this.IsPending.Value = true;
                         await sameTextEditor.Reload(encoding);
                         this.Logger.Log($"ファイルを再読み込みしました。tab#{sameTextEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Info);
                     }
@@ -769,16 +715,11 @@ namespace MyPad.ViewModels
                     }
                     finally
                     {
-                        this.IsWorking.Value = false;
+                        this.IsPending.Value = false;
                     }
                 }
 
-                // シンタックス定義を設定する
-                // NOTE: フォールディングを更新させるため、意図的に変更を発生させる
-                sameTextEditor.SyntaxDefinition = null;
-                sameTextEditor.SyntaxDefinition = definition;
-
-                this.DialogService.ToastNotify($"{Resources.Message_NotifyLoaded}{Environment.NewLine}{Path.GetFileName(path)}{Environment.NewLine}[{sameTextEditor.Encoding.EncodingName}, {sameTextEditor.SyntaxDefinition?.Name ?? "Plain Text"}]");
+                this.DialogService.ToastNotify($"{Resources.Message_NotifyLoaded}{Environment.NewLine}{Path.GetFileName(path)}{Environment.NewLine}{sameTextEditor.Encoding.EncodingName}");
                 return (true, sameTextEditor);
             }
             else
@@ -838,7 +779,7 @@ namespace MyPad.ViewModels
                     this.ActiveTextEditor.Value : this.AddTextEditor();
                 try
                 {
-                    this.IsWorking.Value = true;
+                    this.IsPending.Value = true;
                     await textEditor.Load(stream, encoding);
                     this.Logger.Log($"ファイルを読み込みました。tab#{textEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}, IsReadOnly={textEditor.IsReadOnly}", Category.Info);
                 }
@@ -850,24 +791,106 @@ namespace MyPad.ViewModels
                 }
                 finally
                 {
-                    this.IsWorking.Value = false;
+                    this.IsPending.Value = false;
                 }
 
-                // シンタックス定義を設定する
-                textEditor.SyntaxDefinition = definition;
-
-                this.DialogService.ToastNotify($"{Resources.Message_NotifyLoaded}{Environment.NewLine}{Path.GetFileName(path)}{Environment.NewLine}[{textEditor.Encoding.EncodingName}, {textEditor.SyntaxDefinition?.Name ?? "Plain Text"}]");
+                this.DialogService.ToastNotify($"{Resources.Message_NotifyLoaded}{Environment.NewLine}{Path.GetFileName(path)}{Environment.NewLine}{textEditor.Encoding.EncodingName}");
                 return (true, textEditor);
             }
         }
 
+        /// <summary>
+        /// <see cref="TextEditorViewModel"/> が保持するドキュメントデータをファイルに保存します。
+        /// インスタンスの状態に応じてユーザインタラクションが発生します。
+        /// </summary>
+        /// <param name="textEditor"><see cref="TextEditorViewModel"/> クラスのインスタンス</param>
+        /// <returns>
+        /// ファイルに保存されたかどうかを示す値を返却します。
+        /// ファイルに保存できない場合や、すでに他のタブまたはウィンドウで開かれているファイルであれば <see cref="false"/> を返します。
+        /// </returns>
         [LogInterceptor]
-        private async Task<(bool result, TextEditorViewModel textEditor)> WriteFile(TextEditorViewModel textEditor, string path, Encoding encoding, XshdSyntaxDefinition definition)
+        private async Task<bool> Save(TextEditorViewModel textEditor)
         {
-            this.Logger.Debug($"ファイルに書き出します。: TextEditor={textEditor?.FileName ?? "<null>"}, Path={path}, Encoding={encoding?.EncodingName ?? "<null>"}, Definition={definition?.Name ?? "<null>"}");
+            if (textEditor.IsNewFile || textEditor.IsReadOnly)
+                return await this.SaveAs(textEditor);
+            else
+                return await this.SaveAs(textEditor, textEditor.FileName, textEditor.Encoding);
+        }
+
+        /// <summary>
+        /// ユーザインタラクションを介してパスを指定し、<see cref="TextEditorViewModel"/> が保持するドキュメントデータをファイルに保存します。
+        /// </summary>
+        /// <param name="textEditor"><see cref="TextEditorViewModel"/> クラスのインスタンス</param>
+        /// <returns>
+        /// ファイルに保存されたかどうかを示す値を返却します。
+        /// ファイルに保存できない場合や、すでに他のタブまたはウィンドウで開かれているファイルであれば <see cref="false"/> を返します。
+        /// </returns>
+        [LogInterceptor]
+        private async Task<bool> SaveAs(TextEditorViewModel textEditor)
+        {
+            var path = textEditor.FileName;
+            var filterName = textEditor.SyntaxDefinition?.Name;
+            var encoding = textEditor.Encoding;
+
+            var ready = this.CommonDialogService.ShowDialog(
+                new SaveFileDialogParameters()
+                {
+                    InitialDirectory = textEditor.IsNewFile == false ? Path.GetDirectoryName(path) : null,
+                    DefaultFileName = Path.GetFileName(path),
+                    Filter = CommonDialogHelper.CreateFileFilter(this.SyntaxService),
+                    DefaultExtension = TextEditorViewModel.TEXT_EXTENSION,
+                },
+                (dialog, parameters) =>
+                {
+                    // 文字コードの選択欄を追加する
+                    var d = (CommonFileDialog)dialog;
+                    var encodingComboBox = CommonDialogHelper.CreateEncodingComboBox(encoding);
+                    var encodingGroupBox = new CommonFileDialogGroupBox($"{Resources.Label_Encoding}(&E):");
+                    encodingGroupBox.Items.Add(encodingComboBox);
+                    d.Controls.Add(encodingGroupBox);
+                },
+                (dialog, parameters, result) =>
+                {
+                    if (result == false)
+                        return;
+
+                    var d = (CommonFileDialog)dialog;
+                    var p = (SaveFileDialogParameters)parameters;
+                    path = p.FileName;
+                    filterName = p.FilterName;
+
+                    // 選択された文字コードを取得する
+                    var encodingGroupBox = (CommonFileDialogGroupBox)d.Controls.First();
+                    var encodingComboBox = (CommonFileDialogComboBox)encodingGroupBox.Items.First();
+                    encoding = ((CommonDialogHelper.EncodingComboBoxItem)encodingComboBox.Items[encodingComboBox.SelectedIndex]).Encoding;
+                });
+            if (ready == false)
+                return false;
+
+            var definition = this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetExtensions().Contains(Path.GetExtension(path)));
+            var result = await this.SaveAs(textEditor, path, encoding);
+            if (result) textEditor.SyntaxDefinition = definition;
+            return result;
+        }
+
+        /// <summary>
+        /// <see cref="TextEditorViewModel"/> が保持するドキュメントデータをファイルに保存します。
+        /// </summary>
+        /// <param name="textEditor"><see cref="TextEditorViewModel"/> クラスのインスタンス</param>
+        /// <param name="path">ファイルパス</param>
+        /// <param name="encoding">文字コード</param>
+        /// <returns>
+        /// ファイルに保存されたかどうかを示す値を返却します。
+        /// ファイルに保存できない場合や、すでに他のタブまたはウィンドウで開かれているファイルであれば <see cref="false"/> を返します。
+        /// </returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        [LogInterceptor]
+        private async Task<bool> SaveAs(TextEditorViewModel textEditor, string path, Encoding encoding)
+        {
+            this.Logger.Debug($"ファイルに書き出します。: TextEditor={textEditor?.FileName ?? "<null>"}, Path={path}, Encoding={encoding?.EncodingName ?? "<null>"}");
 
             if (string.IsNullOrEmpty(path))
-                throw new ArgumentException("空のパスが渡されました。", nameof(path));
+                throw new ArgumentNullException(nameof(path));
 
             var sameTextEditor = this.TextEditors.Where(m => m.IsNewFile == false).FirstOrDefault(m => m.FileName == path);
             if (sameTextEditor != null)
@@ -877,13 +900,13 @@ namespace MyPad.ViewModels
                 {
                     this.WakeUpTextEditor(sameTextEditor);
                     this.DialogService.ToastWarn($"{Resources.Message_NotifyFileInAnother}{Environment.NewLine}{sameTextEditor.FileName}");
-                    return (false, sameTextEditor);
+                    return false;
                 }
 
                 // ファイルに保存する
                 try
                 {
-                    this.IsWorking.Value = true;
+                    this.IsPending.Value = true;
                     await sameTextEditor.Save(encoding);
                     this.Logger.Log($"ファイルを上書き保存しました。tab#{sameTextEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding.EncodingName}", Category.Info);
                 }
@@ -891,18 +914,15 @@ namespace MyPad.ViewModels
                 {
                     this.Logger.Log($"ファイルの上書き保存に失敗しました。tab#{sameTextEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding.EncodingName}", Category.Error, e);
                     this.DialogService.Warn(e.Message);
-                    return (false, sameTextEditor);
+                    return false;
                 }
                 finally
                 {
-                    this.IsWorking.Value = false;
+                    this.IsPending.Value = false;
                 }
 
-                // シンタックス定義を設定する
-                sameTextEditor.SyntaxDefinition = definition;
-
                 this.DialogService.ToastNotify($"{Resources.Message_NotifySaved}{Environment.NewLine}{Path.GetFileName(path)}{Environment.NewLine}[{sameTextEditor.Encoding.EncodingName}]");
-                return (true, sameTextEditor);
+                return true;
             }
             else
             {
@@ -916,14 +936,14 @@ namespace MyPad.ViewModels
                     viewModel.WakeUpTextEditor(existTextEditor);
                     viewModel.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
                     viewModel.DialogService.ToastWarn($"{Resources.Message_NotifyFileLocked}{Environment.NewLine}{existTextEditor.FileName}");
-                    return (false, null);
+                    return false;
                 }
 
                 // ストリームを取得し、ファイルに保存する
                 FileStream stream = null;
                 try
                 {
-                    this.IsWorking.Value = true;
+                    this.IsPending.Value = true;
                     Directory.CreateDirectory(Path.GetDirectoryName(path));
                     stream = new(path, FileMode.Create, FileAccess.ReadWrite, FileShare.Read);
                     await textEditor.SaveAs(stream, encoding);
@@ -933,60 +953,102 @@ namespace MyPad.ViewModels
                 {
                     this.Logger.Log($"ファイルの新規保存に失敗しました。tab#{textEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding.EncodingName}", Category.Error, e);
                     this.DialogService.Warn(e.Message);
-                    return (false, textEditor);
+                    return false;
                 }
                 finally
                 {
-                    this.IsWorking.Value = false;
+                    this.IsPending.Value = false;
                 }
 
-                // シンタックス定義を設定する
-                textEditor.SyntaxDefinition = definition;
-
                 this.DialogService.ToastNotify($"{Resources.Message_NotifySaved}{Environment.NewLine}{Path.GetFileName(path)}{Environment.NewLine}[{textEditor.Encoding.EncodingName}]");
-                return (true, textEditor);
+                return true;
             }
         }
 
         #endregion
 
-        private static class CommonDialogHelper
+        #region テキストエディターの制御
+
+        /// <summary>
+        /// <see cref="TextEditorViewModel"/> クラスの新しいインスタンスを生成します。
+        /// </summary>
+        /// <returns>生成された <see cref="TextEditorViewModel"/> クラスのインスタンス</returns>
+        [LogInterceptor]
+        public TextEditorViewModel CreateTextEditor()
         {
-            public static string CreateFileFilter(SyntaxService syntaxService)
-            {
-                return string.Join("|",
-                    new[] { $"{Resources.Label_AllFiles}|*.*" }
-                    .Concat(syntaxService.Definitions.Values.Select(d => $"{d.Name}|{string.Join(";", d.Extensions)}")));
-            }
-
-            public static CommonFileDialogComboBox ConvertToComboBox(Encoding defaultEncoding)
-            {
-                var comboBox = new CommonFileDialogComboBox();
-                var encodings = Constants.ENCODINGS;
-                for (var i = 0; i < encodings.Count(); i++)
-                {
-                    comboBox.Items.Add(new EncodingComboBoxItem(encodings.ElementAt(i)));
-                    if (encodings.ElementAt(i) == defaultEncoding)
-                        comboBox.SelectedIndex = i;
-                }
-                return comboBox;
-            }
-
-            public class EncodingComboBoxItem : CommonFileDialogComboBoxItem
-            {
-                public Encoding Encoding { get; }
-
-                public EncodingComboBoxItem(Encoding encoding)
-                    : this(encoding, encoding?.EncodingName)
-                {
-                }
-
-                public EncodingComboBoxItem(Encoding encoding, string text)
-                    : base(text)
-                {
-                    this.Encoding = encoding;
-                }
-            }
+            var textEditor = this.Container.Resolve<TextEditorViewModel>();
+            this.Logger.Log($"タブを生成しました。tab#{textEditor.Sequense} win#{this.Sequense}", Category.Info);
+            return textEditor;
         }
+
+        /// <summary>
+        /// <see cref="TextEditorViewModel"/> クラスの新しいインスタンスを生成し、<see cref="TextEditors"/> に追加します。
+        /// </summary>
+        /// <returns>生成された <see cref="TextEditorViewModel"/> クラスのインスタンス</returns>
+        [LogInterceptor]
+        private TextEditorViewModel AddTextEditor()
+        {
+            var textEditor = this.CreateTextEditor();
+            this.TextEditors.Add(textEditor);
+            return textEditor;
+        }
+
+        /// <summary>
+        /// 指定された <see cref="TextEditorViewModel"/> インスタンスの終了を要求します。
+        /// インスタンスの状態に応じてユーザインタラクションが発生します。
+        /// </summary>
+        /// <param name="textEditor"><see cref="TextEditorViewModel"/> クラスのインスタンス</param>
+        /// <returns>正常に処理されたかどうかを示す値</returns>
+        [LogInterceptor]
+        private async Task<bool> TryCloseTextEditor(TextEditorViewModel textEditor)
+        {
+            if (textEditor.IsModified)
+            {
+                var result = this.DialogService.CancelableConfirm($"{Resources.Message_ConfirmSaveChanges}{Environment.NewLine}{textEditor.FileName}");
+                switch (result)
+                {
+                    case true:
+                        if (await this.Save(textEditor) == false)
+                            return false;
+                        break;
+                    case false:
+                        break;
+                    default:
+                        return false;
+                }
+            }
+
+            this.RemoveTextEditor(textEditor);
+            return true;
+        }
+
+        /// <summary>
+        /// 指定されたインスタンスを <see cref="TextEditors"/> から取り除き、リソースを解放します。
+        /// </summary>
+        /// <param name="textEditor"><see cref="TextEditorViewModel"/> クラスのインスタンス</param>
+        /// <returns>正常に処理されたかどうかを示す値</returns>
+        [LogInterceptor]
+        private bool RemoveTextEditor(TextEditorViewModel textEditor)
+        {
+            if (this.TextEditors.Contains(textEditor) == false)
+                return false;
+
+            this.TextEditors.Remove(textEditor);
+            textEditor.Dispose();
+            this.Logger.Log($"タブを破棄しました。tab#{textEditor.Sequense} win#{this.Sequense}", Category.Info);
+            return true;
+        }
+
+        /// <summary>
+        /// 指定されたインスタンスをアクティブなテキストエディターに設定します。
+        /// </summary>
+        /// <param name="textEditor"><see cref="TextEditorViewModel"/> クラスのインスタンス</param>
+        [LogInterceptor]
+        private void WakeUpTextEditor(TextEditorViewModel textEditor)
+        {
+            this.ActiveTextEditor.Value = textEditor ?? throw new ArgumentNullException(nameof(textEditor));
+        }
+
+        #endregion
     }
 }

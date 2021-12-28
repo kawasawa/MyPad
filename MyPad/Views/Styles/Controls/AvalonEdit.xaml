@@ -12,7 +12,7 @@
                     xmlns:completion="clr-namespace:MyPad.Views.Controls.Completion">
 
     <Style x:Key="Default.TextView" TargetType="{x:Type ae:TextView}">
-        <!-- NOTE: ColumnRulerPen は設定できない -->
+        <!-- WARN: ColumnRulerPen はオンコードで指定する -->
         <Setter Property="LinkTextForegroundBrush" Value="{DynamicResource MahApps.Brushes.AccentBase}"/>
         <Setter Property="NonPrintableCharacterBrush" Value="{DynamicResource MahApps.Brushes.Gray2}"/>
         <Setter Property="CurrentLineBackground" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
@@ -66,7 +66,7 @@
     </Style>
 
     <Style x:Key="Default.SearchPanel" TargetType="{x:Type ae:SearchPanel}">
-         <!-- NOTE: MarkerBrush は設定できない -->
+        <!-- WARN: MarkerBrush, MarkerCornerRadius はオンコードで指定する -->
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>

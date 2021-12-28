@@ -12,6 +12,9 @@ using WPFLocalizeExtension.Engine;
 
 namespace MyPad.Models
 {
+    /// <summary>
+    /// システム設定を管理するモデルを表します。
+    /// </summary>
     public class SystemSettings : ModelBase
     {
         private User32.WINDOWPLACEMENT? _windowPlacement;

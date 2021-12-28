@@ -9,13 +9,18 @@ using Unity;
 
 namespace MyPad.ViewModels.Regions
 {
+    /// <summary>
+    /// <see cref="Views.Regions.AboutContentView"/> に対応する ViewModel を表します。
+    /// </summary>
     public class AboutContentViewModel : ViewModelBase
     {
         private static readonly Encoding FILE_ENCODING = Encoding.UTF8;
-        private string DisclaimerPath => Path.Combine(this.ProductInfo.Working, "docs", "DISCLAIMER.md");
-        private string HistoryPath => Path.Combine(this.ProductInfo.Working, "docs", "HISTORY.md");
-        private string OssLicensePath => Path.Combine(this.ProductInfo.Working, "docs", "OSS_LICENSE.md");
-        private string PrivacyPolicyPath => Path.Combine(this.ProductInfo.Working, "docs", "PRIVACY_POLICY.md");
+
+        private string RootDirecotryPath => Path.Combine(this.ProductInfo.Working, "docs");
+        private string DisclaimerPath => Path.Combine(this.RootDirecotryPath, "DISCLAIMER.md");
+        private string HistoryPath => Path.Combine(this.RootDirecotryPath, "HISTORY.md");
+        private string OssLicensePath => Path.Combine(this.RootDirecotryPath, "OSS_LICENSE.md");
+        private string PrivacyPolicyPath => Path.Combine(this.RootDirecotryPath, "PRIVACY_POLICY.md");
 
         [Dependency]
         public IDialogService DialogService { get; set; }
@@ -29,6 +34,9 @@ namespace MyPad.ViewModels.Regions
 
         public ReactiveCommand<EventArgs> LoadedHandler { get; }
 
+        /// <summary>
+        /// このクラスの新しいインスタンスを生成します。
+        /// </summary>
         [InjectionConstructor]
         [LogInterceptor]
         public AboutContentViewModel()

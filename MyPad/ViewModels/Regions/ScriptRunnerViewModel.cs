@@ -11,28 +11,26 @@ using Unity;
 
 namespace MyPad.ViewModels.Regions
 {
+    /// <summary>
+    /// <see cref="Views.Regions.ScriptRunnerView"/> に対応する ViewModel を表します。
+    /// </summary>
     public class ScriptRunnerViewModel : ViewModelBase
     {
-        #region インジェクション
-
         [Dependency]
         public ILoggerFacade Logger { get; set; }
-
-        #endregion
-
-        #region プロパティ
 
         public ReactiveCollection<string> ScriptHistories { get; }
         public ReactiveCollection<string> ResultHistories { get; }
 
-        public ReactiveProperty<bool> IsWorking { get; }
+        public ReactiveProperty<bool> IsPending { get; }
         public ReactiveProperty<string> Script { get; }
         public ReactiveProperty<string> OutputText { get; }
 
         public ReactiveCommand RunScriptCommand { get; }
 
-        #endregion
-
+        /// <summary>
+        /// このクラスの新しいインスタンスを生成します。
+        /// </summary>
         [InjectionConstructor]
         [LogInterceptor]
         public ScriptRunnerViewModel()
@@ -42,7 +40,7 @@ namespace MyPad.ViewModels.Regions
             BindingOperations.EnableCollectionSynchronization(this.ScriptHistories, new object());
             BindingOperations.EnableCollectionSynchronization(this.ResultHistories, new object());
 
-            this.IsWorking = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
+            this.IsPending = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             this.Script = new ReactiveProperty<string>().AddTo(this.CompositeDisposable);
             this.OutputText = this.ResultHistories.CollectionChangedAsObservable()
                 .Select(_ => string.Join(Environment.NewLine, this.ResultHistories))
@@ -54,6 +52,9 @@ namespace MyPad.ViewModels.Regions
                 .AddTo(this.CompositeDisposable);
         }
 
+        /// <summary>
+        /// スクリプトを実行します。
+        /// </summary>
         [LogInterceptor]
         private async void RunScript()
         {
@@ -79,12 +80,17 @@ namespace MyPad.ViewModels.Regions
             this.Script.Value = string.Empty;
         }
 
+        /// <summary>
+        /// C＃スクリプトを実行します。
+        /// </summary>
+        /// <param name="script">C# のスクリプト</param>
+        /// <returns>スクリプトの実行結果</returns>
         [LogInterceptor]
         private async Task<string> EvaluateAsync(string script)
         {
             try
             {
-                this.IsWorking.Value = true;
+                this.IsPending.Value = true;
                 var result = await CSharpScript.EvaluateAsync(script);
                 return result?.ToString().Trim();
             }
@@ -94,7 +100,7 @@ namespace MyPad.ViewModels.Regions
             }
             finally
             {
-                this.IsWorking.Value = false;
+                this.IsPending.Value = false;
             }
         }
     }

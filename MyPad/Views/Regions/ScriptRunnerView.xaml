@@ -32,11 +32,11 @@
         </TextBox>
         <Grid Grid.Row="1" ge:GridEx.ColumnDefinition="Auto, *">
             <Label Grid.Column="0" Content="> "/>
-            <!-- NOTE: MainWindow から FindName で検索されているので、コントロール名を変更する際は注意 -->
+            <!-- WARN: このコントロール名は MainWindow から FindName で検索される -->
             <ComboBox Grid.Column="1" x:Name="ScriptInputField"
                       ItemsSource="{Binding ScriptHistories, Mode=OneWay}"
                       Text="{Binding Script.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                      IsReadOnly="{Binding IsWorking.Value, Mode=OneWay}"
+                      IsReadOnly="{Binding IsPending.Value, Mode=OneWay}"
                       IsEditable="True"
                       BorderThickness="0"
                       m:TextBoxHelper.ButtonWidth="0">
@@ -60,7 +60,7 @@
                 </ComboBox.InputBindings>
             </ComboBox>
         </Grid>
-        <Border Grid.RowSpan="2" d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsWorking.Value, Mode=OneWay}}">
+        <Border Grid.RowSpan="2" d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
             <m:ProgressRing/>
         </Border>
     </Grid>

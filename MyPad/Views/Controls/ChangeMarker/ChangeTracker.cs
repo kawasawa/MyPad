@@ -68,10 +68,9 @@ namespace MyPad.Views.Controls.ChangeMarker
         {
             switch (e.PropertyName)
             {
-                case nameof(this._document.UndoStack.SizeLimit):
-                    // HACK: UndoStack のサイズ変更を起点にファイルのリロードを検知
-                    // たまたま ViewModel 側でサスペンドしているため実現できるが、
-                    // 内部実装レベルで依存しており条件として非常に脆い。
+                case nameof(this._document.FileName):
+                    // HACK: UndoStack の SizeLimit 変更を起点にファイルのリロードを検知
+                    // 偶然 ViewModel 側で SizeLimit を操作しているため実現するが、内部実装レベルで依存しており条件として非常に脆い。
                     this._baseDocument = new(this._document);
                     break;
                 case nameof(this._document.UndoStack.IsOriginalFile) when this._document.UndoStack.IsOriginalFile:

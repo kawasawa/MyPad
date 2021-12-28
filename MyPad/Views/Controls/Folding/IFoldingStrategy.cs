@@ -14,20 +14,23 @@ namespace MyPad.Views.Controls.Folding
     /// </remarks>
     public unsafe sealed class IFoldingStrategy
     {
+        private readonly object _strategy;
+        private readonly delegate*<object, FoldingManager, TextDocument, void> _updateFoldings;
+
+        #region 公開メソッド
+
         /// <summary>
-        /// フォールディングの状態を再解析します。
+        /// フォールディングの状態を再計算します。
         /// </summary>
         /// <param name="manager">フォールディングマネージャ</param>
         /// <param name="document">テキストドキュメント</param>
         public void UpdateFoldings(FoldingManager manager, TextDocument document) => this._updateFoldings(this._strategy, manager, document);
 
-        private readonly object _strategy;
-        private readonly delegate*<object, FoldingManager, TextDocument, void> _updateFoldings;
+        #endregion
 
         // XmlFoldingStrategy
         public static implicit operator IFoldingStrategy(XmlFoldingStrategy strategy) => new(strategy);
         public static explicit operator XmlFoldingStrategy(in IFoldingStrategy self) => (XmlFoldingStrategy)self._strategy;
-
         private IFoldingStrategy(XmlFoldingStrategy strategy)
         {
             this._strategy = strategy;

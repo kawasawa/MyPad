@@ -18,17 +18,17 @@ namespace MyPad
         public readonly Lazy<ILogger> FatalCoreLogger;
 
         /// <summary>
-        /// 発行元のロガーの型を取得または設定します。
+        /// 発行元のロガーの型
         /// </summary>
         public Type PublisherType { get; set; }
 
         /// <summary>
-        /// ファクトリーの生成に使用される構成情報を取得または設定します。
+        /// ファクトリーの生成に使用される構成情報
         /// </summary>
         public Func<LoggingConfiguration> ConfigurationFactory { get; set; }
 
         /// <summary>
-        /// ロガーのインスタンスを生成する処理をフックするためのメソッドを取得または設定します。
+        /// ロガーのインスタンスを生成する処理をフックするためのメソッド
         /// </summary>
         public Action<ILogger, Category> CreateLoggerHook { get; set; }
 

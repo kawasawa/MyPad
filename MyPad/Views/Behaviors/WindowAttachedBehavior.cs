@@ -3,6 +3,9 @@ using System.Windows.Input;
 
 namespace MyPad.Views.Behaviors
 {
+    /// <summary>
+    /// <see cref="Window"/> クラスに汎用処理を追加する添付ビヘイビアを表します。
+    /// </summary>
     public class WindowAttachedBehavior
     {
         #region CloseByEsc
@@ -27,7 +30,7 @@ namespace MyPad.Views.Behaviors
 
         private static void PreviewKeyDown4CloseByEsc(object sender, KeyEventArgs e)
         {
-            if (sender is not Window window || window.IsMouseCaptureWithin == true)
+            if (sender is not Window window || window.IsMouseCaptureWithin)
                 return;
             if (e.Key != Key.Escape || Keyboard.Modifiers != ModifierKeys.None)
                 return;
