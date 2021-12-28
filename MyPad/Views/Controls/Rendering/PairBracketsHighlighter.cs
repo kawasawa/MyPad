@@ -3,26 +3,43 @@ using ICSharpCode.AvalonEdit.Rendering;
 using System;
 using System.Windows.Media;
 
-namespace MyPad.Views.Controls
+namespace MyPad.Views.Controls.Rendering
 {
-    public class BracketHighlighter : IBackgroundRenderer
+    /// <summary>
+    /// 対応する括弧をハイライトするレンダラーを表します。
+    /// </summary>
+    public class PairBracketsHighlighter : IBackgroundRenderer
     {
-        private readonly TextView _textView;
-        private readonly Pen _higlightBorderPen;
+        private readonly Pen _highlightBorderPen;
         private readonly Brush _highlightBackgroundBrush;
+        private TextView _textView;
         private ISegment _segment;
 
         KnownLayer IBackgroundRenderer.Layer => KnownLayer.Selection;
 
-        public BracketHighlighter(TextView textView)
+        private PairBracketsHighlighter(TextView textView)
         {
             this._textView = textView ?? throw new ArgumentNullException(nameof(textView));
             this._textView.BackgroundRenderers.Add(this);
 
-            this._higlightBorderPen = new(Brushes.Gray, 2);
-            this._higlightBorderPen.Freeze();
+            this._highlightBorderPen = new(Brushes.Gray, 2);
+            this._highlightBorderPen.Freeze();
             this._highlightBackgroundBrush = new SolidColorBrush(Colors.Transparent);
             this._highlightBackgroundBrush.Freeze();
+        }
+
+        public static PairBracketsHighlighter Install(TextView textView)
+        {
+            if (textView == null)
+                throw new ArgumentNullException(nameof(textView));
+            return new PairBracketsHighlighter(textView);
+        }
+
+        public void Uninstall()
+        {
+            this._segment = null;
+            this._textView.BackgroundRenderers.Remove(this);
+            this._textView = null;
         }
 
         public void Highlight(ISegment segment)
@@ -51,7 +68,7 @@ namespace MyPad.Views.Controls
 
             var geometry = builder.CreateGeometry();
             if (geometry != null)
-                drawingContext.DrawGeometry(this._highlightBackgroundBrush, this._higlightBorderPen, geometry);
+                drawingContext.DrawGeometry(this._highlightBackgroundBrush, this._highlightBorderPen, geometry);
         }
     }
 }

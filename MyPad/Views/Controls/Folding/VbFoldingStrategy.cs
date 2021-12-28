@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace MyPad.Views.Controls.Folding
 {
+    /// <summary>
+    /// Visual Basic の文法に沿ったフォールディングを行うためのアルゴリズムを定義します。
+    /// </summary>
     public class VbFoldingStrategy : FoldingStrategyBase
     {
         public IEnumerable<string> Keywords { get; set; } = new[] { "namespace", "interface", "class", "structure", "module", "enum", "function", "sub" };

@@ -8,12 +8,14 @@ using System.Windows.Media;
 
 namespace MyPad.Views.Controls.ChangeMarker
 {
+    /// <summary>
+    /// 行単位の変更状態を示すマーカーが描画されるマージンを表します。
+    /// </summary>
     public class ChangeMarkerMargin : AbstractMargin, IDisposable
     {
         private const double MARGIN_WIDTH = 8;
 
-        private bool _disposed;
-        private readonly ChangeWatcher _changeWatcher;
+        private ChangeTracker _changeTracker;
 
         public static readonly DependencyProperty AddedLineBrushProperty =
             DependencyPropertyExtensions.Register(new FrameworkPropertyMetadata(Brushes.LightSeaGreen));
@@ -44,25 +46,32 @@ namespace MyPad.Views.Controls.ChangeMarker
 
         public ChangeMarkerMargin()
         {
-            this._changeWatcher = new();
-            this._changeWatcher.ChangeOccurred += this.ChangeWatcher_ChangeOccurred;
+            this._changeTracker = new();
+            this._changeTracker.ChangeOccurred += this.ChangeWatcher_ChangeOccurred;
+        }
+
+        ~ChangeMarkerMargin()
+        {
+            this.Dispose(false);
         }
 
         public void Dispose()
         {
-            if (this._disposed)
-                return;
-
-            this._changeWatcher.ChangeOccurred -= this.ChangeWatcher_ChangeOccurred;
-            
-            this._disposed = true;
+            this.Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            this._changeTracker.ChangeOccurred -= this.ChangeWatcher_ChangeOccurred;
+            this._changeTracker.Dispose();
+            this._changeTracker = null;
         }
 
         protected override void OnDocumentChanged(TextDocument oldDocument, TextDocument newDocument)
         {
             if (newDocument != null)
-                this._changeWatcher.Initialize(newDocument);
+                this._changeTracker.Initialize(newDocument);
             base.OnDocumentChanged(oldDocument, newDocument);
         }
 
@@ -71,11 +80,11 @@ namespace MyPad.Views.Controls.ChangeMarker
             if (this.TextView == null || this.TextView.VisualLinesValid == false)
                 return;
 
-            var zeroLineInfo = this._changeWatcher.ChangeList.First();
+            var zeroLineInfo = this._changeTracker.ChangeList.First();
             foreach (var line in this.TextView.VisualLines)
             {
                 var rect = new Rect(0, line.VisualTop - this.TextView.ScrollOffset.Y - 1, MARGIN_WIDTH - 3, line.Height + 2);
-                var info = this._changeWatcher.ChangeList[line.FirstDocumentLine.LineNumber];
+                var info = this._changeTracker.ChangeList[line.FirstDocumentLine.LineNumber];
 
                 if (zeroLineInfo.ChangeType == ChangeKind.Deleted &&
                     info.ChangeType != ChangeKind.Unsaved &&
@@ -113,7 +122,7 @@ namespace MyPad.Views.Controls.ChangeMarker
             }
 
             base.OnTextViewChanged(oldTextView, newTextView);
-            
+
             if (newTextView != null)
             {
                 newTextView.VisualLinesChanged += this.TextView_VisualLinesChanged;

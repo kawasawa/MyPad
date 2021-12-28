@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace MyPad.Views.Controls.Folding
 {
+    /// <summary>
+    /// タブ文字によるフォールディングを行うためのアルゴリズムを定義します。
+    /// </summary>
     public class TabFoldingStrategy : FoldingStrategyBase
     {
         public override IEnumerable<NewFolding> CreateFoldings(TextDocument document)

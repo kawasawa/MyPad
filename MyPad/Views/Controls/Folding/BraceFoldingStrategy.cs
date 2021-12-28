@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace MyPad.Views.Controls.Folding
 {
+    /// <summary>
+    /// 波括弧によるフォールディングを行うためのアルゴリズムを定義します。
+    /// </summary>
     public class BraceFoldingStrategy : FoldingStrategyBase
     {
         public char OpeningBrace { get; set; } = '{';

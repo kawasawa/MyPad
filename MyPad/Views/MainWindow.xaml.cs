@@ -22,7 +22,6 @@ using ToastNotifications;
 using ToastNotifications.Lifetime;
 using ToastNotifications.Position;
 using Unity;
-using Vanara.InteropServices;
 using Vanara.PInvoke;
 
 namespace MyPad.Views
@@ -66,11 +65,11 @@ namespace MyPad.Views
                 nameof(ActivateFileExplorerCommand),
                 typeof(MainWindow),
                 new InputGestureCollection { new KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Shift) });
-                public static readonly ICommand ActivatePropertyCommand
-                    = new RoutedCommand(
-                        nameof(ActivatePropertyCommand),
-                        typeof(MainWindow),
-                        new InputGestureCollection { new KeyGesture(Key.Enter, ModifierKeys.Alt) });
+        public static readonly ICommand ActivatePropertyCommand
+            = new RoutedCommand(
+                nameof(ActivatePropertyCommand),
+                typeof(MainWindow),
+                new InputGestureCollection { new KeyGesture(Key.Enter, ModifierKeys.Alt) });
 
         private static readonly DependencyProperty IsVisibleBottomContentProperty
             = DependencyPropertyExtensions.Register(
@@ -135,7 +134,8 @@ namespace MyPad.Views
         }
 
         public ICommand SwitchFullScreenModeCommand
-            => new DelegateCommand(() => {
+            => new DelegateCommand(() =>
+            {
                 if (this._fullScreenMode)
                 {
                     this._fullScreenMode = false;
@@ -566,32 +566,32 @@ namespace MyPad.Views
             switch (e.Key)
             {
                 case Key.Enter:
-                {
-                    var node = (FileExplorerViewModel.FileTreeNode)((TreeViewItem)sender).DataContext;
-                    if (node.IsEmpty)
                     {
-                        e.Handled = true;
-                        return;
+                        var node = (FileExplorerViewModel.FileTreeNode)((TreeViewItem)sender).DataContext;
+                        if (node.IsEmpty)
+                        {
+                            e.Handled = true;
+                            return;
+                        }
+                        if (File.Exists(node.FileName))
+                        {
+                            this.ViewModel.LoadCommand.Execute(new[] { node.FileName });
+                            e.Handled = true;
+                            return;
+                        }
+                        if (Directory.Exists(node.FileName))
+                        {
+                            node.IsExpanded = !node.IsExpanded;
+                            e.Handled = true;
+                            return;
+                        }
+                        break;
                     }
-                    if (File.Exists(node.FileName))
-                    {
-                        this.ViewModel.LoadCommand.Execute(new[] { node.FileName });
-                        e.Handled = true;
-                        return;
-                    }
-                    if (Directory.Exists(node.FileName))
-                    {
-                        node.IsExpanded = !node.IsExpanded;
-                        e.Handled = true;
-                        return;
-                    }
-                    break;
-                }
             }
         }
 
         [LogInterceptor]
-        private void DraggableTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void MainContent_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.Handled || e.Source != e.OriginalSource)
                 return;
@@ -601,7 +601,7 @@ namespace MyPad.Views
         }
 
         [LogInterceptor]
-        private void DragablzItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void MainContentItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.Handled)
                 return;
@@ -617,6 +617,13 @@ namespace MyPad.Views
             var textEditor = (TextEditor)sender;
             textEditor.Focus();
             textEditor.Redraw();
+        }
+
+        [LogInterceptor]
+        private void TextEditor_Unloaded(object sender, RoutedEventArgs e)
+        {
+            var textEditor = (TextEditor)sender;
+            textEditor.Dispose();
         }
 
         [LogInterceptor]
@@ -645,37 +652,37 @@ namespace MyPad.Views
             switch ((User32.WindowMessage)msg)
             {
                 case User32.WindowMessage.WM_INITMENUPOPUP:
-                {
-                    var hMenu = User32.GetSystemMenu(this._handleSource.Handle, false);
-                    this._miiShowMenuBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowMenuBar);
-                    this._miiShowToolBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowToolBar);
-                    this._miiShowSideBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowSideBar);
-                    this._miiShowStatusBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowStatusBar);
-                    this._miiShowMenuBar.lpmii.fState = this.Settings.System.ShowMenuBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
-                    this._miiShowToolBar.lpmii.fState = this.Settings.System.ShowToolBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
-                    this._miiShowSideBar.lpmii.fState = this.Settings.System.ShowSideBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
-                    this._miiShowStatusBar.lpmii.fState = this.Settings.System.ShowStatusBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
-                    User32.SetMenuItemInfo(hMenu, this._miiShowMenuBar.fByPosition, true, in this._miiShowMenuBar.lpmii);
-                    User32.SetMenuItemInfo(hMenu, this._miiShowToolBar.fByPosition, true, in this._miiShowToolBar.lpmii);
-                    User32.SetMenuItemInfo(hMenu, this._miiShowSideBar.fByPosition, true, in this._miiShowSideBar.lpmii);
-                    User32.SetMenuItemInfo(hMenu, this._miiShowStatusBar.fByPosition, true, in this._miiShowStatusBar.lpmii);
-                    break;
-                }
+                    {
+                        var hMenu = User32.GetSystemMenu(this._handleSource.Handle, false);
+                        this._miiShowMenuBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowMenuBar);
+                        this._miiShowToolBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowToolBar);
+                        this._miiShowSideBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowSideBar);
+                        this._miiShowStatusBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowStatusBar);
+                        this._miiShowMenuBar.lpmii.fState = this.Settings.System.ShowMenuBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
+                        this._miiShowToolBar.lpmii.fState = this.Settings.System.ShowToolBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
+                        this._miiShowSideBar.lpmii.fState = this.Settings.System.ShowSideBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
+                        this._miiShowStatusBar.lpmii.fState = this.Settings.System.ShowStatusBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
+                        User32.SetMenuItemInfo(hMenu, this._miiShowMenuBar.fByPosition, true, in this._miiShowMenuBar.lpmii);
+                        User32.SetMenuItemInfo(hMenu, this._miiShowToolBar.fByPosition, true, in this._miiShowToolBar.lpmii);
+                        User32.SetMenuItemInfo(hMenu, this._miiShowSideBar.fByPosition, true, in this._miiShowSideBar.lpmii);
+                        User32.SetMenuItemInfo(hMenu, this._miiShowStatusBar.fByPosition, true, in this._miiShowStatusBar.lpmii);
+                        break;
+                    }
 
                 case User32.WindowMessage.WM_SYSCOMMAND:
-                {
-                    var settings = this.Settings.System;
-                    var wID = wParam.ToInt32();
-                    if (this._miiShowMenuBar.lpmii.wID == wID)
-                        settings.ShowMenuBar = !settings.ShowMenuBar;
-                    if (this._miiShowToolBar.lpmii.wID == wID)
-                        settings.ShowToolBar = !settings.ShowToolBar;
-                    if (this._miiShowSideBar.lpmii.wID == wID)
-                        settings.ShowSideBar = !settings.ShowSideBar;
-                    if (this._miiShowStatusBar.lpmii.wID == wID)
-                        settings.ShowStatusBar = !settings.ShowStatusBar;
-                    break;
-                }
+                    {
+                        var settings = this.Settings.System;
+                        var wID = wParam.ToInt32();
+                        if (this._miiShowMenuBar.lpmii.wID == wID)
+                            settings.ShowMenuBar = !settings.ShowMenuBar;
+                        if (this._miiShowToolBar.lpmii.wID == wID)
+                            settings.ShowToolBar = !settings.ShowToolBar;
+                        if (this._miiShowSideBar.lpmii.wID == wID)
+                            settings.ShowSideBar = !settings.ShowSideBar;
+                        if (this._miiShowStatusBar.lpmii.wID == wID)
+                            settings.ShowStatusBar = !settings.ShowStatusBar;
+                        break;
+                    }
             }
             return IntPtr.Zero;
         }

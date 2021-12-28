@@ -8,7 +8,8 @@
                     xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
                     xmlns:aec="clr-namespace:ICSharpCode.AvalonEdit.CodeCompletion;assembly=ICSharpCode.AvalonEdit"
                     xmlns:aef="clr-namespace:ICSharpCode.AvalonEdit.Folding;assembly=ICSharpCode.AvalonEdit"
-                    xmlns:controls="clr-namespace:MyPad.Views.Controls">
+                    xmlns:controls="clr-namespace:MyPad.Views.Controls"
+                    xmlns:completion="clr-namespace:MyPad.Views.Controls.Completion">
 
     <Style x:Key="Default.TextView" TargetType="{x:Type ae:TextView}">
         <!-- NOTE: ColumnRulerPen は設定できない -->
@@ -186,11 +187,11 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type controls:TextView}"         BasedOn="{StaticResource Default.TextView}"/>
-    <Style TargetType="{x:Type controls:TextArea}"         BasedOn="{StaticResource Default.TextArea}"/>
-    <Style TargetType="{x:Type controls:TextEditor}"       BasedOn="{StaticResource Default.TextEditor}"/>
-    <Style TargetType="{x:Type controls:CompletionWindow}" BasedOn="{StaticResource Default.CompletionWindow}"/>
-    <Style TargetType="{x:Type aef:FoldingMargin}"         BasedOn="{StaticResource Default.FoldingMargin}"/>
-    <Style TargetType="{x:Type ae:SearchPanel}"            BasedOn="{StaticResource Default.SearchPanel}"/>
+    <Style TargetType="{x:Type controls:TextView}"           BasedOn="{StaticResource Default.TextView}"/>
+    <Style TargetType="{x:Type controls:TextArea}"           BasedOn="{StaticResource Default.TextArea}"/>
+    <Style TargetType="{x:Type controls:TextEditor}"         BasedOn="{StaticResource Default.TextEditor}"/>
+    <Style TargetType="{x:Type completion:CompletionWindow}" BasedOn="{StaticResource Default.CompletionWindow}"/>
+    <Style TargetType="{x:Type aef:FoldingMargin}"           BasedOn="{StaticResource Default.FoldingMargin}"/>
+    <Style TargetType="{x:Type ae:SearchPanel}"              BasedOn="{StaticResource Default.SearchPanel}"/>
 
 </ResourceDictionary>

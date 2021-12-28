@@ -1,4 +1,7 @@
-﻿using ICSharpCode.AvalonEdit.Rendering;
+﻿using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Rendering;
+using MyPad.Views.Controls.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows;
@@ -7,17 +10,53 @@ using System.Windows.Media.TextFormatting;
 
 namespace MyPad.Views.Controls
 {
-    public class TextView : ICSharpCode.AvalonEdit.Rendering.TextView
+    /// <summary>
+    /// <see cref="TextArea"/> のレンダリングを処理するコントロールを表します。
+    /// 
+    /// 対応する括弧をハイライトする <see cref="Rendering.PairBracketsHighlighter"/> を内包します。
+    /// </summary>
+    public class TextView : ICSharpCode.AvalonEdit.Rendering.TextView, IDisposable
     {
         public string VisualCharacterCR { get; set; } = "\u2190";
         public string VisualCharacterLF { get; set; } = "\u2193";
         public string VisualCharacterCRLF { get; set; } = "\u21B2";
+
+        public PairBracketsHighlighter PairBracketsHighlighter { get; private set; }
 
         public TextView()
         {
             // NOTE: 依存関係プロパティ ColumnRulerPen の設定
             // おそらく SearchPanel.MarkerBrush と似たような理由だと思われる。
             this.ColumnRulerPen = new(Brushes.Gray, 1);
+
+            this.PairBracketsHighlighter = PairBracketsHighlighter.Install(this);
+        }
+
+        ~TextView()
+        {
+            this.Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            this.PairBracketsHighlighter.Uninstall();
+            this.PairBracketsHighlighter = null;
+        }
+
+        public void HighlightPairBrackets(ISegment segment)
+        {
+            this.PairBracketsHighlighter.Highlight(segment);
+        }
+
+        public void ClearHighlightPairBrackets()
+        {
+            this.PairBracketsHighlighter.ClearHighlight();
         }
 
         protected override Size MeasureOverride(Size availableSize)

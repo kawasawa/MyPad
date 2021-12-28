@@ -126,15 +126,19 @@ namespace MyPad.ViewModels
         public ReactiveCommand<EventArgs> ContentRenderedHandler { get; }
         public ReactiveCommand<CancelEventArgs> ClosingHandler { get; }
 
-        public Func<TextEditorViewModel> TextEditorFactory =>
+        public Func<object> TextEditorFactory =>
             () => this.CreateTextEditor();
-        public Delegate ClosingTextEditorHandler
-           => new ItemActionCallback(async e =>
+        public ItemActionCallback ClosingTextEditorHandler
+           => new(async e =>
            {
                if (e.IsCancelled || e.DragablzItem?.DataContext is not TextEditorViewModel textEditor)
                    return;
 
+               // View の TextEditor インスタンスはドッキングウィンドウを行き来するたびに再生成される
+               // その際、コントロールの破棄と生成の前後で ViewModel のインスタンスは同一である
+               // したがって TextEditor の ViewModel は View に比べ生存期間が長いためリソースの解放は ViewModel 起点に行う
                e.Cancel();
+
                await this.TryCloseTextEditor(textEditor);
                if (this.TextEditors.Any() == false)
                    this.WakeUpTextEditor(this.AddTextEditor());
@@ -379,7 +383,7 @@ namespace MyPad.ViewModels
                 {
                     var target = this.ActiveTextEditor.Value;
                     this.Logger.Log($"印刷ダイアログを表示します。tab#{target.Sequense} win#{this.Sequense}", Category.Info);
-                    
+
                     var result = this.CommonDialogService.ShowDialog(
                         new PrintDialogParameters()
                         {

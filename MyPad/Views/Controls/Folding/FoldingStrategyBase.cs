@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace MyPad.Views.Controls.Folding
 {
+    /// <summary>
+    /// フォールディングアルゴリズムの基底クラスを表します。
+    /// </summary>
     public abstract class FoldingStrategyBase
     {
         public virtual void UpdateFoldings(FoldingManager manager, TextDocument document)

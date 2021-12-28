@@ -11,6 +11,8 @@
         xmlns:qc="http://QuickConverter.CodePlex.com/"
         xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
         xmlns:t="http://www.hardcodet.net/taskbar"
+        xmlns:viewModels="clr-namespace:MyPad.ViewModels"
+        d:DataContext="{d:DesignInstance viewModels:WorkspaceViewModel}"
         mc:Ignorable="d"
         p:ViewModelLocator.AutoWireViewModel="True"
         Height="0" Width="0" ResizeMode="NoResize" WindowStyle="None" ShowInTaskbar="False"

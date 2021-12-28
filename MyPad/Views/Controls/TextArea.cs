@@ -1,10 +1,11 @@
 ﻿using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Search;
 using MyPad.Views.Controls.ChangeMarker;
+using MyPad.Views.Controls.Completion;
 using MyPad.Views.Controls.Folding;
 using System;
 using System.Collections.Generic;
@@ -20,11 +21,23 @@ using LinqExpression = System.Linq.Expressions.Expression;
 
 namespace MyPad.Views.Controls
 {
-    public class TextArea : ICSharpCode.AvalonEdit.Editing.TextArea
+    /// <summary>
+    /// <see cref="TextEditor"/> の UI を構成するコントロールを表します。
+    /// 
+    /// レンダリングのコア機能を提供する <see cref="Controls.TextView"/>、
+    /// キャレット位置を管理する <see cref="ICSharpCode.AvalonEdit.Editing.Caret"/>、
+    /// 入力補完ウィンドウを表示する <see cref="Completion.CompletionWindow"/>、
+    /// 検索パネルを表示する <see cref="ICSharpCode.AvalonEdit.Search.SearchPanel"/>、
+    /// 変更箇所を示すマーカーを描画する <see cref="ChangeMarker.ChangeMarkerMargin"/>、
+    /// エディタの折り畳み機能を提供する <see cref="ICSharpCode.AvalonEdit.Folding.FoldingManager"/>
+    /// から構成されます。
+    /// </summary>
+    public class TextArea : ICSharpCode.AvalonEdit.Editing.TextArea, IDisposable
     {
         private const double MIN_FONT_SIZE = 2;
         private const double MAX_FONT_SIZE = 99;
         private const double UPDATE_FOLDINGS_INTERVAL = 2;
+        private const int LINE_NUMBER_MARGIN_INDEX = 2;
 
         private static readonly SolidColorBrush SEARCH_RESULTS_MARKER_BRUSH = new(Colors.RosyBrown);
 
@@ -55,7 +68,7 @@ namespace MyPad.Views.Controls
                 value => int.TryParse(value.ToString(), out var i) && 1 <= i && i <= 16);
         public static readonly DependencyProperty ShowChangeMarkerProperty
             = DependencyPropertyExtensions.Register(
-                new PropertyMetadata(true, (obj, e) => ((TextArea)obj).ResetChangeMarker()));
+                new PropertyMetadata(true, (obj, e) => ((TextArea)obj).RefreshChangeMarker()));
         public static readonly DependencyProperty CutCopyHtmlFormatProperty
             = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(false));
@@ -63,8 +76,8 @@ namespace MyPad.Views.Controls
             = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(true, (obj, e) =>
                 {
-                    ((TextArea)obj).UpdateFoldings();
-                    ((TextArea)obj).UpdateBracketHighlight();
+                    ((TextArea)obj).RefreshFoldings();
+                    ((TextArea)obj).RefreshBracketHighlight();
                 }));
         public static readonly DependencyProperty EnableAutoCompletionProperty
             = DependencyPropertyExtensions.Register(
@@ -83,17 +96,19 @@ namespace MyPad.Views.Controls
             });
 
         private readonly DispatcherTimer _updateFoldingsTimer;
-        private IEnumerable<ICompletionData> _completionData = Enumerable.Empty<ICompletionData>();
+        private IEnumerable<CompletionData> _completionData = Enumerable.Empty<CompletionData>();
 
-        public ChangeMarkerManager ChangeMarkerManager { get; private set; }
+        public CompletionWindow CompletionWindow { get; private set; }
+        public SearchPanel SearchPanel { get; private set; }
+        public ChangeMarkerMargin ChangeMarkerMargin { get; private set; }
         public FoldingManager FoldingManager { get; private set; }
         public IFoldingStrategy FoldingStrategy { get; private set; }
-        public BracketHighlighter BracketHighlighter { get; private set; }
-        public SearchPanel SearchPanel { get; private set; }
-        public CompletionWindow CompletionWindow { get; private set; }
 
         public new TextView TextView => (TextView)base.TextView;
         public bool IsReadOnly => this.ReadOnlySectionProvider.CanInsert(this.Caret.Offset) == false;
+        public bool IsShowLineNumberMargin => this.LeftMargins.OfType<LineNumberMargin>().Any();
+        public bool IsShowChangeMarkerMargin => this.LeftMargins.OfType<ChangeMarkerMargin>().Any();
+        public bool IsShowFoldingMargin => this.LeftMargins.OfType<FoldingMargin>().Any();
 
         public new double FontSize
         {
@@ -196,7 +211,7 @@ namespace MyPad.Views.Controls
                 (sender, e) => e.CanExecute = this.CanShowCompletionList()));
             bindings.Add(new CommandBinding(
                 Commands.ConvertToNarrow,
-                (sender, e) => this.InvokeTransformSelectedSegments(
+                (sender, e) => InvokeTransformSelectedSegments(
                     new[] {
                         (Action<ICSharpCode.AvalonEdit.Editing.TextArea, ISegment>)(
                             (textArea, segment) =>
@@ -216,7 +231,7 @@ namespace MyPad.Views.Controls
             ));
             bindings.Add(new CommandBinding(
                 Commands.ConvertToWide,
-                (sender, e) => this.InvokeTransformSelectedSegments(
+                (sender, e) => InvokeTransformSelectedSegments(
                     new[] {
                         (Action<ICSharpCode.AvalonEdit.Editing.TextArea, ISegment>)(
                             (textArea, segment) => textArea.Document.Replace(
@@ -237,7 +252,7 @@ namespace MyPad.Views.Controls
             this._updateFoldingsTimer = new();
             this._updateFoldingsTimer.Tick += this.FoldingsTimer_Tick;
 
-            this.BracketHighlighter = new BracketHighlighter(this.TextView);
+            this.ChangeMarkerMargin = new();
 
             // NOTE: SearchPanel の依存関係プロパティ MarkerBrush の設定
             // SearchPanel は Install メソッドで自身のインスタンスを作成後、
@@ -263,16 +278,51 @@ namespace MyPad.Views.Controls
             this.Caret.PositionChanged += this.Caret_PositionChanged;
             this.SearchPanel.Loaded += this.SearchPanel_Loaded;
             this.Loaded += this.TextArea_Loaded;
-            this.Unloaded += this.TextArea_Unloaded;
             DataObject.AddSettingDataHandler(this, this.OnAddSettingData);
         }
 
+        ~TextArea()
+        {
+            this.Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            this._updateFoldingsTimer.Tick -= this.FoldingsTimer_Tick;
+            this._updateFoldingsTimer.Stop();
+
+            this.Caret.PositionChanged -= this.Caret_PositionChanged;
+            this.SearchPanel.Loaded -= this.SearchPanel_Loaded;
+            DataObject.RemoveSettingDataHandler(this, this.OnAddSettingData);
+
+
+            if (this.FoldingManager != null)
+            {
+                FoldingManager.Uninstall(this.FoldingManager);
+                this.FoldingManager = null;
+            }
+            this.SearchPanel.Uninstall();
+            this.SearchPanel = null;
+
+            this.ChangeMarkerMargin.Dispose();
+            this.TextView.Dispose();
+        }
+
         public void Redraw()
-            => this.TextView.Redraw();
+        {
+            this.TextView.Redraw();
+        }
 
         public bool CanZoomIn()
-            => this.FontSize < MAX_FONT_SIZE;
-
+        {
+            return this.FontSize < MAX_FONT_SIZE;
+        }
         public void ZoomIn()
         {
             if (this.CanZoomIn() == false)
@@ -286,7 +336,9 @@ namespace MyPad.Views.Controls
         }
 
         public bool CanZoomOut()
-            => MIN_FONT_SIZE < this.FontSize;
+        {
+            return MIN_FONT_SIZE < this.FontSize;
+        }
 
         public void ZoomOut()
         {
@@ -301,7 +353,9 @@ namespace MyPad.Views.Controls
         }
 
         public bool CanZoomReset()
-            => this.FontSize != this.ActualFontSize;
+        {
+            return this.FontSize != this.ActualFontSize;
+        }
 
         public void ZoomReset()
         {
@@ -315,7 +369,9 @@ namespace MyPad.Views.Controls
         }
 
         public void OpenSearchPanel()
-            => this.OpenSearchPanel(false);
+        {
+            this.OpenSearchPanel(false);
+        }
 
         public void OpenSearchPanel(bool replaceAreaExpanded)
         {
@@ -339,7 +395,9 @@ namespace MyPad.Views.Controls
         }
 
         public bool CanReplaceNext()
-            => !this.IsReadOnly;
+        {
+            return !this.IsReadOnly;
+        }
 
         public void ReplaceNext()
         {
@@ -355,7 +413,9 @@ namespace MyPad.Views.Controls
         }
 
         public bool CanReplaceAll()
-            => !this.IsReadOnly;
+        {
+            return !this.IsReadOnly;
+        }
 
         public void ReplaceAll()
         {
@@ -392,7 +452,7 @@ namespace MyPad.Views.Controls
             // 開始括弧が表示領域外にある場合、開始括弧の位置までスクロールする
             var viewAreaTopOffset = this.TextView.ScrollOffset.Y;
             var viewAreaBottomOffset = viewAreaTopOffset + ((IScrollInfo)this).ScrollOwner.ActualHeight;
-            var lineOffset = Math.Max(this.Document.GetLineByOffset(section.StartOffset).LineNumber - 2, 0) * this.TextView.DefaultLineHeight;            
+            var lineOffset = Math.Max(this.Document.GetLineByOffset(section.StartOffset).LineNumber - 2, 0) * this.TextView.DefaultLineHeight;
             if (lineOffset < viewAreaTopOffset || viewAreaBottomOffset < lineOffset)
                 ((IScrollInfo)this).SetVerticalOffset(lineOffset);
         }
@@ -472,38 +532,29 @@ namespace MyPad.Views.Controls
                 FoldingStrategyKind.Xml => new XmlFoldingStrategy(),
                 _ => null,
             };
-            this.UpdateFoldings();
-            this.UpdateBracketHighlight();
+
+            // ビューを更新する
+            this.RefreshFoldings();
+            this.RefreshBracketHighlight();
         }
 
-        public void ResetChangeMarker()
+        public void RefreshChangeMarker()
         {
             if (this.ShowChangeMarker == false)
             {
-                if (this.ChangeMarkerManager != null)
-                {
-                    ChangeMarkerManager.Uninstall(this.ChangeMarkerManager);
-                    this.ChangeMarkerManager = null;
-                }
+                if (this.IsShowChangeMarkerMargin)
+                    this.LeftMargins.Remove(this.ChangeMarkerMargin);
                 return;
             }
 
-            this.ChangeMarkerManager ??= ChangeMarkerManager.Install(this);
-        }
-
-        public void UpdateBracketHighlight()
-        {
-            if (this.EnableFoldings == false || this.FoldingStrategy == null)
-            {
-                this.BracketHighlighter.ClearHighlight();
+            if (this.IsShowChangeMarkerMargin)
                 return;
-            }
 
-            var section = this.GetFoldingSection(this.Caret);
-            this.BracketHighlighter.Highlight(section);
+            var index = this.IsShowLineNumberMargin ? LINE_NUMBER_MARGIN_INDEX : 0;
+            this.LeftMargins.Insert(index, this.ChangeMarkerMargin);
         }
 
-        public void UpdateFoldings()
+        public void RefreshFoldings()
         {
             if (this.EnableFoldings == false || this.FoldingStrategy == null)
             {
@@ -520,7 +571,19 @@ namespace MyPad.Views.Controls
             this.FoldingStrategy?.UpdateFoldings(this.FoldingManager, this.Document);
         }
 
-        public FoldingSection GetFoldingSection(ICSharpCode.AvalonEdit.Editing.Caret caret)
+        public void RefreshBracketHighlight()
+        {
+            if (this.EnableFoldings == false || this.FoldingStrategy == null)
+            {
+                this.TextView.ClearHighlightPairBrackets();
+                return;
+            }
+
+            var section = this.GetFoldingSection(this.Caret);
+            this.TextView.HighlightPairBrackets(section);
+        }
+
+        public FoldingSection GetFoldingSection(Caret caret)
         {
             return this.FoldingManager?.AllFoldings
                 .Where(s =>
@@ -533,7 +596,7 @@ namespace MyPad.Views.Controls
                 .FirstOrDefault();
         }
 
-        private void InvokeTransformSelectedSegments(object[] parameters)
+        private static void InvokeTransformSelectedSegments(object[] parameters)
         {
             // HACK: EditingCommandHandler.TransformSelectedSegments メソッドで選択テキストを編集
             // private クラスの静的メソッドを呼び出している。仕様が変更される可能性もあるため危険。
@@ -625,8 +688,8 @@ namespace MyPad.Views.Controls
         private void FoldingsTimer_Tick(object sender, EventArgs e)
         {
             this._updateFoldingsTimer.Stop();
-            this.UpdateFoldings();
-            this.UpdateBracketHighlight();
+            this.RefreshFoldings();
+            this.RefreshBracketHighlight();
         }
 
         private void Caret_PositionChanged(object sender, EventArgs e)
@@ -636,7 +699,7 @@ namespace MyPad.Views.Controls
             this._updateFoldingsTimer.Interval = TimeSpan.FromSeconds(UPDATE_FOLDINGS_INTERVAL);
             this._updateFoldingsTimer.Start();
 
-            this.UpdateBracketHighlight();
+            this.RefreshBracketHighlight();
         }
 
         private void SearchPanel_Loaded(object sender, RoutedEventArgs e)
@@ -646,45 +709,7 @@ namespace MyPad.Views.Controls
 
         private void TextArea_Loaded(object sender, RoutedEventArgs e)
         {
-            this.ResetChangeMarker();
-        }
-
-        private void TextArea_Unloaded(object sender, RoutedEventArgs e)
-        {
-            this.SearchPanel.Loaded -= this.SearchPanel_Loaded;
-            this.Loaded -= this.TextArea_Loaded;
-            this.Unloaded -= this.TextArea_Unloaded;
-            DataObject.RemoveSettingDataHandler(this, this.OnAddSettingData);
-
-            this._updateFoldingsTimer.Tick -= this.FoldingsTimer_Tick;
-            this._updateFoldingsTimer.Stop();
-
-            if (this.ChangeMarkerManager != null)
-            {
-                ChangeMarkerManager.Uninstall(this.ChangeMarkerManager);
-                this.ChangeMarkerManager = null;
-            }
-
-            if (this.FoldingManager != null)
-            {
-                FoldingManager.Uninstall(this.FoldingManager);
-                this.FoldingManager = null;
-            }
-
-            this.SearchPanel.Uninstall();
-            this.SearchPanel = null;
-        }
-
-        public class CompletionData : ICompletionData
-        {
-            public ImageSource Image { get; set; }
-            public string Text { get; set; }
-            public object Content { get; set; }
-            public object Description { get; set; }
-            public double Priority { get; set; }
-
-            void ICompletionData.Complete(ICSharpCode.AvalonEdit.Editing.TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
-                => textArea.Document.Replace(completionSegment, this.Text);
+            this.RefreshChangeMarker();
         }
 
         public static class Commands

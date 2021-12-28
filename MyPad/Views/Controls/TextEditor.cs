@@ -9,7 +9,15 @@ using System.Windows;
 
 namespace MyPad.Views.Controls
 {
-    public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
+    /// <summary>
+    /// テキストエディターのコントロールを表します。
+    /// 
+    /// このクラスは、UI を司る <see cref="Controls.TextArea"/>、
+    /// ドキュメントを保管するモデルである <see cref="TextDocument"/>、
+    /// コントロールのプロパティを保管するモデルである <see cref="ICSharpCode.AvalonEdit.TextEditorOptions"/>
+    /// から構成されます。
+    /// </summary>
+    public class TextEditor : ICSharpCode.AvalonEdit.TextEditor, IDisposable
     {
         #region プロパティ
 
@@ -29,7 +37,7 @@ namespace MyPad.Views.Controls
         public static readonly DependencyProperty SettingsProperty
             = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(null, (obj, e) => ((TextEditor)obj).PopulateSettings((INotifyPropertyChanged)e.NewValue)));
-        public static readonly DependencyProperty SyntaxDefinitionProperty 
+        public static readonly DependencyProperty SyntaxDefinitionProperty
             = DependencyPropertyExtensions.Register(
                 new PropertyMetadata(null, (obj, e) =>
                 {
@@ -273,20 +281,51 @@ namespace MyPad.Views.Controls
             this.TextArea.OverstrikeModeChanged += this.TextArea_OverstrikeModeChanged;
         }
 
+        ~TextEditor()
+        {
+            this.Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            this.TextChanged -= this.TextEditor_TextChanged;
+            this.TextArea.Caret.PositionChanged -= this.Caret_PositionChanged;
+            this.TextArea.SelectionChanged -= this.TextArea_SelectionChanged;
+            this.TextArea.OverstrikeModeChanged -= this.TextArea_OverstrikeModeChanged;
+
+            this.TextArea.Dispose();
+        }
+
         public void Redraw()
-            => this.TextArea.Redraw();
+        {
+            this.TextArea.Redraw();
+        }
 
         public void ZoomIn()
-            => this.TextArea.ZoomIn();
+        {
+            this.TextArea.ZoomIn();
+        }
 
         public void ZoomOut()
-            => this.TextArea.ZoomOut();
+        {
+            this.TextArea.ZoomOut();
+        }
 
         public void ZoomReset()
-            => this.TextArea.ZoomReset();
+        {
+            this.TextArea.ZoomReset();
+        }
 
         public void ScrollToCaret()
-            => this.ScrollTo(this.Line, this.Column);
+        {
+            this.ScrollTo(this.Line, this.Column);
+        }
 
         private void PopulateSettings(INotifyPropertyChanged settings)
         {
@@ -298,8 +337,8 @@ namespace MyPad.Views.Controls
                 src.GetType().GetProperties().Where(p => p.CanRead)
                     .Join(
                         dest.GetType().GetProperties().Where(p => p.CanWrite),
-                        sp => new { sp.Name, sp.PropertyType }, 
-                        dp => new { dp.Name, dp.PropertyType }, 
+                        sp => new { sp.Name, sp.PropertyType },
+                        dp => new { dp.Name, dp.PropertyType },
                         (sp, dp) => new { sp, dp })
                     .ForEach(anon => anon.dp.SetValue(dest, anon.sp.GetValue(src)));
                 return dest;
