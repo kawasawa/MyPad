@@ -55,7 +55,7 @@ jobs:
       - name: Compress
         shell: pwsh
         run: |
-          Compress-Archive -Path dist -DestinationPath release.zip
+          Compress-Archive -Path dist/* -DestinationPath release.zip
 
       - name: Create release
         id: create_release
