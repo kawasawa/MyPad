@@ -21,7 +21,7 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Build
-      run: dotnet build MyPad.sln -c Release
+      run: dotnet build MyPad/MyPad.csproj -c Release
 
     - name: Test
       run: dotnet test MyPad.sln --no-restore
