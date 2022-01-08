@@ -16,12 +16,30 @@ namespace MyPad
         private readonly IProductInfo _productInfo;
         private readonly Process _process;
 
-        public IEnumerable<string> CommandLineArgs { get; set; } = Enumerable.Empty<string>();
+        /// <summary>
+        /// このアプリケーションの実行中のバージョンにおける固有の識別子
+        /// </summary>
+        public string Identifier => $"__{this._productInfo.Company}:{this._productInfo.Product}:{this._productInfo.Version}__";
+
+        /// <summary>
+        /// ログフォルダのパス
+        /// </summary>
+        public string LogDirectoryPath => Path.Combine(this._productInfo.Local, "log");
+
+        /// <summary>
+        /// 一時フォルダのパス
+        /// </summary>
+        public string TempDirectoryPath => Path.Combine(this._productInfo.Temporary, this._process.StartTime.ToString("yyyyMMddHHmmssfff"));
+
+        /// <summary>
+        /// キャッシュフォルダのパス
+        /// </summary>
         public IEnumerable<string> CachedDirectories { get; set; } = Enumerable.Empty<string>();
 
-        public string Identifier => $"__{this._productInfo.Company}:{this._productInfo.Product}:{this._productInfo.Version}__";
-        public string LogDirectoryPath => Path.Combine(this._productInfo.Local, "log");
-        public string TempDirectoryPath => Path.Combine(this._productInfo.Temporary, this._process.StartTime.ToString("yyyyMMddHHmmssfff"));
+        /// <summary>
+        /// コマンドライン引数
+        /// </summary>
+        public IEnumerable<string> CommandLineArgs { get; set; } = Enumerable.Empty<string>();
 
         /// <summary>
         /// このクラスの新しいインスタンスを生成します。

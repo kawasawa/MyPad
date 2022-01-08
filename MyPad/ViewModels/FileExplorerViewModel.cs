@@ -21,6 +21,9 @@ using Vanara.PInvoke;
 
 namespace MyPad.ViewModels
 {
+    /// <summary>
+    /// ファイルエクスプローラーに対応する ViewModel を表します。
+    /// </summary>
     public class FileExplorerViewModel : ViewModelBase
     {
         // Constructor Injection
@@ -28,7 +31,7 @@ namespace MyPad.ViewModels
 
         // Dependency Injection
         [Dependency]
-        public IContainerExtension ContainerExtension { get; set; }
+        public IContainerExtension Container { get; set; }
         [Dependency]
         public ILoggerFacade Logger { get; set; }
         [Dependency]
@@ -36,6 +39,10 @@ namespace MyPad.ViewModels
 
         public ReactiveCollection<FileTreeNode> FileTreeNodes { get; }
 
+        /// <summary>
+        /// このクラスの新しいインスタンスを生成します。
+        /// </summary>
+        /// <param name="eventAggregator">イベントアグリゲーター</param>
         [InjectionConstructor]
         [LogInterceptor]
         public FileExplorerViewModel(IEventAggregator eventAggregator)
@@ -51,12 +58,15 @@ namespace MyPad.ViewModels
 
             // ----- PUB/SUB メッセージ ------------------------------
 
-            void refreshExplorer() => this.RefreshExplorer();
-            this.EventAggregator.GetEvent<RefreshExplorerEvent>().Subscribe(refreshExplorer);
+            void recreateExplorer() => this.RecreateExplorer();
+            this.EventAggregator.GetEvent<RecreateExplorerEvent>().Subscribe(recreateExplorer);
         }
 
+        /// <summary>
+        /// エクスプローラーを再構築します。
+        /// </summary>
         [LogInterceptor]
-        public void RefreshExplorer()
+        public void RecreateExplorer()
         {
             var roots = this.Settings.OtherTools?.ExplorerRoots?.Where(i => string.IsNullOrEmpty(i.Path) == false && i.IsEnabled);
             var rootPath = roots?.Any() == true ? roots.Select(i => i.Path) : new[] { Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) };
@@ -64,14 +74,16 @@ namespace MyPad.ViewModels
 
             this.FileTreeNodes.ClearOnScheduler();
             this.FileTreeNodes.AddRangeOnScheduler(
-                rootPath.Select((r, i) => this.ContainerExtension.Resolve<FileTreeNode>().Initialize(r, i == 0, isExpanded)));
+                rootPath.Select((r, i) => this.Container.Resolve<FileTreeNode>().Initialize(r, i == 0, isExpanded)));
         }
 
-        // NOTE: このクラスは頻出するためトレースしない
+        /// <summary>
+        /// ファイルツリーノードのモデルを表します。
+        /// </summary>
         public class FileTreeNode : ViewModelBase
         {
             [Dependency]
-            public IContainerExtension ContainerExtension { get; set; }
+            public IContainerExtension Container { get; set; }
             [Dependency]
             public ILoggerFacade Logger { get; set; }
 
@@ -122,7 +134,11 @@ namespace MyPad.ViewModels
 
             public ReactiveCommand PropertyCommand { get; }
 
+            /// <summary>
+            /// このクラスの新しいインスタンスを生成します。
+            /// </summary>
             [InjectionConstructor]
+            [LogInterceptorIgnore]
             public FileTreeNode()
             {
                 this.Children = new ReactiveCollection<FileTreeNode>().AddTo(this.CompositeDisposable);
@@ -133,6 +149,29 @@ namespace MyPad.ViewModels
                     .AddTo(this.CompositeDisposable);
             }
 
+            /// <summary>
+            /// ノードの状態を指定し、ファイルパスを紐づけます。
+            /// </summary>
+            /// <param name="fileName">ファイルパス</param>
+            /// <param name="isSelected">選択されているかどうかを示す値</param>
+            /// <param name="isExpanded">展開されているかどうかを示す値</param>
+            /// <returns>呼び出し元のインスタンス</returns>
+            [LogInterceptorIgnore]
+            public FileTreeNode Initialize(string fileName, bool isSelected, bool isExpanded)
+            {
+                this.Initialize(fileName, null);
+                this.IsSelected = isSelected;
+                this.IsExpanded = isExpanded;
+                return this;
+            }
+
+            /// <summary>
+            /// ファイルパスと親ノードをこのインスタンスに紐づけます。
+            /// </summary>
+            /// <param name="fileName">ファイルパス</param>
+            /// <param name="parent">親ノード</param>
+            /// <returns>呼び出し元のインスタンス</returns>
+            [LogInterceptorIgnore]
             public FileTreeNode Initialize(string fileName, FileTreeNode parent)
             {
                 this._fileName = fileName;
@@ -166,22 +205,10 @@ namespace MyPad.ViewModels
                 return this;
             }
 
-            public FileTreeNode Initialize(string fileName, bool isSelected, bool isExpanded)
-            {
-                this.Initialize(fileName, null);
-                this.IsSelected = isSelected;
-                this.IsExpanded = isExpanded;
-                return this;
-            }
-
-            private FileTreeNode CreateEmptyChild()
-            {
-                var treeNode = this.ContainerExtension.Resolve<FileTreeNode>();
-                treeNode._isEmpty = true;
-                treeNode._parent = this;
-                return treeNode;
-            }
-
+            /// <summary>
+            /// 子ノードを一段階の深さまで探索し、このインスタンスに紐づけます。
+            /// </summary>
+            [LogInterceptorIgnore]
             private void ExploreChildren()
             {
                 static bool nodeFilter(string path)
@@ -199,7 +226,7 @@ namespace MyPad.ViewModels
                     var temp = Directory.EnumerateFileSystemEntries(parent.FileName, "*").Where(nodeFilter);
                     var children = temp.Where(p => Directory.Exists(p))
                         .Union(temp.Where(p => Directory.Exists(p) == false))
-                        .Select(p => this.ContainerExtension.Resolve<FileTreeNode>().Initialize(p, parent));
+                        .Select(p => this.Container.Resolve<FileTreeNode>().Initialize(p, parent));
                     return children.Any() ? children : new[] { parent.CreateEmptyChild() };
                 }
 
@@ -218,6 +245,19 @@ namespace MyPad.ViewModels
                 {
                     Mouse.OverrideCursor = null;
                 }
+            }
+
+            /// <summary>
+            /// 空の子ノードを生成し、このインスタンスに紐づけます。
+            /// </summary>
+            /// <returns>空の子ノード</returns>
+            [LogInterceptorIgnore]
+            private FileTreeNode CreateEmptyChild()
+            {
+                var treeNode = this.Container.Resolve<FileTreeNode>();
+                treeNode._isEmpty = true;
+                treeNode._parent = this;
+                return treeNode;
             }
         }
     }

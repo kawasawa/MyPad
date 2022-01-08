@@ -11,6 +11,9 @@ using Unity;
 
 namespace MyPad.ViewModels.Dialogs
 {
+    /// <summary>
+    /// <see cref="Views.Dialogs.SelectDiffFilesDialog"/> に対応する ViewModel を表します。
+    /// </summary>
     public class SelectDiffFilesDialogViewModel : DialogViewModelBase
     {
         [Dependency]
@@ -28,6 +31,9 @@ namespace MyPad.ViewModels.Dialogs
         public ReactiveCommand OKCommand { get; }
         public ReactiveCommand CancelCommand { get; }
 
+        /// <summary>
+        /// このクラスの新しいインスタンスを生成します。
+        /// </summary>
         [InjectionConstructor]
         [LogInterceptor]
         public SelectDiffFilesDialogViewModel()
@@ -57,6 +63,10 @@ namespace MyPad.ViewModels.Dialogs
                 .AddTo(this.CompositeDisposable);
         }
 
+        /// <summary>
+        /// ダイアログが表示されたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="parameters">ダイアログのパラメータ</param>
         [LogInterceptor]
         public override void OnDialogOpened(IDialogParameters parameters)
         {

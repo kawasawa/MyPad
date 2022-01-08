@@ -22,17 +22,19 @@ using ToastNotifications;
 using ToastNotifications.Lifetime;
 using ToastNotifications.Position;
 using Unity;
-using Vanara.InteropServices;
 using Vanara.PInvoke;
 
 namespace MyPad.Views
 {
+    /// <summary>
+    /// アプリケーションのメインウィンドウを表します。
+    /// </summary>
     public partial class MainWindow : MetroWindow
     {
         #region インジェクション
 
         // Constructor Injection
-        public IContainerExtension ContainerExtension { get; set; }
+        public IContainerExtension Container { get; set; }
 
         // Dependency Injection
         [Dependency]
@@ -66,11 +68,11 @@ namespace MyPad.Views
                 nameof(ActivateFileExplorerCommand),
                 typeof(MainWindow),
                 new InputGestureCollection { new KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Shift) });
-                public static readonly ICommand ActivatePropertyCommand
-                    = new RoutedCommand(
-                        nameof(ActivatePropertyCommand),
-                        typeof(MainWindow),
-                        new InputGestureCollection { new KeyGesture(Key.Enter, ModifierKeys.Alt) });
+        public static readonly ICommand ActivatePropertyCommand
+            = new RoutedCommand(
+                nameof(ActivatePropertyCommand),
+                typeof(MainWindow),
+                new InputGestureCollection { new KeyGesture(Key.Enter, ModifierKeys.Alt) });
 
         private static readonly DependencyProperty IsVisibleBottomContentProperty
             = DependencyPropertyExtensions.Register(
@@ -98,19 +100,60 @@ namespace MyPad.Views
         private (double sideBarWidth, double contentAreaWidth) _columnWidthCache = (2, 5);
         private bool _fullScreenMode;
 
-        public ICSharpCode.AvalonEdit.Search.Localization Localization { get; }
-        public IInterTabClient InterTabClient { get; }
-        public Notifier Notifier { get; }
-        public bool IsNewTabHost { get; set; }
+        /// <summary>
+        /// このウィンドウの ViewModel
+        /// </summary>
         public MainWindowViewModel ViewModel => (MainWindowViewModel)this.DataContext;
 
+        /// <summary>
+        /// フローティングウィンドウプロバイダー
+        /// </summary>
+        public IInterTabClient InterTabClient { get; }
+
+        /// <summary>
+        /// トースト通知プロバイダー
+        /// </summary>
+        public Notifier Notifier { get; }
+
+        /// <summary>
+        /// 検索パネル用の多言語処理プロバイダー
+        /// </summary>
+        public ICSharpCode.AvalonEdit.Search.Localization Localization { get; }
+
+        /// <summary>
+        /// 初期ウィンドウであるかどうかを示す値
+        /// </summary>
+        public bool IsInitialWindow { get; set; }
+
+        /// <summary>
+        /// フローティングによって誕生したウィンドウであるかどうかを示す値
+        /// </summary>
+        public bool IsFloatingWindow { get; set; }
+
+        /// <summary>
+        /// サイドコンテンツが開かれているかどうかを示す値
+        /// </summary>
+        public bool IsOpenedSideContent => double.IsNaN(this.SideContent.Width);
+
+        /// <summary>
+        /// ボトムコンテンツが表示されているかどうかを示す値
+        /// </summary>
+        public bool IsVisibleBottomContent
+        {
+            get => (bool)this.GetValue(IsVisibleBottomContentProperty);
+            set => this.SetValue(IsVisibleBottomContentProperty, value);
+        }
+
+        /// <summary>
+        /// アクティブな <see cref="TextEditor"/> のインスタンス
+        /// </summary>
         public TextEditor ActiveTextEditor
         {
             get
             {
                 try
                 {
-                    // NOTE: 選択されたタブ内のコントロールを取得
+                    // INFO: タブ内のコントロールを取得できない問題への対応
                     // ItemsSource に ViewModel をバインドした場合、その参照が Item プロパティに設定されるため、
                     // 子要素のビジュアルオブジェクトを直接取得する方法が無い。(仕様)
                     // VisualTree をたどり ContentPreseneter を取得し、内包する要素の名前からコントロールを特定する。
@@ -128,14 +171,12 @@ namespace MyPad.Views
             }
         }
 
-        public bool IsVisibleBottomContent
-        {
-            get => (bool)this.GetValue(IsVisibleBottomContentProperty);
-            set => this.SetValue(IsVisibleBottomContentProperty, value);
-        }
-
+        /// <summary>
+        /// フルスクリーンと通常表示の切り替えコマンド
+        /// </summary>
         public ICommand SwitchFullScreenModeCommand
-            => new DelegateCommand(() => {
+            => new DelegateCommand(() =>
+            {
                 if (this._fullScreenMode)
                 {
                     this._fullScreenMode = false;
@@ -157,14 +198,18 @@ namespace MyPad.Views
 
         #region メソッド
 
+        /// <summary>
+        /// このクラスの新しいインスタンスを生成します。
+        /// </summary>
+        /// <param name="container">DI コンテナ</param>
         [InjectionConstructor]
         [LogInterceptor]
-        public MainWindow(IContainerExtension containerExtension)
+        public MainWindow(IContainerExtension container)
         {
             this.InitializeComponent();
-            this.ContainerExtension = containerExtension;
+            this.Container = container;
             this.Localization = new LocalizationWrapper();
-            this.InterTabClient = this.ContainerExtension.Resolve<InterTabClientWrapper>();
+            this.InterTabClient = this.Container.Resolve<InterTabClientWrapper>();
             this.Notifier = new(config =>
             {
                 config.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromSeconds(AppSettingsReader.ToastLifetime), MaximumNotificationCount.FromCount(AppSettingsReader.ToastCountLimit));
@@ -230,11 +275,11 @@ namespace MyPad.Views
                 ),
                 new CommandBinding(
                     ActivateFileExplorerCommand,
-                    (sender, e) => this.PerformInvokeSideContent(this.FileExplorerItem)
+                    (sender, e) => this.PerformClickSideContent(this.FileExplorerItem)
                 ),
                 new CommandBinding(
                     ActivatePropertyCommand,
-                    (sender, e) => this.PerformInvokeSideContent(this.PropertyItem)
+                    (sender, e) => this.PerformClickSideContent(this.PropertyItem)
                 ),
             });
 
@@ -262,12 +307,27 @@ namespace MyPad.Views
             this._miiSeparator = (10, createMenuItem(true));
         }
 
+        /// <summary>
+        /// テキストエディターをキャレット位置までスクロールさせます。
+        /// </summary>
+        [LogInterceptor]
+        public void ScrollToCaret()
+        {
+            this.ActiveTextEditor?.ScrollToCaret();
+        }
+
+        /// <summary>
+        /// テキストエディターにフォーカスを設定します。
+        /// </summary>
         [LogInterceptor]
         private void FocusTextEditor()
         {
             this.Dispatcher.InvokeAsync(() => this.ActiveTextEditor?.Focus());
         }
 
+        /// <summary>
+        /// ボトムコンテンツにフォーカスを設定します。
+        /// </summary>
         [LogInterceptor]
         private void FocusBottomContent()
         {
@@ -288,6 +348,9 @@ namespace MyPad.Views
             element.Loaded += elementLoaded;
         }
 
+        /// <summary>
+        /// サイドコンテンツにフォーカスを設定します。
+        /// </summary>
         [LogInterceptor]
         private void FocusSideContent()
         {
@@ -302,6 +365,10 @@ namespace MyPad.Views
             element.Loaded += elementLoaded;
         }
 
+        /// <summary>
+        /// サイドコンテンツを開き、項目をアクティブにします。
+        /// </summary>
+        /// <param name="targetItem">アクティブにする項目</param>
         [LogInterceptor]
         private void OpenSideContent(object targetItem)
         {
@@ -314,6 +381,9 @@ namespace MyPad.Views
             this.MainContentColumn.Width = new(this._columnWidthCache.contentAreaWidth, GridUnitType.Star);
         }
 
+        /// <summary>
+        /// サイドコンテンツを閉じます。
+        /// </summary>
         [LogInterceptor]
         private void CloseSideContent()
         {
@@ -327,18 +397,16 @@ namespace MyPad.Views
             this.MainContentColumn.Width = new(1, GridUnitType.Star);
         }
 
+        /// <summary>
+        /// サイドコンテンツの項目を選択した際の再現します。
+        /// </summary>
+        /// <param name="targetItem">対象の項目</param>
         [LogInterceptor]
-        private bool IsClosedSideContent()
-        {
-            return double.IsNaN(this.SideContent.Width) == false;
-        }
-
-        [LogInterceptor]
-        private void PerformInvokeSideContent(object targetItem)
+        private void PerformClickSideContent(object targetItem)
         {
             this.Settings.System.ShowSideBar = true;
 
-            if (this.IsClosedSideContent())
+            if (this.IsOpenedSideContent == false)
             {
                 // 閉じた状態の場合
                 this.OpenSideContent(targetItem);
@@ -360,16 +428,15 @@ namespace MyPad.Views
             }
         }
 
-        [LogInterceptor]
-        public void ScrollToCaret()
-        {
-            this.ActiveTextEditor?.ScrollToCaret();
-        }
-
         #endregion
 
         #region イベントハンドラ
 
+        /// <summary>
+        /// ウィンドウがロードされたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
         [LogInterceptor]
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -385,10 +452,9 @@ namespace MyPad.Views
             User32.InsertMenuItem(hMenu, this._miiShowStatusBar.fByPosition, true, ref this._miiShowStatusBar.lpmii);
             User32.InsertMenuItem(hMenu, this._miiSeparator.fByPosition, true, ref this._miiSeparator.lpmii);
 
-            // 初期ウィンドウ向けの処理を行う
-            if (this.IsNewTabHost == false)
+            // 表示位置を復元する
+            if (this.IsInitialWindow)
             {
-                // 表示位置を復元する
                 if (this.Settings.System.SaveWindowPlacement && this.Settings.System.WindowPlacement.HasValue)
                 {
                     var lpwndpl = this.Settings.System.WindowPlacement.Value;
@@ -396,8 +462,11 @@ namespace MyPad.Views
                         lpwndpl.showCmd = ShowWindowCommand.SW_SHOWNORMAL;
                     User32.SetWindowPlacement(this._handleSource.Handle, ref lpwndpl);
                 }
+            }
 
-                // 既定のタブを生成する
+            // 既定のタブを生成する
+            if (this.IsInitialWindow || this.IsFloatingWindow == false)
+            {
                 if (this.MainContent.Items.Count == 0)
                 {
                     TabablzControl.AddItemCommand.Execute(null, this.MainContent);
@@ -408,7 +477,7 @@ namespace MyPad.Views
             void injectRegionContent<T>(string suffix = null)
             {
                 var regionName = $"{PrismConvertHelper.ConvertToRegionName<T>()}{suffix}";
-                var content = this.ContainerExtension.Resolve<T>();
+                var content = this.Container.Resolve<T>();
 
                 try
                 {
@@ -443,6 +512,11 @@ namespace MyPad.Views
             injectRegionContent<ScriptRunnerView>();
         }
 
+        /// <summary>
+        /// ウィンドウが閉じられるときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
         [LogInterceptor]
         private void Window_Closing(object sender, CancelEventArgs e)
         {
@@ -450,6 +524,11 @@ namespace MyPad.Views
             this.SetForegroundWindow();
         }
 
+        /// <summary>
+        /// ウィンドウが閉じられたあとに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
         [LogInterceptor]
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -462,6 +541,9 @@ namespace MyPad.Views
                 User32.GetWindowPlacement(this._handleSource.Handle, ref lpwndpl);
                 this.Settings.System.WindowPlacement = lpwndpl;
             }
+
+            // リージョンを破棄する
+            this.RegionManager.Regions.ForEach(r => r.RemoveAll());
 
             // フックメソッドを解除する
             this._handleSource.RemoveHook(this.WndProc);
@@ -478,13 +560,21 @@ namespace MyPad.Views
             }
         }
 
+        /// <summary>
+        /// DataContext が変更されたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
         [LogInterceptor]
         private void Window_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
+            // INFO: Closing イベント内で非同期処理後にイベントをキャンセルできない問題への対応 (View)
+            // 非同期処理を挟む都合上、ViewModel は Closing イベントをキャンセルせざるを得ない。
+            // したがって Close 処理は View 側で行う。
+            // ViewModel は Close 要件を満たすと自身の Dispose を実行する。
+            // View はこれをトリガーに Close メソッドを実行する。
             void viewModel_Disposed(object sender, EventArgs e)
             {
-                // NOTE: Closing イベント内で非同期処理後にイベントをキャンセルできなくなる問題 (View)
-                // ViewModel の Dispose をトリガーに、View の Close メソッドを実行する。
                 ((ViewModelBase)sender).Disposed -= viewModel_Disposed;
                 this.Dispatcher.InvokeAsync(() => this.Close());
             }
@@ -495,6 +585,11 @@ namespace MyPad.Views
                 newViewModel.Disposed += viewModel_Disposed;
         }
 
+        /// <summary>
+        /// フライアウトの開閉状態が変更されたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
         [LogInterceptor]
         private void Flyout_IsOpenChanged(object sender, RoutedEventArgs e)
         {
@@ -505,25 +600,40 @@ namespace MyPad.Views
             e.Handled = true;
         }
 
+        /// <summary>
+        /// サイドコンテンツの表示設定が変更されたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
         [LogInterceptor]
         private void SideContent_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue is not bool visible || visible)
                 return;
-            if (this.IsClosedSideContent())
+            if (this.IsOpenedSideContent == false)
                 return;
 
             this.CloseSideContent();
         }
 
+        /// <summary>
+        /// サイドコンテンツの項目が選択されたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
         [LogInterceptor]
         private void SideContent_ItemInvoked(object sender, HamburgerMenuItemInvokedEventArgs e)
         {
             if (System.Windows.Input.MouseButtonState.Pressed == Mouse.LeftButton && e.IsItemOptions == false)
-                this.PerformInvokeSideContent(e.InvokedItem);
+                this.PerformClickSideContent(e.InvokedItem);
             e.Handled = true;
         }
 
+        /// <summary>
+        /// ファイルツリーノードが右クリックされたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
         [LogInterceptor]
         private void FileTreeNode_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -537,6 +647,11 @@ namespace MyPad.Views
             e.Handled = true;
         }
 
+        /// <summary>
+        /// ファイルツリーノードがダブルクリックされたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
         [LogInterceptor]
         private void FileTreeNode_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -557,6 +672,11 @@ namespace MyPad.Views
             }
         }
 
+        /// <summary>
+        /// ファイルツリーノード上でキーが押されたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
         [LogInterceptor]
         private void FileTreeNode_KeyDown(object sender, KeyEventArgs e)
         {
@@ -566,32 +686,37 @@ namespace MyPad.Views
             switch (e.Key)
             {
                 case Key.Enter:
-                {
-                    var node = (FileExplorerViewModel.FileTreeNode)((TreeViewItem)sender).DataContext;
-                    if (node.IsEmpty)
                     {
-                        e.Handled = true;
-                        return;
+                        var node = (FileExplorerViewModel.FileTreeNode)((TreeViewItem)sender).DataContext;
+                        if (node.IsEmpty)
+                        {
+                            e.Handled = true;
+                            return;
+                        }
+                        if (File.Exists(node.FileName))
+                        {
+                            this.ViewModel.LoadCommand.Execute(new[] { node.FileName });
+                            e.Handled = true;
+                            return;
+                        }
+                        if (Directory.Exists(node.FileName))
+                        {
+                            node.IsExpanded = !node.IsExpanded;
+                            e.Handled = true;
+                            return;
+                        }
+                        break;
                     }
-                    if (File.Exists(node.FileName))
-                    {
-                        this.ViewModel.LoadCommand.Execute(new[] { node.FileName });
-                        e.Handled = true;
-                        return;
-                    }
-                    if (Directory.Exists(node.FileName))
-                    {
-                        node.IsExpanded = !node.IsExpanded;
-                        e.Handled = true;
-                        return;
-                    }
-                    break;
-                }
             }
         }
 
+        /// <summary>
+        /// メインコンテンツの選択中の項目が変更されたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
         [LogInterceptor]
-        private void DraggableTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void MainContent_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.Handled || e.Source != e.OriginalSource)
                 return;
@@ -600,8 +725,13 @@ namespace MyPad.Views
             e.Handled = true;
         }
 
+        /// <summary>
+        /// メインコンテンツの項目を右クリックしたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
         [LogInterceptor]
-        private void DragablzItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void MainContentItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.Handled)
                 return;
@@ -611,6 +741,11 @@ namespace MyPad.Views
             e.Handled = true;
         }
 
+        /// <summary>
+        /// テキストエディターがロードされたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
         [LogInterceptor]
         private void TextEditor_Loaded(object sender, RoutedEventArgs e)
         {
@@ -619,6 +754,23 @@ namespace MyPad.Views
             textEditor.Redraw();
         }
 
+        /// <summary>
+        /// テキストエディターがアンロードされたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
+        [LogInterceptor]
+        private void TextEditor_Unloaded(object sender, RoutedEventArgs e)
+        {
+            var textEditor = (TextEditor)sender;
+            textEditor.Dispose();
+        }
+
+        /// <summary>
+        /// 列スプリッターの移動が完了したときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
         [LogInterceptor]
         private void ColumnSplitter_DragCompleted(object sender, DragCompletedEventArgs e)
         {
@@ -630,6 +782,11 @@ namespace MyPad.Views
             this.CloseSideContent();
         }
 
+        /// <summary>
+        /// 行スプリッターの移動が完了したときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
         [LogInterceptor]
         private void RowSplitter_DragCompleted(object sender, DragCompletedEventArgs e)
         {
@@ -639,43 +796,61 @@ namespace MyPad.Views
             this.IsVisibleBottomContent = false;
         }
 
-        // NOTE: このメソッドは頻発するためトレースしない
+        /// <summary>
+        /// Windows メッセージを受信したときに呼び出されます。
+        /// </summary>
+        /// <param name="hWnd">ウィンドウハンドル</param>
+        /// <param name="msg">Windows メッセージ</param>
+        /// <param name="wParam">メッセージの付加情報</param>
+        /// <param name="lParam">メッセージの付加情報</param>
+        /// <param name="handled">ハンドルされたかどうかを示す値</param>
+        /// <returns>メッセージが処理された場合は 0 以外の値が返ります。</returns>
+        [LogInterceptorIgnore]
         private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            switch ((User32.WindowMessage)msg)
+            try
             {
-                case User32.WindowMessage.WM_INITMENUPOPUP:
+                switch ((User32.WindowMessage)msg)
                 {
-                    var hMenu = User32.GetSystemMenu(this._handleSource.Handle, false);
-                    this._miiShowMenuBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowMenuBar);
-                    this._miiShowToolBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowToolBar);
-                    this._miiShowSideBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowSideBar);
-                    this._miiShowStatusBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowStatusBar);
-                    this._miiShowMenuBar.lpmii.fState = this.Settings.System.ShowMenuBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
-                    this._miiShowToolBar.lpmii.fState = this.Settings.System.ShowToolBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
-                    this._miiShowSideBar.lpmii.fState = this.Settings.System.ShowSideBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
-                    this._miiShowStatusBar.lpmii.fState = this.Settings.System.ShowStatusBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
-                    User32.SetMenuItemInfo(hMenu, this._miiShowMenuBar.fByPosition, true, in this._miiShowMenuBar.lpmii);
-                    User32.SetMenuItemInfo(hMenu, this._miiShowToolBar.fByPosition, true, in this._miiShowToolBar.lpmii);
-                    User32.SetMenuItemInfo(hMenu, this._miiShowSideBar.fByPosition, true, in this._miiShowSideBar.lpmii);
-                    User32.SetMenuItemInfo(hMenu, this._miiShowStatusBar.fByPosition, true, in this._miiShowStatusBar.lpmii);
-                    break;
-                }
+                    // システムメニューがアクティブになったとき
+                    case User32.WindowMessage.WM_INITMENUPOPUP:
+                        {
+                            var hMenu = User32.GetSystemMenu(this._handleSource.Handle, false);
+                            this._miiShowMenuBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowMenuBar);
+                            this._miiShowToolBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowToolBar);
+                            this._miiShowSideBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowSideBar);
+                            this._miiShowStatusBar.lpmii.dwTypeData.Assign(Properties.Resources.Command_ShowStatusBar);
+                            this._miiShowMenuBar.lpmii.fState = this.Settings.System.ShowMenuBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
+                            this._miiShowToolBar.lpmii.fState = this.Settings.System.ShowToolBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
+                            this._miiShowSideBar.lpmii.fState = this.Settings.System.ShowSideBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
+                            this._miiShowStatusBar.lpmii.fState = this.Settings.System.ShowStatusBar ? User32.MenuItemState.MFS_CHECKED : User32.MenuItemState.MFS_ENABLED;
+                            User32.SetMenuItemInfo(hMenu, this._miiShowMenuBar.fByPosition, true, in this._miiShowMenuBar.lpmii);
+                            User32.SetMenuItemInfo(hMenu, this._miiShowToolBar.fByPosition, true, in this._miiShowToolBar.lpmii);
+                            User32.SetMenuItemInfo(hMenu, this._miiShowSideBar.fByPosition, true, in this._miiShowSideBar.lpmii);
+                            User32.SetMenuItemInfo(hMenu, this._miiShowStatusBar.fByPosition, true, in this._miiShowStatusBar.lpmii);
+                            break;
+                        }
 
-                case User32.WindowMessage.WM_SYSCOMMAND:
-                {
-                    var settings = this.Settings.System;
-                    var wID = wParam.ToInt32();
-                    if (this._miiShowMenuBar.lpmii.wID == wID)
-                        settings.ShowMenuBar = !settings.ShowMenuBar;
-                    if (this._miiShowToolBar.lpmii.wID == wID)
-                        settings.ShowToolBar = !settings.ShowToolBar;
-                    if (this._miiShowSideBar.lpmii.wID == wID)
-                        settings.ShowSideBar = !settings.ShowSideBar;
-                    if (this._miiShowStatusBar.lpmii.wID == wID)
-                        settings.ShowStatusBar = !settings.ShowStatusBar;
-                    break;
+                    // システムメニューの項目が選択されたとき
+                    case User32.WindowMessage.WM_SYSCOMMAND:
+                        {
+                            var settings = this.Settings.System;
+                            var wID = wParam.ToInt32();
+                            if (this._miiShowMenuBar.lpmii.wID == wID)
+                                settings.ShowMenuBar = !settings.ShowMenuBar;
+                            if (this._miiShowToolBar.lpmii.wID == wID)
+                                settings.ShowToolBar = !settings.ShowToolBar;
+                            if (this._miiShowSideBar.lpmii.wID == wID)
+                                settings.ShowSideBar = !settings.ShowSideBar;
+                            if (this._miiShowStatusBar.lpmii.wID == wID)
+                                settings.ShowStatusBar = !settings.ShowStatusBar;
+                            break;
+                        }
                 }
+            }
+            catch (Exception e)
+            {
+                this.Logger.Log($"Windows メッセージを処理する際にエラーが発生しました。", Category.Error, e);
             }
             return IntPtr.Zero;
         }
@@ -684,10 +859,13 @@ namespace MyPad.Views
 
         #region 内部クラス
 
+        /// <summary>
+        /// フローティング処理における新旧のウィンドウの制御を行います。
+        /// </summary>
         public class InterTabClientWrapper : IInterTabClient
         {
             [Dependency]
-            public IContainerExtension ContainerExtension { get; set; }
+            public IContainerExtension Container { get; set; }
             [Dependency]
             public IRegionManager RegionManager { get; set; }
             [Dependency]
@@ -696,30 +874,33 @@ namespace MyPad.Views
             [LogInterceptor]
             INewTabHost<Window> IInterTabClient.GetNewHost(IInterTabClient interTabClient, object partition, TabablzControl source)
             {
-                var view = this.ContainerExtension.Resolve<MainWindow>((typeof(IRegionManager), this.RegionManager.CreateRegionManager()));
-                this.Logger.Log($"タブのアンドックによりウィンドウが生成されました。win#{((MainWindowViewModel)view.DataContext).Sequense}", Category.Info);
-                view.IsNewTabHost = true;
-
-                // NOTE: IsHeaderPanelVisible = false の状態でフローティングを行うと例外が発生する現象への対策
-                // ドラッグ移動中(マウスの左ボタンが押下されている間)はタブを表示する。
-                // また、既存のタブコントロールにドッキングされウィンドウが消滅する場合に備え Closed イベントも監視する。
+                // INFO: IsHeaderPanelVisible = false の状態でフローティングを行うと例外が発生する場合がある問題への対応
+                // アプリ側の仕様でタブが一つのみの場合にタブバーを非表示にする機能がある。
+                // この状態ではタブの受け入れができずフローティング時に例外となってしまう。
+                // これを避けるため、ドラッグ移動中(マウスの左ボタンが押下されている間)はタブを常に表示させる。
                 //
                 // Dragablz/Dragablz/TabablzControl.cs | 6311e72 on 16 Aug 2017 | Line 1330:
                 //   _dragablzItemsControl.InstigateDrag(interTabTransfer.Item, newContainer =>
+                var view = this.Container.Resolve<MainWindow>((typeof(IRegionManager), this.RegionManager.CreateRegionManager()));
+                view.IsFloatingWindow = true;
                 if (view.Settings.System.ShowSingleTab == false)
                 {
-                    void windowMoveEnd(object sender, EventArgs e)
+                    // フローティングが終了するタイミングはドラッグ終了時とウィンドウクローズ時がある
+                    // (既存のタブコントロールにドッキングされるとウィンドウがクローズする)
+                    void floatingFinished(object sender, EventArgs e)
                     {
                         view.Settings.System.ShowSingleTab = false;
-                        ((Window)sender).PreviewMouseLeftButtonUp -= windowMoveEnd;
-                        ((Window)sender).Closed -= windowMoveEnd;
+                        ((Window)sender).PreviewMouseLeftButtonUp -= floatingFinished;
+                        ((Window)sender).Closed -= floatingFinished;
                     }
                     view.Settings.System.ShowSingleTab = true;
-                    view.PreviewMouseLeftButtonUp += windowMoveEnd;
-                    view.Closed += windowMoveEnd;
+                    view.PreviewMouseLeftButtonUp += floatingFinished;
+                    view.Closed += floatingFinished;
                 }
+                var host = new NewTabHost<Window>(view, view.MainContent);
 
-                return new NewTabHost<Window>(view, view.MainContent);
+                this.Logger.Log($"タブのアンドックにより新しいウィンドウが生成されました。win#{((MainWindowViewModel)view.DataContext).Sequense}", Category.Info);
+                return host;
             }
 
             [LogInterceptor]
@@ -727,6 +908,9 @@ namespace MyPad.Views
                 => TabEmptiedResponse.CloseWindowOrLayoutBranch;
         }
 
+        /// <summary>
+        /// <see cref="ICSharpCode.AvalonEdit.Search.SearchPanel"/> のラベルテキストを多言語対応します。
+        /// </summary>
         public class LocalizationWrapper : ICSharpCode.AvalonEdit.Search.Localization
         {
             public override string MatchCaseText => Properties.Resources.Command_CaseSensitive;
@@ -737,12 +921,14 @@ namespace MyPad.Views
             public override string ErrorText => $"{Properties.Resources.Message_NotifyErrorText}: ";
             public override string NoMatchesFoundText => Properties.Resources.Message_NotifyNoMatchesText;
 
+#pragma warning disable CA1822
             public string SwitchFindModeText => Properties.Resources.Command_SwitchFindMode;
             public string FindText => Properties.Resources.Command_Find;
             public string ReplaceText => Properties.Resources.Command_Replace;
             public string ReplaceNextText => Properties.Resources.Command_ReplaceNext;
             public string ReplaceAllText => Properties.Resources.Command_ReplaceAll;
             public string CloseText => Properties.Resources.Command_Close;
+#pragma warning restore CA1822
         }
 
         #endregion

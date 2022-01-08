@@ -12,6 +12,9 @@ using Unity;
 
 namespace MyPad.Models
 {
+    /// <summary>
+    /// シンタックス定義に関連する処理を提供します。
+    /// </summary>
     public sealed class SyntaxService
     {
         #region インジェクション
@@ -35,7 +38,12 @@ namespace MyPad.Models
 
         #endregion
 
-        public bool Initialize(bool force)
+        /// <summary>
+        /// シンタックス定義ファイルとそれを配置するディレクトリを作成します。
+        /// </summary>
+        /// <param name="force"><see cref="true"/> が指定された場合、すでにディレクトリが存在していても新たに定義ファイルを生成しなおします。</param>
+        /// <returns>正常に処理されたかどうかを示す値</returns>
+        public bool CreateDefinitionFiles(bool force)
         {
             try
             {
@@ -61,6 +69,10 @@ namespace MyPad.Models
             }
         }
 
+        /// <summary>
+        /// シンタックス定義を列挙します。
+        /// </summary>
+        /// <returns>シンタックス定義のイテレータ</returns>
         public IEnumerable<XshdSyntaxDefinition> Enumerate()
         {
             if (Directory.Exists(this.DirectoryPath) == false)

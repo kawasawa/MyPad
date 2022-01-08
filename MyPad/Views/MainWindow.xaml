@@ -19,6 +19,7 @@
                xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
                xmlns:controls="clr-namespace:MyPad.Views.Controls"
                xmlns:helpers="clr-namespace:MyPad.Views.Helpers"
+               d:DataContext="{d:DesignInstance {x:Type viewModels:MainWindowViewModel}}"
                mc:Ignorable="d"
                p:ViewModelLocator.AutoWireViewModel="True"
                Style="{StaticResource App.Window}"
@@ -27,7 +28,7 @@
                        P1={Binding ActiveTextEditor.Value.FileName, Mode=OneWay},
                        P2={Binding ActiveTextEditor.Value.IsModified, Mode=OneWay},
                        P3={Binding ProductInfo.Product, Mode=OneWay}}"
-               Cursor="{qc:Binding '$P ? Cursors.Wait : Cursors.Arrow', P={Binding IsWorking.Value, Mode=TwoWay}}"
+               Cursor="{qc:Binding '$P ? Cursors.Wait : Cursors.Arrow', P={Binding IsPending.Value, Mode=TwoWay}}"
                ResizeMode="{qc:Binding '$P ? ResizeMode.CanResizeWithGrip : ResizeMode.CanResize', P={Binding Settings.System.ShowStatusBar, Mode=TwoWay}}" 
                Height="525" Width="850" WindowStartupLocation="CenterScreen" AllowDrop="True"
                Loaded="Window_Loaded" Closing="Window_Closing" Closed="Window_Closed" DataContextChanged="Window_DataContextChanged">
@@ -187,15 +188,15 @@
 
         <Grid Grid.Row="2">
             <Grid.Resources>
-                <s:Double x:Key="HamburgerWidth">48</s:Double>
-                <GridLength x:Key="HamburgerColumnWidth">48</GridLength>
+                <s:Double x:Key="SideContentWidth">48</s:Double>
+                <GridLength x:Key="SideContentColumnWidth">48</GridLength>
                 <helpers:BindingProxy x:Key="Proxy" Data="{Binding Mode=OneWay}"/>
             </Grid.Resources>
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" x:Name="SideContentColumn"
-                                  MinWidth="{qc:MultiBinding '$P0 ? $P1 : 0', P0={Binding Settings.System.ShowSideBar, Mode=OneWay}, P1={Binding Source={StaticResource HamburgerWidth}}}"
-                                  MaxWidth="{qc:MultiBinding '$P0 - $P1', P0={Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}, P1={Binding Source={StaticResource HamburgerWidth}}}"/>
+                                  MinWidth="{qc:MultiBinding '$P0 ? $P1 : 0', P0={Binding Settings.System.ShowSideBar, Mode=OneWay}, P1={Binding Source={StaticResource SideContentWidth}}}"
+                                  MaxWidth="{qc:MultiBinding '$P0 - $P1', P0={Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}, P1={Binding Source={StaticResource SideContentWidth}}}"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*" x:Name="MainContentColumn"/>
             </Grid.ColumnDefinitions>
@@ -207,8 +208,8 @@
             </Grid.RowDefinitions>
 
             <m:HamburgerMenu Grid.Column="0" Grid.RowSpan="3" x:Name="SideContent"
-                             Width="{StaticResource HamburgerWidth}"
-                             HamburgerWidth="{StaticResource HamburgerWidth}"
+                             Width="{StaticResource SideContentWidth}"
+                             HamburgerWidth="{StaticResource SideContentWidth}"
                              HamburgerVisibility="Collapsed"
                              Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowSideBar, Mode=OneWay}}"
                              IsTabStop="False"
@@ -216,15 +217,15 @@
                              IsVisibleChanged="SideContent_IsVisibleChanged"
                              ItemInvoked="SideContent_ItemInvoked">
                 <i:Interaction.Triggers>
-                    <i:PropertyChangedTrigger Binding="{Binding Visibility, ElementName=HamburgerMenu, Mode=OneWay}">
+                    <i:PropertyChangedTrigger Binding="{Binding Visibility, ElementName=SideContent, Mode=OneWay}">
                         <i:ChangePropertyAction TargetName="SideContentColumn" PropertyName="Width" Value="Auto"/>
                     </i:PropertyChangedTrigger>
                 </i:Interaction.Triggers>
                 <m:HamburgerMenu.ItemTemplate>
                     <DataTemplate DataType="{x:Type m:HamburgerMenuIconItem}">
-                        <Grid Height="{StaticResource HamburgerWidth}">
+                        <Grid Height="{StaticResource SideContentWidth}">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="{StaticResource HamburgerColumnWidth}"/>
+                                <ColumnDefinition Width="{StaticResource SideContentColumnWidth}"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Border ToolTip="{Binding Label, Mode=OneWay}" Background="{qc:MultiBinding '$P0 == $P1 ? new SolidColorBrush(Color.FromArgb((byte)204, (byte)0, (byte)120, (byte)215)) : Brushes.Transparent', P0={Binding Mode=OneWay}, P1={Binding Content, ElementName=SideContent, Mode=OneWay}}">
@@ -235,9 +236,9 @@
                 </m:HamburgerMenu.ItemTemplate>
                 <m:HamburgerMenu.OptionsItemTemplate>
                     <DataTemplate DataType="{x:Type m:HamburgerMenuIconItem}">
-                        <Grid Height="{StaticResource HamburgerWidth}">
+                        <Grid Height="{StaticResource SideContentWidth}">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="{StaticResource HamburgerColumnWidth}"/>
+                                <ColumnDefinition Width="{StaticResource SideContentColumnWidth}"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Border ToolTip="{Binding Label, Mode=OneWay}" Background="Transparent">
@@ -248,7 +249,7 @@
                 </m:HamburgerMenu.OptionsItemTemplate>
                 <m:HamburgerMenu.ContentTemplate>
                     <DataTemplate DataType="{x:Type m:HamburgerMenuIconItem}">
-                        <Grid ge:GridEx.RowDefinition="10, Auto, 10, *" Width="{qc:MultiBinding '$P0 - $P1', P0={Binding ActualWidth, ElementName=HamburgerMenu, Mode=OneWay}, P1={Binding Source={StaticResource HamburgerWidth}}}">
+                        <Grid ge:GridEx.RowDefinition="10, Auto, 10, *" Width="{qc:MultiBinding '$P0 - $P1', P0={Binding ActualWidth, ElementName=SideContent, Mode=OneWay}, P1={Binding Source={StaticResource SideContentWidth}}}">
                             <Grid.ContextMenu>
                                 <ContextMenu/>
                             </Grid.ContextMenu>
@@ -402,7 +403,7 @@
                                           IsHeaderPanelVisible="{qc:MultiBinding '$P0 || $P1.CompareTo(1) == 1', P0={Binding Settings.System.ShowSingleTab, Mode=OneWay}, P1={Binding Items.Count, RelativeSource={RelativeSource Self}, Mode=OneWay}}"
                                           ShowDefaultAddButton="False"
                                           ShowDefaultCloseButton="True"
-                                          SelectionChanged="DraggableTabControl_SelectionChanged">
+                                          SelectionChanged="MainContent_SelectionChanged">
                 <dr:TabablzControl.InterTabController>
                     <dr:InterTabController InterTabClient="{Binding InterTabClient, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
                 </dr:TabablzControl.InterTabController>
@@ -443,7 +444,7 @@
                 </dr:TabablzControl.HeaderItemTemplate>
                 <dr:TabablzControl.ItemContainerStyle>
                     <Style TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource Default.DragablzItem}">
-                        <EventSetter Event="MouseRightButtonDown" Handler="DragablzItem_MouseRightButtonDown"/>
+                        <EventSetter Event="MouseRightButtonDown" Handler="MainContentItem_MouseRightButtonDown"/>
                         <Setter Property="ToolTipService.IsEnabled" Value="{qc:Binding '!$P', P={Binding IsNewFile, Mode=OneWay}}"/>
                         <Setter Property="ToolTip" Value="{qc:MultiBinding '($P0 ? \'[R/O] \' : null) + $P1', P0={Binding IsReadOnly, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}"/>
                         <Style.Triggers>
@@ -521,6 +522,7 @@
                             <controls:TextEditor.Style>
                                 <Style TargetType="{x:Type controls:TextEditor}" BasedOn="{StaticResource Default.TextEditor}">
                                     <EventSetter Event="Loaded" Handler="TextEditor_Loaded"/>
+                                    <EventSetter Event="Unloaded" Handler="TextEditor_Unloaded"/>
                                     <Setter Property="Settings"         Value="{Binding DataContext.Settings.TextEditor, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
                                     <Setter Property="Document"         Value="{Binding Document, Mode=OneWay}"/>
                                     <Setter Property="IsReadOnly"       Value="{Binding IsReadOnly, Mode=TwoWay}"/>
@@ -715,7 +717,7 @@
             </TabControl>
         </Grid>
 
-        <Border Grid.RowSpan="3" d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsWorking.Value, Mode=OneWay}}">
+        <Border Grid.RowSpan="3" d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
             <StackPanel Margin="5 0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                 <TextBlock Text="{le:Loc Text_Working}" HorizontalAlignment="Center" TextAlignment="Center"/>
                 <Border Height="10"/>

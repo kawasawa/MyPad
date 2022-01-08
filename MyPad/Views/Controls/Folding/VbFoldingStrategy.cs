@@ -5,22 +5,27 @@ using System.Linq;
 
 namespace MyPad.Views.Controls.Folding
 {
-    public class VbFoldingStrategy : IFoldingStrategy
+    /// <summary>
+    /// Visual Basic の文法に沿ったフォールディングを行うためのアルゴリズムを定義します。
+    /// </summary>
+    public class VbFoldingStrategy : FoldingStrategyBase
     {
-        public void UpdateFoldings(FoldingManager manager, TextDocument document)
-        {
-            var newFoldings = this.CreateNewFoldings(document);
-            var firstErrorOffset = -1;
-            manager.UpdateFoldings(newFoldings, firstErrorOffset);
-        }
+        /// <summary>
+        /// フォールディングの基準となるキーワード
+        /// </summary>
+        public IEnumerable<string> Keywords { get; set; } = new[] { "namespace", "interface", "class", "structure", "module", "enum", "function", "sub" };
 
-        public IEnumerable<NewFolding> CreateNewFoldings(TextDocument document)
+        /// <summary>
+        /// フォールディングに必要な情報を構築します。
+        /// </summary>
+        /// <param name="document">ドキュメント</param>
+        /// <returns>フォールディングに必要な情報</returns>
+        public override IEnumerable<NewFolding> CreateFoldings(TextDocument document)
         {
             var newFoldings = new List<NewFolding>();
             var text = document.Text;
 
-            foreach (var (keyword, closingKeyword) in new[] { "namespace", "interface", "class", "structure", "module", "enum", "function", "sub", }
-                .Select(w => (keyword: $"{w} ", closingKeyword: $"end {w}")))
+            foreach (var (keyword, closingKeyword) in this.Keywords.Select(w => (keyword: $"{w} ", closingKeyword: $"end {w}")))
             {
                 var startOffsets = new Stack<int>();
 

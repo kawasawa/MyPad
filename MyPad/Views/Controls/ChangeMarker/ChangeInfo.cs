@@ -2,15 +2,18 @@
 
 namespace MyPad.Views.Controls.ChangeMarker
 {
-    public struct LineChangeInfo : IEquatable<LineChangeInfo>
+    /// <summary>
+    /// 変更状態を格納するモデルを表します。
+    /// </summary>
+    public struct ChangeInfo : IEquatable<ChangeInfo>
     {
-        public static readonly LineChangeInfo Empty = new(ChangeKind.None, 1, 1);
+        public static readonly ChangeInfo Empty = new(ChangeKind.None, 1, 1);
 
         public ChangeKind ChangeType { get; set; }
         public int StartLine { get; }
         public int EndLine { get; }
 
-        public LineChangeInfo(ChangeKind change, int startLine, int endLine)
+        public ChangeInfo(ChangeKind change, int startLine, int endLine)
         {
             this.ChangeType = change;
             this.StartLine = startLine;
@@ -30,17 +33,17 @@ namespace MyPad.Views.Controls.ChangeMarker
         }
 
         public override bool Equals(object obj)
-            => obj is LineChangeInfo info && this.Equals(info);
+            => obj is ChangeInfo info && this.Equals(info);
 
-        public bool Equals(LineChangeInfo other)
+        public bool Equals(ChangeInfo other)
             => this.ChangeType == other.ChangeType &&
                 this.StartLine == other.StartLine &&
                 this.EndLine == other.EndLine;
 
-        public static bool operator ==(LineChangeInfo lhs, LineChangeInfo rhs)
+        public static bool operator ==(ChangeInfo lhs, ChangeInfo rhs)
             => lhs.Equals(rhs);
 
-        public static bool operator !=(LineChangeInfo lhs, LineChangeInfo rhs)
+        public static bool operator !=(ChangeInfo lhs, ChangeInfo rhs)
             => lhs.Equals(rhs) == false;
     }
 }

@@ -11,6 +11,8 @@
         xmlns:qc="http://QuickConverter.CodePlex.com/"
         xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
         xmlns:t="http://www.hardcodet.net/taskbar"
+        xmlns:viewModels="clr-namespace:MyPad.ViewModels"
+        d:DataContext="{d:DesignInstance {x:Type viewModels:WorkspaceViewModel}}"
         mc:Ignorable="d"
         p:ViewModelLocator.AutoWireViewModel="True"
         Height="0" Width="0" ResizeMode="NoResize" WindowStyle="None" ShowInTaskbar="False"
@@ -27,7 +29,7 @@
                 <MenuItem x:Name="WindowListItem" Header="{le:Loc Command_WindowList}" IsEnabled="{qc:Binding '$P.CompareTo(0) == 1', P={Binding Items.Count, RelativeSource={RelativeSource Self}, Mode=OneWay}}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Default.MenuItem}">
-                            <EventSetter Event="Click" Handler="WindowItem_Click"/>
+                            <EventSetter Event="Click" Handler="WindowListItem_Click"/>
                             <Setter Property="Header" Value="{Binding DataContext.ActiveTextEditor.Value.FileName, Mode=OneWay}"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{qc:Binding '$P.WindowState == WindowState.Minimized', P={Binding Mode=OneWay}}" Value="True">
@@ -37,7 +39,7 @@
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
-                <MenuItem Click="NewWindowCommand_Click" Header="{le:Loc Command_NewWindow}">
+                <MenuItem Command="{Binding NewWindowCommand, Mode=OneTime}" Header="{le:Loc Command_NewWindow}">
                     <MenuItem.Icon>
                         <mi:Modern Kind="New"/>
                     </MenuItem.Icon>

@@ -1,78 +1,31 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace MyPad
 {
+    /// <summary>
+    /// <see cref="IOrderedEnumerable{T}"/> インターフェースの拡張メソッドを提供します。
+    /// </summary>
     public static class IOrderedEnumerableExtensions
     {
-        public static IOrderedEnumerable<T> NaturallyOrderBy<T>(this IEnumerable<T> self, Func<T, string> keySelector)
-            => self.OrderBy(keySelector, NaturalComparer.Default);
-
-        public static IOrderedEnumerable<T> NaturallyOrderByDescending<T>(this IEnumerable<T> self, Func<T, string> keySelector)
-            => self.OrderByDescending(keySelector, NaturalComparer.Default);
-
+        /// <summary>
+        /// 並び替えられたシーケンスに対して、要素を自然順の昇順に並び変えます。
+        /// </summary>
+        /// <typeparam name="T">要素の型</typeparam>
+        /// <param name="self"><see cref="IOrderedEnumerable{T}"/> インターフェースを実装するシーケンス</param>
+        /// <param name="keySelector">要素から並び替えのキーを抽出するためのメソッド</param>
+        /// <returns>並び替えを行った結果</returns>
         public static IOrderedEnumerable<T> NaturallyThenBy<T>(this IOrderedEnumerable<T> self, Func<T, string> keySelector)
             => self.ThenBy(keySelector, NaturalComparer.Default);
 
+        /// <summary>
+        /// 並び替えられたシーケンスに対して、要素を自然順の降順に並び変えます。
+        /// </summary>
+        /// <typeparam name="T">要素の型</typeparam>
+        /// <param name="self"><see cref="IOrderedEnumerable{T}"/> インターフェースを実装するシーケンス</param>
+        /// <param name="keySelector">要素から並び替えのキーを抽出するためのメソッド</param>
+        /// <returns>並び替えを行った結果</returns>
         public static IOrderedEnumerable<T> NaturallyThenByDescending<T>(this IOrderedEnumerable<T> self, Func<T, string> keySelector)
             => self.ThenByDescending(keySelector, NaturalComparer.Default);
-
-        public class NaturalComparer : IComparer, IComparer<string>
-        {
-            private static NaturalComparer _default = null;
-            public static NaturalComparer Default => _default ??= new();
-
-            int IComparer.Compare(object x, object y)
-            {
-                try
-                {
-                    return ((IComparer<string>)this).Compare((string)x, (string)y);
-                }
-                catch (InvalidCastException e)
-                {
-                    throw new ArgumentException(e.Message);
-                }
-            }
-
-            int IComparer<string>.Compare(string x, string y)
-            {
-                static IEnumerable<string> split(string self, Func<char, char, bool> selector)
-                {
-                    var startIndex = 0;
-                    for (var i = 0; i < self.Length - 1; i++)
-                    {
-                        if (selector(self[i], self[i + 1]) == false)
-                            continue;
-
-                        yield return self[startIndex..(i + 1)];
-                        startIndex = i + 1;
-                    }
-                    yield return self[startIndex..];
-                }
-
-                static bool numberCharBorder(char p, char n)
-                    => (('0' <= p && p <= '9') && !('0' <= n && n <= '9')) || (!('0' <= p && p <= '9') && ('0' <= n && n <= '9'));
-
-                using (var xe = split(x, numberCharBorder).GetEnumerator())
-                using (var ye = split(y, numberCharBorder).GetEnumerator())
-                {
-                    while (true)
-                    {
-                        var xHasNext = xe.MoveNext();
-                        var yHasNext = ye.MoveNext();
-                        if (xHasNext == false || yHasNext == false)
-                            return (xHasNext ? 1 : 0) - (yHasNext ? 1 : 0);
-
-                        var result = (ulong.TryParse(xe.Current, out var xi) && ulong.TryParse(ye.Current, out var yi)) ?
-                            Comparer<ulong>.Default.Compare(xi, yi) :
-                            Comparer<string>.Default.Compare(xe.Current, ye.Current);
-                        if (result != 0)
-                            return result;
-                    }
-                }
-            }
-        }
     }
 }

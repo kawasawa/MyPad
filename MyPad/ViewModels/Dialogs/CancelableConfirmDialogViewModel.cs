@@ -5,10 +5,16 @@ using Unity;
 
 namespace MyPad.ViewModels.Dialogs
 {
+    /// <summary>
+    /// <see cref="Views.Dialogs.CancelableConfirmDialog"/> に対応する ViewModel を表します。
+    /// </summary>
     public class CancelableConfirmDialogViewModel : ConfirmDialogViewModel
     {
         public ReactiveCommand CancelCommand { get; }
 
+        /// <summary>
+        /// このクラスの新しいインスタンスを生成します。
+        /// </summary>
         [InjectionConstructor]
         [LogInterceptor]
         public CancelableConfirmDialogViewModel()

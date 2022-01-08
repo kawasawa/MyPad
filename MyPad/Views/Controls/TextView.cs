@@ -1,4 +1,7 @@
-﻿using ICSharpCode.AvalonEdit.Rendering;
+﻿using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Rendering;
+using MyPad.Views.Controls.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows;
@@ -7,34 +10,115 @@ using System.Windows.Media.TextFormatting;
 
 namespace MyPad.Views.Controls
 {
-    public class TextView : ICSharpCode.AvalonEdit.Rendering.TextView
+    /// <summary>
+    /// <see cref="TextArea"/> のレンダリングを処理するコントロールを表します。
+    /// 
+    /// 対応する括弧をハイライトする <see cref="Rendering.PairBracketsHighlighter"/> を内包します。
+    /// </summary>
+    public class TextView : ICSharpCode.AvalonEdit.Rendering.TextView, IDisposable
     {
+        /// <summary>
+        /// CR の可視化時に表示される文字列
+        /// </summary>
         public string VisualCharacterCR { get; set; } = "\u2190";
+
+        /// <summary>
+        /// LF の可視化時に表示される文字列
+        /// </summary>
         public string VisualCharacterLF { get; set; } = "\u2193";
+
+        /// <summary>
+        /// CRLF の可視化時に表示される文字列
+        /// </summary>
         public string VisualCharacterCRLF { get; set; } = "\u21B2";
 
+        /// <summary>
+        /// 対応する括弧をハイライトするレンダラー
+        /// </summary>
+        public PairBracketsHighlighter PairBracketsHighlighter { get; private set; }
+
+        /// <summary>
+        /// このクラスの新しいインスタンスを生成します。
+        /// </summary>
         public TextView()
         {
-            // NOTE: 依存関係プロパティ ColumnRulerPen の設定
-            // おそらく SearchPanel.MarkerBrush と似たような理由だと思われる。
+            // INFO: Style で ColumnRulerPen を設定できない問題への対応
+            // ColumnRulerPen は columnRulerRenderer のプロパティに設定される。
+            // columnRulerRenderer は基底クラスのコンストラクタで初期化されるため、
+            // Style 等で設定するとインスタンスが存在せず、Null 参照の例外になる。
             this.ColumnRulerPen = new(Brushes.Gray, 1);
+
+            this.PairBracketsHighlighter = PairBracketsHighlighter.Install(this);
         }
 
+        /// <summary>
+        /// このインスタンスが破棄されるときに呼び出されます。
+        /// </summary>
+        ~TextView()
+        {
+            this.Dispose(false);
+        }
+
+        /// <summary>
+        /// このインスタンスが保持するリソースを解放します。
+        /// </summary>
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// このインスタンスが保持するリソースを解放します。
+        /// </summary>
+        /// <param name="disposing">マネージリソースを破棄するかどうかを示す値</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            this.PairBracketsHighlighter.Uninstall();
+            this.PairBracketsHighlighter = null;
+        }
+
+        /// <summary>
+        /// 対となるブラケットをハイライトします。
+        /// </summary>
+        /// <param name="segment">セグメント</param>
+        public void HighlightPairBrackets(ISegment segment)
+        {
+            this.PairBracketsHighlighter.Highlight(segment);
+        }
+
+        /// <summary>
+        /// ブラケットのハイライトをクリアします。
+        /// </summary>
+        public void ClearHighlightPairBrackets()
+        {
+            this.PairBracketsHighlighter.ClearHighlight();
+        }
+
+        /// <summary>
+        /// 子要素のレイアウトのサイズを測定し、この要素に必要なサイズを決定します。
+        /// </summary>
+        /// <param name="availableSize">子要素が利用可能なサイズ</param>
+        /// <returns>この要素に必要なサイズ</returns>
         protected override Size MeasureOverride(Size availableSize)
         {
+            // このメソッドの目的とは異なるが、改行マークを変更できるのはこのタイミングになる
             if (this.Options?.ShowEndOfLine == true)
-                this.RefreshNonPrintableCharacterTexts();
+                this.OverrideNewLineTexts();
             return base.MeasureOverride(availableSize);
         }
 
-        private void RefreshNonPrintableCharacterTexts()
+        /// <summary>
+        /// AvalonEdit が定義する改行マークを上書きします。
+        /// </summary>
+        private void OverrideNewLineTexts()
         {
-            // NOTE: 改行マークの変更
+            // INFO: AvalonEdito の改行マークを変更できない問題への対応
             // 既定の改行マークは VisualLineTextSource.CreateTextRunForNewLine() でハードコーディングされている。
             // private 関数のため変更できず、VisualLineTextSource は sealed クラスであり継承して誤魔化すこともできない。
             // AvalonEdit では、画面描画にあたりこの改行マークを TextLine に変換しており、
             // TextViewCachedElements.nonPrintableCharacterTexts の Dictionary を参照して変換先を生成する。
-            // ここを突き、nonPrintableCharacterTexts を書き換えることで、生成される TextLine を制御する。
+            // ここを突き、nonPrintableCharacterTexts を書き換えることで、生成される TextLine を制御できる。
 
             var globalProterties = (TextRunProperties)typeof(ICSharpCode.AvalonEdit.Rendering.TextView)
                 .GetMethod("CreateGlobalTextRunProperties", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod)

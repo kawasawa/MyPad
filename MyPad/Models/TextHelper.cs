@@ -11,6 +11,9 @@ using Ude;
 
 namespace MyPad.Models
 {
+    /// <summary>
+    /// 文字列の操作に関わる処理を提供します。
+    /// </summary>
     public static class TextHelper
     {
         /// <summary>
@@ -184,12 +187,11 @@ namespace MyPad.Models
         /// <returns>ファイルのパス</returns>
         private static IEnumerable<string> EnumerateFilesSafe(string path, string searchPattern = "*", SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
+            // INFO: EnumerateFiles の実行時に例外が発生する場合がある問題への対応
+            // Directory.EnumerateFiles では UnauthorizedAccessException 等が発生すると列挙が中断されてしまう。
+            // 例外を握りつぶして列挙を継続する。
             try
             {
-                // NOTE: EnumerateFiles による列挙時の例外
-                // Directory.EnumerateFiles では UnauthorizedAccessException 等が発生すると列挙が中断されてしまう。
-                // 例外を握りつぶして列挙を継続する。
-
                 var children =
                     searchOption == SearchOption.AllDirectories ?
                     Directory.EnumerateDirectories(path).SelectMany(p => EnumerateFilesSafe(p, searchPattern, searchOption)) :
@@ -224,7 +226,7 @@ namespace MyPad.Models
         /// 圧縮された Base64 形式の文字列を解凍します。
         /// </summary>
         /// <param name="base64">圧縮された Base64 形式の文字列</param>
-        /// <returns>解答された文字列</returns>
+        /// <returns>解凍された文字列</returns>
         public static string ConvertFromCompressedBase64(string base64)
         {
             using (var memory = new MemoryStream(Convert.FromBase64String(base64)))

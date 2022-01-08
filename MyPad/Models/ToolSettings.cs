@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyPad.Models
 {
+    /// <summary>
+    /// ツールの設定を管理するモデルを表します。
+    /// </summary>
     public class ToolSettings : ModelBase
     {
         private ObservableCollection<PathInfo> _explorerRoots = new();

@@ -18,10 +18,10 @@
 
     <Grid Margin="20 0 20 20" ge:GridEx.RowDefinition="*, 5, Auto">
         <!--
-            NOTE: DiffPlex の OldText, NewText に空文字を設定すると例外が発生する問題への対応
-            DiffPlex.Wpf v1.1.2 以降で確認された。
-            System.InvalidOperationException: Nullable object must have a value. が発生する。
-            IsNullOrEmpty に該当する場合は半角スペースに置き換える。
+        INFO: DiffPlex の OldText, NewText に空文字を設定すると例外が発生する問題への対応
+        DiffPlex.Wpf v1.1.2 以降で確認された。
+        System.InvalidOperationException: Nullable object must have a value. が発生する。
+        IsNullOrEmpty に該当する場合は半角スペースに置き換える。
         -->
         <dp:DiffViewer x:Name="DiffViewer"
                        OldText="{qc:Binding 'string.IsNullOrEmpty($P) ? \' \' : $P', P={Binding DiffSource.Value.Document.Text, Mode=OneWay}}"

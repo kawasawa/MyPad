@@ -11,15 +11,16 @@
              xmlns:qc="http://QuickConverter.CodePlex.com/"
              xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
              xmlns:root="clr-namespace:MyPad"
+             xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
              mc:Ignorable="d"
-             p:ViewModelLocator.AutoWireViewModel="True"
-             Loaded="Dialog_Loaded">
+             p:ViewModelLocator.AutoWireViewModel="True">
 
     <p:Dialog.WindowStyle>
         <Style TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource App.Dialog}"/>
     </p:Dialog.WindowStyle>
 
-    <Grid Margin="20 10 20 15" ge:GridEx.RowDefinition="*, 10, Auto">
+    <Grid Margin="20 10 20 15" ge:GridEx.RowDefinition="*, 10, Auto"
+          behaviors:KeyboardFocusManager.FocusedElement="{Binding ElementName=Encoding}">
         <Grid Grid.Row="0" VerticalAlignment="Center">
             <ComboBox x:Name="Encoding" ItemsSource="{x:Static root:Constants.ENCODINGS}" SelectedValue="{Binding Encoding.Value, Mode=TwoWay}" m:TextBoxHelper.Watermark="{le:Loc Label_Encoding}" m:TextBoxHelper.UseFloatingWatermark="True">
                 <ComboBox.ItemTemplate>

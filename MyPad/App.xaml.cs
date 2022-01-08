@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -28,17 +29,17 @@ namespace MyPad
     public partial class App : PrismApplication
     {
         /// <summary>
-        /// ロガーを取得します。
+        /// ロガー
         /// </summary>
         public ILoggerFacade Logger { get; }
 
         /// <summary>
-        /// プロダクト情報を取得します。
+        /// プロダクト情報
         /// </summary>
         public IProductInfo ProductInfo { get; }
 
         /// <summary>
-        /// アプリケーションの共有情報を取得します。
+        /// アプリケーションの共有情報
         /// </summary>
         public SharedDataStore SharedDataStore { get; }
 
@@ -49,7 +50,8 @@ namespace MyPad
         {
             this.Logger = new CompositeLogger(
                 new DebugLogger(),
-                new NLogger() {
+                new NLogger()
+                {
                     PublisherType = typeof(ILoggerFacadeExtension),
                     ConfigurationFactory = () =>
                     {
@@ -60,15 +62,19 @@ namespace MyPad
                         headerText.AppendLine("# ${environment:COMPUTERNAME}");
                         headerText.Append("##");
 
-                        var header = new NLog.Layouts.CsvLayout();
-                        header.Delimiter = NLog.Layouts.CsvColumnDelimiterMode.Tab;
-                        header.Quoting = NLog.Layouts.CsvQuotingMode.Nothing;
+                        var header = new NLog.Layouts.CsvLayout
+                        {
+                            Delimiter = NLog.Layouts.CsvColumnDelimiterMode.Tab,
+                            Quoting = NLog.Layouts.CsvQuotingMode.Nothing
+                        };
                         header.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, headerText.ToString()));
 
-                        var layout = new NLog.Layouts.CsvLayout();
-                        layout.Delimiter = NLog.Layouts.CsvColumnDelimiterMode.Tab;
-                        layout.Quoting = NLog.Layouts.CsvQuotingMode.Nothing;
-                        layout.Header = header;
+                        var layout = new NLog.Layouts.CsvLayout
+                        {
+                            Delimiter = NLog.Layouts.CsvColumnDelimiterMode.Tab,
+                            Quoting = NLog.Layouts.CsvQuotingMode.Nothing,
+                            Header = header
+                        };
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${longdate}"));
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${environment-user}"));
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, $"{this.ProductInfo.Version}"));
@@ -76,18 +82,22 @@ namespace MyPad
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${threadid}"));
                         layout.Columns.Add(new NLog.Layouts.CsvColumn(string.Empty, "${message}"));
 
-                        var file = new NLog.Targets.FileTarget();
-                        file.Encoding = Encoding.UTF8;
-                        file.Footer = "${newline}";
-                        file.FileName = "${var:DIR}/${var:CTG}.log";
-                        file.ArchiveFileName = "${var:DIR}/archive/{#}.${var:CTG}.log";
-                        file.ArchiveEvery = NLog.Targets.FileArchivePeriod.Day;
-                        file.ArchiveNumbering = NLog.Targets.ArchiveNumberingMode.Date;
-                        file.MaxArchiveFiles = 10;
-                        file.Layout = layout;
+                        var file = new NLog.Targets.FileTarget
+                        {
+                            Encoding = Encoding.UTF8,
+                            Footer = "${newline}",
+                            FileName = "${var:DIR}/${var:CTG}.log",
+                            ArchiveFileName = "${var:DIR}/archive/{#}.${var:CTG}.log",
+                            ArchiveEvery = NLog.Targets.FileArchivePeriod.Day,
+                            ArchiveNumbering = NLog.Targets.ArchiveNumberingMode.Date,
+                            MaxArchiveFiles = 10,
+                            Layout = layout
+                        };
 
-                        var memory = new NLog.Targets.MemoryTarget();
-                        memory.Layout = layout;
+                        var memory = new NLog.Targets.MemoryTarget
+                        {
+                            Layout = layout
+                        };
 
                         var config = new NLog.Config.LoggingConfiguration();
                         config.AddTarget(nameof(file), file);
@@ -128,9 +138,6 @@ namespace MyPad
                 this.Shutdown(0);
                 return;
             }
-
-            Initializer.InitQuickConverter();
-            Initializer.InitEncoding();
 
             this.SharedDataStore.CommandLineArgs = e.Args;
             this.SharedDataStore.CreateTempDirectory();
@@ -208,7 +215,10 @@ namespace MyPad
             {
                 // View に対して多言語化の初期設定を行う
                 if (view is DependencyObject obj)
-                    Initializer.InitWPFLocalizeExtension(obj);
+                {
+                    ResxLocalizationProvider.SetDefaultAssembly(obj, obj.GetType().Assembly.GetName().Name);
+                    ResxLocalizationProvider.SetDefaultDictionary(obj, "Resources");
+                }
 
                 // ViewModel のインスタンスを生成する
                 return this.Container.Resolve(viewModelType);
@@ -264,8 +274,8 @@ namespace MyPad
         {
             var (_, settings) = this.Container.Resolve<Models.Settings>().Load();
 
-            this.Container.Resolve<Models.SyntaxService>().Initialize(settings.IsDifferentVersion());
-            if (settings.IsDifferentVersion())
+            this.Container.Resolve<Models.SyntaxService>().CreateDefinitionFiles(settings.IsDifferentVersion);
+            if (settings.IsDifferentVersion)
                 this.Logger.Debug($"アプリケーションのバージョンが更新されました。: Old={settings.Version}, New={this.ProductInfo.Version}");
 
             var shell = this.Container.Resolve<Views.Workspace>();
@@ -337,12 +347,12 @@ namespace MyPad
             // すべてのハンドルを列挙し、ウィンドウテキストが一致するハンドルから特定する。
 
             var (hWnd, lpdwProcessId) = (HWND.NULL, 0u);
-            var result = User32.EnumWindows(new User32.EnumWindowsProc((_hWnd, _) =>
+            var result = User32.EnumWindows(new User32.EnumWindowsProc((_hWnd, _lParam) =>
             {
                 try
                 {
                     // プロセスの情報を比較する
-                    User32.GetWindowThreadProcessId(_hWnd, out var _lpdwProcessId);
+                    _ = User32.GetWindowThreadProcessId(_hWnd, out var _lpdwProcessId);
                     var process = Process.GetProcessById((int)_lpdwProcessId);
                     if (sourceProcess.Id == _lpdwProcessId)
                         return true;
@@ -352,7 +362,7 @@ namespace MyPad
                     // ウィンドウテキストを比較する
                     // 本アプリケーションでは実質的に識別子として使用される
                     var lpString = new StringBuilder(256);
-                    User32.GetWindowText(_hWnd, lpString, lpString.Capacity);
+                    _ = User32.GetWindowText(_hWnd, lpString, lpString.Capacity);
                     if (lpString.ToString().Contains(this.SharedDataStore.Identifier) == false)
                         return true;
 
@@ -401,26 +411,12 @@ namespace MyPad
         }
 
         /// <summary>
-        /// 初期化処理を行うためのメソッドを提供します。
+        /// <see cref="QuickConverter"/> の初期設定を行います。
         /// </summary>
-        private static class Initializer
+        [ModuleInitializer]
+        public static void InitQuickConverter()
         {
-            /// <summary>
-            /// 指定された View のインスタンスに対する <see cref="WPFLocalizeExtension"/> の初期設定を行います。
-            /// </summary>
-            /// <param name="view">View のインスタンス</param>
-            [LogInterceptor]
-            public static void InitWPFLocalizeExtension(DependencyObject view)
-            {
-                ResxLocalizationProvider.SetDefaultAssembly(view, view.GetType().Assembly.GetName().Name);
-                ResxLocalizationProvider.SetDefaultDictionary(view, "Resources");
-            }
-
-            /// <summary>
-            /// <see cref="QuickConverter"/> の初期設定を行います。
-            /// </summary>
-            [LogInterceptor]
-            public static void InitQuickConverter()
+            try
             {
 #pragma warning disable IDE0049
                 EquationTokenizer.AddNamespace(typeof(System.Object));                           // System                  : System.Runtime.dll
@@ -439,15 +435,10 @@ namespace MyPad
                 EquationTokenizer.AddExtensionMethods(typeof(System.Linq.Enumerable));           // System.Linq             : System.Linq.dll
 #pragma warning restore IDE0049
             }
-
-            /// <summary>
-            /// 文字コードの初期設定を行います。
-            /// </summary>
-            [LogInterceptor]
-            public static void InitEncoding()
+            catch (Exception e)
             {
-                // SJIS を追加する
-                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                Debug.WriteLine($"ERROR: QuickConverter の初期設定に失敗しました。: Message={e.Message}");
+                throw;
             }
         }
 

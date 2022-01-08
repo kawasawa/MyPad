@@ -11,16 +11,13 @@ using Unity;
 
 namespace MyPad.ViewModels.Regions
 {
-    public class TerminalViewModel : ViewModelBase
+    /// <summary>
+    /// <see cref="Views.Regions.TerminalView"/> に対応する ViewModel を表します。
+    /// </summary>
+    public class TerminalViewModel : RegionViewModelBase
     {
-        #region インジェクション
-
         [Dependency]
         public ILoggerFacade Logger { get; set; }
-
-        #endregion
-
-        #region プロパティ
 
         private const string COMSPEC = "COMSPEC";
 
@@ -31,15 +28,16 @@ namespace MyPad.ViewModels.Regions
         public ReactiveCollection<string> ScriptHistories { get; }
         public ReactiveCollection<string> ResultHistories { get; }
 
-        public ReactiveProperty<bool> IsWorking { get; }
+        public ReactiveProperty<bool> IsPending { get; }
         public ReactiveProperty<string> Script { get; }
         public ReactiveProperty<string> OutputText { get; }
         public ReactiveProperty<string> OutputLastLine { get; }
 
         public ReactiveCommand RunScriptCommand { get; }
 
-        #endregion
-
+        /// <summary>
+        /// このクラスの新しいインスタンスを生成します。
+        /// </summary>
         [InjectionConstructor]
         [LogInterceptor]
         public TerminalViewModel()
@@ -49,7 +47,7 @@ namespace MyPad.ViewModels.Regions
             BindingOperations.EnableCollectionSynchronization(this.ScriptHistories, new object());
             BindingOperations.EnableCollectionSynchronization(this.ResultHistories, new object());
 
-            this.IsWorking = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
+            this.IsPending = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
             this.Script = new ReactiveProperty<string>().AddTo(this.CompositeDisposable);
             this.OutputText = this.ResultHistories.CollectionChangedAsObservable()
                 .Select(_ => string.Join(Environment.NewLine, this.ResultHistories))
@@ -61,28 +59,40 @@ namespace MyPad.ViewModels.Regions
                 .WithSubscribe(() => this.RunScript())
                 .AddTo(this.CompositeDisposable);
 
-            this.StartTerminal();
+            this.StartTerminalProcess();
         }
 
+        /// <summary>
+        /// このインスタンスが保持するリソースを解放します。
+        /// </summary>
+        /// <param name="disposing">マネージリソースを破棄するかどうかを示す値</param>
         [LogInterceptor]
         protected override void Dispose(bool disposing)
         {
             if (this.IsDisposed || this._terminalClosing)
                 return;
 
-            this.CloseTerminal();
+            this.CloseTerminalProcess();
             base.Dispose(disposing);
         }
 
+        /// <summary>
+        /// プロセスが終了した後に行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
         [LogInterceptor]
         private void Terminal_Exited(object sender, EventArgs e)
         {
-            this.CloseTerminal();
-            this.StartTerminal();
+            this.CloseTerminalProcess();
+            this.StartTerminalProcess();
         }
 
+        /// <summary>
+        /// ターミナルのプロセスを起動します。
+        /// </summary>
         [LogInterceptor]
-        private void StartTerminal()
+        private void StartTerminalProcess()
         {
             this._terminalProcess = new();
             this._terminalProcess.StartInfo.FileName = Environment.GetEnvironmentVariable(COMSPEC);
@@ -103,8 +113,11 @@ namespace MyPad.ViewModels.Regions
             this._terminalInput = this._terminalProcess.StandardInput;
         }
 
+        /// <summary>
+        /// ターミナルのプロセスを終了します。
+        /// </summary>
         [LogInterceptor]
-        private void CloseTerminal()
+        private void CloseTerminalProcess()
         {
             if (this._terminalProcess == null)
                 return;
@@ -128,6 +141,9 @@ namespace MyPad.ViewModels.Regions
             this._terminalProcess = null;
         }
 
+        /// <summary>
+        /// スクリプトを実行します。
+        /// </summary>
         [LogInterceptor]
         private void RunScript()
         {
@@ -153,7 +169,12 @@ namespace MyPad.ViewModels.Regions
             this.Script.Value = string.Empty;
         }
 
-        // NOTE: このメソッドは頻発するためトレースしない
+        /// <summary>
+        /// プロセスのストリームに行が書き込まれたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
+        [LogInterceptorIgnore]
         private void Terminal_DataReceived(object sender, DataReceivedEventArgs e)
         {
             if (this.OutputLastLine.Value != null)

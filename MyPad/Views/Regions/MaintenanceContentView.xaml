@@ -14,8 +14,19 @@
              mc:Ignorable="d" 
              p:ViewModelLocator.AutoWireViewModel="True"
              d:DesignHeight="450" d:DesignWidth="800"
-             Cursor="{qc:Binding '$P ? Cursors.Wait : Cursors.Arrow', P={Binding IsWorking.Value, Mode=TwoWay}}"
-             IsVisibleChanged="UserControl_IsVisibleChanged">
+             Cursor="{qc:Binding '$P ? Cursors.Wait : Cursors.Arrow', P={Binding IsPending.Value, Mode=TwoWay}}">
+
+    <i:Interaction.Triggers>
+        <!--
+        INFO: IsVisibleChanged を EventTrigger で拾えない問題への対応
+        以下のように書いてもハンドリングできない。
+        ``` <i:EventTrigger EventName="IsVisibleChanged"> ```
+        これは仕様のためイベントの検知はあきらめて、プロパティの変化をトリガーにする。
+        -->
+        <i:PropertyChangedTrigger Binding="{Binding IsVisible, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Mode=OneWay}">
+            <i:InvokeCommandAction Command="{Binding IsVisibleChangedHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
+        </i:PropertyChangedTrigger>
+    </i:Interaction.Triggers>
 
     <Grid Margin="20 0 20 20">
         <TabControl Padding="5 10 0 0" m:HeaderedControlHelper.HeaderFontWeight="Bold">
@@ -74,7 +85,7 @@
                     </TabControl>
 
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 -40 30 0">
-                        <Button Command="{Binding RefreshLogsCommand, Mode=OneTime}" Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_Refresh}" IsTabStop="False">
+                        <Button Command="{Binding UpdateLogsCommand, Mode=OneTime}" Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_Refresh}" IsTabStop="False">
                             <mi:Material Kind="Refresh"/>
                         </Button>
                         <Border Width="10"/>
@@ -138,7 +149,7 @@
             </TabItem>
         </TabControl>
 
-        <Border d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsWorking.Value, Mode=OneWay}}">
+        <Border d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
             <StackPanel Margin="5 0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                 <TextBlock Text="{le:Loc Text_Working}" HorizontalAlignment="Center" TextAlignment="Center"/>
                 <Border Height="10"/>

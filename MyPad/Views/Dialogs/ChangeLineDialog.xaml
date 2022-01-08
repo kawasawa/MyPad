@@ -10,16 +10,17 @@
              xmlns:le="http://wpflocalizeextension.codeplex.com"
              xmlns:qc="http://QuickConverter.CodePlex.com/"
              xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
+             xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
              xmlns:controls="clr-namespace:MyPad.Views.Controls"
              mc:Ignorable="d"
-             p:ViewModelLocator.AutoWireViewModel="True"
-             Loaded="Dialog_Loaded">
+             p:ViewModelLocator.AutoWireViewModel="True">
 
     <p:Dialog.WindowStyle>
         <Style TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource App.Dialog}"/>
     </p:Dialog.WindowStyle>
 
-    <Grid Margin="20 10 20 15" ge:GridEx.RowDefinition="*, 10, Auto">
+    <Grid Margin="20 10 20 15" ge:GridEx.RowDefinition="*, 10, Auto"
+          behaviors:KeyboardFocusManager.FocusedElement="{Binding ElementName=Line}">
         <Grid Grid.Row="0" VerticalAlignment="Center">
             <controls:NumericUpDown x:Name="Line"
                                     Value="{Binding Line.Value, Mode=TwoWay}"
@@ -28,7 +29,7 @@
                                     m:TextBoxHelper.Watermark="{le:Loc Label_LineMumber}" 
                                     m:TextBoxHelper.UseFloatingWatermark="True"
                                     m:TextBoxHelper.SelectAllOnFocus="True"
-                                    ReverseOnMouseWheel="True"/>
+                                    ReverseIncrement="True"/>
         </Grid>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="{le:Loc Command_OK}" Command="{Binding OKCommand, Mode=Onetime}" Style="{StaticResource Common.AccentButton}" MinWidth="80" IsDefault="True"/>

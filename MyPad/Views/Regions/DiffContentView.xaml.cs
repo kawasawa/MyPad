@@ -1,16 +1,6 @@
 ﻿using MyPad.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Unity;
 
 namespace MyPad.Views.Regions
@@ -20,12 +10,8 @@ namespace MyPad.Views.Regions
     /// </summary>
     public partial class DiffContentView : UserControl
     {
-        #region インジェクション
-
         [Dependency]
         public Settings Settings { get; set; }
-
-        #endregion
 
         [LogInterceptor]
         public DiffContentView()
