@@ -20,11 +20,14 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: Build
+    - name: Build app
       run: dotnet build MyPad/MyPad.csproj -c Release
 
+    - name: Build test
+      run: dotnet build MyPad.Test/MyPad.Test.csproj -c Release --no-dependencies
+
     - name: Test
-      run: dotnet test MyPad.sln --no-restore
+      run: dotnet test MyPad.Test/MyPad.Test.csproj --no-restore
 
     - name: Copy
       shell: pwsh
