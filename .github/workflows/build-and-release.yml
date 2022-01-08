@@ -7,41 +7,68 @@ on:
 
 jobs:
   build:
+    runs-on: windows-latest
     env:
-      Project_Directory: MyPad
-      Project_Path:      MyPad/MyPad.csproj
-      Test_Project_Path: MyPad.Test/MyPad.Test.csproj
-    
-    strategy:
-      matrix:
-        os: [ windows-latest ]
-        configuration: [ Release ]
-    
-    runs-on: ${{ matrix.os }}
-    
+      DOTNET_VERSION: 6.0.x
     steps:
+
     - name: Checkout
       uses: actions/checkout@v2
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.x
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Build
+      run: dotnet build MyPad.sln -c Release
 
     - name: Test
-      run: dotnet test $env:Test_Project_Path -p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.configuration }}
-    
-    - name: Build
-      run: dotnet build $env:Test_Project_Path -p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.configuration }}
+      run: dotnet test MyPad.sln --no-restore
 
-    - name: Create release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Copy
+      shell: pwsh
+      run: |
+        mkdir dist
+        Copy-Item -Path MyPad/bin/Release/* -Destination dist -Recurse
+
+    - name: Archive
+      uses: actions/upload-artifact@v1
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        name: dist
+        path: dist
+
+  create-release:
+    needs: [build]
+    runs-on: windows-latest
+    steps:
+
+      - name: Download
+        uses: actions/download-artifact@v2
+        with:
+          name: dist
+          path: dist
+
+      - name: Compress
+        shell: pwsh
+        run: |
+          Compress-Archive -Path dist -DestinationPath release.zip
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+
+      - name: Upload release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: release.zip
+          asset_name: release.zip
+          asset_content_type: application/zip
