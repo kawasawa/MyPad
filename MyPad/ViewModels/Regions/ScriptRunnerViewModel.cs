@@ -14,7 +14,7 @@ namespace MyPad.ViewModels.Regions
     /// <summary>
     /// <see cref="Views.Regions.ScriptRunnerView"/> に対応する ViewModel を表します。
     /// </summary>
-    public class ScriptRunnerViewModel : ViewModelBase
+    public class ScriptRunnerViewModel : RegionViewModelBase
     {
         [Dependency]
         public ILoggerFacade Logger { get; set; }

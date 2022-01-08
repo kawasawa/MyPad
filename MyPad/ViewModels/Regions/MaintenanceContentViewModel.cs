@@ -24,7 +24,7 @@ namespace MyPad.ViewModels.Regions
     /// <summary>
     /// <see cref="Views.Regions.MaintenanceContentView"/> に対応する ViewModel を表します。
     /// </summary>
-    public class MaintenanceContentViewModel : ViewModelBase
+    public class MaintenanceContentViewModel : RegionViewModelBase
     {
         // Constructor Injection
         public IEventAggregator EventAggregator { get; set; }

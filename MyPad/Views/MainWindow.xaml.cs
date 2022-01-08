@@ -542,6 +542,9 @@ namespace MyPad.Views
                 this.Settings.System.WindowPlacement = lpwndpl;
             }
 
+            // リージョンを破棄する
+            this.RegionManager.Regions.ForEach(r => r.RemoveAll());
+
             // フックメソッドを解除する
             this._handleSource.RemoveHook(this.WndProc);
 

@@ -12,7 +12,7 @@ namespace MyPad.ViewModels.Regions
     /// <summary>
     /// <see cref="Views.Regions.AboutContentView"/> に対応する ViewModel を表します。
     /// </summary>
-    public class AboutContentViewModel : ViewModelBase
+    public class AboutContentViewModel : RegionViewModelBase
     {
         private static readonly Encoding FILE_ENCODING = Encoding.UTF8;
 

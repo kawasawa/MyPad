@@ -18,7 +18,7 @@ namespace MyPad.ViewModels.Regions
     /// <summary>
     /// <see cref="Views.Regions.OptionContentView"/> に対応する ViewModel を表します。
     /// </summary>
-    public class OptionContentViewModel : ViewModelBase
+    public class OptionContentViewModel : RegionViewModelBase
     {
         [Dependency]
         public IEventAggregator EventAggregator { get; set; }

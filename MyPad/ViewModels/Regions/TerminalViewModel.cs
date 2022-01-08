@@ -14,7 +14,7 @@ namespace MyPad.ViewModels.Regions
     /// <summary>
     /// <see cref="Views.Regions.TerminalView"/> に対応する ViewModel を表します。
     /// </summary>
-    public class TerminalViewModel : ViewModelBase
+    public class TerminalViewModel : RegionViewModelBase
     {
         [Dependency]
         public ILoggerFacade Logger { get; set; }
