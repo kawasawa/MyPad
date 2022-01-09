@@ -29,7 +29,7 @@ jobs:
     - name: Test
       run: dotnet test MyPad.Test/MyPad.Test.csproj --no-restore
 
-    - name: Copy
+    - name: Output
       shell: pwsh
       run: |
         mkdir dist
@@ -41,7 +41,7 @@ jobs:
         name: dist
         path: dist
 
-  create-release:
+  release:
     needs: [build]
     runs-on: windows-latest
     steps:
@@ -57,7 +57,7 @@ jobs:
         run: |
           Compress-Archive -Path dist/* -DestinationPath release.zip
 
-      - name: Create release
+      - name: Create
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -66,7 +66,7 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
 
-      - name: Upload release
+      - name: Upload
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
