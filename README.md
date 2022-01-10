@@ -43,13 +43,42 @@ MyPad は簡単操作ですぐに使えるシンプルなテキストエディ�
 
 ## 開発情報
 
-本プログラムは以下を主な基盤として使用し、構築されています。  
+### 使用技術
+
+本プログラムは以下を主な基盤として使用し、構築されています。
 
 |                        | 使用技術               | Ver. (Minor) |
-|:-----------------------|:-----------------------|-------------:|
-| プログラミング言語     | C#                     | 10.0         |
-| フレームワーク         | .NET                   | 6.0          |
-| UI プラットフォーム    | WPF                    | -            |
-| MVVM / DI インフラ     | Prism.Unity            | 8.1          |
-| デザインテンプレート   | MahApps.Metro          | 2.4          |
-| エディタコンポーネント | ICSharpCode.AvalonEdit | 6.1          |
+| :--------------------- | :--------------------- | -----------: |
+| プログラミング言語     | C#                     |         10.0 |
+| フレームワーク         | .NET                   |          6.0 |
+| UI プラットフォーム    | WPF                    |            - |
+| MVVM / DI インフラ     | Prism.Unity            |          8.1 |
+| デザインテンプレート   | MahApps.Metro          |          2.4 |
+| エディタコンポーネント | ICSharpCode.AvalonEdit |          6.1 |
+
+### 構造
+
+本プログラムの構造を以下に抜粋して示します。
+
+```:
+□ MyPad
+│
+├ $Extensions // 拡張メソッド
+│
+├ PubSub      // 非同期メッセージ
+│
+├ Models      // Model層のプログラム
+│
+├ ViewModels  // ViewModel層のプログラム
+│ ├ Dialogs   // View.Dialogs に対応する ViewModel
+│ └ Regions   // View.Regions に対応する ViewModel
+│
+└ Views       // View層のプログラム
+  ├ Behaviors // ビヘイビアやトリガーアクション
+  ├ Controls  // カスタムコントロール
+  ├ Dialogs   // メッセージボックスやダイアログ
+  ├ Regions   // リージョンコンテンツ
+  └ Styles    // リソースディクショナリ
+```
+
+![dependencies](./.images/dependencies.drawio.png)
