@@ -332,7 +332,7 @@
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <ge:ResponsiveGrid DataContext="{Binding Data.ActiveTextEditor.Value, Source={StaticResource Proxy}, Mode=OneWay}">
                                         <ge:ResponsiveGrid.Resources>
-                                            <Style TargetType="{x:Type Label}" BasedOn="{StaticResource Default.Label}">
+                                            <Style x:Key="PropertyName" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
                                                 <Setter Property="FontSize" Value="14"/>
                                             </Style>
                                             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
@@ -343,7 +343,7 @@
 
                                         <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5 0">
                                             <StackPanel Orientation="Horizontal">
-                                                <Label  Content="{le:Loc Label_Name}"/>
+                                                <TextBlock Text="{le:Loc Label_Name}" Style="{StaticResource PropertyName}"/>
                                                 <Border Width="10"/>
                                                 <Button Click="{qc:QuickEvent 'Clipboard.SetText($dataContext.FileName)'}"
                                                         Style="{StaticResource Common.ChromelessButton}"
@@ -352,24 +352,24 @@
                                                 </Button>
                                             </StackPanel>
                                             <TextBlock Text="{qc:Binding 'Path.GetFileName($P)', P={Binding FileName, Mode=OneWay}}"/>
-                                            <Label     Content="{le:Loc Label_Type}"/>
+                                            <TextBlock Text="{le:Loc Label_Type}" Style="{StaticResource PropertyName}"/>
                                             <TextBlock Text="{Binding FileType, Mode=OneWay}"/>
-                                            <Label     Content="{le:Loc Label_Location}"/>
+                                            <TextBlock Text="{le:Loc Label_Location}" Style="{StaticResource PropertyName}"/>
                                             <TextBlock Text="{Binding FileInfo.DirectoryName, Mode=OneWay}"/>
-                                            <Label     Content="{le:Loc Label_Size}"/>
+                                            <TextBlock Text="{le:Loc Label_Size}" Style="{StaticResource PropertyName}"/>
                                             <TextBlock Text="{Binding FileInfo.Length, StringFormat={}{0:N0} bytes, Mode=OneWay}"/>
                                         </StackPanel>
 
                                         <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5 0">
-                                            <Label     Content="{le:Loc Label_CreationDate}"/>
+                                            <TextBlock Text="{le:Loc Label_CreationDate}" Style="{StaticResource PropertyName}"/>
                                             <TextBlock Text="{Binding FileInfo.CreationTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
-                                            <Label     Content="{le:Loc Label_ModifiredDate}"/>
+                                            <TextBlock Text="{le:Loc Label_ModifiredDate}" Style="{StaticResource PropertyName}"/>
                                             <TextBlock Text="{Binding FileInfo.LastWriteTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
-                                            <Label     Content="{le:Loc Label_AccessDate}"/>
+                                            <TextBlock Text="{le:Loc Label_AccessDate}" Style="{StaticResource PropertyName}"/>
                                             <TextBlock Text="{Binding FileInfo.LastAccessTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
-                                            <Label     Content="{le:Loc Label_Attributes}"/>
+                                            <TextBlock Text="{le:Loc Label_Attributes}" Style="{StaticResource PropertyName}"/>
                                             <TextBlock Text="{Binding FileInfo.Attributes, Mode=OneWay}"/>
-                                            <Label     Content="{le:Loc Label_Owner}"/>
+                                            <TextBlock Text="{le:Loc Label_Owner}" Style="{StaticResource PropertyName}"/>
                                             <TextBlock Text="{Binding FileOwner, Mode=OneWay}"/>
                                         </StackPanel>
                                     </ge:ResponsiveGrid>
