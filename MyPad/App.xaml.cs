@@ -2,6 +2,7 @@
 using MyBase;
 using MyBase.Logging;
 using MyBase.Wpf.CommonDialogs;
+using Prism;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -17,6 +18,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using Vanara.PInvoke;
 using WPFLocalizeExtension.Providers;
@@ -26,6 +28,23 @@ namespace MyPad
     /// <summary>
     /// アプリケーションのエントリーポイントとなるクラスを表します。
     /// </summary>
+    /// <remarks>
+    /// <see cref="PrismApplicationBase"/> に用意された初期設定用のメソッドが下記の順に呼び出されます。
+    /// - <see cref="PrismApplicationBase.OnStartup"/>
+    /// - <see cref="PrismApplicationBase.ConfigureViewModelLocator"/>
+    /// - <see cref="PrismApplicationBase.CreateContainerExtension"/>
+    /// - <see cref="PrismApplicationBase.CreateModuleCatalog"/>
+    /// - <see cref="PrismApplicationBase.RegisterRequiredTypes"/>
+    /// - <see cref="PrismApplicationBase.RegisterTypes"/>
+    /// - <see cref="PrismApplicationBase.ConfigureModuleCatalog"/>
+    /// - <see cref="PrismApplicationBase.ConfigureRegionAdapterMappings"/>
+    /// - <see cref="PrismApplicationBase.ConfigureDefaultRegionBehaviors"/>
+    /// - <see cref="PrismApplicationBase.RegisterFrameworkExceptionTypes"/>
+    /// - <see cref="PrismApplicationBase.CreateShell"/>
+    /// - <see cref="PrismApplicationBase.InitializeShell"/>
+    /// - <see cref="PrismApplicationBase.InitializeModules"/>
+    /// - <see cref="PrismApplicationBase.OnInitialized"/>
+    /// </remarks>
     public partial class App : PrismApplication
     {
         /// <summary>
@@ -48,6 +67,7 @@ namespace MyPad
         /// </summary>
         public App()
         {
+            // 関連するインスタンスを生成する
             this.Logger = new CompositeLogger(
                 new DebugLogger(),
                 new NLogger()
@@ -116,12 +136,14 @@ namespace MyPad
                 });
             this.ProductInfo = new ProductInfo();
             this.SharedDataStore = new(this.Logger, this.ProductInfo, Process.GetCurrentProcess());
+
+            // イベントを購読する
             UnhandledExceptionObserver.Observe(this, this.Logger, this.ProductInfo);
             SystemEvents.SessionEnding += this.SystemEvents_SessionEnding;
         }
 
         /// <summary>
-        /// アプリケーションの開始直後に行う処理を定義します。
+        /// アプリケーションの開始時に行う処理を定義します。
         /// </summary>
         /// <param name="e">イベントの情報</param>
         [LogInterceptor]
@@ -129,58 +151,7 @@ namespace MyPad
         {
             this.Logger.Log($"アプリケーションを開始しました。", Category.Info);
             this.Logger.Debug($" アプリケーションを開始しました。: Args=[{string.Join(", ", e.Args)}]");
-
-            var process = Process.GetCurrentProcess();
-            var handle = this.GetOtherProcessHandle(process);
-            if (handle.IsNull == false)
-            {
-                this.SendData(process, handle, e.Args);
-                this.Shutdown(0);
-                return;
-            }
-
             this.SharedDataStore.CommandLineArgs = e.Args;
-            this.SharedDataStore.CreateTempDirectory();
-
-            var cachedDirectories = new DirectoryInfo(this.ProductInfo.Temporary)
-                .EnumerateDirectories()
-                .Where(i => i.FullName != this.SharedDataStore.TempDirectoryPath)
-                .Select(i =>
-                {
-                    var result = DateTime.TryParseExact(Path.GetFileName(i.FullName), "yyyyMMddHHmmssfff", CultureInfo.CurrentCulture, DateTimeStyles.None, out var value);
-                    return (result, value, info: i);
-                });
-
-            if (cachedDirectories.Any())
-            {
-                const int LOOP_DELAY = 500;
-
-                try
-                {
-                    // 残存する一時フォルダの隠し属性を外す
-                    foreach (var info in cachedDirectories.Select(t => t.info))
-                        info.Attributes &= ~FileAttributes.Hidden;
-
-                    // 残存する一時フォルダのうち、指定の期間を超えたものを削除する
-                    var basis = process.StartTime.AddDays(-1 * AppSettingsReader.CacheLifetime);
-                    foreach (var info in cachedDirectories
-                        .Where(t => t.result == false || t.value < basis || t.info.EnumerateFileSystemInfos().Any() == false)
-                        .Select(t => t.info))
-                    {
-                        Directory.Delete(info.FullName, true);
-                        while (Directory.Exists(info.FullName))
-                            Thread.Sleep(LOOP_DELAY);
-                    }
-                    this.Logger.Debug($"保存期限を過ぎた一時フォルダを削除しました。");
-                }
-                catch (Exception ex)
-                {
-                    this.Logger.Log("保存期限を過ぎた一時フォルダの削除に失敗しました。", Category.Warn, ex);
-                }
-
-                this.SharedDataStore.CachedDirectories = cachedDirectories.Select(t => t.info.FullName).ToList();
-            }
-
             base.OnStartup(e);
         }
 
@@ -230,6 +201,7 @@ namespace MyPad
         /// </summary>
         /// <param name="containerRegistry">DI コンテナ</param>
         /// <remarks>
+        /// DI コンテナは本メソッドの完了後から使用することができます。
         /// 既定のシングルトンや型マッピングは PrismInitializationExtensions.RegisterRequiredTypes にて設定されます。
         /// 本メソッドでは上記以外に必要なアプリケーション固有のオブジェクトを追加することができます。
         /// </remarks>
@@ -237,12 +209,14 @@ namespace MyPad
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // シングルトン
+            // このタイミングで設定ファイルの初期化を済ませておく
+            containerRegistry.RegisterSingleton<Models.Settings>();
+            var loadSettingsTask = Task.Run(() => this.Container.Resolve<Models.Settings>().Load());
+            containerRegistry.RegisterSingleton<Models.SyntaxService>();
+            containerRegistry.RegisterSingleton<ICommonDialogService, CommonDialogService>();
             containerRegistry.RegisterInstance(this.Logger);
             containerRegistry.RegisterInstance(this.ProductInfo);
             containerRegistry.RegisterInstance(this.SharedDataStore);
-            containerRegistry.RegisterSingleton<Models.Settings>();
-            containerRegistry.RegisterSingleton<Models.SyntaxService>();
-            containerRegistry.RegisterSingleton<ICommonDialogService, CommonDialogService>();
 
             // ダイアログ
             containerRegistry.RegisterDialogWindow<DialogWindowWrapper>();
@@ -260,6 +234,9 @@ namespace MyPad
             containerRegistry.Register<ViewModels.FileExplorerViewModel>();
             containerRegistry.Register<ViewModels.FileExplorerViewModel.FileTreeNode>();
             containerRegistry.Register<Views.MainWindow.InterTabClientWrapper>();
+
+            // タスクの完了を待機する
+            loadSettingsTask.Wait();
         }
 
         /// <summary>
@@ -267,21 +244,99 @@ namespace MyPad
         /// </summary>
         /// <returns>ウィンドウのインスタンス</returns>
         /// <remarks>
-        /// 本メソッドで返却されるインスタンスが MainWindow に設定されます。
+        /// 本メソッドで返却されるインスタンスが <see cref="InitializeShell"/> に渡されます。
+        /// null を指定した場合 <see cref="InitializeShell"/> は呼び出されません。
         /// </remarks>
         [LogInterceptor]
         protected override Window CreateShell()
         {
-            var (_, settings) = this.Container.Resolve<Models.Settings>().Load();
+            // 他のプロセスの探索しワークスペースのインスタンスを生成する
+            // どちらの処理も時間がかかるため並列して行う
+            var process = Process.GetCurrentProcess();
+            var getHandleTask = Task.Run(() => this.GetOtherProcessHandle(process));
+            var shell = this.Container.Resolve<Views.Workspace>();
+            getHandleTask.Wait();
+            if (getHandleTask.Result.IsNull == false)
+            {
+                this.SendData(process, getHandleTask.Result, this.SharedDataStore.CommandLineArgs);
+                this.Shutdown(0);
+                return null;
+            }
+            return shell;
+        }
 
-            this.Container.Resolve<Models.SyntaxService>().CreateDefinitionFiles(settings.IsDifferentVersion);
+        /// <summary>
+        /// メインウィンドウの初期処理を行います。
+        /// </summary>
+        /// <param name="shell">ウィンドウのインスタンス</param>
+        /// <remarks>
+        /// 引数で受け取るインスタンスは base.InitializeShell によって MainWindow に設定されます。
+        /// </remarks>
+        [LogInterceptor]
+        protected override void InitializeShell(Window shell)
+        {
+            base.InitializeShell(shell);
+
+            // 一時フォルダに関する処理を行う
+            this.SharedDataStore.CreateTempDirectory();
+            var cachedDirectories = new DirectoryInfo(this.ProductInfo.Temporary)
+                .EnumerateDirectories()
+                .Where(i => i.FullName != this.SharedDataStore.TempDirectoryPath)
+                .Select(i =>
+                {
+                    var result = DateTime.TryParseExact(Path.GetFileName(i.FullName), "yyyyMMddHHmmssfff", CultureInfo.CurrentCulture, DateTimeStyles.None, out var value);
+                    return (result, value, info: i);
+                });
+            if (cachedDirectories.Any())
+            {
+                const int LOOP_DELAY = 500;
+                try
+                {
+                    // 残存する一時フォルダの隠し属性を外す
+                    foreach (var info in cachedDirectories.Select(t => t.info))
+                        info.Attributes &= ~FileAttributes.Hidden;
+
+                    // 残存する一時フォルダのうち、指定の期間を超えたものを削除する
+                    var basis = Process.GetCurrentProcess().StartTime.AddDays(-1 * AppSettingsReader.CacheLifetime);
+                    foreach (var info in cachedDirectories
+                        .Where(t => t.result == false || t.value < basis || t.info.EnumerateFileSystemInfos().Any() == false)
+                        .Select(t => t.info))
+                    {
+                        Directory.Delete(info.FullName, true);
+                        while (Directory.Exists(info.FullName))
+                            Thread.Sleep(LOOP_DELAY);
+                    }
+                    this.Logger.Debug($"保存期限を過ぎた一時フォルダを削除しました。");
+                }
+                catch (Exception ex)
+                {
+                    this.Logger.Log("保存期限を過ぎた一時フォルダの削除に失敗しました。", Category.Warn, ex);
+                }
+                this.SharedDataStore.CachedDirectories = cachedDirectories.Select(t => t.info.FullName).ToList();
+            }
+
+            // バージョンの更新状況を確認する
+            var settings = this.Container.Resolve<Models.Settings>();
             if (settings.IsDifferentVersion)
                 this.Logger.Debug($"アプリケーションのバージョンが更新されました。: Old={settings.Version}, New={this.ProductInfo.Version}");
+            this.Container.Resolve<Models.SyntaxService>().CreateDefinitionFiles(settings.IsDifferentVersion);
 
-            var shell = this.Container.Resolve<Views.Workspace>();
+            // Workspace の設定を行う
             shell.Title = this.SharedDataStore.Identifier;
             shell.Closed += (sender, e) => settings.Save();
-            return shell;
+        }
+
+        /// <summary>
+        /// 初期化のフローにおける最後の処理を行います。
+        /// </summary>
+        /// <remarks>
+        /// base.OnInitialized によって MainWindow が Show されます。
+        /// </remarks>
+        [LogInterceptor]
+        protected override void OnInitialized()
+        {
+            // ログに記録するためオーバーライドする
+            base.OnInitialized();
         }
 
         /// <summary>
@@ -291,10 +346,10 @@ namespace MyPad
         [LogInterceptor]
         protected override void OnExit(ExitEventArgs e)
         {
-            const int LOOP_DELAY = 500;
-
+            // 一時フォルダに関する処理を行う
             if (Directory.Exists(this.SharedDataStore.TempDirectoryPath))
             {
+                const int LOOP_DELAY = 500;
                 try
                 {
                     Directory.Delete(this.SharedDataStore.TempDirectoryPath, true);
@@ -308,8 +363,14 @@ namespace MyPad
                 }
             }
 
+            // アプリケーションを終了する
             base.OnExit(e);
+
+            // イベントの購読を解除する
             SystemEvents.SessionEnding -= this.SystemEvents_SessionEnding;
+            UnhandledExceptionObserver.Unobserve(this);
+
+            // ログに記録する
             this.Logger.Log($"アプリケーションを終了しました。", Category.Info);
             this.Logger.Debug($"アプリケーションを終了しました。: ExitCode={e.ApplicationExitCode}");
         }
@@ -414,7 +475,7 @@ namespace MyPad
         /// <see cref="QuickConverter"/> の初期設定を行います。
         /// </summary>
         [ModuleInitializer]
-        public static void InitQuickConverter()
+        public static void ConfigureQuickConverter()
         {
             try
             {

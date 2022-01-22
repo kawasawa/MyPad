@@ -142,7 +142,7 @@ namespace MyPad.Views
         [LogInterceptor]
         private void Window_Closed(object sender, EventArgs e)
         {
-            this._handleSource.RemoveHook(this.WndProc);
+            this._handleSource?.RemoveHook(this.WndProc);
             this.Descendants().OfType<TaskbarIcon>().ForEach(t => t.Dispose());
         }
 

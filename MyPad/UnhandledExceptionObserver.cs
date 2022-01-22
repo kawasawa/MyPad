@@ -41,6 +41,22 @@ namespace MyPad
         }
 
         /// <summary>
+        /// 指定されたアプリケーションに対してハンドルされていない例外の発生を監視を解除します。
+        /// </summary>
+        /// <param name="application">アプリケーション</param>
+        public static void Unobserve(Application application)
+        {
+            _isObserved = false;
+
+            Logger = null;
+            ProductInfo = null;
+
+            application.DispatcherUnhandledException -= App_DispatcherUnhandledException;
+            TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
+            AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
+        }
+
+        /// <summary>
         /// UI スレッドで例外が発生したときに行う処理を定義します。
         /// </summary>
         /// <param name="sender">イベントの発生源</param>
