@@ -205,7 +205,7 @@ namespace MyPad
             //
             // ViewModelLocationProvider._defaultViewTypeToViewModelTypeResolver に既定のリゾルバが用意されているが、
             // これを上書きし、デバッグのため独自のリゾルバを設定する
-            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver(PrismConvertHelper.ViewTypeToViewModelType);
+            ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver(PrismConverter.ViewTypeToViewModelType);
 
             // ViewModel のファクトリ
             //

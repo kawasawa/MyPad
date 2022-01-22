@@ -7,7 +7,7 @@ using System;
 
 namespace MyPad.Test
 {
-    public class PrismConvertHelperTest
+    public class PrismConverterTest
     {
         [TestCase("Workspace", typeof(WorkspaceViewModel))]
         [TestCase("MainWindow", typeof(MainWindowViewModel))]
@@ -23,30 +23,30 @@ namespace MyPad.Test
         [TestCase("ToolBar", typeof(ToolBarView))]
         [TestCase("StatusBar", typeof(StatusBarView))]
         public void ConvertToCoreName(string expected, Type actual)
-            => Assert.That(PrismConvertHelper.ConvertToCoreName(actual), Is.EqualTo(expected));
-        
-        [TestCase("AboutContentRegion",        typeof(AboutContentView))]
-        [TestCase("OptionContentRegion",       typeof(OptionContentView))]
-        [TestCase("PrintPreviewContentRegion", typeof(PrintPreviewContentView))]
-        [TestCase("DiffContentRegion",         typeof(DiffContentView))]
-        [TestCase("MenuBarRegion",             typeof(MenuBarView))]
-        [TestCase("ToolBarRegion",             typeof(ToolBarView))]
-        [TestCase("StatusBarRegion",           typeof(StatusBarView))]
-        public void ConvertToRegionName(string expected, Type actual)
-            => Assert.That(PrismConvertHelper.ConvertToRegionName(actual), Is.EqualTo(expected));
+            => Assert.That(PrismConverter.ConvertToCoreName(actual), Is.EqualTo(expected));
 
-        [TestCase(typeof(Workspace),         typeof(WorkspaceViewModel))]
-        [TestCase(typeof(MainWindow),        typeof(MainWindowViewModel))]
-        [TestCase(typeof(AboutContentView),  typeof(AboutContentViewModel))]
+        [TestCase("AboutContentRegion", typeof(AboutContentView))]
+        [TestCase("OptionContentRegion", typeof(OptionContentView))]
+        [TestCase("PrintPreviewContentRegion", typeof(PrintPreviewContentView))]
+        [TestCase("DiffContentRegion", typeof(DiffContentView))]
+        [TestCase("MenuBarRegion", typeof(MenuBarView))]
+        [TestCase("ToolBarRegion", typeof(ToolBarView))]
+        [TestCase("StatusBarRegion", typeof(StatusBarView))]
+        public void ConvertToRegionName(string expected, Type actual)
+            => Assert.That(PrismConverter.ConvertToRegionName(actual), Is.EqualTo(expected));
+
+        [TestCase(typeof(Workspace), typeof(WorkspaceViewModel))]
+        [TestCase(typeof(MainWindow), typeof(MainWindowViewModel))]
+        [TestCase(typeof(AboutContentView), typeof(AboutContentViewModel))]
         [TestCase(typeof(OptionContentView), typeof(OptionContentViewModel))]
         public void ViewModelTypeToViewType(Type expected, Type actual)
-            => Assert.That(PrismConvertHelper.ViewModelTypeToViewType(actual), Is.EqualTo(expected));
+            => Assert.That(PrismConverter.ViewModelTypeToViewType(actual), Is.EqualTo(expected));
 
-        [TestCase(typeof(WorkspaceViewModel),     typeof(Workspace))]
-        [TestCase(typeof(MainWindowViewModel),    typeof(MainWindow))]
-        [TestCase(typeof(AboutContentViewModel),  typeof(AboutContentView))]
+        [TestCase(typeof(WorkspaceViewModel), typeof(Workspace))]
+        [TestCase(typeof(MainWindowViewModel), typeof(MainWindow))]
+        [TestCase(typeof(AboutContentViewModel), typeof(AboutContentView))]
         [TestCase(typeof(OptionContentViewModel), typeof(OptionContentView))]
         public void ViewTypeToViewModelType(Type expected, Type actual)
-            => Assert.That(PrismConvertHelper.ViewTypeToViewModelType(actual), Is.EqualTo(expected));
+            => Assert.That(PrismConverter.ViewTypeToViewModelType(actual), Is.EqualTo(expected));
     }
 }
