@@ -222,9 +222,15 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type Button}">
-                                            <Button Command="{Binding DataContext.RecreateExplorerCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" ToolTip="{le:Loc Command_Apply}" Style="{DynamicResource Common.ChromelessButton}">
-                                                <mi:Material Kind="Refresh"/>
-                                            </Button>
+                                            <Border Background="Transparent" ToolTip="{le:Loc Command_Apply}">
+                                                <Button Command="{Binding DataContext.RecreateExplorerCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Style="{DynamicResource Common.ChromelessButton}">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <mi:Material Kind="FileTree"/>
+                                                        <Border Width="5"/>
+                                                        <mi:Unicons Kind="CornerUpLeftAlt"/>
+                                                    </StackPanel>
+                                                </Button>
+                                            </Border>
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>

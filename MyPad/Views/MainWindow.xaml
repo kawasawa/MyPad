@@ -286,14 +286,14 @@
                                                                 <i:EventTrigger EventName="Click">
                                                                     <behaviors:ProcessStartAction
                                                                         FileName="explorer.exe"
-                                                                        Arguments="{qc:Binding '$P.IsEmpty ? $P.Parent.FileName : ($P.IsDirectory ? $P.FileName : (\'/select, \' + $P.FileName))', P={Binding Mode=OneWay}}"/>
+                                                                        Arguments="{qc:Binding '$P.IsDummy ? $P.Parent.FileName : ($P.IsDirectory ? $P.FileName : (\'/select, \' + $P.FileName))', P={Binding Mode=OneWay}}"/>
                                                                 </i:EventTrigger>
                                                             </i:Interaction.Triggers>
                                                             <MenuItem.Icon>
                                                                 <mi:Material Kind="FolderOutline"/>
                                                             </MenuItem.Icon>
                                                         </MenuItem>
-                                                        <MenuItem Command="{Binding PropertyCommand, Mode=OneTime}" Header="{le:Loc Command_Property}" IsEnabled="{qc:Binding '!$P', P={Binding IsEmpty, Mode=OneWay}}">
+                                                        <MenuItem Command="{Binding PropertyCommand, Mode=OneTime}" Header="{le:Loc Command_Property}" IsEnabled="{qc:Binding '!$P', P={Binding IsDummy, Mode=OneWay}}">
                                                             <MenuItem.Icon>
                                                                 <mi:FontAwesome Kind="WrenchSolid"/>
                                                             </MenuItem.Icon>
@@ -302,10 +302,13 @@
                                                 </Setter.Value>
                                             </Setter>
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsEmpty, Mode=OneWay}" Value="True">
+                                                <DataTrigger Binding="{Binding IsExists, Mode=OneWay}" Value="False">
                                                     <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding IsHidden, Mode=OneWay}" Value="True">
+                                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsDummy, Mode=OneWay}" Value="True">
                                                     <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
@@ -313,10 +316,11 @@
                                     </TreeView.ItemContainerStyle>
                                     <TreeView.ItemTemplate>
                                         <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="{x:Type viewModels:FileExplorerViewModel+FileTreeNode}">
-                                            <Border Background="Transparent" ToolTip="{Binding FileName, Mode=OneWay}" ToolTipService.IsEnabled="{qc:Binding '!$P', P={Binding IsEmpty, Mode=OneWay}}">
+                                            <Border Background="Transparent" ToolTip="{qc:MultiBinding '$P0 ? $P1 : \'not exists\'', P0={Binding IsExists, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" ToolTipService.IsEnabled="{qc:Binding '!$P', P={Binding IsDummy, Mode=OneWay}}">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <Image Source="{Binding Image, Mode=OneWay}" Opacity="{qc:Binding '$P ? 0.5 : 1.0', P={Binding IsHidden, Mode=OneWay}}" Height="20" Margin="0 0 3 0"/>
-                                                    <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsEmpty, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" VerticalAlignment="Center"/>
+                                                    <Image Source="{Binding Image, Mode=OneWay}" Opacity="{qc:Binding '$P ? 0.5 : 1.0', P={Binding IsHidden, Mode=OneWay}}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsExists, Mode=OneWay}}" Height="18"/>
+                                                    <mi:PackIconModern Kind="Question" Opacity="0.5" Visibility="{qc:MultiBinding '!$P0 ## !$P1 ? Visibility.Visible : Visibility.Collapsed', P0={Binding IsExists, Mode=OneWay}, P1={Binding IsDummy, Mode=OneWay}}" Height="18"/>
+                                                    <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsDummy, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" VerticalAlignment="Center" Margin="3 0 0 0"/>
                                                 </StackPanel>
                                             </Border>
                                         </HierarchicalDataTemplate>
