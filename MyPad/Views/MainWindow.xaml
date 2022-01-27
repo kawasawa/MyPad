@@ -33,6 +33,26 @@
                Height="525" Width="850" WindowStartupLocation="CenterScreen" AllowDrop="True"
                Loaded="Window_Loaded" Closing="Window_Closing" Closed="Window_Closed" DataContextChanged="Window_DataContextChanged">
 
+    <!-- イベントトリガー -->
+    <i:Interaction.Triggers>
+        <l:InteractionMessageTrigger MessageKey="Activate" Messenger="{Binding Messenger, Mode=OneWay}">
+            <behaviors:WindowActivateAction/>
+        </l:InteractionMessageTrigger>
+        <l:InteractionMessageTrigger MessageKey="ScrollToCaret" Messenger="{Binding Messenger, Mode=OneWay}">
+            <i:CallMethodAction MethodName="ScrollToCaret" TargetObject="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
+        </l:InteractionMessageTrigger>
+        <i:EventTrigger EventName="Drop">
+            <behaviors:WindowActivateAction/>
+            <i:InvokeCommandAction Command="{Binding DropHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="ContentRendered">
+            <i:InvokeCommandAction Command="{Binding ContentRenderedHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding ClosingHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <!-- リソース -->
     <Window.Resources>
         <Style x:Key="RegionContent" TargetType="{x:Type ContentControl}">
@@ -53,26 +73,6 @@
             <MenuItem IsCheckable="True" IsChecked="{Binding Settings.System.ShowStatusBar, Mode=TwoWay}" Header="{le:Loc Command_ShowStatusBar}"/>
         </ContextMenu>
     </Window.Resources>
-
-    <!-- イベントトリガー -->
-    <i:Interaction.Triggers>
-        <l:InteractionMessageTrigger MessageKey="Activate" Messenger="{Binding Messenger, Mode=OneWay}">
-            <behaviors:WindowActivateAction/>
-        </l:InteractionMessageTrigger>
-        <l:InteractionMessageTrigger MessageKey="ScrollToCaret" Messenger="{Binding Messenger, Mode=OneWay}">
-            <i:CallMethodAction MethodName="ScrollToCaret" TargetObject="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
-        </l:InteractionMessageTrigger>
-        <i:EventTrigger EventName="Drop">
-            <behaviors:WindowActivateAction/>
-            <i:InvokeCommandAction Command="{Binding DropHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
-        </i:EventTrigger>
-        <i:EventTrigger EventName="ContentRendered">
-            <i:InvokeCommandAction Command="{Binding ContentRenderedHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
-        </i:EventTrigger>
-        <i:EventTrigger EventName="Closing">
-            <i:InvokeCommandAction Command="{Binding ClosingHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
 
     <!-- 入力バインディング -->
     <Window.InputBindings>
@@ -104,6 +104,7 @@
     <!-- ウィンドウコマンド(右) -->
     <m:MetroWindow.RightWindowCommands>
         <m:WindowCommands>
+            <!-- 最前面表示ボタン -->
             <ToggleButton IsChecked="{Binding Topmost, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}" ToolTip="{le:Loc Command_Topmost}" Focusable="False">
                 <mi:PackIconModern Kind="Pin" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                     <mi:PackIconModern.Resources>
@@ -121,6 +122,8 @@
                     </mi:PackIconModern.Resources>
                 </mi:PackIconModern>
             </ToggleButton>
+            
+            <!-- 全画面表示ボタン -->
             <Button Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}" Focusable="False">
                 <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
             </Button>
@@ -130,46 +133,32 @@
     <!-- ウィンドウコマンド(左) -->
     <m:MetroWindow.LeftWindowCommands>
         <m:WindowCommands Margin="0 2 0 0">
+            <!-- メニューバー -->
             <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="MenuBarRegion1"
                             Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowMenuBar, Mode=OneWay}}"/>
         </m:WindowCommands>
     </m:MetroWindow.LeftWindowCommands>
 
-    <!-- フライアウト -->
-    <m:MetroWindow.Flyouts>
-        <m:FlyoutsControl>
-            <m:Flyout Header="{le:Loc Command_Diff}" IsOpen="{Binding IsOpenDiffContent.Value, Mode=TwoWay}">
-                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="DiffContentRegion"/>
-            </m:Flyout>
-            <m:Flyout Header="{le:Loc Command_Print}" IsOpen="{Binding IsOpenPrintPreviewContent.Value, Mode=TwoWay}">
-                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="PrintPreviewContentRegion"/>
-            </m:Flyout>
-            <m:Flyout Header="{le:Loc Command_Option}" IsOpen="{Binding IsOpenOptionContent.Value, Mode=TwoWay}">
-                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="OptionContentRegion"/>
-            </m:Flyout>
-            <m:Flyout Header="{le:Loc Command_Maintenance}" IsOpen="{Binding IsOpenMaintenanceContent.Value, Mode=TwoWay}">
-                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="MaintenanceContentRegion"/>
-            </m:Flyout>
-            <m:Flyout Header="{le:Loc Command_About}" IsOpen="{Binding IsOpenAboutContent.Value, Mode=TwoWay}">
-                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="AboutContentRegion"/>
-            </m:Flyout>
-        </m:FlyoutsControl>
-    </m:MetroWindow.Flyouts>
-
-    <!-- 画面コンテンツ -->
+    <!-- コンテンツ -->
     <Grid ge:GridEx.RowDefinition="Auto, Auto, *, Auto">
+        <!-- メニューバー(全画面表示時) -->
         <ContentControl Grid.Row="0" Style="{StaticResource RegionContent}" p:RegionManager.RegionName="MenuBarRegion2"
                         Visibility="{qc:MultiBinding '!$P0 ## $P1 ? Visibility.Visible : Visibility.Collapsed',
                                      P0={Binding ShowTitleBar, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}},
                                      P1={Binding Settings.System.ShowMenuBar, Mode=OneWay}}"
                         ContextMenu="{StaticResource ContextMenu}"/>
+        
+        <!-- ツールバー -->
         <ContentControl Grid.Row="1" Style="{StaticResource RegionContent}" p:RegionManager.RegionName="ToolBarRegion"
                         Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowToolBar, Mode=OneWay}}"
                         ContextMenu="{StaticResource ContextMenu}"/>
+        
+        <!-- ステータスバー -->
         <ContentControl Grid.Row="3" Style="{StaticResource RegionContent}" p:RegionManager.RegionName="StatusBarRegion"
                         Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowStatusBar, Mode=OneWay}}"
                         ContextMenu="{StaticResource ContextMenu}"/>
 
+        <!-- ウィンドウ表示ボタン(全画面表示時) -->
         <Button Grid.Row="0" Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}" Focusable="False"
                 Style="{DynamicResource Common.ChromelessButton}" Padding="10 5" VerticalAlignment="Top" HorizontalAlignment="Right"
                 Visibility="{qc:MultiBinding '!$P0 ## $P1 ? Visibility.Visible : Visibility.Collapsed',
@@ -186,6 +175,7 @@
             <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
         </Button>
 
+        <!-- コンテンツグリッド -->
         <Grid Grid.Row="2">
             <Grid.Resources>
                 <s:Double x:Key="SideContentWidth">48</s:Double>
@@ -207,6 +197,7 @@
                 <RowDefinition Height="Auto" x:Name="BottomContentRow"/>
             </Grid.RowDefinitions>
 
+            <!-- ハンバーガーメニュー -->
             <m:HamburgerMenu Grid.Column="0" Grid.RowSpan="3" x:Name="SideContent"
                              Width="{StaticResource SideContentWidth}"
                              HamburgerWidth="{StaticResource SideContentWidth}"
@@ -260,6 +251,7 @@
                 </m:HamburgerMenu.ContentTemplate>
                 <m:HamburgerMenu.ItemsSource>
                     <m:HamburgerMenuItemCollection>
+                        <!-- エクスプローラー -->
                         <m:HamburgerMenuIconItem x:Name="FileExplorerItem" Label="{le:Loc Command_Explorer}">
                             <m:HamburgerMenuIconItem.Icon>
                                 <mi:Material Kind="FileTree"/>
@@ -328,6 +320,8 @@
                                 </TreeView>
                             </m:HamburgerMenuIconItem.Tag>
                         </m:HamburgerMenuIconItem>
+                        
+                        <!-- プロパティ -->
                         <m:HamburgerMenuIconItem x:Name="PropertyItem" Label="{le:Loc Command_Property}">
                             <m:HamburgerMenuIconItem.Icon>
                                 <mi:Material Kind="FileOutline"/>
@@ -384,6 +378,7 @@
                 </m:HamburgerMenu.ItemsSource>
                 <m:HamburgerMenu.OptionsItemsSource>
                     <m:HamburgerMenuItemCollection>
+                        <!-- オプション -->
                         <m:HamburgerMenuIconItem Label="{le:Loc Command_Option}" Command="{Binding Data.OptionCommand, Source={StaticResource Proxy}, Mode=OneTime}">
                             <m:HamburgerMenuIconItem.Icon>
                                 <mi:Modern Kind="Cog"/>
@@ -399,6 +394,7 @@
                                  P1={Binding Width, ElementName=SideContent, Mode=OneWay}}"
                           DragCompleted="ColumnSplitter_DragCompleted"/>
 
+            <!-- タブコントロール(メイン) -->
             <controls:DraggableTabControl Grid.Column="2" Grid.Row="0" x:Name="MainContent"
                                           ItemsSource="{Binding TextEditors, Mode=OneWay}"
                                           SelectedItem="{Binding ActiveTextEditor.Value, Mode=TwoWay}"
@@ -517,6 +513,7 @@
                 </dr:TabablzControl.ContextMenu>
                 <dr:TabablzControl.ContentTemplate>
                     <DataTemplate>
+                        <!-- テキストエディター -->
                         <controls:TextEditor x:Name="TextEditor">
                             <controls:TextEditor.Resources>
                                 <Style TargetType="{x:Type ae:SearchPanel}" BasedOn="{StaticResource Default.SearchPanel}">
@@ -709,19 +706,23 @@
                           Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsVisibleBottomContent, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}"
                           DragCompleted="RowSplitter_DragCompleted"/>
 
+            <!-- タブコントロール(ボトム) -->
             <TabControl Grid.Column="2" Grid.Row="2" x:Name="BottomContent"
                         TabStripPlacement="Bottom" m:HeaderedControlHelper.HeaderFontWeight="Bold" m:HeaderedControlHelper.HeaderFontSize="10"
                         Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsVisibleBottomContent, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}">
                 <TabItem Header="{le:Loc Command_Terminal}">
+                    <!-- ターミナル -->
                     <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="TerminalRegion"/>
                 </TabItem>
                 <TabItem Header="{le:Loc Command_ScriptRunner}">
+                    <!-- スクリプトランナー -->
                     <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="ScriptRunnerRegion"/>
                 </TabItem>
             </TabControl>
         </Grid>
 
-        <Border Grid.RowSpan="3" d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
+        <!-- プログレスサークル -->
+        <Border Grid.Row="0" Grid.RowSpan="4" d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
             <StackPanel Margin="5 0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                 <TextBlock Text="{le:Loc Text_Working}" HorizontalAlignment="Center" TextAlignment="Center"/>
                 <Border Height="10"/>
@@ -729,5 +730,26 @@
             </StackPanel>
         </Border>
     </Grid>
+
+    <!-- フライアウト -->
+    <m:MetroWindow.Flyouts>
+        <m:FlyoutsControl>
+            <m:Flyout Header="{le:Loc Command_Diff}" IsOpen="{Binding IsOpenDiffContent.Value, Mode=TwoWay}">
+                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="DiffContentRegion"/>
+            </m:Flyout>
+            <m:Flyout Header="{le:Loc Command_Print}" IsOpen="{Binding IsOpenPrintPreviewContent.Value, Mode=TwoWay}">
+                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="PrintPreviewContentRegion"/>
+            </m:Flyout>
+            <m:Flyout Header="{le:Loc Command_Option}" IsOpen="{Binding IsOpenOptionContent.Value, Mode=TwoWay}">
+                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="OptionContentRegion"/>
+            </m:Flyout>
+            <m:Flyout Header="{le:Loc Command_Maintenance}" IsOpen="{Binding IsOpenMaintenanceContent.Value, Mode=TwoWay}">
+                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="MaintenanceContentRegion"/>
+            </m:Flyout>
+            <m:Flyout Header="{le:Loc Command_About}" IsOpen="{Binding IsOpenAboutContent.Value, Mode=TwoWay}">
+                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="AboutContentRegion"/>
+            </m:Flyout>
+        </m:FlyoutsControl>
+    </m:MetroWindow.Flyouts>
 
 </m:MetroWindow>
