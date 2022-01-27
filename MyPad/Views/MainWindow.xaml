@@ -16,9 +16,9 @@
                xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
                xmlns:s="clr-namespace:System;assembly=System.Runtime"
                xmlns:viewModels="clr-namespace:MyPad.ViewModels"
+               xmlns:views="clr-namespace:MyPad.Views"
                xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
                xmlns:controls="clr-namespace:MyPad.Views.Controls"
-               xmlns:helpers="clr-namespace:MyPad.Views.Helpers"
                d:DataContext="{d:DesignInstance {x:Type viewModels:MainWindowViewModel}}"
                mc:Ignorable="d"
                p:ViewModelLocator.AutoWireViewModel="True"
@@ -32,6 +32,26 @@
                ResizeMode="{qc:Binding '$P ? ResizeMode.CanResizeWithGrip : ResizeMode.CanResize', P={Binding Settings.System.ShowStatusBar, Mode=TwoWay}}" 
                Height="525" Width="850" WindowStartupLocation="CenterScreen" AllowDrop="True"
                Loaded="Window_Loaded" Closing="Window_Closing" Closed="Window_Closed" DataContextChanged="Window_DataContextChanged">
+
+    <!-- イベントトリガー -->
+    <i:Interaction.Triggers>
+        <l:InteractionMessageTrigger MessageKey="Activate" Messenger="{Binding Messenger, Mode=OneWay}">
+            <behaviors:WindowActivateAction/>
+        </l:InteractionMessageTrigger>
+        <l:InteractionMessageTrigger MessageKey="ScrollToCaret" Messenger="{Binding Messenger, Mode=OneWay}">
+            <i:CallMethodAction MethodName="ScrollToCaret" TargetObject="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
+        </l:InteractionMessageTrigger>
+        <i:EventTrigger EventName="Drop">
+            <behaviors:WindowActivateAction/>
+            <i:InvokeCommandAction Command="{Binding DropHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="ContentRendered">
+            <i:InvokeCommandAction Command="{Binding ContentRenderedHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding ClosingHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 
     <!-- リソース -->
     <Window.Resources>
@@ -53,26 +73,6 @@
             <MenuItem IsCheckable="True" IsChecked="{Binding Settings.System.ShowStatusBar, Mode=TwoWay}" Header="{le:Loc Command_ShowStatusBar}"/>
         </ContextMenu>
     </Window.Resources>
-
-    <!-- イベントトリガー -->
-    <i:Interaction.Triggers>
-        <l:InteractionMessageTrigger MessageKey="Activate" Messenger="{Binding Messenger, Mode=OneWay}">
-            <behaviors:WindowActivateAction/>
-        </l:InteractionMessageTrigger>
-        <l:InteractionMessageTrigger MessageKey="ScrollToCaret" Messenger="{Binding Messenger, Mode=OneWay}">
-            <i:CallMethodAction MethodName="ScrollToCaret" TargetObject="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
-        </l:InteractionMessageTrigger>
-        <i:EventTrigger EventName="Drop">
-            <behaviors:WindowActivateAction/>
-            <i:InvokeCommandAction Command="{Binding DropHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
-        </i:EventTrigger>
-        <i:EventTrigger EventName="ContentRendered">
-            <i:InvokeCommandAction Command="{Binding ContentRenderedHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
-        </i:EventTrigger>
-        <i:EventTrigger EventName="Closing">
-            <i:InvokeCommandAction Command="{Binding ClosingHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
 
     <!-- 入力バインディング -->
     <Window.InputBindings>
@@ -104,6 +104,7 @@
     <!-- ウィンドウコマンド(右) -->
     <m:MetroWindow.RightWindowCommands>
         <m:WindowCommands>
+            <!-- 最前面表示ボタン -->
             <ToggleButton IsChecked="{Binding Topmost, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}" ToolTip="{le:Loc Command_Topmost}" Focusable="False">
                 <mi:PackIconModern Kind="Pin" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                     <mi:PackIconModern.Resources>
@@ -121,6 +122,8 @@
                     </mi:PackIconModern.Resources>
                 </mi:PackIconModern>
             </ToggleButton>
+            
+            <!-- 全画面表示ボタン -->
             <Button Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}" Focusable="False">
                 <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
             </Button>
@@ -130,46 +133,32 @@
     <!-- ウィンドウコマンド(左) -->
     <m:MetroWindow.LeftWindowCommands>
         <m:WindowCommands Margin="0 2 0 0">
+            <!-- メニューバー -->
             <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="MenuBarRegion1"
                             Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowMenuBar, Mode=OneWay}}"/>
         </m:WindowCommands>
     </m:MetroWindow.LeftWindowCommands>
 
-    <!-- フライアウト -->
-    <m:MetroWindow.Flyouts>
-        <m:FlyoutsControl>
-            <m:Flyout Header="{le:Loc Command_Diff}" IsOpen="{Binding IsOpenDiffContent.Value, Mode=TwoWay}">
-                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="DiffContentRegion"/>
-            </m:Flyout>
-            <m:Flyout Header="{le:Loc Command_Print}" IsOpen="{Binding IsOpenPrintPreviewContent.Value, Mode=TwoWay}">
-                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="PrintPreviewContentRegion"/>
-            </m:Flyout>
-            <m:Flyout Header="{le:Loc Command_Option}" IsOpen="{Binding IsOpenOptionContent.Value, Mode=TwoWay}">
-                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="OptionContentRegion"/>
-            </m:Flyout>
-            <m:Flyout Header="{le:Loc Command_Maintenance}" IsOpen="{Binding IsOpenMaintenanceContent.Value, Mode=TwoWay}">
-                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="MaintenanceContentRegion"/>
-            </m:Flyout>
-            <m:Flyout Header="{le:Loc Command_About}" IsOpen="{Binding IsOpenAboutContent.Value, Mode=TwoWay}">
-                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="AboutContentRegion"/>
-            </m:Flyout>
-        </m:FlyoutsControl>
-    </m:MetroWindow.Flyouts>
-
-    <!-- 画面コンテンツ -->
+    <!-- コンテンツ -->
     <Grid ge:GridEx.RowDefinition="Auto, Auto, *, Auto">
+        <!-- メニューバー(全画面表示時) -->
         <ContentControl Grid.Row="0" Style="{StaticResource RegionContent}" p:RegionManager.RegionName="MenuBarRegion2"
                         Visibility="{qc:MultiBinding '!$P0 ## $P1 ? Visibility.Visible : Visibility.Collapsed',
                                      P0={Binding ShowTitleBar, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}},
                                      P1={Binding Settings.System.ShowMenuBar, Mode=OneWay}}"
                         ContextMenu="{StaticResource ContextMenu}"/>
+        
+        <!-- ツールバー -->
         <ContentControl Grid.Row="1" Style="{StaticResource RegionContent}" p:RegionManager.RegionName="ToolBarRegion"
                         Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowToolBar, Mode=OneWay}}"
                         ContextMenu="{StaticResource ContextMenu}"/>
+        
+        <!-- ステータスバー -->
         <ContentControl Grid.Row="3" Style="{StaticResource RegionContent}" p:RegionManager.RegionName="StatusBarRegion"
                         Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowStatusBar, Mode=OneWay}}"
                         ContextMenu="{StaticResource ContextMenu}"/>
 
+        <!-- ウィンドウ表示ボタン(全画面表示時) -->
         <Button Grid.Row="0" Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}" Focusable="False"
                 Style="{DynamicResource Common.ChromelessButton}" Padding="10 5" VerticalAlignment="Top" HorizontalAlignment="Right"
                 Visibility="{qc:MultiBinding '!$P0 ## $P1 ? Visibility.Visible : Visibility.Collapsed',
@@ -186,11 +175,12 @@
             <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
         </Button>
 
+        <!-- コンテンツグリッド -->
         <Grid Grid.Row="2">
             <Grid.Resources>
                 <s:Double x:Key="SideContentWidth">48</s:Double>
                 <GridLength x:Key="SideContentColumnWidth">48</GridLength>
-                <helpers:BindingProxy x:Key="Proxy" Data="{Binding Mode=OneWay}"/>
+                <views:BindingProxy x:Key="Proxy" Data="{Binding Mode=OneWay}"/>
             </Grid.Resources>
 
             <Grid.ColumnDefinitions>
@@ -207,6 +197,7 @@
                 <RowDefinition Height="Auto" x:Name="BottomContentRow"/>
             </Grid.RowDefinitions>
 
+            <!-- ハンバーガーメニュー -->
             <m:HamburgerMenu Grid.Column="0" Grid.RowSpan="3" x:Name="SideContent"
                              Width="{StaticResource SideContentWidth}"
                              HamburgerWidth="{StaticResource SideContentWidth}"
@@ -260,6 +251,7 @@
                 </m:HamburgerMenu.ContentTemplate>
                 <m:HamburgerMenu.ItemsSource>
                     <m:HamburgerMenuItemCollection>
+                        <!-- エクスプローラー -->
                         <m:HamburgerMenuIconItem x:Name="FileExplorerItem" Label="{le:Loc Command_Explorer}">
                             <m:HamburgerMenuIconItem.Icon>
                                 <mi:Material Kind="FileTree"/>
@@ -286,14 +278,14 @@
                                                                 <i:EventTrigger EventName="Click">
                                                                     <behaviors:ProcessStartAction
                                                                         FileName="explorer.exe"
-                                                                        Arguments="{qc:Binding '$P.IsEmpty ? $P.Parent.FileName : ($P.IsDirectory ? $P.FileName : (\'/select, \' + $P.FileName))', P={Binding Mode=OneWay}}"/>
+                                                                        Arguments="{qc:Binding '$P.IsDummy ? $P.Parent.FileName : ($P.IsDirectory ? $P.FileName : (\'/select, \' + $P.FileName))', P={Binding Mode=OneWay}}"/>
                                                                 </i:EventTrigger>
                                                             </i:Interaction.Triggers>
                                                             <MenuItem.Icon>
                                                                 <mi:Material Kind="FolderOutline"/>
                                                             </MenuItem.Icon>
                                                         </MenuItem>
-                                                        <MenuItem Command="{Binding PropertyCommand, Mode=OneTime}" Header="{le:Loc Command_Property}" IsEnabled="{qc:Binding '!$P', P={Binding IsEmpty, Mode=OneWay}}">
+                                                        <MenuItem Command="{Binding PropertyCommand, Mode=OneTime}" Header="{le:Loc Command_Property}" IsEnabled="{qc:Binding '!$P', P={Binding IsDummy, Mode=OneWay}}">
                                                             <MenuItem.Icon>
                                                                 <mi:FontAwesome Kind="WrenchSolid"/>
                                                             </MenuItem.Icon>
@@ -302,10 +294,13 @@
                                                 </Setter.Value>
                                             </Setter>
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsEmpty, Mode=OneWay}" Value="True">
+                                                <DataTrigger Binding="{Binding IsExists, Mode=OneWay}" Value="False">
                                                     <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding IsHidden, Mode=OneWay}" Value="True">
+                                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsDummy, Mode=OneWay}" Value="True">
                                                     <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
@@ -313,10 +308,11 @@
                                     </TreeView.ItemContainerStyle>
                                     <TreeView.ItemTemplate>
                                         <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="{x:Type viewModels:FileExplorerViewModel+FileTreeNode}">
-                                            <Border Background="Transparent" ToolTip="{Binding FileName, Mode=OneWay}" ToolTipService.IsEnabled="{qc:Binding '!$P', P={Binding IsEmpty, Mode=OneWay}}">
+                                            <Border Background="Transparent" ToolTip="{qc:MultiBinding '$P0 ? $P1 : \'not exists\'', P0={Binding IsExists, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" ToolTipService.IsEnabled="{qc:Binding '!$P', P={Binding IsDummy, Mode=OneWay}}">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <Image Source="{Binding Image, Mode=OneWay}" Opacity="{qc:Binding '$P ? 0.5 : 1.0', P={Binding IsHidden, Mode=OneWay}}" Height="20" Margin="0 0 3 0"/>
-                                                    <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsEmpty, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" VerticalAlignment="Center"/>
+                                                    <Image Source="{Binding Image, Mode=OneWay}" Opacity="{qc:Binding '$P ? 0.5 : 1.0', P={Binding IsHidden, Mode=OneWay}}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsExists, Mode=OneWay}}" Height="18"/>
+                                                    <mi:PackIconModern Kind="Question" Opacity="0.5" Visibility="{qc:MultiBinding '!$P0 ## !$P1 ? Visibility.Visible : Visibility.Collapsed', P0={Binding IsExists, Mode=OneWay}, P1={Binding IsDummy, Mode=OneWay}}" Height="18"/>
+                                                    <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsDummy, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" VerticalAlignment="Center" Margin="3 0 0 0"/>
                                                 </StackPanel>
                                             </Border>
                                         </HierarchicalDataTemplate>
@@ -324,6 +320,8 @@
                                 </TreeView>
                             </m:HamburgerMenuIconItem.Tag>
                         </m:HamburgerMenuIconItem>
+                        
+                        <!-- プロパティ -->
                         <m:HamburgerMenuIconItem x:Name="PropertyItem" Label="{le:Loc Command_Property}">
                             <m:HamburgerMenuIconItem.Icon>
                                 <mi:Material Kind="FileOutline"/>
@@ -332,7 +330,7 @@
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <ge:ResponsiveGrid DataContext="{Binding Data.ActiveTextEditor.Value, Source={StaticResource Proxy}, Mode=OneWay}">
                                         <ge:ResponsiveGrid.Resources>
-                                            <Style TargetType="{x:Type Label}" BasedOn="{StaticResource Default.Label}">
+                                            <Style x:Key="PropertyName" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
                                                 <Setter Property="FontSize" Value="14"/>
                                             </Style>
                                             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
@@ -343,7 +341,7 @@
 
                                         <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5 0">
                                             <StackPanel Orientation="Horizontal">
-                                                <Label  Content="{le:Loc Label_Name}"/>
+                                                <TextBlock Text="{le:Loc Label_Name}" Style="{StaticResource PropertyName}"/>
                                                 <Border Width="10"/>
                                                 <Button Click="{qc:QuickEvent 'Clipboard.SetText($dataContext.FileName)'}"
                                                         Style="{StaticResource Common.ChromelessButton}"
@@ -352,24 +350,24 @@
                                                 </Button>
                                             </StackPanel>
                                             <TextBlock Text="{qc:Binding 'Path.GetFileName($P)', P={Binding FileName, Mode=OneWay}}"/>
-                                            <Label     Content="{le:Loc Label_Type}"/>
+                                            <TextBlock Text="{le:Loc Label_Type}" Style="{StaticResource PropertyName}"/>
                                             <TextBlock Text="{Binding FileType, Mode=OneWay}"/>
-                                            <Label     Content="{le:Loc Label_Location}"/>
+                                            <TextBlock Text="{le:Loc Label_Location}" Style="{StaticResource PropertyName}"/>
                                             <TextBlock Text="{Binding FileInfo.DirectoryName, Mode=OneWay}"/>
-                                            <Label     Content="{le:Loc Label_Size}"/>
+                                            <TextBlock Text="{le:Loc Label_Size}" Style="{StaticResource PropertyName}"/>
                                             <TextBlock Text="{Binding FileInfo.Length, StringFormat={}{0:N0} bytes, Mode=OneWay}"/>
                                         </StackPanel>
 
                                         <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5 0">
-                                            <Label     Content="{le:Loc Label_CreationDate}"/>
+                                            <TextBlock Text="{le:Loc Label_CreationDate}" Style="{StaticResource PropertyName}"/>
                                             <TextBlock Text="{Binding FileInfo.CreationTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
-                                            <Label     Content="{le:Loc Label_ModifiredDate}"/>
+                                            <TextBlock Text="{le:Loc Label_ModifiredDate}" Style="{StaticResource PropertyName}"/>
                                             <TextBlock Text="{Binding FileInfo.LastWriteTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
-                                            <Label     Content="{le:Loc Label_AccessDate}"/>
+                                            <TextBlock Text="{le:Loc Label_AccessDate}" Style="{StaticResource PropertyName}"/>
                                             <TextBlock Text="{Binding FileInfo.LastAccessTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"/>
-                                            <Label     Content="{le:Loc Label_Attributes}"/>
+                                            <TextBlock Text="{le:Loc Label_Attributes}" Style="{StaticResource PropertyName}"/>
                                             <TextBlock Text="{Binding FileInfo.Attributes, Mode=OneWay}"/>
-                                            <Label     Content="{le:Loc Label_Owner}"/>
+                                            <TextBlock Text="{le:Loc Label_Owner}" Style="{StaticResource PropertyName}"/>
                                             <TextBlock Text="{Binding FileOwner, Mode=OneWay}"/>
                                         </StackPanel>
                                     </ge:ResponsiveGrid>
@@ -380,6 +378,7 @@
                 </m:HamburgerMenu.ItemsSource>
                 <m:HamburgerMenu.OptionsItemsSource>
                     <m:HamburgerMenuItemCollection>
+                        <!-- オプション -->
                         <m:HamburgerMenuIconItem Label="{le:Loc Command_Option}" Command="{Binding Data.OptionCommand, Source={StaticResource Proxy}, Mode=OneTime}">
                             <m:HamburgerMenuIconItem.Icon>
                                 <mi:Modern Kind="Cog"/>
@@ -395,6 +394,7 @@
                                  P1={Binding Width, ElementName=SideContent, Mode=OneWay}}"
                           DragCompleted="ColumnSplitter_DragCompleted"/>
 
+            <!-- タブコントロール(メイン) -->
             <controls:DraggableTabControl Grid.Column="2" Grid.Row="0" x:Name="MainContent"
                                           ItemsSource="{Binding TextEditors, Mode=OneWay}"
                                           SelectedItem="{Binding ActiveTextEditor.Value, Mode=TwoWay}"
@@ -513,6 +513,7 @@
                 </dr:TabablzControl.ContextMenu>
                 <dr:TabablzControl.ContentTemplate>
                     <DataTemplate>
+                        <!-- テキストエディター -->
                         <controls:TextEditor x:Name="TextEditor">
                             <controls:TextEditor.Resources>
                                 <Style TargetType="{x:Type ae:SearchPanel}" BasedOn="{StaticResource Default.SearchPanel}">
@@ -705,19 +706,23 @@
                           Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsVisibleBottomContent, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}"
                           DragCompleted="RowSplitter_DragCompleted"/>
 
+            <!-- タブコントロール(ボトム) -->
             <TabControl Grid.Column="2" Grid.Row="2" x:Name="BottomContent"
                         TabStripPlacement="Bottom" m:HeaderedControlHelper.HeaderFontWeight="Bold" m:HeaderedControlHelper.HeaderFontSize="10"
                         Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsVisibleBottomContent, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}">
                 <TabItem Header="{le:Loc Command_Terminal}">
+                    <!-- ターミナル -->
                     <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="TerminalRegion"/>
                 </TabItem>
                 <TabItem Header="{le:Loc Command_ScriptRunner}">
+                    <!-- スクリプトランナー -->
                     <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="ScriptRunnerRegion"/>
                 </TabItem>
             </TabControl>
         </Grid>
 
-        <Border Grid.RowSpan="3" d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
+        <!-- プログレスサークル -->
+        <Border Grid.Row="0" Grid.RowSpan="4" d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
             <StackPanel Margin="5 0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                 <TextBlock Text="{le:Loc Text_Working}" HorizontalAlignment="Center" TextAlignment="Center"/>
                 <Border Height="10"/>
@@ -725,5 +730,26 @@
             </StackPanel>
         </Border>
     </Grid>
+
+    <!-- フライアウト -->
+    <m:MetroWindow.Flyouts>
+        <m:FlyoutsControl>
+            <m:Flyout Header="{le:Loc Command_Diff}" IsOpen="{Binding IsOpenDiffContent.Value, Mode=TwoWay}">
+                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="DiffContentRegion"/>
+            </m:Flyout>
+            <m:Flyout Header="{le:Loc Command_Print}" IsOpen="{Binding IsOpenPrintPreviewContent.Value, Mode=TwoWay}">
+                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="PrintPreviewContentRegion"/>
+            </m:Flyout>
+            <m:Flyout Header="{le:Loc Command_Option}" IsOpen="{Binding IsOpenOptionContent.Value, Mode=TwoWay}">
+                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="OptionContentRegion"/>
+            </m:Flyout>
+            <m:Flyout Header="{le:Loc Command_Maintenance}" IsOpen="{Binding IsOpenMaintenanceContent.Value, Mode=TwoWay}">
+                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="MaintenanceContentRegion"/>
+            </m:Flyout>
+            <m:Flyout Header="{le:Loc Command_About}" IsOpen="{Binding IsOpenAboutContent.Value, Mode=TwoWay}">
+                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="AboutContentRegion"/>
+            </m:Flyout>
+        </m:FlyoutsControl>
+    </m:MetroWindow.Flyouts>
 
 </m:MetroWindow>

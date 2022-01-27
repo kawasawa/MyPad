@@ -476,7 +476,7 @@ namespace MyPad.Views
             // リージョンにビューを設定する
             void injectRegionContent<T>(string suffix = null)
             {
-                var regionName = $"{PrismConvertHelper.ConvertToRegionName<T>()}{suffix}";
+                var regionName = $"{PrismConverter.ConvertToRegionName<T>()}{suffix}";
                 var content = this.Container.Resolve<T>();
 
                 try
@@ -659,11 +659,6 @@ namespace MyPad.Views
                 return;
 
             var node = (FileExplorerViewModel.FileTreeNode)((TreeViewItem)sender).DataContext;
-            if (node.IsEmpty)
-            {
-                e.Handled = true;
-                return;
-            }
             if (File.Exists(node.FileName))
             {
                 this.ViewModel.LoadCommand.Execute(new[] { node.FileName });
@@ -688,7 +683,7 @@ namespace MyPad.Views
                 case Key.Enter:
                     {
                         var node = (FileExplorerViewModel.FileTreeNode)((TreeViewItem)sender).DataContext;
-                        if (node.IsEmpty)
+                        if (node.IsDummy)
                         {
                             e.Handled = true;
                             return;

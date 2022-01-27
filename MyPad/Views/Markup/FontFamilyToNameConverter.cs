@@ -5,14 +5,22 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Media;
 
-namespace MyPad.Views.Helpers
+namespace MyPad.Views.Markup
 {
+    /// <summary>
+    /// フォントファミリの名称を取得するためのコンバーターを表します。
+    /// </summary>
     public class FontFamilyToNameConverter : MarkupExtension, IValueConverter
     {
+        // Markup
+
         private static object INSTANCE;
 
         public override object ProvideValue(IServiceProvider serviceProvider)
             => INSTANCE ??= Activator.CreateInstance(this.GetType());
+
+
+        // ValueConverter
 
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

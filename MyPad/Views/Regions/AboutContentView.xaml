@@ -10,11 +10,10 @@
              xmlns:le="http://wpflocalizeextension.codeplex.com"
              xmlns:qc="http://QuickConverter.CodePlex.com/"
              xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
-             xmlns:mw="clr-namespace:Markdig.Wpf;assembly=Markdig.Wpf"
              xmlns:root="clr-namespace:MyPad"
              xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
              xmlns:controls="clr-namespace:MyPad.Views.Controls"
-             xmlns:helpers="clr-namespace:MyPad.Views.Helpers"
+             xmlns:markup="clr-namespace:MyPad.Views.Markup"
              mc:Ignorable="d" 
              p:ViewModelLocator.AutoWireViewModel="True"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -28,7 +27,7 @@
     <Grid ge:GridEx.RowDefinition="Auto, 15, Auto, 15, *, 20">
         <ScrollViewer Grid.Row="0" Margin="40 0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
             <Grid ge:GridEx.ColumnDefinition="Auto, 15, Auto, 15, Auto, 30, Auto, 15, Auto, 15, Auto">
-                <Image     Grid.Column="0" Source="{helpers:IconSource /Resources/app.ico}" Width="40" VerticalAlignment="Center"/>
+                <Image     Grid.Column="0" Source="{markup:IconSource /Resources/app.ico}" Width="40" VerticalAlignment="Center"/>
                 <TextBlock Grid.Column="2" Text="{Binding ProductInfo.Product, Mode=OneWay}" FontWeight="Bold" FontSize="32" Margin="0 0 0 5" VerticalAlignment="Center"/>
                 <TextBlock Grid.Column="4" TextWrapping="Wrap" VerticalAlignment="Center">
                     <Run Text="{qc:MultiBinding '\'Version \' + $P0.Major + \'.\' + $P0.Minor + \'.\' + $P0.Build + ($P1 ? \' - Debug Build\' : null)', P0={Binding ProductInfo.Version, Mode=OneWay}, P1={Binding ProductInfo.IsDebugBuild, Mode=OneWay}}"/>

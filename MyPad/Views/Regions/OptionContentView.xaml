@@ -12,7 +12,8 @@
              xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
              xmlns:root="clr-namespace:MyPad"
              xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
-             xmlns:helpers="clr-namespace:MyPad.Views.Helpers"
+             xmlns:controls="clr-namespace:MyPad.Views.Controls"
+             xmlns:markup="clr-namespace:MyPad.Views.Markup"
              mc:Ignorable="d" 
              p:ViewModelLocator.AutoWireViewModel="True"
              d:DesignHeight="450" d:DesignWidth="800"
@@ -21,8 +22,11 @@
     <Grid Margin="20 0 20 20">
         <TabControl Padding="5 10 0 0" m:HeaderedControlHelper.HeaderFontWeight="Bold">
             <TabControl.Resources>
-                <Style TargetType="{x:Type Label}" BasedOn="{StaticResource Default.Label}">
+                <Style x:Key="ComboBoxTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
+                </Style>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
                     <Setter Property="Margin" Value="5"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
                 </Style>
                 <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
                     <Setter Property="Margin" Value="5"/>
@@ -58,55 +62,55 @@
                 <ScrollViewer>
                     <StackPanel>
                         <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto">
-                            <Label      Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_Theme}"/>
+                            <TextBlock  Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_Theme}"/>
                             <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
                                 <RadioButton Content="{le:Loc Label_SyncAppTheme}" IsChecked="{qc:Binding Convert='(int)$P == 0', ConvertBack='$value ? 0 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
                                 <RadioButton Content="{le:Loc Label_Dark}"         IsChecked="{qc:Binding Convert='(int)$P == 1', ConvertBack='$value ? 1 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
                                 <RadioButton Content="{le:Loc Label_Light}"        IsChecked="{qc:Binding Convert='(int)$P == 2', ConvertBack='$value ? 2 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
                             </StackPanel>
 
-                            <Label    Grid.Row="1" Grid.Column="0" Content="{le:Loc Label_Language}"/>
-                            <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
-                                      ItemsSource="{x:Static root:Constants.CULTURES}"
-                                      SelectedValue="{Binding Culture, Mode=TwoWay}"
-                                      SelectedValuePath="Name">
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="{le:Loc Label_Language}"/>
+                            <ComboBox  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
+                                       ItemsSource="{x:Static root:Constants.CULTURES}"
+                                       SelectedValue="{Binding Culture, Mode=TwoWay}"
+                                       SelectedValuePath="Name">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{qc:MultiBinding '$P0 + \' (\' + $P1 + \')\'', P0={Binding Description, Mode=OneWay}, P1={Binding Name, Mode=OneWay}}"/>
+                                        <TextBlock Text="{qc:MultiBinding '$P0 + \' (\' + $P1 + \')\'', P0={Binding Description, Mode=OneWay}, P1={Binding Name, Mode=OneWay}}" Style="{StaticResource ComboBoxTextBlock}"/>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
 
-                            <Label    Grid.Row="2" Grid.Column="0" Content="{le:Loc Label_Encoding}"/>
-                            <ComboBox Grid.Row="2" Grid.Column="1"
-                                      ItemsSource="{x:Static root:Constants.ENCODINGS}"
-                                      SelectedValue="{Binding Encoding, Mode=TwoWay}">
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="{le:Loc Label_Encoding}"/>
+                            <ComboBox  Grid.Row="2" Grid.Column="1"
+                                       ItemsSource="{x:Static root:Constants.ENCODINGS}"
+                                       SelectedValue="{Binding Encoding, Mode=TwoWay}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{qc:MultiBinding '$P0 + \' - \' + $P1', P0={Binding CodePage, Mode=OneWay}, P1={Binding EncodingName, Mode=OneWay}}"/>
+                                        <TextBlock Text="{qc:MultiBinding '$P0 + \' - \' + $P1', P0={Binding CodePage, Mode=OneWay}, P1={Binding EncodingName, Mode=OneWay}}" Style="{StaticResource ComboBoxTextBlock}"/>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                             <CheckBox Grid.Row="2" Grid.Column="3" IsChecked="{Binding AutoDetectEncoding, Mode=TwoWay}" Content="{le:Loc LabelText_AutoDetectByDefault}"/>
 
-                            <Label    Grid.Row="3" Grid.Column="0" Content="{le:Loc Label_Syntax}"/>
-                            <ComboBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"
-                                      ItemsSource="{qc:Binding 'new string[] { string.Empty }.Concat($P.Keys)', P={Binding DataContext.SyntaxService.Definitions, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Mode=OneWay}}"
-                                      SelectedValue="{qc:Binding Convert='$P ?? string.Empty', ConvertBack='string.IsNullOrEmpty($value) ? null : $value', P={Binding SyntaxDefinitionName, Mode=TwoWay}}">
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="{le:Loc Label_Syntax}"/>
+                            <ComboBox  Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"
+                                       ItemsSource="{qc:Binding 'new string[] { string.Empty }.Concat($P.Keys)', P={Binding DataContext.SyntaxService.Definitions, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Mode=OneWay}}"
+                                       SelectedValue="{qc:Binding Convert='$P ?? string.Empty', ConvertBack='string.IsNullOrEmpty($value) ? null : $value', P={Binding SyntaxDefinitionName, Mode=TwoWay}}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{qc:Binding 'string.IsNullOrEmpty($P) ? \'Plain Text\' : $P', P={Binding Mode=OneWay}}"/>
+                                        <TextBlock Text="{qc:Binding 'string.IsNullOrEmpty($P) ? \'Plain Text\' : $P', P={Binding Mode=OneWay}}" Style="{StaticResource ComboBoxTextBlock}"/>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
 
-                            <Label    Grid.Row="4" Grid.Column="0" Content="{le:Loc Label_Font}"/>
-                            <ComboBox Grid.Row="4" Grid.Column="1" 
-                                      ItemsSource="{x:Static root:Constants.FONT_FAMILIES}"
-                                      SelectedValue="{Binding DataContext.Settings.TextEditor.FontFamily, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="{le:Loc Label_Font}"/>
+                            <ComboBox  Grid.Row="4" Grid.Column="1" 
+                                       ItemsSource="{x:Static root:Constants.FONT_FAMILIES}"
+                                       SelectedValue="{Binding DataContext.Settings.TextEditor.FontFamily, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Converter={helpers:FontFamilyToNameConverter}}" FontFamily="{Binding}"/>
+                                        <TextBlock Text="{Binding Converter={markup:FontFamilyToNameConverter}}" FontFamily="{Binding}" Style="{StaticResource ComboBoxTextBlock}"/>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
@@ -138,7 +142,7 @@
                                 <StackPanel>
                                     <CheckBox IsChecked="{Binding EnableAutoSave, Mode=TwoWay}"             Content="{le:Loc LabelText_EnableAutoSave}"/>
                                     <Grid ge:GridEx.RowDefinition="Auto" ge:GridEx.ColumnDefinition="Auto, 10, Auto" Margin="30 0 0 0">
-                                        <Label           Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_AutoSaveInterval}"/>
+                                        <TextBlock       Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_AutoSaveInterval}"/>
                                         <m:NumericUpDown Grid.Row="0" Grid.Column="2" Value="{Binding AutoSaveInterval, Mode=TwoWay}" Minimum="1" MinWidth="100"/>
                                     </Grid>
                                 </StackPanel>
@@ -169,13 +173,13 @@
                                 <StackPanel>
                                     <CheckBox IsChecked="{Binding ShowColumnRuler, Mode=TwoWay}" Content="{le:Loc LabelText_ShowColumnRuler}"/>
                                     <Grid ge:GridEx.RowDefinition="Auto" ge:GridEx.ColumnDefinition="Auto, 10, Auto" Margin="30 0 0 0">
-                                        <Label           Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_ColumnRulerPosition}"/>
+                                        <TextBlock       Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_ColumnRulerPosition}"/>
                                         <m:NumericUpDown Grid.Row="0" Grid.Column="2" Value="{Binding ColumnRulerPosition, Mode=TwoWay}" Minimum="1" Maximum="10000" MinWidth="100"/>
                                     </Grid>
                                     <CheckBox IsChecked="{Binding WordWrap, Mode=TwoWay}"            Content="{le:Loc LabelText_EnableWordWrap}"/>
                                     <CheckBox IsChecked="{Binding ConvertTabsToSpaces, Mode=TwoWay}" Content="{le:Loc LabelText_ConvertTabsToSpaces}"/>
                                     <Grid ge:GridEx.RowDefinition="Auto" ge:GridEx.ColumnDefinition="Auto, 10, Auto" Margin="30 0 0 0">
-                                        <Label           Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_IndentationSize}"/>
+                                        <TextBlock       Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_IndentationSize}"/>
                                         <m:NumericUpDown Grid.Row="0" Grid.Column="2" Value="{Binding IndentationSize, Mode=TwoWay}" Minimum="1" Maximum="64" MinWidth="100"/>
                                     </Grid>
                                 </StackPanel>
@@ -207,20 +211,26 @@
             <!-- ********** エクスプローラー ********** -->
             <TabItem DataContext="{Binding Settings.OtherTools, Mode=OneWay}" Header="{le:Loc Command_Explorer}">
                 <Grid ge:GridEx.RowDefinition="Auto, *">
-                    <Label    Grid.Row="0" Content="{le:Loc LabelText_SetExplorerRoot}"/>
-                    <DataGrid Grid.Row="1" ItemsSource="{Binding ExplorerRoots, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}"
-                              AutoGenerateColumns="False" HeadersVisibility="All" RowHeaderWidth="50" ColumnWidth="*"
-                              CanUserResizeRows="False" CanUserResizeColumns="False" CanUserSortColumns="False" CanUserAddRows="True" CanUserDeleteRows="True"
-                              SelectionUnit="Cell" KeyboardNavigation.ControlTabNavigation="None">
+                    <TextBlock Grid.Row="0" Text="{le:Loc LabelText_SetExplorerRoot}"/>
+                    <DataGrid  Grid.Row="1" ItemsSource="{Binding ExplorerRoots, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}"
+                               AutoGenerateColumns="False" HeadersVisibility="All" RowHeaderWidth="50" ColumnWidth="*"
+                               CanUserResizeRows="False" CanUserResizeColumns="False" CanUserSortColumns="False" CanUserAddRows="True" CanUserDeleteRows="True"
+                               SelectionUnit="Cell" KeyboardNavigation.ControlTabNavigation="None">
                         <DataGrid.Resources>
                             <!-- 全選択ボタンを置き換える -->
                             <Style x:Key="{ComponentResourceKey ResourceId=MetroDataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type Button}">
-                                            <Button Command="{Binding DataContext.RecreateExplorerCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" ToolTip="{le:Loc Command_Apply}" Style="{DynamicResource Common.ChromelessButton}">
-                                                <mi:Material Kind="Refresh"/>
-                                            </Button>
+                                            <Border Background="Transparent" ToolTip="{le:Loc Command_Apply}">
+                                                <Button Command="{Binding DataContext.RecreateExplorerCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Style="{DynamicResource Common.ChromelessButton}">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <mi:Material Kind="FileTree"/>
+                                                        <Border Width="5"/>
+                                                        <mi:Unicons Kind="CornerUpLeftAlt"/>
+                                                    </StackPanel>
+                                                </Button>
+                                            </Border>
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>
@@ -246,7 +256,7 @@
                                     <DataTemplate>
                                         <DataTemplate.Triggers>
                                             <!-- プレースホルダーには表示しない -->
-                                            <DataTrigger Binding="{Binding}" Value="{x:Static helpers:DataGridHelper.NewItemPlaceholder}">
+                                            <DataTrigger Binding="{Binding}" Value="{x:Static controls:DataGridHelper.NewItemPlaceholder}">
                                                 <Setter Property="Visibility" Value="Collapsed"/>
                                             </DataTrigger>
                                         </DataTemplate.Triggers>
@@ -268,7 +278,7 @@
                                     <DataTemplate>
                                         <DataTemplate.Triggers>
                                             <!-- プレースホルダーには表示しない -->
-                                            <DataTrigger Binding="{Binding}" Value="{x:Static helpers:DataGridHelper.NewItemPlaceholder}">
+                                            <DataTrigger Binding="{Binding}" Value="{x:Static controls:DataGridHelper.NewItemPlaceholder}">
                                                 <Setter Property="Visibility" Value="Collapsed"/>
                                             </DataTrigger>
                                         </DataTemplate.Triggers>
@@ -313,9 +323,9 @@
                                     </Style>
                                 </Grid.Resources>
 
-                                <Label   Grid.Row="0" Grid.Column="0" Content="{le:Loc Label_ExecutionDirectory}"/>
-                                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ProductInfo.Working, Mode=OneWay}"/>
-                                <Button  Grid.Row="0" Grid.Column="3" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}">
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_ExecutionDirectory}"/>
+                                <TextBox   Grid.Row="0" Grid.Column="1" Text="{Binding ProductInfo.Working, Mode=OneWay}"/>
+                                <Button    Grid.Row="0" Grid.Column="3" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Click">
                                             <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{Binding ProductInfo.Working, Mode=OneWay}" ThrowException="False"/>
@@ -324,9 +334,9 @@
                                     <mi:Modern Kind="FolderOpen"/>
                                 </Button>
 
-                                <Label   Grid.Row="1" Grid.Column="0" Content="{le:Loc Label_TempDirectory}"/>
-                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ProductInfo.Temporary, Mode=OneWay}"/>
-                                <Button  Grid.Row="1" Grid.Column="3" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}">
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="{le:Loc Label_TempDirectory}"/>
+                                <TextBox   Grid.Row="1" Grid.Column="1" Text="{Binding ProductInfo.Temporary, Mode=OneWay}"/>
+                                <Button    Grid.Row="1" Grid.Column="3" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Click">
                                             <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{Binding ProductInfo.Temporary, Mode=OneWay}" ThrowException="False"/>
@@ -335,9 +345,9 @@
                                     <mi:Modern Kind="FolderOpen"/>
                                 </Button>
 
-                                <Label   Grid.Row="2" Grid.Column="0" Content="{le:Loc Label_AppDataDirectory}"/>
-                                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ProductInfo.Roaming, Mode=OneWay}"/>
-                                <Button  Grid.Row="2" Grid.Column="3" Command="{Binding InitializeSyntaxCommand, Mode=OneTime}" ToolTip="{le:Loc Command_InitializeSyntax}" Style="{StaticResource IconDangerButton}">
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="{le:Loc Label_AppDataDirectory}"/>
+                                <TextBox   Grid.Row="2" Grid.Column="1" Text="{Binding ProductInfo.Roaming, Mode=OneWay}"/>
+                                <Button    Grid.Row="2" Grid.Column="3" Command="{Binding InitializeSyntaxCommand, Mode=OneTime}" ToolTip="{le:Loc Command_InitializeSyntax}" Style="{StaticResource IconDangerButton}">
                                     <mi:Material Kind="FileRefreshOutline"/>
                                 </Button>
                             </Grid>

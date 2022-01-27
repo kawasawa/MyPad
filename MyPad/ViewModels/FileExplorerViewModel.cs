@@ -96,14 +96,17 @@ namespace MyPad.ViewModels
             private string _fileName;
             public string FileName => this._fileName;
 
-            private bool _isEmpty;
-            public bool IsEmpty => this._isEmpty;
+            private bool _isDummy;
+            public bool IsDummy => this._isDummy;
 
-            private bool _isLink;
-            public bool IsLink => this._isLink;
+            private bool _isExists;
+            public bool IsExists => this._isExists;
 
             private bool _isHidden;
             public bool IsHidden => this._isHidden;
+
+            private bool _isLink;
+            public bool IsLink => this._isLink;
 
             private bool _isDirectory;
             public bool IsDirectory => this._isDirectory;
@@ -191,15 +194,17 @@ namespace MyPad.ViewModels
                 if (((Shell32.SFGAO)psfi.dwAttributes).HasFlag(Shell32.SFGAO.SFGAO_LINK))
                     this._isLink = true;
 
-                if ((File.Exists(fileName) || Directory.Exists(fileName)) &&
-                    File.GetAttributes(fileName).HasFlag(FileAttributes.Hidden))
+                if (File.Exists(fileName) || Directory.Exists(fileName))
+                    this._isExists = true;
+
+                if ((File.Exists(fileName) || Directory.Exists(fileName)) && File.GetAttributes(fileName).HasFlag(FileAttributes.Hidden))
                     this._isHidden = true;
 
                 this.Children.Clear();
                 if (Directory.Exists(fileName))
                 {
                     this._isDirectory = true;
-                    this.Children.Add(this.CreateEmptyChild());
+                    this.Children.Add(this.CreateDummyChild());
                 }
 
                 return this;
@@ -227,7 +232,7 @@ namespace MyPad.ViewModels
                     var children = temp.Where(p => Directory.Exists(p))
                         .Union(temp.Where(p => Directory.Exists(p) == false))
                         .Select(p => this.Container.Resolve<FileTreeNode>().Initialize(p, parent));
-                    return children.Any() ? children : new[] { parent.CreateEmptyChild() };
+                    return children.Any() ? children : new[] { parent.CreateDummyChild() };
                 }
 
                 try
@@ -235,7 +240,7 @@ namespace MyPad.ViewModels
                     Mouse.OverrideCursor = Cursors.Wait;
                     this.Children.Clear();
                     this.Children.AddRange(getChildren(this));
-                    this.Children.Where(c => existChild(c)).ForEach(c => c.Children.Add(c.CreateEmptyChild()));
+                    this.Children.Where(c => existChild(c)).ForEach(c => c.Children.Add(c.CreateDummyChild()));
                 }
                 catch (UnauthorizedAccessException e)
                 {
@@ -248,14 +253,14 @@ namespace MyPad.ViewModels
             }
 
             /// <summary>
-            /// 空の子ノードを生成し、このインスタンスに紐づけます。
+            /// 空のダミーノードを生成し、このインスタンスを子ノードとして紐づけます。
             /// </summary>
             /// <returns>空の子ノード</returns>
             [LogInterceptorIgnore]
-            private FileTreeNode CreateEmptyChild()
+            private FileTreeNode CreateDummyChild()
             {
                 var treeNode = this.Container.Resolve<FileTreeNode>();
-                treeNode._isEmpty = true;
+                treeNode._isDummy = true;
                 treeNode._parent = this;
                 return treeNode;
             }

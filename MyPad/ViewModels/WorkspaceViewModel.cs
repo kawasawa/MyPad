@@ -52,9 +52,9 @@ namespace MyPad.ViewModels
 
         #region プロパティ
 
-        private PerformanceCounter ProcessorTimeCounter { get; }
-        private PerformanceCounter WorkingSetPrivateCounter { get; }
         private DispatcherTimer PerformanceCheckTimer { get; }
+        private PerformanceCounter ProcessorTimeCounter { get; set; }
+        private PerformanceCounter WorkingSetPrivateCounter { get; set; }
 
         public ReactiveCommand NewWindowCommand { get; }
         public ReactiveCommand ExitApplicationCommand { get; }
@@ -70,10 +70,6 @@ namespace MyPad.ViewModels
         public WorkspaceViewModel(IEventAggregator eventAggregator)
         {
             this.EventAggregator = eventAggregator;
-
-            var processName = Process.GetCurrentProcess().ProcessName;
-            this.ProcessorTimeCounter = new PerformanceCounter("Process", "% Processor Time", processName, true).AddTo(this.CompositeDisposable);
-            this.WorkingSetPrivateCounter = new PerformanceCounter("Process", "Working Set - Private", processName, true).AddTo(this.CompositeDisposable);
 
             this.PerformanceCheckTimer = new();
             this.PerformanceCheckTimer.Tick += this.PerformanceCheckTimer_Tick;
@@ -154,6 +150,9 @@ namespace MyPad.ViewModels
                     float? workingSetPrivate = null;
                     try
                     {
+                        // INFO: PerformanceCounter の初期化には時間がかかる
+                        // コンストラクタや同期処理で実行しないように
+                        this.ProcessorTimeCounter ??= new PerformanceCounter("Process", "% Processor Time", Process.GetCurrentProcess().ProcessName, true).AddTo(this.CompositeDisposable);
                         processorTime = this.ProcessorTimeCounter.NextValue();
                     }
                     catch
@@ -162,6 +161,7 @@ namespace MyPad.ViewModels
                     }
                     try
                     {
+                        this.WorkingSetPrivateCounter ??= new PerformanceCounter("Process", "Working Set - Private", Process.GetCurrentProcess().ProcessName, true).AddTo(this.CompositeDisposable);
                         workingSetPrivate = this.WorkingSetPrivateCounter.NextValue() / 1000 / 1000;
                     }
                     catch

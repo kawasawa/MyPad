@@ -5,7 +5,7 @@ namespace MyPad
     /// <summary>
     /// Prism の命名規則に従い、情報を変換するためのコンバーターを表します。
     /// </summary>
-    public static class PrismConvertHelper
+    public static class PrismConverter
     {
         /// <summary>
         /// 指定された型情報をもとに MVVM の命名規則に該当する箇所を除去した固有名称を推定します。
