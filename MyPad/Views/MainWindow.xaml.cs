@@ -441,7 +441,8 @@ namespace MyPad.Views
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             // フックメソッドを登録する
-            this._handleSource = (HwndSource)PresentationSource.FromVisual(this);
+            var interop = new WindowInteropHelper(this);
+            this._handleSource = HwndSource.FromHwnd(interop.EnsureHandle());
             this._handleSource.AddHook(this.WndProc);
 
             // システムメニューを構築する
