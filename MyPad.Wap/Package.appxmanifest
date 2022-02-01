@@ -10,10 +10,10 @@
   <Identity
     Name="34049KazukiAwasawa.310512F2C2269"
     Publisher="CN=FF18BBFC-17FB-4075-8AD6-0AD85AB820F9"
-    Version="1.13.2.0" />
+    Version="1.13.3.0" />
 
   <Properties>
-    <DisplayName>MyPad テキストエディタ</DisplayName>
+    <DisplayName>MyPad TextEditor</DisplayName>
     <PublisherDisplayName>Kazuki Awasawa</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
@@ -32,7 +32,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="MyPad テキストエディタ"
+        DisplayName="MyPad TextEditor"
         Description="MyPad は簡単操作ですぐに使えるシンプルなテキストエディタです。"
         BackgroundColor="#404040"
         Square150x150Logo="Images\Square150x150Logo.png"
