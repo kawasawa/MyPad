@@ -20,6 +20,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Unity;
 using Vanara.PInvoke;
 using WPFLocalizeExtension.Providers;
 
@@ -194,6 +195,22 @@ namespace MyPad
                 // ViewModel のインスタンスを生成する
                 return this.Container.Resolve(viewModelType);
             });
+        }
+
+        /// <summary>
+        /// DI コンテナのインスタンスを生成します。
+        /// </summary>
+        /// <returns>DI コンテナ</returns>
+        /// <remarks>
+        /// このメソッドをオーバーライドすることで、
+        /// <see cref="UnityContainerExtension"/> に渡される <see cref="IUnityContainer"/> のインスタンスを置き換えることができます。
+        /// </remarks>
+        [LogInterceptor]
+        protected override IContainerExtension CreateContainerExtension()
+        {
+            var container = new UnityContainer();
+            container.EnableDebugDiagnostic();
+            return new UnityContainerExtension(container);
         }
 
         /// <summary>
