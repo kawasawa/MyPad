@@ -114,7 +114,8 @@ namespace MyPad
                 message.AppendLine($"ハンドルされていない例外が発生しました。");
                 message.AppendLine($"エラーを無視してプログラムを続行しますか？");
                 message.AppendLine();
-                message.AppendLine($"{e?.Message}");
+                message.AppendLine($"{e?.GetType()?.Name}: {e?.Message}");
+                message.AppendLine($"{e?.TargetSite?.Module?.Name}: {e?.TargetSite?.DeclaringType?.Name}.{e?.TargetSite?.Name}");
                 if (MessageBox.Show(message.ToString(), ProductInfo?.Product ?? "警告", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
                     _canOpenConfirm = true;
@@ -152,11 +153,7 @@ namespace MyPad
                 message.AppendLine($"ハンドルされていない例外が発生しました。");
                 message.AppendLine($"アプリケーションを終了します。");
                 message.AppendLine();
-                message.AppendLine($"{e?.GetType()?.Name}");
-                message.AppendLine($"[Method] {e?.TargetSite?.DeclaringType?.Name}.{e?.TargetSite?.Name}");
-                message.AppendLine($"[Module] {e?.TargetSite?.Module?.Name}");
-                message.AppendLine();
-                message.AppendLine($"{e?.Message}");
+                message.AppendLine($"{e?.ToString()}");
                 MessageBox.Show(message.ToString(), ProductInfo?.Product ?? "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch

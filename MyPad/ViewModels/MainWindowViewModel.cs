@@ -261,7 +261,9 @@ namespace MyPad.ViewModels
                 .WithSubscribe(async paths =>
                 {
                     var results = await this.Load(paths);
-                    this.WakeUpTextEditor(results.LastOrDefault(tuple => tuple.textEditor != null).textEditor);
+                    var textEditor = results.LastOrDefault(tuple => tuple.textEditor != null).textEditor;
+                    if (textEditor != null)
+                        this.WakeUpTextEditor(textEditor);
                 })
                 .AddTo(this.CompositeDisposable);
 
@@ -269,7 +271,9 @@ namespace MyPad.ViewModels
                 .WithSubscribe(async () =>
                 {
                     var results = await this.Load();
-                    this.WakeUpTextEditor(results.LastOrDefault(tuple => tuple.textEditor != null).textEditor);
+                    var textEditor = results.LastOrDefault(tuple => tuple.textEditor != null).textEditor;
+                    if (textEditor != null)
+                        this.WakeUpTextEditor(textEditor);
                 })
                 .AddTo(this.CompositeDisposable);
 
