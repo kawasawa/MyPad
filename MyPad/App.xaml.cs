@@ -209,9 +209,7 @@ namespace MyPad
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // シングルトン
-            // このタイミングで設定ファイルの初期化を済ませておく
             containerRegistry.RegisterSingleton<Models.Settings>();
-            var loadSettingsTask = Task.Run(() => this.Container.Resolve<Models.Settings>().Load());
             containerRegistry.RegisterSingleton<Models.SyntaxService>();
             containerRegistry.RegisterSingleton<ICommonDialogService, CommonDialogService>();
             containerRegistry.RegisterInstance(this.Logger);
@@ -234,9 +232,6 @@ namespace MyPad
             containerRegistry.Register<ViewModels.FileExplorerViewModel>();
             containerRegistry.Register<ViewModels.FileExplorerViewModel.FileTreeNode>();
             containerRegistry.Register<Views.MainWindow.InterTabClientWrapper>();
-
-            // タスクの完了を待機する
-            loadSettingsTask.Wait();
         }
 
         /// <summary>
@@ -254,6 +249,7 @@ namespace MyPad
             // どちらの処理も時間がかかるため並列して行う
             var process = Process.GetCurrentProcess();
             var getHandleTask = Task.Run(() => this.GetOtherProcessHandle(process));
+            this.Container.Resolve<Models.Settings>().Load();
             var shell = this.Container.Resolve<Views.Workspace>();
             getHandleTask.Wait();
             if (getHandleTask.Result.IsNull == false)
