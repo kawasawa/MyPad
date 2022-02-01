@@ -31,20 +31,22 @@ namespace MyPad
     /// </summary>
     /// <remarks>
     /// <see cref="PrismApplicationBase"/> に用意された初期設定用のメソッドが下記の順に呼び出されます。
-    /// - <see cref="PrismApplicationBase.OnStartup"/>
-    /// - <see cref="PrismApplicationBase.ConfigureViewModelLocator"/>
-    /// - <see cref="PrismApplicationBase.CreateContainerExtension"/>
-    /// - <see cref="PrismApplicationBase.CreateModuleCatalog"/>
-    /// - <see cref="PrismApplicationBase.RegisterRequiredTypes"/>
-    /// - <see cref="PrismApplicationBase.RegisterTypes"/>
-    /// - <see cref="PrismApplicationBase.ConfigureModuleCatalog"/>
-    /// - <see cref="PrismApplicationBase.ConfigureRegionAdapterMappings"/>
-    /// - <see cref="PrismApplicationBase.ConfigureDefaultRegionBehaviors"/>
-    /// - <see cref="PrismApplicationBase.RegisterFrameworkExceptionTypes"/>
-    /// - <see cref="PrismApplicationBase.CreateShell"/>
-    /// - <see cref="PrismApplicationBase.InitializeShell"/>
-    /// - <see cref="PrismApplicationBase.InitializeModules"/>
-    /// - <see cref="PrismApplicationBase.OnInitialized"/>
+    ///
+    /// <see cref="PrismApplicationBase.OnStartup"/>
+    ///  ├ <see cref="PrismApplicationBase.ConfigureViewModelLocator"/>
+    ///  ├ <see cref="PrismApplicationBase.Initialize"/>
+    ///  │  ├ <see cref="PrismApplicationBase.CreateContainerExtension"/>
+    ///  │  ├ <see cref="PrismApplicationBase.CreateModuleCatalog"/>
+    ///  │  ├ <see cref="PrismApplicationBase.RegisterRequiredTypes"/>
+    ///  │  ├ <see cref="PrismApplicationBase.RegisterTypes"/>
+    ///  │  ├ <see cref="PrismApplicationBase.ConfigureModuleCatalog"/>
+    ///  │  ├ <see cref="PrismApplicationBase.ConfigureRegionAdapterMappings"/>
+    ///  │  ├ <see cref="PrismApplicationBase.ConfigureDefaultRegionBehaviors"/>
+    ///  │  ├ <see cref="PrismApplicationBase.RegisterFrameworkExceptionTypes"/>
+    ///  │  ├ <see cref="PrismApplicationBase.CreateShell"/>
+    ///  │  ├ <see cref="PrismApplicationBase.InitializeShell"/>
+    ///  │  └ <see cref="PrismApplicationBase.InitializeModules"/>
+    ///  └ <see cref="PrismApplicationBase.OnInitialized"/>
     /// </remarks>
     public partial class App : PrismApplication
     {
@@ -151,7 +153,7 @@ namespace MyPad
         protected override void OnStartup(StartupEventArgs e)
         {
             this.Logger.Log($"アプリケーションを開始しました。", Category.Info);
-            this.Logger.Debug($" アプリケーションを開始しました。: Args=[{string.Join(", ", e.Args)}]");
+            this.Logger.Debug($"アプリケーションを開始しました。: Args=[{string.Join(", ", e.Args)}]");
             this.SharedDataStore.CommandLineArgs = e.Args;
             base.OnStartup(e);
         }
@@ -160,29 +162,28 @@ namespace MyPad
         /// View と ViewModel のワイヤリングを構成します。
         /// </summary>
         /// <remarks>
-        /// ViewModelLocator は ViewModelLocationProvider を利用し ViewModel のインスタンスの取得を試行します。
-        ///   1. ViewModel のインスタンスを取得
-        ///   -> _factories に登録された ViewModel のインスタンスを取得する。
-        ///   2. ViewModel の型を取得しインスタンスを生成
-        ///      ・_typeFactories に登録された ViewModel の型を取得する。
-        ///      ・_defaultViewTypeToViewModelTypeResolver によって ViewModel の型を推定する。
-        ///   -> _defaultViewModelFactoryWithViewParameter または _defaultViewModelFactory によって ViewModel のインスタンスを生成する。
+        /// このメソッドをオーバーライドすることで、ViewModel のインスタンスファクトリーを置き換えることができます。
         /// </remarks>
         [LogInterceptor]
         protected override void ConfigureViewModelLocator()
         {
+            // ViewModelLocator はいくつかの方法で ViewModel のインスタンスの取得を試行しています。
+            // A. 生成済みのインスタンスを取得する
+            //   -> ViewModelLocationProvider._factories に ViewModel のインスタンスが存在すればそれを取得する。
+            // B. 新しいインスタンスを生成する
+            //   a. ViewModelLocationProvider._typeFactories に ViewModel の型が登録されていればそれを取得する。
+            //   b. ViewModelLocationProvider._defaultViewTypeToViewModelTypeResolver によって ViewModel の型を推定する。
+            //   -> ViewModelLocationProvider._defaultViewModelFactory または ViewModelLocationProvider._defaultViewModelFactoryWithViewParameter によって
+            //      ViewModel の型からインスタンスを生成する。
+
             base.ConfigureViewModelLocator();
 
-            // ViewModel のタイプリゾルバ
-            //
-            // ViewModelLocationProvider._defaultViewTypeToViewModelTypeResolver に既定のリゾルバが用意されているが、
-            // これを上書きし、デバッグのため独自のリゾルバを設定する
+            // デバッグのためのタイプリゾルバーを設定する
+            // 既定で用意される ViewModelLocationProvider._defaultViewTypeToViewModelTypeResolver を置き換える
             ViewModelLocationProvider.SetDefaultViewTypeToViewModelTypeResolver(PrismConverter.ViewTypeToViewModelType);
 
-            // ViewModel のファクトリ
-            //
-            // base.ConfigureViewModelLocator() で既定のファクトリが設定されるが、
-            // これを上書きし、View の多言語化の設定を一元化するため独自のファクトリを設定する
+            // 多言語化の設定を一元化するためのインスタンスファクトリーを設定する
+            // PrismInitializationExtensions.ConfigureViewModelLocator() で設定される既定のファクトリーメソッドを置き換える
             ViewModelLocationProvider.SetDefaultViewModelFactory((view, viewModelType) =>
             {
                 // View に対して多言語化の初期設定を行う
@@ -216,11 +217,10 @@ namespace MyPad
         /// <summary>
         /// DI コンテナにオブジェクトを追加します。
         /// </summary>
-        /// <param name="containerRegistry">DI コンテナ</param>
+        /// <param name="containerRegistry">DI コンテナの登録インターフェース</param>
         /// <remarks>
-        /// DI コンテナは本メソッドの完了後から使用することができます。
-        /// 既定のシングルトンや型マッピングは PrismInitializationExtensions.RegisterRequiredTypes にて設定されます。
-        /// 本メソッドでは上記以外に必要なアプリケーション固有のオブジェクトを追加することができます。
+        /// このメソッドをオーバーライドすることで、アプリケーション固有のオブジェクトを DI コンテナに追加することができます。
+        /// なお、既定のシングルトンや型マッピングは <see cref="PrismInitializationExtensions.RegisterRequiredTypes"/> にて設定されます。
         /// </remarks>
         [LogInterceptor]
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -256,18 +256,21 @@ namespace MyPad
         /// </summary>
         /// <returns>ウィンドウのインスタンス</returns>
         /// <remarks>
-        /// 本メソッドで返却されるインスタンスが <see cref="InitializeShell"/> に渡されます。
-        /// null を指定した場合 <see cref="InitializeShell"/> は呼び出されません。
+        /// このメソッドが返却するインスタンスは <see cref="InitializeShell"/> に渡されます。
+        /// null を返却した場合 <see cref="InitializeShell"/> は呼び出されません。
         /// </remarks>
         [LogInterceptor]
         protected override Window CreateShell()
         {
-            // 他のプロセスの探索しワークスペースのインスタンスを生成する
-            // どちらの処理も時間がかかるため並列して行う
+            // バックアップ起動中のプロセスの探索する
             var process = Process.GetCurrentProcess();
             var getHandleTask = Task.Run(() => this.GetOtherProcessHandle(process));
+
+            // 設定情報を初期化してからワークスペースを生成する
             this.Container.Resolve<Models.Settings>().Load();
             var shell = this.Container.Resolve<Views.Workspace>();
+
+            // 起動中のプロセスが見つかった場合はコマンドライン引数を引き渡し、本プロセスは終了する
             getHandleTask.Wait();
             if (getHandleTask.Result.IsNull == false)
             {
@@ -275,6 +278,7 @@ namespace MyPad
                 this.Shutdown(0);
                 return null;
             }
+
             return shell;
         }
 
@@ -283,7 +287,8 @@ namespace MyPad
         /// </summary>
         /// <param name="shell">ウィンドウのインスタンス</param>
         /// <remarks>
-        /// 引数で受け取るインスタンスは base.InitializeShell によって MainWindow に設定されます。
+        /// このメソッドをオーバーライドすることで、MainWindow の表示前に処理を割り込ませることができます。
+        /// なお、引数で受け取るインスタンスは <see cref="PrismApplicationBase.InitializeShell"/> によって MainWindow に設定されます。
         /// </remarks>
         [LogInterceptor]
         protected override void InitializeShell(Window shell)
@@ -343,7 +348,8 @@ namespace MyPad
         /// 初期化のフローにおける最後の処理を行います。
         /// </summary>
         /// <remarks>
-        /// base.OnInitialized によって MainWindow が Show されます。
+        /// このメソッドをオーバーライドすることで、Prism の初期化処理の最終ステップに処理を割り込ませることができます。
+        /// なお、<see cref="PrismApplicationBase.OnInitialized"/> によって MainWindow.Show() が呼び出されます。
         /// </remarks>
         [LogInterceptor]
         protected override void OnInitialized()
