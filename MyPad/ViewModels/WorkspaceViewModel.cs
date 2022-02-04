@@ -1,5 +1,4 @@
-﻿using Livet.Messaging;
-using MyBase;
+﻿using MyBase;
 using MyBase.Logging;
 using MyPad.Models;
 using MyPad.PubSub;
@@ -112,9 +111,7 @@ namespace MyPad.ViewModels
             var viewModels = ViewModelHelper.GetMainWindowViewModels();
             for (var i = viewModels.Count() - 1; 0 <= i; i--)
             {
-                var viewModel = viewModels.ElementAt(i);
-                viewModel.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
-                if (await viewModel.TryClose() == false)
+                if (await viewModels.ElementAt(i).TryClose() == false)
                     return;
             }
             this.Dispose();

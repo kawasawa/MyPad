@@ -27,7 +27,7 @@ namespace MyPad
         public void Init(object instance, MethodBase method, object[] args)
         {
             this._sequence = ++GlobalSequence;
-            this._logger = ((App)Application.Current).Logger;
+            this._logger = ((App)Application.Current)?.Logger;
             this._method = method;
         }
 
@@ -35,20 +35,20 @@ namespace MyPad
         /// メソッドが起動するときに呼び出されます。
         /// </summary>
         public void OnEntry()
-            => this._logger.Log(this.CreateMessage("BEGIN"), Category.Trace);
+            => this._logger?.Log(this.CreateMessage("BEGIN"), Category.Trace);
 
         /// <summary>
         /// メソッドが正常終了した後に呼び出されます。
         /// </summary>
         public void OnExit()
-            => this._logger.Log(this.CreateMessage("END  "), Category.Trace);
+            => this._logger?.Log(this.CreateMessage("END  "), Category.Trace);
 
         /// <summary>
         /// メソッドの実行中にハンドルされていない例外が発生したときに呼び出されます。
         /// </summary>
         /// <param name="e">例外の情報</param>
         public void OnException(Exception e)
-            => this._logger.Log(this.CreateMessage("ERROR"), Category.Trace);
+            => this._logger?.Log(this.CreateMessage("ERROR"), Category.Trace);
 
         /// <summary>
         /// ログメッセージを生成します。

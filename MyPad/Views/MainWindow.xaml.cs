@@ -9,9 +9,11 @@ using Prism.Commands;
 using Prism.Ioc;
 using Prism.Regions;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,7 +21,10 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Interop;
 using ToastNotifications;
+using ToastNotifications.Core;
+using ToastNotifications.Display;
 using ToastNotifications.Lifetime;
+using ToastNotifications.Lifetime.Clear;
 using ToastNotifications.Position;
 using Unity;
 using Vanara.PInvoke;
@@ -535,6 +540,9 @@ namespace MyPad.Views
         {
             this.Logger.Log($"ウィンドウを破棄しました。win#{this.ViewModel.Sequense}", Category.Info);
 
+            // リソースを解放する
+            this.Notifier.Dispose();
+
             // 表示位置を退避する
             if (this.Settings.System.SaveWindowPlacement && this._handleSource.IsDisposed == false)
             {
@@ -549,15 +557,12 @@ namespace MyPad.Views
             // フックメソッドを解除する
             this._handleSource.RemoveHook(this.WndProc);
 
-            // リソースを開放する
-            this.Notifier.Dispose();
-
             // 他のウィンドウが存在せず、タスクトレイに存在しない場合はアプリケーションを終了する
-            if (Application.Current.Windows.OfType<MainWindow>().Any() == false &&
+            if (ViewHelper.GetMainWindows().Any() == false &&
                 (this.Settings.System.EnableNotificationIcon == false ||
                  this.Settings.System.EnableResident == false))
             {
-                Application.Current.Windows.OfType<Workspace>().ForEach(w => w.Close());
+                ViewHelper.GetWorkspace()?.Close();
             }
         }
 
@@ -577,6 +582,22 @@ namespace MyPad.Views
             void viewModel_Disposed(object sender, EventArgs e)
             {
                 ((ViewModelBase)sender).Disposed -= viewModel_Disposed;
+
+                // HACK: ウィンドウのクローズ後にアプリ内トーストが表示されると例外になる現象への対応
+                // ウィンドウがクローズされる前に、表示中のメッセージ(_notifications)と保留中のメッセージ(_notificationsPending)をクリアし、画面要素(DisplayPart)をクローズする。
+                var _lifetimeSupervisor = this.Notifier.GetType().GetField("_lifetimeSupervisor", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(this.Notifier) as INotificationsLifetimeSupervisor;
+                var _notifications = _lifetimeSupervisor?.GetType().GetField("_notifications", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(_lifetimeSupervisor) as NotificationsList;
+                var _notificationsPending = _lifetimeSupervisor?.GetType().GetField("_notificationsPending", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(_lifetimeSupervisor) as Queue<INotification>;
+                var needCloseNotifications = _notifications?.Select(kvp => kvp.Value.Notification).ToList();
+                _notificationsPending?.Clear();
+                _notifications?.Clear();
+                _lifetimeSupervisor?.ClearMessages(new ClearAll());
+                var _displaySupervisor = this.Notifier.GetType().GetField("_displaySupervisor", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(this.Notifier) as NotificationsDisplaySupervisor;
+                var closeNotification = _displaySupervisor?.GetType().GetMethod("CloseNotification", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod);
+                needCloseNotifications?.ForEach(n => closeNotification?.Invoke(_displaySupervisor, new[] { n }));
+
+                // ウィンドウを閉じる
+                // ViewModel が破棄済みのためウィンドウは確実に終了する
                 this.Dispatcher.InvokeAsync(() => this.Close());
             }
 
