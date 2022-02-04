@@ -513,6 +513,8 @@ namespace MyPad.ViewModels
         [LogInterceptor]
         public async Task<bool> TryClose()
         {
+            this.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
+
             for (var i = this.TextEditors.Count - 1; 0 <= i; i--)
             {
                 var target = this.TextEditors[i];
