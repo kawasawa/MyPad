@@ -528,22 +528,6 @@ namespace MyPad.Views
         {
             // ダイアログの表示に備えてフォアグラウンドへ移動
             this.SetForegroundWindow();
-
-            // HACK: ウィンドウのクローズ後にアプリ内トーストが表示されると例外になる現象への対応
-            // ウィンドウがクローズされる前に、表示中のメッセージ(_notifications)と保留中のメッセージ(_notificationsPending)をクリアし、画面要素(DisplayPart)をクローズする。
-            // なお、Closing の段階では Window がクローズされるかどうかは未確定であるが、
-            // クローズされないパターンでは、ファイルの保存確認を行うオーバーレイあるいはダイアログが表示されるため、
-            // いずれの場合も比較的重要度の低いアプリ内トースト通知をクリアすることは問題にならないと判断する。
-            var _lifetimeSupervisor = this.Notifier.GetType().GetField("_lifetimeSupervisor", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(this.Notifier) as INotificationsLifetimeSupervisor;
-            var _notifications = _lifetimeSupervisor?.GetType().GetField("_notifications", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(_lifetimeSupervisor) as NotificationsList;
-            var _notificationsPending = _lifetimeSupervisor?.GetType().GetField("_notificationsPending", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(_lifetimeSupervisor) as Queue<INotification>;
-            var needCloseNotifications = _notifications?.Select(kvp => kvp.Value.Notification).ToList();
-            _notificationsPending?.Clear();
-            _notifications?.Clear();
-            _lifetimeSupervisor?.ClearMessages(new ClearAll());
-            var _displaySupervisor = this.Notifier.GetType().GetField("_displaySupervisor", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(this.Notifier) as NotificationsDisplaySupervisor;
-            var closeNotification = _displaySupervisor?.GetType().GetMethod("CloseNotification", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod);
-            needCloseNotifications?.ForEach(n => closeNotification?.Invoke(_displaySupervisor, new[] { n }));
         }
 
         /// <summary>
@@ -598,6 +582,22 @@ namespace MyPad.Views
             void viewModel_Disposed(object sender, EventArgs e)
             {
                 ((ViewModelBase)sender).Disposed -= viewModel_Disposed;
+
+                // HACK: ウィンドウのクローズ後にアプリ内トーストが表示されると例外になる現象への対応
+                // ウィンドウがクローズされる前に、表示中のメッセージ(_notifications)と保留中のメッセージ(_notificationsPending)をクリアし、画面要素(DisplayPart)をクローズする。
+                var _lifetimeSupervisor = this.Notifier.GetType().GetField("_lifetimeSupervisor", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(this.Notifier) as INotificationsLifetimeSupervisor;
+                var _notifications = _lifetimeSupervisor?.GetType().GetField("_notifications", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(_lifetimeSupervisor) as NotificationsList;
+                var _notificationsPending = _lifetimeSupervisor?.GetType().GetField("_notificationsPending", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(_lifetimeSupervisor) as Queue<INotification>;
+                var needCloseNotifications = _notifications?.Select(kvp => kvp.Value.Notification).ToList();
+                _notificationsPending?.Clear();
+                _notifications?.Clear();
+                _lifetimeSupervisor?.ClearMessages(new ClearAll());
+                var _displaySupervisor = this.Notifier.GetType().GetField("_displaySupervisor", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(this.Notifier) as NotificationsDisplaySupervisor;
+                var closeNotification = _displaySupervisor?.GetType().GetMethod("CloseNotification", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod);
+                needCloseNotifications?.ForEach(n => closeNotification?.Invoke(_displaySupervisor, new[] { n }));
+
+                // ウィンドウを閉じる
+                // ViewModel が破棄済みのためウィンドウは確実に終了する
                 this.Dispatcher.InvokeAsync(() => this.Close());
             }
 
