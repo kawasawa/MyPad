@@ -558,11 +558,11 @@ namespace MyPad.Views
             this._handleSource.RemoveHook(this.WndProc);
 
             // 他のウィンドウが存在せず、タスクトレイに存在しない場合はアプリケーションを終了する
-            if (Application.Current.Windows.OfType<MainWindow>().Any() == false &&
+            if (ViewHelper.GetMainWindows().Any() == false &&
                 (this.Settings.System.EnableNotificationIcon == false ||
                  this.Settings.System.EnableResident == false))
             {
-                Application.Current.Windows.OfType<Workspace>().ForEach(w => w.Close());
+                ViewHelper.GetWorkspace()?.Close();
             }
         }
 

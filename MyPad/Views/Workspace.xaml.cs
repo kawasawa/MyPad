@@ -233,7 +233,7 @@ namespace MyPad.Views
                             if (string.IsNullOrEmpty(structure.lpData) == false)
                             {
                                 var paths = structure.lpData.Split('\t');
-                                var window = Application.Current?.Windows.OfType<MainWindow>().FirstOrDefault();
+                                var window = ViewHelper.GetMainWindows().FirstOrDefault();
                                 if (window == null)
                                 {
                                     window = this.CreateWindow();
