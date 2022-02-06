@@ -396,7 +396,7 @@ namespace MyPad.ViewModels
         /// </summary>
         /// <returns><see cref="MainWindow"/> のインスタンス</returns>
         private static MainWindow GetActiveMainWindow()
-            => ViewHelper.GetMainWindows().FirstOrDefault(x => x.IsActive);
+            => MvvmHelper.GetMainWindows().FirstOrDefault(x => x.IsActive);
 
         /// <summary>
         /// ダイアログ名を取得します。

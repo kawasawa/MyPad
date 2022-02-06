@@ -176,7 +176,7 @@ namespace MyPad.Views
         private void TaskbarIcon_TrayContextMenuOpen(object sender, RoutedEventArgs e)
         {
             this.WindowListItem.Items.Clear();
-            var windows = ViewHelper.GetMainWindows();
+            var windows = MvvmHelper.GetMainWindows();
             for (var i = 0; i < windows.Count(); i++)
                 this.WindowListItem.Items.Add(new MenuItem { DataContext = windows.ElementAt(i) });
         }
@@ -191,7 +191,7 @@ namespace MyPad.Views
         {
             // ウィンドウが存在する場合はそれらをフォアグラウンドに移動する
             // ウィンドウが一つも存在しない場合は新しいウィンドウを生成する
-            var windows = ViewHelper.GetMainWindows();
+            var windows = MvvmHelper.GetMainWindows();
             if (windows.Any())
                 windows.ForEach(w => w.SetForegroundWindow());
             else
@@ -233,7 +233,7 @@ namespace MyPad.Views
                             if (string.IsNullOrEmpty(structure.lpData) == false)
                             {
                                 var paths = structure.lpData.Split('\t');
-                                var window = ViewHelper.GetMainWindows().FirstOrDefault();
+                                var window = MvvmHelper.GetMainWindows().FirstOrDefault();
                                 if (window == null)
                                 {
                                     window = this.CreateWindow();
@@ -244,7 +244,7 @@ namespace MyPad.Views
                             }
                             else
                             {
-                                var windows = ViewHelper.GetMainWindows();
+                                var windows = MvvmHelper.GetMainWindows();
                                 if (windows.Any())
                                     (windows.FirstOrDefault(w => w.IsActive) ?? windows.First()).SetForegroundWindow();
                                 else

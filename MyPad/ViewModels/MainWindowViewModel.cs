@@ -354,7 +354,7 @@ namespace MyPad.ViewModels
             this.DiffCommand = new ReactiveCommand()
                 .WithSubscribe(async () =>
                 {
-                    var textEditors = ViewModelHelper.GetMainWindowViewModels().SelectMany(viewModel => viewModel.TextEditors);
+                    var textEditors = MvvmHelper.GetMainWindowViewModels().SelectMany(viewModel => viewModel.TextEditors);
                     var (result, diffSourcePath, diffDestinationPath) = await this.DialogService.SelectDiffFiles(textEditors.Select(e => e.FileName), this.ActiveTextEditor.Value.FileName);
                     if (result == false)
                         return;
@@ -731,7 +731,7 @@ namespace MyPad.ViewModels
             else
             {
                 // 他のウィンドウが同名ファイルを占有している場合は処理を委譲する
-                foreach (var viewModel in ViewModelHelper.GetMainWindowViewModels())
+                foreach (var viewModel in MvvmHelper.GetMainWindowViewModels())
                 {
                     var existTextEditor = viewModel?.TextEditors.FirstOrDefault(e => e.FileName == path);
                     if (existTextEditor == null)
@@ -933,7 +933,7 @@ namespace MyPad.ViewModels
             else
             {
                 // 他のウィンドウが同名ファイルを占有している場合は、保存せずに終了する
-                foreach (var viewModel in ViewModelHelper.GetMainWindowViewModels())
+                foreach (var viewModel in MvvmHelper.GetMainWindowViewModels())
                 {
                     var existTextEditor = viewModel?.TextEditors.FirstOrDefault(e => e.FileName == path);
                     if (existTextEditor == null)

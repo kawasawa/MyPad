@@ -108,7 +108,7 @@ namespace MyPad.ViewModels
         private async Task ExitApplication()
         {
             // すべての ViewModel の破棄に成功した場合はアプリケーションを終了する
-            var viewModels = ViewModelHelper.GetMainWindowViewModels();
+            var viewModels = MvvmHelper.GetMainWindowViewModels();
             for (var i = viewModels.Count() - 1; 0 <= i; i--)
             {
                 if (await viewModels.ElementAt(i).TryClose() == false)
