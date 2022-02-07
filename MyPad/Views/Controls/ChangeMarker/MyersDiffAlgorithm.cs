@@ -155,7 +155,7 @@ namespace MyPad.Views.Controls.ChangeMarker
 
                 this.BeginA = this.Forward.Snake(beginK, beginA);
                 this.BeginB = this.BeginA + beginK;
-                this.EndA = this.Backward.Snake(beginK, endA);
+                this.EndA = this.Backward.Snake(endK, endA);
                 this.EndB = this.EndA + endK;
             }
 
