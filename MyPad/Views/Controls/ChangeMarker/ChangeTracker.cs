@@ -35,21 +35,13 @@ namespace MyPad.Views.Controls.ChangeMarker
 
         protected virtual void Dispose(bool disposing)
         {
-            if (this._document != null)
-            {
-                if (this._document.LineTrackers.Contains(this) == false)
-                    this._document.LineTrackers.Remove(this);
-                this._document.UndoStack.PropertyChanged -= this.UndoStack_PropertyChanged;
-            }
+            this.Uninstall(this._document);
+            this.ChangeList.Clear();
         }
 
         public void Initialize(TextDocument document)
         {
-            if (this._document != null)
-            {
-                this._document.LineTrackers.Remove(this);
-                this._document.UndoStack.PropertyChanged -= this.UndoStack_PropertyChanged;
-            }
+            this.Uninstall(this._document);
 
             this._document = document;
             this._baseDocument = new(document);
@@ -57,10 +49,30 @@ namespace MyPad.Views.Controls.ChangeMarker
             this.ChangeList.Clear();
             this.ChangeList.InsertRange(0, document.LineCount + 1, ChangeInfo.Empty);
 
-            if (this._document.LineTrackers.Contains(this) == false)
+            this.Install(this._document);
+        }
+
+        private void Install(TextDocument document)
+        {
+            if (document == null)
+                return;
+
+            if (document.LineTrackers.Contains(this) == false)
             {
-                this._document.LineTrackers.Add(this);
-                this._document.UndoStack.PropertyChanged += this.UndoStack_PropertyChanged;
+                document.LineTrackers.Add(this);
+                document.UndoStack.PropertyChanged += this.UndoStack_PropertyChanged;
+            }
+        }
+
+        private void Uninstall(TextDocument document)
+        {
+            if (document == null)
+                return;
+
+            if (document.LineTrackers.Contains(this))
+            {
+                document.LineTrackers.Remove(this);
+                document.UndoStack.PropertyChanged -= this.UndoStack_PropertyChanged;
             }
         }
 

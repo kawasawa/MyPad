@@ -3,6 +3,37 @@ using System.Collections.Generic;
 
 namespace MyPad.Views.Controls.ChangeMarker
 {
+    /// <summary>
+    /// このクラスは ICSharpCode.SharpDevelop.Widgets.MyersDiff.MyersDiffAlgorithm を参考に構築された差分検出アルゴリズムです。
+    /// 
+    /// <para/>
+    /// 
+    /// Diff algorithm, based on "An O(ND) Difference Algorithm and its Variations", by Eugene Myers.
+    /// The basic idea is to put the line numbers of text A as columns("x") and the lines of text B as rows("y").
+    /// Now you try to find the shortest "edit path" from the upper left corner to the lower right corner, where you can always go horizontally or vertically, but diagonally from(x, y) to(x+1, y+1) only if line x in text A is identical to line y in text B.
+    /// Myers' fundamental concept is the "furthest reaching D-path on diagonal k": a D-path is an edit path starting at the upper left corner and containing exactly D non-diagonal elements ("differences").
+    /// The furthest reaching D-path on diagonal k is the one that contains the most (diagonal) elements which ends on diagonal k (where k = y - x).
+    ///
+    /// Example:
+    ///
+    /// H E L L O W O R L D
+    ///   ____
+    /// L     \___
+    /// O         \___
+    /// W             \________
+    ///
+    /// Since every D-path has exactly D horizontal or vertical elements, it can only end on the diagonals -D, -D+2, ..., D-2, D.
+    /// Since every furthest reaching D-path contains at least one furthest reaching(D-1)-path(except for D= 0), we can construct them recursively.
+    /// Since we are really interested in the shortest edit path, we can start looking for a 0-path, then a 1-path, and so on, until we find a path that ends in the lower right corner.
+    /// To save space, we do not need to store all paths (which has quadratic space requirements), but generate the D-paths simultaneously from both sides.
+    /// When the ends meet, we will have found "the middle" of the path.From the end points of that diagonal part, we can generate the rest recursively.
+    /// This only requires linear space.
+    /// 
+    /// The overall(runtime) complexity is
+    /// O(N * D^2 + 2 * N/2 * (D/2)^2 + 4 * N/4 * (D/4)^2 + ...) = O(N * D^2 * 5 / 4) = O(N * D^2),
+    /// (With each step, we have to find the middle parts of twice as many regions as before, but the regions (as well as the D) are halved.)
+    /// So the overall runtime complexity stays the same with linear space, albeit with a larger constant factor.
+    /// </summary>
     public class MyersDiffAlgorithm
     {
         private readonly MiddleEdit _middleEdit;
@@ -23,6 +54,10 @@ namespace MyPad.Views.Controls.ChangeMarker
             this.CalculateEdits(this._middleEdit.BeginA, this._middleEdit.EndA, this._middleEdit.BeginB, this._middleEdit.EndB);
         }
 
+        /// <summary>
+        /// Entrypoint into the algorithm this class is all about.
+        /// This method triggers that the differences between A and B are calculated in form of a list of edits.
+        /// </summary>
         private void CalculateEdits(int beginA, int endA, int beginB, int endB)
         {
             var edit = this._middleEdit.Calculate(beginA, endA, beginB, endB);
@@ -79,6 +114,12 @@ namespace MyPad.Views.Controls.ChangeMarker
                 => this._hashes.Length;
         }
 
+        /// <summary>
+        /// A modified region detected between two versions of roughly the same content.
+        /// Regions should be specified using 0 based notation, so add 1 to the start and end marks for line numbers in a file.
+        /// An edit where <code>beginA == endA &amp;&amp; beginB &gt; endB</code> is an insert edit, that is sequence B inserted the elements in region<code>[beginB, endB)</code> at <code> beginA </code>.
+        /// An edit where <code>beginA &gt; endA &amp;&amp; beginB &gt; endB</code> is a replace edit, that is sequence B has replaced the range of elements between<code>[beginA, endA)</code> with those found in <code>[beginB, endB)</code>.
+        /// </summary>
         public class Edit
         {
             public int BeginA { get; }
@@ -118,17 +159,31 @@ namespace MyPad.Views.Controls.ChangeMarker
                     this.EndB == other.EndB;
 
             public static bool operator ==(Edit left, Edit right)
-                => left.Equals(right);
+                => Equals(left, right);
 
             public static bool operator !=(Edit left, Edit right)
-                => left.Equals(right) == false;
+                => Equals(left, right) == false;
 
             public override int GetHashCode()
                 => this.BeginA ^ this.EndA;
         }
 
+        /// <summary>
+        /// A class to help bisecting the sequences a and b to find minimal edit paths.
+        /// As the arrays are reused for space efficiency, you will need one instance per thread.
+        /// The entry function is the calculate() method.
+        /// </summary>
         public class MiddleEdit
         {
+            // For each d, we need to hold the d-paths for the diagonals k = -d, -d + 2, ..., d - 2, d.These are stored in the forward(and backward) array.
+            // As we allow subsequences, too, this needs some refinement: the forward paths start on the diagonal forwardK = beginB - beginA, and backward paths start on the diagonal backwardK = endB - endA.
+            // So, we need to hold the forward d-paths for the diagonals k = forwardK - d, forwardK - d + 2, ..., forwardK + d and the analogue for the backward d-paths.This means that we can turn(k, d) into the forward array index using this formula: i = (d + k - forwardK) / 2
+            // There is a further complication: the edit paths should not leave the specified subsequences, so k is bounded by minK = beginB - endA and maxK = endB - beginA.However, (k - forwardK) _must_ be odd whenever d is odd, and it _must_ be even when d is even.
+            // The values in the "forward" and "backward" arrays are positions ("x") in the sequence a, to get the corresponding positions("y") in the sequence b, you have to calculate the appropriate k and then y:
+            // k = forwardK - d + i * 2
+            // y = k + x
+            // (substitute backwardK for forwardK if you want to get the y position for an entry in the "backward" array.
+
             public Sequence SequenceA { get; }
             public Sequence SequenceB { get; }
             public EditPath Forward { get; }
@@ -159,11 +214,17 @@ namespace MyPad.Views.Controls.ChangeMarker
                 this.EndB = this.EndA + endK;
             }
 
+            /// <summary>
+            /// This function calculates the "middle" Edit of the shortest edit path between the given subsequences of a and b.
+            /// Once a forward path and a backward path meet, we found the middle part.From the last snake end point on both of them, we construct the Edit.
+            /// It is assumed that there is at least one edit in the range.
+            /// </summary>
             public Edit Calculate(int beginA, int endA, int beginB, int endB)
             {
                 if (beginA == endA || beginB == endB)
                     return new Edit(beginA, endA, beginB, endB);
 
+                // Following the conventions in Myers' paper, "k" is the difference between the index into "b" and the index into "a".
                 var beginK = beginB - beginA;
                 var endK = endB - endA;
                 var minK = beginB - endA;
@@ -183,6 +244,11 @@ namespace MyPad.Views.Controls.ChangeMarker
                 }
             }
 
+            /// <summary>
+            /// A class to help bisecting the sequences a and b to find minimal edit paths.
+            /// As the arrays are reused for space efficiency, you will need one instance per thread.
+            /// The entry function is the calculate() method.
+            /// </summary>
             public abstract class EditPath
             {
                 private readonly List<int> _xList = new();
@@ -295,6 +361,10 @@ namespace MyPad.Views.Controls.ChangeMarker
                 private static long CreateNewSnake(int k, int x)
                     => ((long)x << 32) | (long)(k + x);
 
+                /// <summary>
+                /// Check for incompatible partial edit paths: when there are ambiguities, we might have hit incompatible (i.e. non-overlapping) forward/backward paths.
+                /// In that case, just pretend that we have an empty edit at the end of one snake; this will force a decision which path to take in the next recursion step.
+                /// </summary>
                 protected void MakeEdit(long snake1, long snake2)
                 {
                     static int snake2x(long snake) => (int)((ulong)snake >> 32);
@@ -408,5 +478,4 @@ namespace MyPad.Views.Controls.ChangeMarker
             }
         }
     }
-
 }
