@@ -129,7 +129,7 @@ namespace MyPad.Views
             // コマンドライン引数を渡す
             var args = this.SharedDataStore.CommandLineArgs;
             if (args.Any())
-                view.ViewModel.LoadCommand.Execute(args);
+                _ = view.ViewModel.InvokeLoad(args);
 
             // 初期ウィンドウを表示する
             view.Show();
@@ -239,7 +239,7 @@ namespace MyPad.Views
                                     window = this.CreateWindow();
                                     window.Show();
                                 }
-                                (window.DataContext as MainWindowViewModel)?.LoadCommand.Execute(paths);
+                                _ = (window.DataContext as MainWindowViewModel)?.InvokeLoad(paths);
                                 window.SetForegroundWindow();
                             }
                             else

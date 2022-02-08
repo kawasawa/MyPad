@@ -63,7 +63,7 @@
                     <mi:Material Kind="ContentSaveAll"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Command="{Binding PrintCommand, Mode=OneTime}"
+            <MenuItem Command="{Binding PrintDirectCommand, Mode=OneTime}"
                       Header="{le:Loc Command_Print}"
                       HeaderStringFormat="{}{0}..."
                       InputGestureText="Ctrl+P">

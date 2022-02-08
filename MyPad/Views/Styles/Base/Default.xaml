@@ -3,7 +3,8 @@
                     xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:s="clr-namespace:System;assembly=System.Runtime"
                     xmlns:m="http://metro.mahapps.com/winfx/xaml/controls"
-                    xmlns:mi="http://metro.mahapps.com/winfx/xaml/iconpacks">
+                    xmlns:mi="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                    xmlns:md="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>
@@ -341,6 +342,12 @@
         <Setter Property="Theme" Value="Adapt"/>
         <Setter Property="AnimateOpacity" Value="True"/>
         <Setter Property="Opacity" Value="0.95"/>
+    </Style>
+
+    <!-- カスタムダイアログ -->
+    <Style x:Key="Default.CustomDialog" TargetType="{x:Type md:CustomDialog}" BasedOn="{StaticResource {x:Type md:CustomDialog}}">
+        <!-- ウィンドウの状態にかかわらずダイアログはアローカーソルに設定する -->
+        <Setter Property="Cursor" Value="Arrow"/>
     </Style>
 
 </ResourceDictionary>
