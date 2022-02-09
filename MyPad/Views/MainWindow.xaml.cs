@@ -10,7 +10,6 @@ using Prism.Ioc;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -244,7 +243,8 @@ namespace MyPad.Views
                 ),
                 new CommandBinding(
                     ActivateTextEditorCommand,
-                    (sender, e) => this.FocusTextEditor()
+                    (sender, e) => this.FocusTextEditor(),
+                    (sender, e) => e.CanExecute = this.ViewModel.IsEditMode.Value
                 ),
                 new CommandBinding(
                     ActivateTerminalCommand,
@@ -260,12 +260,13 @@ namespace MyPad.Views
                             this.IsVisibleBottomContent = true;
                             this.FocusBottomContent();
                         }
-                    }
+                    },
+                    (sender, e) => e.CanExecute = this.ViewModel.IsEditMode.Value
                 ),
                 new CommandBinding(
                     ActivateScriptRunnerCommand,
                     (sender, e) =>
-                     {
+                    {
                         if (this.IsVisibleBottomContent && this.BottomContent.SelectedIndex == 1)
                         {
                             this.IsVisibleBottomContent = false;
@@ -275,16 +276,19 @@ namespace MyPad.Views
                             this.BottomContent.SelectedIndex = 1;
                             this.IsVisibleBottomContent = true;
                             this.FocusBottomContent();
-                         }
-                    }
+                        }
+                    },
+                    (sender, e) => e.CanExecute = this.ViewModel.IsEditMode.Value
                 ),
                 new CommandBinding(
                     ActivateFileExplorerCommand,
-                    (sender, e) => this.PerformClickSideContent(this.FileExplorerItem)
+                    (sender, e) => this.PerformClickSideContent(this.FileExplorerItem),
+                    (sender, e) => e.CanExecute = this.ViewModel.IsEditMode.Value
                 ),
                 new CommandBinding(
                     ActivatePropertyCommand,
-                    (sender, e) => this.PerformClickSideContent(this.PropertyItem)
+                    (sender, e) => this.PerformClickSideContent(this.PropertyItem),
+                    (sender, e) => e.CanExecute = this.ViewModel.IsEditMode.Value
                 ),
             });
 
@@ -519,18 +523,6 @@ namespace MyPad.Views
         }
 
         /// <summary>
-        /// ウィンドウが閉じられるときに行う処理を定義します。
-        /// </summary>
-        /// <param name="sender">イベントの発生源</param>
-        /// <param name="e">イベントの情報</param>
-        [LogInterceptor]
-        private void Window_Closing(object sender, CancelEventArgs e)
-        {
-            // ダイアログの表示に備えてフォアグラウンドへ移動
-            this.SetForegroundWindow();
-        }
-
-        /// <summary>
         /// ウィンドウが閉じられたあとに行う処理を定義します。
         /// </summary>
         /// <param name="sender">イベントの発生源</param>
@@ -558,11 +550,11 @@ namespace MyPad.Views
             this._handleSource.RemoveHook(this.WndProc);
 
             // 他のウィンドウが存在せず、タスクトレイに存在しない場合はアプリケーションを終了する
-            if (ViewHelper.GetMainWindows().Any() == false &&
+            if (MvvmHelper.GetMainWindows().Any() == false &&
                 (this.Settings.System.EnableNotificationIcon == false ||
                  this.Settings.System.EnableResident == false))
             {
-                ViewHelper.GetWorkspace()?.Close();
+                MvvmHelper.GetWorkspace()?.Close();
             }
         }
 
@@ -683,7 +675,7 @@ namespace MyPad.Views
             var node = (FileExplorerViewModel.FileTreeNode)((TreeViewItem)sender).DataContext;
             if (File.Exists(node.FileName))
             {
-                this.ViewModel.LoadCommand.Execute(new[] { node.FileName });
+                _ = this.ViewModel.InvokeLoad(new[] { node.FileName });
                 e.Handled = true;
                 return;
             }
@@ -712,7 +704,7 @@ namespace MyPad.Views
                         }
                         if (File.Exists(node.FileName))
                         {
-                            this.ViewModel.LoadCommand.Execute(new[] { node.FileName });
+                            _ = this.ViewModel.InvokeLoad(new[] { node.FileName });
                             e.Handled = true;
                             return;
                         }

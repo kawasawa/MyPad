@@ -441,7 +441,7 @@ namespace MyPad.ViewModels
 
                 // 文字コードを推定する
                 if (encoding == null)
-                    encoding = await Task.Run(() => TextHelper.DetectEncodingSimple(bytes) ?? this.Settings.System.Encoding);
+                    encoding = await Task.Run(() => StringHelper.DetectEncoding(bytes) ?? this.Settings.System.Encoding);
 
                 // バイト配列をテキストを変換する
                 var text = await Task.Run(() => encoding.GetString(bytes));

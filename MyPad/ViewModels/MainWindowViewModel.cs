@@ -94,32 +94,36 @@ namespace MyPad.ViewModels
         public ReactiveProperty<TextEditorViewModel> DiffDestination { get; }
         public ReactiveProperty<FileExplorerViewModel> FileExplorer { get; }
         public ReactiveProperty<FlowDocument> FlowDocument { get; }
+
+        private List<IDisposable> CompositeContent { get; }
         public ReactiveProperty<bool> IsOpenDiffContent { get; }
         public ReactiveProperty<bool> IsOpenPrintPreviewContent { get; }
         public ReactiveProperty<bool> IsOpenOptionContent { get; }
         public ReactiveProperty<bool> IsOpenMaintenanceContent { get; }
         public ReactiveProperty<bool> IsOpenAboutContent { get; }
 
+        public ReactiveProperty<bool> IsFlyoutMode { get; }
+        public ReactiveProperty<bool> IsEditMode { get; }
+
         public ReactiveCommand NewCommand { get; }
         public ReactiveCommand NewWindowCommand { get; }
-        public ReactiveCommand<IEnumerable<string>> LoadCommand { get; }
         public ReactiveCommand OpenCommand { get; }
         public ReactiveCommand SaveCommand { get; }
         public ReactiveCommand SaveAsCommand { get; }
         public ReactiveCommand SaveAllCommand { get; }
-        public ReactiveCommand ExitCommand { get; }
-        public ReactiveCommand ExitApplicationCommand { get; }
         public ReactiveCommand CloseCommand { get; }
         public ReactiveCommand CloseAllCommand { get; }
         public ReactiveCommand CloseOtherCommand { get; }
-        public ReactiveCommand DiffCommand { get; }
-        public ReactiveCommand DiffUnmodifiedCommand { get; }
-        public ReactiveCommand PropertyCommand { get; }
+        public ReactiveCommand ExitCommand { get; }
+        public ReactiveCommand ExitApplicationCommand { get; }
         public ReactiveCommand PrintCommand { get; }
+        public ReactiveCommand PrintDirectCommand { get; }
         public ReactiveCommand PrintPreviewCommand { get; }
         public ReactiveCommand OptionCommand { get; }
         public ReactiveCommand MaintenanceCommand { get; }
         public ReactiveCommand AboutCommand { get; }
+        public ReactiveCommand DiffCommand { get; }
+        public ReactiveCommand DiffUnmodifiedCommand { get; }
         public ReactiveCommand GoToLineCommand { get; }
         public ReactiveCommand ChangeEncodingCommand { get; }
         public ReactiveCommand ChangeSyntaxCommand { get; }
@@ -160,6 +164,7 @@ namespace MyPad.ViewModels
 
             this.EventAggregator = eventAggregator;
 
+
             // ----- プロパティの定義 ------------------------------
 
             this.Messenger = new();
@@ -173,35 +178,47 @@ namespace MyPad.ViewModels
             this.DiffDestination = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
             this.FileExplorer = new ReactiveProperty<FileExplorerViewModel>().AddTo(this.CompositeDisposable);
             this.FlowDocument = new ReactiveProperty<FlowDocument>().AddTo(this.CompositeDisposable);
-            this.IsOpenDiffContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
-            this.IsOpenPrintPreviewContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
-            this.IsOpenOptionContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
-            this.IsOpenMaintenanceContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
-            this.IsOpenAboutContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
-            var compositeFlyout = new[] {
-                this.IsOpenDiffContent,
-                this.IsOpenPrintPreviewContent,
-                this.IsOpenOptionContent,
-                this.IsOpenMaintenanceContent,
-                this.IsOpenAboutContent
-            };
+
+            this.CompositeContent = new();
+            this.IsOpenPrintPreviewContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable).AddTo(this.CompositeContent);
+            this.IsOpenOptionContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable).AddTo(this.CompositeContent);
+            this.IsOpenMaintenanceContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable).AddTo(this.CompositeContent);
+            this.IsOpenAboutContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable).AddTo(this.CompositeContent);
+            this.IsOpenDiffContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable).AddTo(this.CompositeContent);
+
+            this.IsFlyoutMode = new[] {
+                    this.IsOpenPrintPreviewContent,
+                    this.IsOpenOptionContent,
+                    this.IsOpenMaintenanceContent,
+                    this.IsOpenAboutContent,
+                    this.IsOpenDiffContent,
+                }
+                .CombineLatest(_ => _.Any(_ => _))
+                .ToReactiveProperty()
+                .AddTo(this.CompositeDisposable);
+            this.IsEditMode = new[] {
+                    this.IsPending,
+                    this.IsFlyoutMode,
+                }
+                .CombineLatestValuesAreAllFalse()
+                .ToReactiveProperty()
+                .AddTo(this.CompositeDisposable);
+
 
             // ----- 変更通知の購読 ------------------------------
 
-            this.IsOpenDiffContent
-                .Where(isOpen => isOpen)
-                .Subscribe(_ =>
-                {
-                    compositeFlyout.Except(new[] { this.IsOpenDiffContent }).ForEach(p => p.Value = false);
-                    this.Logger.Log($"差分比較を表示します。: Source={this.DiffSource.Value?.FileName}, Destination={this.DiffDestination.Value?.FileName}", Category.Info);
-                })
-                .AddTo(this.CompositeDisposable);
+            void closeContent(IEnumerable<ReactiveProperty<bool>> except = null)
+                => this.CompositeContent
+                    .OfType<ReactiveProperty<bool>>()
+                    .Except(except ?? Enumerable.Empty<ReactiveProperty<bool>>())
+                    .Where(p => p.Value)
+                    .ForEach(p => p.Value = false);
 
             this.IsOpenPrintPreviewContent
                 .Where(isOpen => isOpen)
                 .Subscribe(_ =>
                 {
-                    compositeFlyout.Except(new[] { this.IsOpenPrintPreviewContent }).ForEach(p => p.Value = false);
+                    closeContent(new[] { this.IsOpenPrintPreviewContent });
                     this.Logger.Log($"印刷プレビューを表示します。", Category.Info);
                 })
                 .AddTo(this.CompositeDisposable);
@@ -210,7 +227,7 @@ namespace MyPad.ViewModels
                 .Where(isOpen => isOpen)
                 .Subscribe(_ =>
                 {
-                    compositeFlyout.Except(new[] { this.IsOpenOptionContent }).ForEach(p => p.Value = false);
+                    closeContent(new[] { this.IsOpenOptionContent });
                     this.Logger.Log($"オプションを表示します。", Category.Info);
                 })
                 .AddTo(this.CompositeDisposable);
@@ -219,7 +236,7 @@ namespace MyPad.ViewModels
                 .Where(isOpen => isOpen)
                 .Subscribe(_ =>
                 {
-                    compositeFlyout.Except(new[] { this.IsOpenMaintenanceContent }).ForEach(p => p.Value = false);
+                    closeContent(new[] { this.IsOpenMaintenanceContent });
                     this.Logger.Log($"メンテナンスを表示します。", Category.Info);
                 })
                 .AddTo(this.CompositeDisposable);
@@ -228,11 +245,21 @@ namespace MyPad.ViewModels
                 .Where(isOpen => isOpen)
                 .Subscribe(_ =>
                 {
-                    compositeFlyout.Except(new[] { this.IsOpenAboutContent }).ForEach(p => p.Value = false);
+                    closeContent(new[] { this.IsOpenAboutContent });
                     this.Logger.Log($"バージョン情報を表示します。", Category.Info);
                 })
                 .AddTo(this.CompositeDisposable);
 
+            this.IsOpenDiffContent
+                .Where(isOpen => isOpen)
+                .Subscribe(_ =>
+                {
+                    closeContent(new[] { this.IsOpenDiffContent });
+                    this.Logger.Log($"差分比較を表示します。: Source={this.DiffSource.Value?.FileName}, Destination={this.DiffDestination.Value?.FileName}", Category.Info);
+                })
+                .AddTo(this.CompositeDisposable);
+
+            // 差分比較を閉じた際に比較用ドキュメントを解放する
             this.IsOpenDiffContent
                 .Inverse()
                 .Where(isClose => isClose)
@@ -243,31 +270,23 @@ namespace MyPad.ViewModels
                 })
                 .AddTo(this.CompositeDisposable);
 
+            // 印刷プレビューの表示前に FlowDocument を生成する
             this.IsOpenPrintPreviewContent
                 .Subscribe(async isOpen => this.FlowDocument.Value = isOpen ? await this.ActiveTextEditor.Value.CreateFlowDocument() : null)
                 .AddTo(this.CompositeDisposable);
 
+
             // ----- コマンドの定義 ------------------------------
 
-            this.NewCommand = new ReactiveCommand()
+            this.NewCommand = this.IsEditMode.ToReactiveCommand()
                 .WithSubscribe(() => this.WakeUpTextEditor(this.AddTextEditor()))
                 .AddTo(this.CompositeDisposable);
 
-            this.NewWindowCommand = new ReactiveCommand()
+            this.NewWindowCommand = this.IsEditMode.ToReactiveCommand()
                 .WithSubscribe(() => this.EventAggregator.GetEvent<CreateWindowEvent>().Publish())
                 .AddTo(this.CompositeDisposable);
 
-            this.LoadCommand = new ReactiveCommand<IEnumerable<string>>()
-                .WithSubscribe(async paths =>
-                {
-                    var results = await this.Load(paths);
-                    var textEditor = results.LastOrDefault(tuple => tuple.textEditor != null).textEditor;
-                    if (textEditor != null)
-                        this.WakeUpTextEditor(textEditor);
-                })
-                .AddTo(this.CompositeDisposable);
-
-            this.OpenCommand = new ReactiveCommand()
+            this.OpenCommand = this.IsEditMode.ToReactiveCommand()
                 .WithSubscribe(async () =>
                 {
                     var results = await this.Load();
@@ -277,7 +296,7 @@ namespace MyPad.ViewModels
                 })
                 .AddTo(this.CompositeDisposable);
 
-            this.SaveCommand = new ReactiveCommand()
+            this.SaveCommand = this.IsEditMode.ToReactiveCommand()
                 .WithSubscribe(async () =>
                 {
                     if (this.ActiveTextEditor.Value.IsModified || this.ActiveTextEditor.Value.IsNewFile)
@@ -285,11 +304,11 @@ namespace MyPad.ViewModels
                 })
                 .AddTo(this.CompositeDisposable);
 
-            this.SaveAsCommand = new ReactiveCommand()
+            this.SaveAsCommand = this.IsEditMode.ToReactiveCommand()
                 .WithSubscribe(async () => await this.SaveAs(this.ActiveTextEditor.Value))
                 .AddTo(this.CompositeDisposable);
 
-            this.SaveAllCommand = new ReactiveCommand()
+            this.SaveAllCommand = this.IsEditMode.ToReactiveCommand()
                 .WithSubscribe(async () =>
                 {
                     foreach (var target in this.TextEditors.Where(e => e.IsReadOnly == false))
@@ -301,15 +320,7 @@ namespace MyPad.ViewModels
                 })
                 .AddTo(this.CompositeDisposable);
 
-            this.ExitCommand = new ReactiveCommand()
-                .WithSubscribe(async () => await this.TryClose())
-                .AddTo(this.CompositeDisposable);
-
-            this.ExitApplicationCommand = new ReactiveCommand()
-                .WithSubscribe(() => this.EventAggregator.GetEvent<ExitApplicationEvent>().Publish())
-                .AddTo(this.CompositeDisposable);
-
-            this.CloseCommand = new ReactiveCommand()
+            this.CloseCommand = this.IsEditMode.ToReactiveCommand()
                 .WithSubscribe(async () =>
                 {
                     await this.TryCloseTextEditor(this.ActiveTextEditor.Value);
@@ -318,7 +329,7 @@ namespace MyPad.ViewModels
                 })
                 .AddTo(this.CompositeDisposable);
 
-            this.CloseAllCommand = new ReactiveCommand()
+            this.CloseAllCommand = this.IsEditMode.ToReactiveCommand()
                 .WithSubscribe(async () =>
                 {
                     for (var i = this.TextEditors.Count - 1; 0 <= i; i--)
@@ -333,7 +344,7 @@ namespace MyPad.ViewModels
                 })
                 .AddTo(this.CompositeDisposable);
 
-            this.CloseOtherCommand = new ReactiveCommand()
+            this.CloseOtherCommand = this.IsEditMode.ToReactiveCommand()
                 .WithSubscribe(async () =>
                 {
                     var current = this.ActiveTextEditor.Value;
@@ -351,34 +362,105 @@ namespace MyPad.ViewModels
                 })
                 .AddTo(this.CompositeDisposable);
 
-            this.DiffCommand = new ReactiveCommand()
+            this.ExitCommand = new ReactiveCommand()
+                .WithSubscribe(async () => await this.InvokeClose())
+                .AddTo(this.CompositeDisposable);
+
+            this.ExitApplicationCommand = new ReactiveCommand()
+                .WithSubscribe(() => this.EventAggregator.GetEvent<ExitApplicationEvent>().Publish())
+                .AddTo(this.CompositeDisposable);
+
+            // プレビュー画面からの印刷用コマンド
+            this.PrintCommand = this.IsPending.Inverse().ToReactiveCommand()
                 .WithSubscribe(async () =>
                 {
-                    var textEditors = ViewModelHelper.GetMainWindowViewModels().SelectMany(viewModel => viewModel.TextEditors);
-                    var (result, diffSourcePath, diffDestinationPath) = await this.DialogService.SelectDiffFiles(textEditors.Select(e => e.FileName), this.ActiveTextEditor.Value.FileName);
-                    if (result == false)
-                        return;
-
                     try
                     {
+                        this.IsPending.Value = true;
+
+                        var target = this.ActiveTextEditor.Value;
+                        this.Logger.Log($"印刷ダイアログを表示します。tab#{target.Sequense} win#{this.Sequense}", Category.Info);
+
+                        var result = this.CommonDialogService.ShowDialog(
+                            new PrintDialogParameters()
+                            {
+                                Title = this.ProductInfo.Description,
+                                FlowDocument = this.FlowDocument.Value ?? await target.CreateFlowDocument()
+                            });
+                        if (result)
+                            this.Logger.Log($"印刷を実行しました。(OSやハードウェアの要因で処理がキャンセルされた可能性もあります。) tab#{target.Sequense} win#{this.Sequense}", Category.Info);
+                        else
+                            this.Logger.Log($"印刷はキャンセルされました。tab#{target.Sequense} win#{this.Sequense}", Category.Info);
+                    }
+                    finally
+                    {
+                        this.IsOpenPrintPreviewContent.Value = false;
+                        this.IsPending.Value = false;
+                    }
+                })
+                .AddTo(this.CompositeDisposable);
+
+            // 直接印刷用のコマンド
+            this.PrintDirectCommand = this.IsEditMode.ToReactiveCommand()
+                .WithSubscribe(() =>
+                {
+                    if (this.PrintCommand.CanExecute())
+                        this.PrintCommand.Execute();
+                })
+                .AddTo(this.CompositeDisposable);
+
+            this.PrintPreviewCommand = this.IsEditMode.ToReactiveCommand()
+                .WithSubscribe(() => this.IsOpenPrintPreviewContent.Value = true)
+                .AddTo(this.CompositeDisposable);
+
+            this.OptionCommand = this.IsEditMode.ToReactiveCommand()
+                .WithSubscribe(() => this.IsOpenOptionContent.Value = true)
+                .AddTo(this.CompositeDisposable);
+
+            this.MaintenanceCommand = this.IsEditMode.ToReactiveCommand()
+                .WithSubscribe(() => this.IsOpenMaintenanceContent.Value = true)
+                .AddTo(this.CompositeDisposable);
+
+            this.AboutCommand = this.IsEditMode.ToReactiveCommand()
+                .WithSubscribe(() => this.IsOpenAboutContent.Value = true)
+                .AddTo(this.CompositeDisposable);
+
+            this.DiffCommand = this.IsEditMode.ToReactiveCommand()
+                .WithSubscribe(async () =>
+                {
+                    string diffSourcePath = null, diffDestinationPath = null;
+                    try
+                    {
+                        this.IsPending.Value = true;
+
+                        var textEditors = MvvmHelper.GetMainWindowViewModels().SelectMany(viewModel => viewModel.TextEditors);
+                        var result = false;
+                        (result, diffSourcePath, diffDestinationPath) = await this.DialogService.SelectDiffFiles(textEditors.Select(e => e.FileName), this.ActiveTextEditor.Value.FileName);
+                        if (result == false)
+                            return;
+
                         this.DiffSource.Value = textEditors.First(e => e.FileName == diffSourcePath);
                         this.DiffDestination.Value = textEditors.First(e => e.FileName == diffDestinationPath);
                     }
                     catch (Exception e)
                     {
+                        this.Logger.Log($"差分を比較するファイルの読み込みに失敗しました。: SourcePath={diffSourcePath ?? "notset"}, DestinationPath={diffDestinationPath ?? "notset"}", Category.Error, e);
+                        this.DialogService.Warn(e.Message);
+                        return;
+                    }
+                    finally
+                    {
                         this.DiffSource.Value = null;
                         this.DiffDestination.Value = null;
 
-                        this.Logger.Log($"差分を比較するファイルの読み込みに失敗しました。: SourcePath={diffSourcePath}, DestinationPath={diffDestinationPath}", Category.Error, e);
-                        this.DialogService.Warn(e.Message);
-                        return;
+                        this.IsPending.Value = false;
                     }
 
                     this.IsOpenDiffContent.Value = true;
                 })
                 .AddTo(this.CompositeDisposable);
 
-            this.DiffUnmodifiedCommand = new ReactiveCommand()
+            this.DiffUnmodifiedCommand = this.IsEditMode.ToReactiveCommand()
                 .WithSubscribe(async () =>
                 {
                     this.DiffSource.Value = await this.ActiveTextEditor.Value.CloneFromFile();
@@ -387,98 +469,85 @@ namespace MyPad.ViewModels
                 })
                 .AddTo(this.CompositeDisposable);
 
-            this.PrintCommand = this.FlowDocument.IsEmpty().Inverse().ToReactiveCommand()
+            this.GoToLineCommand = this.IsEditMode.ToReactiveCommand()
                 .WithSubscribe(async () =>
                 {
-                    var target = this.ActiveTextEditor.Value;
-                    this.Logger.Log($"印刷ダイアログを表示します。tab#{target.Sequense} win#{this.Sequense}", Category.Info);
+                    try
+                    {
+                        this.IsPending.Value = true;
 
-                    var result = this.CommonDialogService.ShowDialog(
-                        new PrintDialogParameters()
-                        {
-                            Title = this.ProductInfo.Description,
-                            FlowDocument = this.FlowDocument.Value ?? await target.CreateFlowDocument()
-                        });
-                    if (result)
-                        this.Logger.Log($"印刷を実行しました。(OSやハードウェアの要因で処理がキャンセルされた可能性もあります。) tab#{target.Sequense} win#{this.Sequense}", Category.Info);
-                    else
-                        this.Logger.Log($"印刷はキャンセルされました。tab#{target.Sequense} win#{this.Sequense}", Category.Info);
+                        var target = this.ActiveTextEditor.Value;
+                        var (result, line) = await this.DialogService.ChangeLine(target);
+                        if (result == false)
+                            return;
 
-                    this.IsOpenPrintPreviewContent.Value = false;
+                        target.Line = line;
+                        await this.Messenger.RaiseAsync(new InteractionMessage(nameof(Views.MainWindow.ScrollToCaret)));
+                        this.Logger.Log($"指定行へ移動しました。tab#{target.Sequense} win#{this.Sequense}: Line={line}", Category.Info);
+                    }
+                    finally
+                    {
+                        this.IsPending.Value = false;
+                    }
                 })
                 .AddTo(this.CompositeDisposable);
 
-            this.PrintPreviewCommand = new ReactiveCommand()
-                .WithSubscribe(() => this.IsOpenPrintPreviewContent.Value = true)
-                .AddTo(this.CompositeDisposable);
-
-            this.OptionCommand = new ReactiveCommand()
-                .WithSubscribe(() => this.IsOpenOptionContent.Value = true)
-                .AddTo(this.CompositeDisposable);
-
-            this.MaintenanceCommand = new ReactiveCommand()
-                .WithSubscribe(() => this.IsOpenMaintenanceContent.Value = true)
-                .AddTo(this.CompositeDisposable);
-
-            this.AboutCommand = new ReactiveCommand()
-                .WithSubscribe(() => this.IsOpenAboutContent.Value = true)
-                .AddTo(this.CompositeDisposable);
-
-            this.GoToLineCommand = new ReactiveCommand()
+            this.ChangeEncodingCommand = this.IsEditMode.ToReactiveCommand()
                 .WithSubscribe(async () =>
                 {
-                    var target = this.ActiveTextEditor.Value;
-                    var (result, line) = await this.DialogService.ChangeLine(target);
-                    if (result == false)
-                        return;
+                    try
+                    {
+                        this.IsPending.Value = true;
 
-                    target.Line = line;
-                    await this.Messenger.RaiseAsync(new InteractionMessage(nameof(Views.MainWindow.ScrollToCaret)));
-                    this.Logger.Log($"指定行へ移動しました。tab#{target.Sequense} win#{this.Sequense}: Line={line}", Category.Info);
+                        var target = this.ActiveTextEditor.Value;
+                        var (result, encoding) = await this.DialogService.ChangeEncoding(target);
+                        if (result == false)
+                            return;
+
+                        if (target.IsNewFile)
+                            target.Encoding = encoding;
+                        else
+                            await this.Load(target.FileName, encoding, target.IsReadOnly);
+                        this.Logger.Log($"文字コードを変更しました。tab#{target.Sequense} win#{this.Sequense}: Encoding={encoding.EncodingName}", Category.Info);
+                    }
+                    finally
+                    {
+                        this.IsPending.Value = false;
+                    }
                 })
                 .AddTo(this.CompositeDisposable);
 
-            this.ChangeEncodingCommand = new ReactiveCommand()
+            this.ChangeSyntaxCommand = this.IsEditMode.ToReactiveCommand()
                 .WithSubscribe(async () =>
                 {
-                    var target = this.ActiveTextEditor.Value;
-                    var (result, encoding) = await this.DialogService.ChangeEncoding(target);
-                    if (result == false)
-                        return;
+                    try
+                    {
+                        this.IsPending.Value = true;
 
-                    if (target.IsNewFile)
-                        target.Encoding = encoding;
-                    else
-                        await this.Load(target.FileName, encoding, target.IsReadOnly);
-                    this.Logger.Log($"文字コードを変更しました。tab#{target.Sequense} win#{this.Sequense}: Encoding={encoding.EncodingName}", Category.Info);
+                        var target = this.ActiveTextEditor.Value;
+                        var (result, syntax) = await this.DialogService.ChangeSyntax(target);
+                        if (result == false)
+                            return;
+
+                        var definition = string.IsNullOrEmpty(syntax) ? null :
+                            this.SyntaxService.Definitions.ContainsKey(syntax) ? this.SyntaxService.Definitions[syntax] : null;
+                        target.SyntaxDefinition = definition;
+                        this.Logger.Log($"シンタックス定義を変更しました。tab#{target.Sequense} win#{this.Sequense}: Syntax={syntax}", Category.Info);
+                    }
+                    finally
+                    {
+                        this.IsPending.Value = false;
+                    }
                 })
                 .AddTo(this.CompositeDisposable);
 
-            this.ChangeSyntaxCommand = new ReactiveCommand()
-                .WithSubscribe(async () =>
-                {
-                    var target = this.ActiveTextEditor.Value;
-                    var (result, syntax) = await this.DialogService.ChangeSyntax(target);
-                    if (result == false)
-                        return;
-
-                    var definition = string.IsNullOrEmpty(syntax) ? null :
-                        this.SyntaxService.Definitions.ContainsKey(syntax) ? this.SyntaxService.Definitions[syntax] : null;
-                    target.SyntaxDefinition = definition;
-                    this.Logger.Log($"シンタックス定義を変更しました。tab#{target.Sequense} win#{this.Sequense}: Syntax={syntax}", Category.Info);
-                })
-                .AddTo(this.CompositeDisposable);
-
-            this.DropHandler = new ReactiveCommand<DragEventArgs>()
-                .WithSubscribe(async e =>
+            this.DropHandler = this.IsEditMode.ToReactiveCommand<DragEventArgs>()
+                .WithSubscribe(e =>
                 {
                     if (e.Data.GetData(DataFormats.FileDrop) is IEnumerable<string> paths && paths.Any())
                     {
                         this.Logger.Log($"ファイルがドロップされました。: Paths=[{string.Join(", ", paths)}]", Category.Info);
-                        var results = await this.Load(paths);
-                        var textEditor = results.LastOrDefault(tuple => tuple.textEditor != null).textEditor;
-                        if (textEditor != null)
-                            this.WakeUpTextEditor(textEditor);
+                        _ = this.InvokeLoad(paths);
                         e.Handled = true;
                     }
                 })
@@ -500,9 +569,28 @@ namespace MyPad.ViewModels
                     // ViewModel は常にイベントをキャンセルした状態で処理を行っていく。
                     // Close の要件を満たした場合は Dispose メソッドを実行する。
                     e.Cancel = true;
-                    await this.TryClose();
+                    await this.InvokeClose();
                 })
                 .AddTo(this.CompositeDisposable);
+        }
+
+        #region 公開メソッド
+
+        /// <summary>
+        /// 指定されたパスのファイルを読み込みます。
+        /// </summary>
+        /// <param name="paths">ファイルパス</param>
+        /// <returns>非同期タスク</returns>
+        [LogInterceptor]
+        public async Task InvokeLoad(IEnumerable<string> paths)
+        {
+            // View 起点で呼ばれるとは限らないため ViewModel で Activate を実行する
+            this.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
+
+            var results = await this.Load(paths);
+            var textEditor = results.LastOrDefault(tuple => tuple.textEditor != null).textEditor;
+            if (textEditor != null)
+                this.WakeUpTextEditor(textEditor);
         }
 
         /// <summary>
@@ -511,8 +599,9 @@ namespace MyPad.ViewModels
         /// </summary>
         /// <returns>正常に処理されたかどうかを示す値</returns>
         [LogInterceptor]
-        public async Task<bool> TryClose()
+        public async Task<bool> InvokeClose()
         {
+            // View 起点で呼ばれるとは限らないため ViewModel で Activate を実行する
             this.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
 
             for (var i = this.TextEditors.Count - 1; 0 <= i; i--)
@@ -526,6 +615,8 @@ namespace MyPad.ViewModels
             this.Dispose();
             return true;
         }
+
+        #endregion
 
         #region ファイル入出力
 
@@ -731,7 +822,7 @@ namespace MyPad.ViewModels
             else
             {
                 // 他のウィンドウが同名ファイルを占有している場合は処理を委譲する
-                foreach (var viewModel in ViewModelHelper.GetMainWindowViewModels())
+                foreach (var viewModel in MvvmHelper.GetMainWindowViewModels())
                 {
                     var existTextEditor = viewModel?.TextEditors.FirstOrDefault(e => e.FileName == path);
                     if (existTextEditor == null)
@@ -933,7 +1024,7 @@ namespace MyPad.ViewModels
             else
             {
                 // 他のウィンドウが同名ファイルを占有している場合は、保存せずに終了する
-                foreach (var viewModel in ViewModelHelper.GetMainWindowViewModels())
+                foreach (var viewModel in MvvmHelper.GetMainWindowViewModels())
                 {
                     var existTextEditor = viewModel?.TextEditors.FirstOrDefault(e => e.FileName == path);
                     if (existTextEditor == null)
@@ -980,7 +1071,7 @@ namespace MyPad.ViewModels
         /// </summary>
         /// <returns>生成された <see cref="TextEditorViewModel"/> クラスのインスタンス</returns>
         [LogInterceptor]
-        public TextEditorViewModel CreateTextEditor()
+        private TextEditorViewModel CreateTextEditor()
         {
             var textEditor = this.Container.Resolve<TextEditorViewModel>();
             this.Logger.Log($"タブを生成しました。tab#{textEditor.Sequense} win#{this.Sequense}", Category.Info);
