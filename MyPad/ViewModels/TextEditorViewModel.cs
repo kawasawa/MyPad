@@ -508,6 +508,8 @@ namespace MyPad.ViewModels
                 // 一時ファイルを削除する
                 await Task.Run(() => this.DeleteTemporary());
             });
+
+            this.RaisePropertyChanged(nameof(this.FileInfo));
         }
 
         /// <summary>
