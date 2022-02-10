@@ -12,34 +12,44 @@ jobs:
       DOTNET_VERSION: 6.0.x
     steps:
 
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: Build app
-      run: dotnet build MyPad/MyPad.csproj -c Release
+      - name: Build app
+        run: dotnet build MyPad/MyPad.csproj -c Release
 
-    - name: Build test
-      run: dotnet build MyPad.Test/MyPad.Test.csproj -c Release --no-dependencies
+      - name: Build test
+        run: dotnet build MyPad.Test/MyPad.Test.csproj -c Release --no-dependencies
 
-    - name: Test
-      run: dotnet test MyPad.Test/MyPad.Test.csproj --no-restore
+      - name: Test
+        run: dotnet test MyPad.Test/MyPad.Test.csproj --no-restore
 
-    - name: Output
-      shell: pwsh
-      run: |
-        mkdir dist
-        Copy-Item -Path MyPad/bin/Release/* -Destination dist -Recurse
+      - name: Output
+        shell: pwsh
+        run: |
+          mkdir dist
+          Copy-Item -Path MyPad/bin/Release/* -Destination dist -Recurse
 
-    - name: Archive
-      uses: actions/upload-artifact@v1
-      with:
-        name: dist
-        path: dist
+      - name: Archive
+        uses: actions/upload-artifact@v1
+        with:
+          name: dist
+          path: dist
+
+      - name: Notify
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: all
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
 
   release:
     needs: [build]
@@ -57,7 +67,7 @@ jobs:
         run: |
           Compress-Archive -Path dist/* -DestinationPath release.zip
 
-      - name: Create
+      - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -66,7 +76,7 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
 
-      - name: Upload
+      - name: Upload Bin
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -75,3 +85,13 @@ jobs:
           asset_path: release.zip
           asset_name: release.zip
           asset_content_type: application/zip
+
+      - name: Notify
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: all
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
