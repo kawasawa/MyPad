@@ -457,6 +457,7 @@
                         <StackPanel Orientation="Horizontal">
                             <Image Source="{Binding FileIcon, Mode=OneWay}" Height="15" Margin="0 0 5 0" Visibility="{qc:MultiBinding '$P0 != null ## $P1 ? Visibility.Visible : Visibility.Collapsed', P0={Binding FileIcon, Mode=OneWay}, P1={Binding DataContext.Settings.System.ShowFileIcon, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}"/>
                             <TextBlock DataContext="{Binding Mode=OneWay}" Text="{qc:MultiBinding 'string.Concat(Path.GetFileName($P0), $P1 ? \'*\' : null)', P0={Binding FileName, Mode=OneWay}, P1={Binding IsModified, Mode=OneWay}}" VerticalAlignment="Center"/>
+                            <mi:PackIconMaterial Kind="Lock" Margin="5 0 0 0" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsReadOnly, Mode=OneWay}}"/>
                         </StackPanel>
                     </DataTemplate>
                 </dr:TabablzControl.HeaderItemTemplate>
@@ -471,7 +472,7 @@
                                     <Condition Binding="{Binding IsReadOnly, Mode=OneWay}" Value="True"/>
                                     <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}, Mode=OneWay}" Value="True"/>
                                 </MultiDataTrigger.Conditions>
-                                <Setter Property="Background" Value="{DynamicResource RedColorBrush}"/>
+                                <Setter Property="Background" Value="{DynamicResource OrangeColorBrush}"/>
                             </MultiDataTrigger>
                             <MultiDataTrigger>
                                 <MultiDataTrigger.Conditions>
