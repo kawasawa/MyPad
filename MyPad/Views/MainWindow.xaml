@@ -329,8 +329,8 @@
                             </m:HamburgerMenuIconItem.Icon>
                             <m:HamburgerMenuIconItem.Tag>
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                    <ge:ResponsiveGrid DataContext="{Binding Data.ActiveTextEditor.Value, Source={StaticResource Proxy}, Mode=OneWay}">
-                                        <ge:ResponsiveGrid.Resources>
+                                    <StackPanel DataContext="{Binding Data.ActiveTextEditor.Value, Source={StaticResource Proxy}, Mode=OneWay}" Margin="5 0 0 0">
+                                        <StackPanel.Resources>
                                             <Style x:Key="PropertyName" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
                                                 <Setter Property="FontSize" Value="14"/>
                                             </Style>
@@ -338,11 +338,11 @@
                                                 <Setter Property="Margin" Value="20 0 0 5"/>
                                                 <Setter Property="TextWrapping" Value="Wrap"/>
                                             </Style>
-                                        </ge:ResponsiveGrid.Resources>
+                                        </StackPanel.Resources>
 
                                         <Button Click="{qc:QuickEvent 'Clipboard.SetText($dataContext.FileName)'}"
                                                 Style="{StaticResource Common.ChromelessButton}"
-                                                Margin="0 0 0 5">
+                                                HorizontalContentAlignment="Left">
                                             <StackPanel Orientation="Horizontal">
                                                 <mi:Modern Kind="ClipboardVariantText"/>
                                                 <Border Width="5"/>
@@ -350,45 +350,45 @@
                                             </StackPanel>
                                         </Button>
 
-                                        <StackPanel Margin="5 0 0 0">
-                                            <TextBlock Text="{le:Loc Label_Name}"
-                                                       Style="{StaticResource PropertyName}"/>
-                                            <TextBlock Text="{qc:Binding 'Path.GetFileName($P)', P={Binding FileName, Mode=OneWay}}"
-                                                       Style="{StaticResource PropertyValue}"/>
-                                            <TextBlock Text="{le:Loc Label_Type}"
-                                                       Style="{StaticResource PropertyName}"/>
-                                            <TextBlock Text="{Binding FileType, Mode=OneWay}"
-                                                       Style="{StaticResource PropertyValue}"/>
-                                            <TextBlock Text="{le:Loc Label_Location}"
-                                                       Style="{StaticResource PropertyName}"/>
-                                            <TextBlock Text="{Binding FileInfo.DirectoryName, Mode=OneWay}"
-                                                       Style="{StaticResource PropertyValue}"/>
-                                            <TextBlock Text="{le:Loc Label_Size}"
-                                                       Style="{StaticResource PropertyName}"/>
-                                            <TextBlock Text="{Binding FileInfo.Length, StringFormat={}{0:N0} bytes, Mode=OneWay}"
-                                                       Style="{StaticResource PropertyValue}"/>
-                                            <TextBlock Text="{le:Loc Label_CreationDate}"
-                                                       Style="{StaticResource PropertyName}"/>
-                                            <TextBlock Text="{Binding FileInfo.CreationTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"
-                                                       Style="{StaticResource PropertyValue}"/>
-                                            <TextBlock Text="{le:Loc Label_ModifiredDate}"
-                                                       Style="{StaticResource PropertyName}"/>
-                                            <TextBlock Text="{Binding FileInfo.LastWriteTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"
-                                                       Style="{StaticResource PropertyValue}"/>
-                                            <TextBlock Text="{le:Loc Label_AccessDate}"
-                                                       Style="{StaticResource PropertyName}"/>
-                                            <TextBlock Text="{Binding FileInfo.LastAccessTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"
-                                                       Style="{StaticResource PropertyValue}"/>
-                                            <TextBlock Text="{le:Loc Label_Attributes}"
-                                                       Style="{StaticResource PropertyName}"/>
-                                            <TextBlock Text="{Binding FileInfo.Attributes, Mode=OneWay}"
-                                                       Style="{StaticResource PropertyValue}"/>
-                                            <TextBlock Text="{le:Loc Label_Owner}"
-                                                       Style="{StaticResource PropertyName}"/>
-                                            <TextBlock Text="{Binding FileOwner, Mode=OneWay}"
-                                                       Style="{StaticResource PropertyValue}"/>
-                                        </StackPanel>
-                                    </ge:ResponsiveGrid>
+                                        <Border Height="10"/>
+                                        
+                                        <TextBlock Text="{le:Loc Label_Name}"
+                                                   Style="{StaticResource PropertyName}"/>
+                                        <TextBlock Text="{qc:Binding 'Path.GetFileName($P)', P={Binding FileName, Mode=OneWay}}"
+                                                   Style="{StaticResource PropertyValue}"/>
+                                        <TextBlock Text="{le:Loc Label_Type}"
+                                                   Style="{StaticResource PropertyName}"/>
+                                        <TextBlock Text="{Binding FileType, Mode=OneWay}"
+                                                   Style="{StaticResource PropertyValue}"/>
+                                        <TextBlock Text="{le:Loc Label_Location}"
+                                                   Style="{StaticResource PropertyName}"/>
+                                        <TextBlock Text="{Binding FileInfo.DirectoryName, Mode=OneWay}"
+                                                   Style="{StaticResource PropertyValue}"/>
+                                        <TextBlock Text="{le:Loc Label_Size}"
+                                                   Style="{StaticResource PropertyName}"/>
+                                        <TextBlock Text="{Binding FileInfo.Length, StringFormat={}{0:N0} bytes, Mode=OneWay}"
+                                                   Style="{StaticResource PropertyValue}"/>
+                                        <TextBlock Text="{le:Loc Label_CreationDate}"
+                                                   Style="{StaticResource PropertyName}"/>
+                                        <TextBlock Text="{Binding FileInfo.CreationTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"
+                                                   Style="{StaticResource PropertyValue}"/>
+                                        <TextBlock Text="{le:Loc Label_ModifiredDate}"
+                                                   Style="{StaticResource PropertyName}"/>
+                                        <TextBlock Text="{Binding FileInfo.LastWriteTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"
+                                                   Style="{StaticResource PropertyValue}"/>
+                                        <TextBlock Text="{le:Loc Label_AccessDate}"
+                                                   Style="{StaticResource PropertyName}"/>
+                                        <TextBlock Text="{Binding FileInfo.LastAccessTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"
+                                                   Style="{StaticResource PropertyValue}"/>
+                                        <TextBlock Text="{le:Loc Label_Attributes}"
+                                                   Style="{StaticResource PropertyName}"/>
+                                        <TextBlock Text="{Binding FileInfo.Attributes, Mode=OneWay}"
+                                                   Style="{StaticResource PropertyValue}"/>
+                                        <TextBlock Text="{le:Loc Label_Owner}"
+                                                   Style="{StaticResource PropertyName}"/>
+                                        <TextBlock Text="{Binding FileOwner, Mode=OneWay}"
+                                                   Style="{StaticResource PropertyValue}"/>
+                                    </StackPanel>
                                 </ScrollViewer>
                             </m:HamburgerMenuIconItem.Tag>
                         </m:HamburgerMenuIconItem>
