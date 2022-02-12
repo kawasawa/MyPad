@@ -46,6 +46,7 @@
         </i:EventTrigger>
         <i:EventTrigger EventName="ContentRendered">
             <i:InvokeCommandAction Command="{Binding ContentRenderedHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
+            <behaviors:WindowActivateAction/>
         </i:EventTrigger>
         <i:EventTrigger EventName="Closing">
             <i:InvokeCommandAction Command="{Binding ClosingHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
