@@ -112,15 +112,15 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Command_About" xml:space="preserve">
     <value>About</value>
   </data>
-  <data name="Command_CaseSensitive" xml:space="preserve">
+  <data name="Label_CaseSensitive" xml:space="preserve">
     <value>Case sensitive</value>
   </data>
   <data name="Command_Close" xml:space="preserve">
@@ -330,7 +330,7 @@
   <data name="Command_Undo" xml:space="preserve">
     <value>Undo</value>
   </data>
-  <data name="Command_UseRegex" xml:space="preserve">
+  <data name="Label_UseRegex" xml:space="preserve">
     <value>Use regex</value>
   </data>
   <data name="Command_WindowList" xml:space="preserve">
@@ -419,9 +419,6 @@
   </data>
   <data name="Label_SearchPattern" xml:space="preserve">
     <value>File masks</value>
-  </data>
-  <data name="Label_SearchText" xml:space="preserve">
-    <value>Text to find</value>
   </data>
   <data name="Label_SettingFile" xml:space="preserve">
     <value>Settings file</value>
@@ -773,5 +770,20 @@ Please check and delete unnecessary files.</value>
   </data>
   <data name="LabelText_EnableCutCopyHtmlFormat" xml:space="preserve">
     <value>Enable cut and copy with HTML format.</value>
+  </data>
+  <data name="Command_Grep" xml:space="preserve">
+    <value>Grep</value>
+  </data>
+  <data name="Label_AllDirectories" xml:space="preserve">
+    <value>All directories</value>
+  </data>
+  <data name="Label_Directory" xml:space="preserve">
+    <value>Directory</value>
+  </data>
+  <data name="Label_DefaultEncoding" xml:space="preserve">
+    <value>Default encoding</value>
+  </data>
+  <data name="Message_NotifySearchCompleted" xml:space="preserve">
+    <value>The search has been completed.</value>
   </data>
 </root>

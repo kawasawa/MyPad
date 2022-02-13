@@ -93,6 +93,7 @@ namespace MyPad.ViewModels
         public ReactiveProperty<TextEditorViewModel> DiffSource { get; }
         public ReactiveProperty<TextEditorViewModel> DiffDestination { get; }
         public ReactiveProperty<FileExplorerViewModel> FileExplorer { get; }
+        public ReactiveProperty<GrepPanelViewModel> GrepPanel { get; }
         public ReactiveProperty<FlowDocument> FlowDocument { get; }
 
         private List<IDisposable> CompositeContent { get; }
@@ -177,6 +178,7 @@ namespace MyPad.ViewModels
             this.DiffSource = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
             this.DiffDestination = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
             this.FileExplorer = new ReactiveProperty<FileExplorerViewModel>().AddTo(this.CompositeDisposable);
+            this.GrepPanel = new ReactiveProperty<GrepPanelViewModel>().AddTo(this.CompositeDisposable);
             this.FlowDocument = new ReactiveProperty<FlowDocument>().AddTo(this.CompositeDisposable);
 
             this.CompositeContent = new();
@@ -558,6 +560,7 @@ namespace MyPad.ViewModels
                 {
                     this.FileExplorer.Value = this.Container.Resolve<FileExplorerViewModel>();
                     this.FileExplorer.Value.RecreateExplorer();
+                    this.GrepPanel.Value = this.Container.Resolve<GrepPanelViewModel>();
                 })
                 .AddTo(this.CompositeDisposable);
 
@@ -575,6 +578,34 @@ namespace MyPad.ViewModels
         }
 
         #region 公開メソッド
+
+        /// <summary>
+        /// 指定されたパスのファイルを読み込みます。
+        /// </summary>
+        /// <param name="path">ファイルパス</param>
+        /// <returns>非同期タスク</returns>
+        [LogInterceptor]
+        public async Task InvokeLoad(string path)
+        {
+            await this.Load(path, null);
+        }
+
+        /// <summary>
+        /// 指定されたパスのファイルを読み込みます。
+        /// </summary>
+        /// <param name="path">ファイルパス</param>
+        /// <param name="encoding">文字コード</param>
+        /// <returns>非同期タスク</returns>
+        [LogInterceptor]
+        public async Task InvokeLoad(string path, Encoding encoding)
+        {
+            // View 起点で呼ばれるとは限らないため ViewModel で Activate を実行する
+            this.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
+
+            var (result, textEditor) = await this.Load(path, encoding);
+            if (textEditor != null)
+                this.WakeUpTextEditor(textEditor);
+        }
 
         /// <summary>
         /// 指定されたパスのファイルを読み込みます。
@@ -766,7 +797,7 @@ namespace MyPad.ViewModels
         /// 指定されたパスのファイルを読み込み <see cref="TextEditorViewModel"/> クラスのインスタンスを生成します。
         /// </summary>
         /// <param name="path">ファイルパス</param>
-        /// <param name="encoding">文字コード</param>
+        /// <param name="encoding">文字コード (この値が null の場合、文字コードは自動判定されます。)</param>
         /// <param name="isReadOnly">読み取り専用</param>
         /// <returns>
         /// ファイルが読み込まれてインスタンスが生成されたかどうかを示す値と <see cref="TextEditorViewModel"/> クラスのインスタンスをイテレータで返却します。

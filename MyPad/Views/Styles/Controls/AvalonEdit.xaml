@@ -96,14 +96,12 @@
                                 <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
                                     <Setter Property="Background"  Value="{x:Null}"/>
                                     <Setter Property="BorderBrush" Value="{x:Null}"/>
-                                    <Setter Property="Width"       Value="{Binding Heitht, RelativeSource={RelativeSource self}, Mode=OneWay}"/>
                                     <Setter Property="Height"      Value="20"/>
                                     <Setter Property="Padding"     Value="2"/>
                                 </Style>
                                 <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButton}">
                                     <Setter Property="Background"  Value="{x:Null}"/>
                                     <Setter Property="BorderBrush" Value="{x:Null}"/>
-                                    <Setter Property="Width"       Value="{Binding Heitht, RelativeSource={RelativeSource self}, Mode=OneWay}"/>
                                     <Setter Property="Height"      Value="20"/>
                                     <Setter Property="Padding"     Value="2"/>
                                     <Style.Resources>

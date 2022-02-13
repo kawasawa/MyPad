@@ -14,6 +14,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -72,6 +74,11 @@ namespace MyPad.Views
                 nameof(ActivateFileExplorerCommand),
                 typeof(MainWindow),
                 new InputGestureCollection { new KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Shift) });
+        public static readonly ICommand ActivateGrepPanelCommand
+            = new RoutedCommand(
+                nameof(ActivateGrepPanelCommand),
+                typeof(MainWindow),
+                new InputGestureCollection { new KeyGesture(Key.F, ModifierKeys.Control | ModifierKeys.Shift) });
         public static readonly ICommand ActivatePropertyCommand
             = new RoutedCommand(
                 nameof(ActivatePropertyCommand),
@@ -283,6 +290,11 @@ namespace MyPad.Views
                 new CommandBinding(
                     ActivateFileExplorerCommand,
                     (sender, e) => this.PerformClickSideContent(this.FileExplorerItem),
+                    (sender, e) => e.CanExecute = this.ViewModel.IsEditMode.Value
+                ),
+                new CommandBinding(
+                    ActivateGrepPanelCommand,
+                    (sender, e) => this.PerformClickSideContent(this.GrepPanelItem),
                     (sender, e) => e.CanExecute = this.ViewModel.IsEditMode.Value
                 ),
                 new CommandBinding(
@@ -675,7 +687,7 @@ namespace MyPad.Views
             var node = (FileExplorerViewModel.FileTreeNode)((TreeViewItem)sender).DataContext;
             if (File.Exists(node.FileName))
             {
-                _ = this.ViewModel.InvokeLoad(new[] { node.FileName });
+                _ = this.ViewModel.InvokeLoad(node.FileName);
                 e.Handled = true;
                 return;
             }
@@ -704,7 +716,7 @@ namespace MyPad.Views
                         }
                         if (File.Exists(node.FileName))
                         {
-                            _ = this.ViewModel.InvokeLoad(new[] { node.FileName });
+                            _ = this.ViewModel.InvokeLoad(node.FileName);
                             e.Handled = true;
                             return;
                         }
@@ -717,6 +729,32 @@ namespace MyPad.Views
                         break;
                     }
             }
+        }
+
+        /// <summary>
+        /// Grep 結果のレコードがダブルクリックされたときに行う処理を定義します。
+        /// </summary>
+        /// <param name="sender">イベントの発生源</param>
+        /// <param name="e">イベントの情報</param>
+        [LogInterceptor]
+        private async void GrepResult_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (e.Handled)
+                return;
+
+            dynamic content = ((ListBoxItem)sender).Content;
+            var path = (string)content.path;
+            var line = (int)content.line;
+            var encoding = (Encoding)content.encoding;
+            await this.ViewModel.InvokeLoad(path, encoding);
+
+            // ViewModel が変更されてから View へ反映されるまでにラグがあるため待機する
+            while (this.ActiveTextEditor?.DataContext != this.ViewModel.ActiveTextEditor.Value)
+                await Task.Delay(100);
+            this.ActiveTextEditor.Line = line;
+            this.ScrollToCaret();
+
+            e.Handled = true;
         }
 
         /// <summary>
@@ -922,9 +960,9 @@ namespace MyPad.Views
         /// </summary>
         public class LocalizationWrapper : ICSharpCode.AvalonEdit.Search.Localization
         {
-            public override string MatchCaseText => Properties.Resources.Command_CaseSensitive;
+            public override string MatchCaseText => Properties.Resources.Label_CaseSensitive;
             public override string MatchWholeWordsText => string.Empty;
-            public override string UseRegexText => Properties.Resources.Command_UseRegex;
+            public override string UseRegexText => Properties.Resources.Label_UseRegex;
             public override string FindNextText => Properties.Resources.Command_FindNext;
             public override string FindPreviousText => Properties.Resources.Command_FindPrev;
             public override string ErrorText => $"{Properties.Resources.Message_NotifyErrorText}: ";

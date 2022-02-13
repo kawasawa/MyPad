@@ -423,7 +423,7 @@ namespace MyPad.ViewModels
         /// <summary>
         /// このインスタンスが占有するファイルストリームからテキストを読み込みます。
         /// </summary>
-        /// <param name="encoding">文字コード</param>
+        /// <param name="encoding">文字コード (この値が null の場合、文字コードは自動判定されます。)</param>
         /// <returns>非同期タスク</returns>
         /// <exception cref="InvalidOperationException"></exception>
         [LogInterceptor]
@@ -508,6 +508,8 @@ namespace MyPad.ViewModels
                 // 一時ファイルを削除する
                 await Task.Run(() => this.DeleteTemporary());
             });
+
+            this.RaisePropertyChanged(nameof(this.FileInfo));
         }
 
         /// <summary>

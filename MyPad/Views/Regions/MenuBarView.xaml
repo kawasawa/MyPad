@@ -308,6 +308,13 @@
                     <mi:Material Kind="FileTree"/>
                 </MenuItem.Icon>
             </MenuItem>
+            <MenuItem Command="{x:Static views:MainWindow.ActivateGrepPanelCommand}"
+                      Header="{le:Loc Command_Grep}"
+                      InputGestureText="Ctrl+Shift+F">
+                <MenuItem.Icon>
+                    <mi:Material Kind="Magnify"/>
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem Command="{x:Static views:MainWindow.ActivatePropertyCommand}"
                       Header="{le:Loc Command_Property}"
                       InputGestureText="Alt+Enter">
