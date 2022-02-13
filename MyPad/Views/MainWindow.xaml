@@ -1,6 +1,7 @@
 ﻿<m:MetroWindow x:Class="MyPad.Views.MainWindow"
                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
@@ -15,6 +16,7 @@
                xmlns:dr="clr-namespace:Dragablz;assembly=Dragablz"
                xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
                xmlns:s="clr-namespace:System;assembly=System.Runtime"
+               xmlns:root="clr-namespace:MyPad"
                xmlns:viewModels="clr-namespace:MyPad.ViewModels"
                xmlns:views="clr-namespace:MyPad.Views"
                xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
@@ -322,7 +324,101 @@
                                 </TreeView>
                             </m:HamburgerMenuIconItem.Tag>
                         </m:HamburgerMenuIconItem>
-                        
+
+                        <!-- Grep -->
+                        <m:HamburgerMenuIconItem x:Name="GrepPanelItem" Label="{le:Loc Command_Grep}">
+                            <m:HamburgerMenuIconItem.Icon>
+                                <mi:Material Kind="Magnify"/>
+                            </m:HamburgerMenuIconItem.Icon>
+                            <m:HamburgerMenuIconItem.Tag>
+                                <Grid DataContext="{Binding Data.GrepPanel.Value, Source={StaticResource Proxy}, Mode=OneWay}" ge:GridEx.RowDefinition="Auto, 10, *, 3, Auto">
+                                    <Grid Grid.Row="0" ge:GridEx.RowDefinition="Auto, 3, Auto, 5, Auto, 10, Auto, 5, Auto, 3, Auto" ge:GridEx.ColumnDefinition="*, Auto, 5, Auto, Auto">
+                                        <Grid.Resources>
+                                            <Style x:Key="AccentButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Common.AccentButton}">
+                                                <Setter Property="Padding"     Value="2"/>
+                                            </Style>
+                                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+                                                <Setter Property="Background"  Value="{x:Null}"/>
+                                                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                                <Setter Property="Padding"     Value="2"/>
+                                            </Style>
+                                            <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButton}">
+                                                <Setter Property="Background"  Value="{x:Null}"/>
+                                                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                                <Setter Property="Padding"     Value="2"/>
+                                                <Style.Resources>
+                                                    <!-- チェック状態での BorderBrush を上書きする -->
+                                                    <SolidColorBrush x:Key="MahApps.Brushes.Gray5" Color="{DynamicResource MahApps.Colors.Gray2}" o:Freeze="True"/>
+                                                </Style.Resources>
+                                            </Style>
+                                            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+                                                <!-- 既定のバリデーションエラーとポップアップを停止する -->
+                                                <Setter Property="Validation.ErrorTemplate" Value="{x:Null}"/>
+                                                <Style.Triggers>
+                                                    <!-- バリデーションエラー時にボーダーアニメーションを表示する -->
+                                                    <Trigger Property="Validation.HasError" Value="True">
+                                                        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.ValidationSummary2}"/>
+                                                        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource MahApps.Brushes.ValidationSummary3}"/>
+                                                        <Setter Property="m:ControlsHelper.MouseOverBorderBrush" Value="{DynamicResource MahApps.Brushes.ValidationSummary4}"/>
+                                                        <Setter Property="m:TextBoxHelper.IsWaitingForData" Value="True"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Grid.Resources>
+
+                                        <TextBox  Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="4" Text="{Binding Directory.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{le:Loc Label_Directory}" m:TextBoxHelper.UseFloatingWatermark="True" m:TextBoxHelper.ClearTextButton="True"/>
+                                        <Button   Grid.Row="0"  Grid.Column="4" Command="{Binding SelectDirectoryCommand, Mode=OneTime}" ToolTip="{le:Loc Command_Open}">
+                                            <mi:Modern Kind="FolderOpen"/>
+                                        </Button>
+                                        <CheckBox Grid.Row="2"  Grid.ColumnSpan="5" Margin="3 0 0 0" IsChecked="{Binding AllDirectories.Value, Mode=TwoWay}" Content="{le:Loc Label_AllDirectories}"/>
+                                        <TextBox  Grid.Row="4"  Grid.Column="0" Text="{Binding SearchText.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{le:Loc Command_Find}" m:TextBoxHelper.UseFloatingWatermark="True" m:TextBoxHelper.ClearTextButton="True"/>
+                                        <Button   Grid.Row="4"  Grid.Column="1" Style="{StaticResource AccentButton}" Command="{Binding GrepCommand, Mode=OneTime}" ToolTip="{le:Loc Command_Find}">
+                                            <mi:Material Kind="Magnify"/>
+                                        </Button>
+                                        <ToggleButton Grid.Row="4" Grid.Column="3" IsChecked="{qc:Binding Convert='!$P', ConvertBack='!$value', P={Binding IgnoreCase.Value, Mode=TwoWay}}" ToolTip="{le:Loc Label_CaseSensitive}">
+                                            <mi:Material Kind="FormatLetterCase"/>
+                                        </ToggleButton>
+                                        <ToggleButton Grid.Row="4" Grid.Column="4" IsChecked="{Binding UseRegex.Value, Mode=TwoWay}" ToolTip="{le:Loc Label_UseRegex}">
+                                            <mi:Material Kind="Regex"/>
+                                        </ToggleButton>
+                                        <TextBox  Grid.Row="6"  Grid.ColumnSpan="5" Text="{Binding SearchPattern.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{le:Loc Label_SearchPattern}" m:TextBoxHelper.UseFloatingWatermark="True" m:TextBoxHelper.ClearTextButton="True"/>
+                                        <ComboBox Grid.Row="8"  Grid.ColumnSpan="5" SelectedValue="{Binding Encoding.Value, Mode=TwoWay}" ItemsSource="{x:Static root:Constants.ENCODINGS}" DisplayMemberPath="EncodingName" m:TextBoxHelper.Watermark="{le:Loc Label_DefaultEncoding}" m:TextBoxHelper.UseFloatingWatermark="True"/>
+                                        <CheckBox Grid.Row="10" Grid.ColumnSpan="5" Margin="3 0 0 0" IsChecked="{Binding AutoDetectEncoding.Value, Mode=TwoWay}" Content="{le:Loc Label_AutoDetect}"/>
+                                    </Grid>
+                                    
+                                    <ListBox Grid.Row="2" ItemsSource="{Binding Results, Mode=OneWay}">
+                                        <ListBox.ItemContainerStyle>
+                                            <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Default.ListBoxItem}">
+                                                <EventSetter Event="MouseDoubleClick" Handler="GrepResult_MouseDoubleClick"/>
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{qc:MultiBinding 'Path.GetFileName($P0) + \'(\' + $P1 + \') [\' + $P2.EncodingName + \']\'', P0={Binding path, Mode=OneWay}, P1={Binding line, Mode=OneWay}, P2={Binding encoding, Mode=OneWay}}">
+                                                    <TextBlock.ToolTip>
+                                                        <TextBlock>
+                                                            <Run Text="{qc:MultiBinding '\'Path: \' + $P1.Substring($P0.Length)', P0={Binding Data.GrepPanel.Value.Directory.Value, Source={StaticResource Proxy}, Mode=OneTime}, P1={Binding path, Mode=OneWay}}"/>
+                                                            <LineBreak/>
+                                                            <Run Text="{qc:Binding '\'Line: \' + $P', P={Binding line, Mode=OneWay}}"/>
+                                                            <LineBreak/>
+                                                            <Run Text="{qc:Binding '\'Encoding: \' + $P.EncodingName', P={Binding encoding, Mode=OneWay}}"/>
+                                                        </TextBlock>
+                                                    </TextBlock.ToolTip>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                    
+                                    <TextBlock Grid.Row="4" HorizontalAlignment="Right" Text="{Binding Results.Count, StringFormat=Matched lines: {0}, Mode=OneWay}"/>
+                                    
+                                    <Border d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
+                                        <m:ProgressRing/>
+                                    </Border>
+                                </Grid>
+                            </m:HamburgerMenuIconItem.Tag>
+                        </m:HamburgerMenuIconItem>
+
                         <!-- プロパティ -->
                         <m:HamburgerMenuIconItem x:Name="PropertyItem" Label="{le:Loc Command_Property}">
                             <m:HamburgerMenuIconItem.Icon>

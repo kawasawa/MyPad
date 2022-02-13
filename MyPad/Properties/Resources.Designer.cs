@@ -19,7 +19,7 @@ namespace MyPad.Properties {
     // または Visual Studio のようなツールを使用して自動生成されました。
     // メンバーを追加または削除するには、.ResX ファイルを編集して、/str オプションと共に
     // ResGen を実行し直すか、または VS プロジェクトをビルドし直します。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -94,15 +94,6 @@ namespace MyPad.Properties {
         public static string Command_Cancel {
             get {
                 return ResourceManager.GetString("Command_Cancel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   大文字と小文字を区別 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Command_CaseSensitive {
-            get {
-                return ResourceManager.GetString("Command_CaseSensitive", resourceCulture);
             }
         }
         
@@ -427,6 +418,15 @@ namespace MyPad.Properties {
         public static string Command_GoToLine {
             get {
                 return ResourceManager.GetString("Command_GoToLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Grep に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_Grep {
+            get {
+                return ResourceManager.GetString("Command_Grep", resourceCulture);
             }
         }
         
@@ -962,15 +962,6 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   正規表現を使用 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Command_UseRegex {
-            get {
-                return ResourceManager.GetString("Command_UseRegex", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   表示 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_View {
@@ -1093,6 +1084,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   サブフォルダーを含める に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_AllDirectories {
+            get {
+                return ResourceManager.GetString("Label_AllDirectories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   すべてのファイル に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_AllFiles {
@@ -1134,6 +1134,15 @@ namespace MyPad.Properties {
         public static string Label_AutoSaveInterval {
             get {
                 return ResourceManager.GetString("Label_AutoSaveInterval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   大文字と小文字を区別 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_CaseSensitive {
+            get {
+                return ResourceManager.GetString("Label_CaseSensitive", resourceCulture);
             }
         }
         
@@ -1201,6 +1210,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   既定の文字コード に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_DefaultEncoding {
+            get {
+                return ResourceManager.GetString("Label_DefaultEncoding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   比較先 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_DiffDestination {
@@ -1215,6 +1233,15 @@ namespace MyPad.Properties {
         public static string Label_DiffSource {
             get {
                 return ResourceManager.GetString("Label_DiffSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   フォルダー に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_Directory {
+            get {
+                return ResourceManager.GetString("Label_Directory", resourceCulture);
             }
         }
         
@@ -1390,15 +1417,6 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   検索文字列 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_SearchText {
-            get {
-                return ResourceManager.GetString("Label_SearchText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   設定ファイル に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_SettingFile {
@@ -1494,6 +1512,15 @@ namespace MyPad.Properties {
         public static string Label_Type {
             get {
                 return ResourceManager.GetString("Label_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   正規表現を使用 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_UseRegex {
+            get {
+                return ResourceManager.GetString("Label_UseRegex", resourceCulture);
             }
         }
         
@@ -2038,6 +2065,15 @@ namespace MyPad.Properties {
         public static string Message_NotifySaved {
             get {
                 return ResourceManager.GetString("Message_NotifySaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   検索が終了しました。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_NotifySearchCompleted {
+            get {
+                return ResourceManager.GetString("Message_NotifySearchCompleted", resourceCulture);
             }
         }
         

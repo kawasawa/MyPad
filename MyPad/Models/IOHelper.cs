@@ -45,15 +45,15 @@ namespace MyPad.Models
         /// </summary>
         /// <param name="targetText">検索する文字列</param>
         /// <param name="rootPath">検索対象のディレクトリ</param>
-        /// <param name="defaultEncoding">既定の文字コード (<paramref name="autoDetectEncoding"/> が false の場合は常にこの文字コードが使用されます。)</param>
+        /// <param name="defaultEncoding">既定の文字コード (<paramref name="autoDetectEncoding"/> が false であるかまたは自動判別に失敗した場合、この文字コードが使用されます。)</param>
+        /// <param name="autoDetectEncoding">文字コードを自動判別するかどうかを示す値</param>
         /// <param name="searchPattern">ファイルの種類</param>
         /// <param name="allDirectories">検索対象にサブディレクトリも含めるかどうかを示す値</param>
         /// <param name="ignoreCase">大文字と小文字を区別するかどうかを示す値</param>
         /// <param name="useRegex">正規表現を使用するかどうかを示す値</param>
-        /// <param name="autoDetectEncoding">文字コードを自動判別するかどうかを示す値</param>
         /// <param name="bufferSize">並列実行されるチャンクのサイズ</param>
-        /// <returns>検索結果 (ファイルのパス、一致した行番号、一致したテキスト、読み込みに使用された文字コード)</returns>
-        public static async IAsyncEnumerable<(string path, int line, string text, Encoding encoding)> Grep(string targetText, string rootPath, Encoding defaultEncoding, string searchPattern = "*", bool allDirectories = true, bool ignoreCase = true, bool useRegex = false, bool autoDetectEncoding = true, int bufferSize = 30)
+        /// <returns>検索結果 (一致したファイルのパス, 行番号, 文字コード)</returns>
+        public static async IAsyncEnumerable<(string path, int line, Encoding encoding)> Grep(string targetText, string rootPath, Encoding defaultEncoding, bool autoDetectEncoding = true, string searchPattern = "*", bool allDirectories = true, bool ignoreCase = true, bool useRegex = false, int bufferSize = 30)
         {
             if (defaultEncoding == null)
                 throw new ArgumentNullException(nameof(defaultEncoding));
@@ -74,7 +74,7 @@ namespace MyPad.Models
             // テキストを検索する
             foreach (var chunk in IOHelper.EnumerateFilesSafe(rootPath, searchPattern, allDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).Buffer(bufferSize))
             {
-                var chunkResult = new ConcurrentBag<(string, int, string, Encoding)>();
+                var chunkResult = new ConcurrentBag<(string, int, Encoding)>();
                 await Task.WhenAll(chunk.Select(path =>
                     Task.Run(() =>
                     {
@@ -96,7 +96,7 @@ namespace MyPad.Models
                                     // 制御文字を除外する
                                     var text = new string(reader.ReadLine().Where(c => char.IsControl(c) == false).ToArray());
                                     if (func(text))
-                                        chunkResult.Add((path, line, text, encoding));
+                                        chunkResult.Add((path, line, encoding));
                                 }
                             }
                         }

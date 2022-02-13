@@ -112,12 +112,12 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="app" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\app.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -154,7 +154,7 @@
   <data name="Command_About" xml:space="preserve">
     <value>バージョン情報</value>
   </data>
-  <data name="Command_CaseSensitive" xml:space="preserve">
+  <data name="Label_CaseSensitive" xml:space="preserve">
     <value>大文字と小文字を区別</value>
   </data>
   <data name="Command_Close" xml:space="preserve">
@@ -364,7 +364,7 @@
   <data name="Command_Undo" xml:space="preserve">
     <value>元に戻す</value>
   </data>
-  <data name="Command_UseRegex" xml:space="preserve">
+  <data name="Label_UseRegex" xml:space="preserve">
     <value>正規表現を使用</value>
   </data>
   <data name="Command_WindowList" xml:space="preserve">
@@ -453,9 +453,6 @@
   </data>
   <data name="Label_SearchPattern" xml:space="preserve">
     <value>ファイル種別</value>
-  </data>
-  <data name="Label_SearchText" xml:space="preserve">
-    <value>検索文字列</value>
   </data>
   <data name="Label_SettingFile" xml:space="preserve">
     <value>設定ファイル</value>
@@ -813,5 +810,20 @@
   </data>
   <data name="LabelText_EnableCutCopyHtmlFormat" xml:space="preserve">
     <value>書式を保持したコピーと切り取りを可能にする。</value>
+  </data>
+  <data name="Command_Grep" xml:space="preserve">
+    <value>Grep</value>
+  </data>
+  <data name="Label_AllDirectories" xml:space="preserve">
+    <value>サブフォルダーを含める</value>
+  </data>
+  <data name="Label_Directory" xml:space="preserve">
+    <value>フォルダー</value>
+  </data>
+  <data name="Label_DefaultEncoding" xml:space="preserve">
+    <value>既定の文字コード</value>
+  </data>
+  <data name="Message_NotifySearchCompleted" xml:space="preserve">
+    <value>検索が終了しました。</value>
   </data>
 </root>

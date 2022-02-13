@@ -248,6 +248,7 @@ namespace MyPad
             containerRegistry.Register<ViewModels.TextEditorViewModel>();
             containerRegistry.Register<ViewModels.FileExplorerViewModel>();
             containerRegistry.Register<ViewModels.FileExplorerViewModel.FileTreeNode>();
+            containerRegistry.Register<ViewModels.GrepPanelViewModel>();
             containerRegistry.Register<Views.MainWindow.InterTabClientWrapper>();
         }
 
