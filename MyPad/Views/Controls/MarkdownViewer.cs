@@ -3,32 +3,31 @@ using Markdig.Wpf;
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace MyPad.Views.Controls
+namespace MyPad.Views.Controls;
+
+/// <summary>
+/// マークダウン形式のテキストをプレビューするためのコントロールを表します。
+/// </summary>
+public class MarkdownViewer : Markdig.Wpf.MarkdownViewer
 {
     /// <summary>
-    /// マークダウン形式のテキストをプレビューするためのコントロールを表します。
+    /// このクラスの新しいインスタンスを生成します。
     /// </summary>
-    public class MarkdownViewer : Markdig.Wpf.MarkdownViewer
+    public MarkdownViewer()
     {
-        /// <summary>
-        /// このクラスの新しいインスタンスを生成します。
-        /// </summary>
-        public MarkdownViewer()
-        {
-            this.Pipeline = new MarkdownPipelineBuilder().UseSupportedExtensions().Build();
-            this.CommandBindings.Add(new CommandBinding(
-                Commands.Hyperlink,
-                (sender, e) =>
+        this.Pipeline = new MarkdownPipelineBuilder().UseSupportedExtensions().Build();
+        this.CommandBindings.Add(new CommandBinding(
+            Commands.Hyperlink,
+            (sender, e) =>
+            {
+                try
                 {
-                    try
-                    {
-                        Process.Start(new ProcessStartInfo("cmd", $"/c start \"\" \"{e.Parameter}\"") { CreateNoWindow = true });
-                    }
-                    catch
-                    {
-                    }
+                    Process.Start(new ProcessStartInfo("cmd", $"/c start \"\" \"{e.Parameter}\"") { CreateNoWindow = true });
                 }
-            ));
-        }
+                catch
+                {
+                }
+            }
+        ));
     }
 }

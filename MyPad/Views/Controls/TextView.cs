@@ -8,146 +8,145 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
 
-namespace MyPad.Views.Controls
+namespace MyPad.Views.Controls;
+
+/// <summary>
+/// <see cref="TextArea"/> のレンダリングを処理するコントロールを表します。
+/// 
+/// 対応する括弧をハイライトする <see cref="Rendering.PairBracketsHighlighter"/> を内包します。
+/// </summary>
+public class TextView : ICSharpCode.AvalonEdit.Rendering.TextView, IDisposable
 {
     /// <summary>
-    /// <see cref="TextArea"/> のレンダリングを処理するコントロールを表します。
-    /// 
-    /// 対応する括弧をハイライトする <see cref="Rendering.PairBracketsHighlighter"/> を内包します。
+    /// CR の可視化時に表示される文字列
     /// </summary>
-    public class TextView : ICSharpCode.AvalonEdit.Rendering.TextView, IDisposable
+    public string VisualCharacterCR { get; set; } = "\u2190";
+
+    /// <summary>
+    /// LF の可視化時に表示される文字列
+    /// </summary>
+    public string VisualCharacterLF { get; set; } = "\u2193";
+
+    /// <summary>
+    /// CRLF の可視化時に表示される文字列
+    /// </summary>
+    public string VisualCharacterCRLF { get; set; } = "\u21B2";
+
+    /// <summary>
+    /// 対応する括弧をハイライトするレンダラー
+    /// </summary>
+    public PairBracketsHighlighter PairBracketsHighlighter { get; private set; }
+
+    /// <summary>
+    /// このクラスの新しいインスタンスを生成します。
+    /// </summary>
+    public TextView()
     {
-        /// <summary>
-        /// CR の可視化時に表示される文字列
-        /// </summary>
-        public string VisualCharacterCR { get; set; } = "\u2190";
+        // INFO: Style で ColumnRulerPen を設定できない問題への対応
+        // ColumnRulerPen は columnRulerRenderer のプロパティに設定される。
+        // columnRulerRenderer は基底クラスのコンストラクタで初期化されるため、
+        // Style 等で設定するとインスタンスが存在せず、Null 参照の例外になる。
+        this.ColumnRulerPen = new(Brushes.Gray, 1);
 
-        /// <summary>
-        /// LF の可視化時に表示される文字列
-        /// </summary>
-        public string VisualCharacterLF { get; set; } = "\u2193";
+        this.PairBracketsHighlighter = PairBracketsHighlighter.Install(this);
+    }
 
-        /// <summary>
-        /// CRLF の可視化時に表示される文字列
-        /// </summary>
-        public string VisualCharacterCRLF { get; set; } = "\u21B2";
+    /// <summary>
+    /// このインスタンスが破棄されるときに呼び出されます。
+    /// </summary>
+    ~TextView()
+    {
+        this.Dispose(false);
+    }
 
-        /// <summary>
-        /// 対応する括弧をハイライトするレンダラー
-        /// </summary>
-        public PairBracketsHighlighter PairBracketsHighlighter { get; private set; }
+    /// <summary>
+    /// このインスタンスが保持するリソースを解放します。
+    /// </summary>
+    public void Dispose()
+    {
+        this.Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
-        /// <summary>
-        /// このクラスの新しいインスタンスを生成します。
-        /// </summary>
-        public TextView()
-        {
-            // INFO: Style で ColumnRulerPen を設定できない問題への対応
-            // ColumnRulerPen は columnRulerRenderer のプロパティに設定される。
-            // columnRulerRenderer は基底クラスのコンストラクタで初期化されるため、
-            // Style 等で設定するとインスタンスが存在せず、Null 参照の例外になる。
-            this.ColumnRulerPen = new(Brushes.Gray, 1);
+    /// <summary>
+    /// このインスタンスが保持するリソースを解放します。
+    /// </summary>
+    /// <param name="disposing">マネージリソースを破棄するかどうかを示す値</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        this.PairBracketsHighlighter.Uninstall();
+        this.PairBracketsHighlighter = null;
+    }
 
-            this.PairBracketsHighlighter = PairBracketsHighlighter.Install(this);
-        }
+    /// <summary>
+    /// 対となるブラケットをハイライトします。
+    /// </summary>
+    /// <param name="segment">セグメント</param>
+    public void HighlightPairBrackets(ISegment segment)
+    {
+        this.PairBracketsHighlighter.Highlight(segment);
+    }
 
-        /// <summary>
-        /// このインスタンスが破棄されるときに呼び出されます。
-        /// </summary>
-        ~TextView()
-        {
-            this.Dispose(false);
-        }
+    /// <summary>
+    /// ブラケットのハイライトをクリアします。
+    /// </summary>
+    public void ClearHighlightPairBrackets()
+    {
+        this.PairBracketsHighlighter.ClearHighlight();
+    }
 
-        /// <summary>
-        /// このインスタンスが保持するリソースを解放します。
-        /// </summary>
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+    /// <summary>
+    /// 子要素のレイアウトのサイズを測定し、この要素に必要なサイズを決定します。
+    /// </summary>
+    /// <param name="availableSize">子要素が利用可能なサイズ</param>
+    /// <returns>この要素に必要なサイズ</returns>
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        // このメソッドの目的とは異なるが、改行マークを変更できるのはこのタイミングになる
+        if (this.Options?.ShowEndOfLine == true)
+            this.OverrideNewLineTexts();
+        return base.MeasureOverride(availableSize);
+    }
 
-        /// <summary>
-        /// このインスタンスが保持するリソースを解放します。
-        /// </summary>
-        /// <param name="disposing">マネージリソースを破棄するかどうかを示す値</param>
-        protected virtual void Dispose(bool disposing)
-        {
-            this.PairBracketsHighlighter.Uninstall();
-            this.PairBracketsHighlighter = null;
-        }
+    /// <summary>
+    /// AvalonEdit が定義する改行マークを上書きします。
+    /// </summary>
+    private void OverrideNewLineTexts()
+    {
+        // INFO: AvalonEdito の改行マークを変更できない問題への対応
+        // 既定の改行マークは VisualLineTextSource.CreateTextRunForNewLine() でハードコーディングされている。
+        // private 関数のため変更できず、VisualLineTextSource は sealed クラスであり継承して誤魔化すこともできない。
+        // AvalonEdit では、画面描画にあたりこの改行マークを TextLine に変換しており、
+        // TextViewCachedElements.nonPrintableCharacterTexts の Dictionary を参照して変換先を生成する。
+        // ここを突き、nonPrintableCharacterTexts を書き換えることで、生成される TextLine を制御できる。
 
-        /// <summary>
-        /// 対となるブラケットをハイライトします。
-        /// </summary>
-        /// <param name="segment">セグメント</param>
-        public void HighlightPairBrackets(ISegment segment)
-        {
-            this.PairBracketsHighlighter.Highlight(segment);
-        }
+        var globalProterties = (TextRunProperties)typeof(ICSharpCode.AvalonEdit.Rendering.TextView)
+            .GetMethod("CreateGlobalTextRunProperties", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod)
+            .Invoke(this, null);
+        var formatter = (TextFormatter)typeof(ICSharpCode.AvalonEdit.Rendering.TextView).Assembly
+            .GetType("ICSharpCode.AvalonEdit.Utils.TextFormatterFactory")
+            .GetMethod("Create", BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod)
+            .Invoke(null, new[] { this });
+        var cachedElements = typeof(ICSharpCode.AvalonEdit.Rendering.TextView)
+            .GetField("cachedElements", BindingFlags.Instance | BindingFlags.NonPublic)
+            .GetValue(this);
+        var nonPrintableCharacterTexts = (Dictionary<string, TextLine>)cachedElements.GetType()
+            .GetField("nonPrintableCharacterTexts", BindingFlags.Instance | BindingFlags.NonPublic)
+            .GetValue(cachedElements);
 
-        /// <summary>
-        /// ブラケットのハイライトをクリアします。
-        /// </summary>
-        public void ClearHighlightPairBrackets()
-        {
-            this.PairBracketsHighlighter.ClearHighlight();
-        }
+        var elementProperties = new VisualLineElementTextRunProperties(globalProterties);
+        elementProperties.SetForegroundBrush(this.NonPrintableCharacterBrush);
+        var cr = FormattedTextElement.PrepareText(formatter, this.VisualCharacterCR, elementProperties);
+        var lf = FormattedTextElement.PrepareText(formatter, this.VisualCharacterLF, elementProperties);
+        var crlf = FormattedTextElement.PrepareText(formatter, this.VisualCharacterCRLF, elementProperties);
 
-        /// <summary>
-        /// 子要素のレイアウトのサイズを測定し、この要素に必要なサイズを決定します。
-        /// </summary>
-        /// <param name="availableSize">子要素が利用可能なサイズ</param>
-        /// <returns>この要素に必要なサイズ</returns>
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            // このメソッドの目的とは異なるが、改行マークを変更できるのはこのタイミングになる
-            if (this.Options?.ShowEndOfLine == true)
-                this.OverrideNewLineTexts();
-            return base.MeasureOverride(availableSize);
-        }
+        nonPrintableCharacterTexts ??= new();
+        nonPrintableCharacterTexts["\\r"] = cr;
+        nonPrintableCharacterTexts["\\n"] = lf;
+        nonPrintableCharacterTexts["¶"] = crlf;
 
-        /// <summary>
-        /// AvalonEdit が定義する改行マークを上書きします。
-        /// </summary>
-        private void OverrideNewLineTexts()
-        {
-            // INFO: AvalonEdito の改行マークを変更できない問題への対応
-            // 既定の改行マークは VisualLineTextSource.CreateTextRunForNewLine() でハードコーディングされている。
-            // private 関数のため変更できず、VisualLineTextSource は sealed クラスであり継承して誤魔化すこともできない。
-            // AvalonEdit では、画面描画にあたりこの改行マークを TextLine に変換しており、
-            // TextViewCachedElements.nonPrintableCharacterTexts の Dictionary を参照して変換先を生成する。
-            // ここを突き、nonPrintableCharacterTexts を書き換えることで、生成される TextLine を制御できる。
-
-            var globalProterties = (TextRunProperties)typeof(ICSharpCode.AvalonEdit.Rendering.TextView)
-                .GetMethod("CreateGlobalTextRunProperties", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod)
-                .Invoke(this, null);
-            var formatter = (TextFormatter)typeof(ICSharpCode.AvalonEdit.Rendering.TextView).Assembly
-                .GetType("ICSharpCode.AvalonEdit.Utils.TextFormatterFactory")
-                .GetMethod("Create", BindingFlags.Static | BindingFlags.Public | BindingFlags.InvokeMethod)
-                .Invoke(null, new[] { this });
-            var cachedElements = typeof(ICSharpCode.AvalonEdit.Rendering.TextView)
-                .GetField("cachedElements", BindingFlags.Instance | BindingFlags.NonPublic)
-                .GetValue(this);
-            var nonPrintableCharacterTexts = (Dictionary<string, TextLine>)cachedElements.GetType()
-                .GetField("nonPrintableCharacterTexts", BindingFlags.Instance | BindingFlags.NonPublic)
-                .GetValue(cachedElements);
-
-            var elementProperties = new VisualLineElementTextRunProperties(globalProterties);
-            elementProperties.SetForegroundBrush(this.NonPrintableCharacterBrush);
-            var cr = FormattedTextElement.PrepareText(formatter, this.VisualCharacterCR, elementProperties);
-            var lf = FormattedTextElement.PrepareText(formatter, this.VisualCharacterLF, elementProperties);
-            var crlf = FormattedTextElement.PrepareText(formatter, this.VisualCharacterCRLF, elementProperties);
-
-            nonPrintableCharacterTexts ??= new();
-            nonPrintableCharacterTexts["\\r"] = cr;
-            nonPrintableCharacterTexts["\\n"] = lf;
-            nonPrintableCharacterTexts["¶"] = crlf;
-
-            cachedElements.GetType()
-                .GetField("nonPrintableCharacterTexts", BindingFlags.Instance | BindingFlags.NonPublic)
-                .SetValue(cachedElements, nonPrintableCharacterTexts);
-        }
+        cachedElements.GetType()
+            .GetField("nonPrintableCharacterTexts", BindingFlags.Instance | BindingFlags.NonPublic)
+            .SetValue(cachedElements, nonPrintableCharacterTexts);
     }
 }

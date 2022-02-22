@@ -1,16 +1,15 @@
 ﻿using System.Windows.Controls;
 
-namespace MyPad.Views.Dialogs
+namespace MyPad.Views.Dialogs;
+
+/// <summary>
+/// ConfirmDialog.xaml の相互作用ロジック
+/// </summary>
+public partial class ConfirmDialog : UserControl
 {
-    /// <summary>
-    /// ConfirmDialog.xaml の相互作用ロジック
-    /// </summary>
-    public partial class ConfirmDialog : UserControl
+    [LogInterceptor]
+    public ConfirmDialog()
     {
-        [LogInterceptor]
-        public ConfirmDialog()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

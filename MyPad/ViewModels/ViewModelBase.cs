@@ -1,19 +1,18 @@
 ﻿using MyBase;
 
-namespace MyPad.ViewModels
+namespace MyPad.ViewModels;
+
+/// <summary>
+/// ViewModel の基底クラスを表します。
+/// </summary>
+public abstract class ViewModelBase : ValidatableBase
 {
     /// <summary>
-    /// ViewModel の基底クラスを表します。
+    /// このクラスの新しいインスタンスを生成します。
     /// </summary>
-    public abstract class ViewModelBase : ValidatableBase
+    [LogInterceptorIgnore]
+    public ViewModelBase()
     {
-        /// <summary>
-        /// このクラスの新しいインスタンスを生成します。
-        /// </summary>
-        [LogInterceptorIgnore]
-        public ViewModelBase()
-        {
-            this.ValidateProperties();
-        }
+        this.ValidateProperties();
     }
 }

@@ -1,11 +1,10 @@
 ﻿using MyBase;
 
-namespace MyPad.Models
+namespace MyPad.Models;
+
+/// <summary>
+/// Model の基底クラスを表します。
+/// </summary>
+public abstract class ModelBase : ValidatableBase
 {
-    /// <summary>
-    /// Model の基底クラスを表します。
-    /// </summary>
-    public abstract class ModelBase : ValidatableBase
-    {
-    }
 }

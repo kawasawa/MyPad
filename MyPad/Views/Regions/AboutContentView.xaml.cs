@@ -1,16 +1,15 @@
 ﻿using System.Windows.Controls;
 
-namespace MyPad.Views.Regions
+namespace MyPad.Views.Regions;
+
+/// <summary>
+/// AboutContentView.xaml の相互作用ロジック
+/// </summary>
+public partial class AboutContentView : UserControl
 {
-    /// <summary>
-    /// AboutContentView.xaml の相互作用ロジック
-    /// </summary>
-    public partial class AboutContentView : UserControl
+    [LogInterceptor]
+    public AboutContentView()
     {
-        [LogInterceptor]
-        public AboutContentView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

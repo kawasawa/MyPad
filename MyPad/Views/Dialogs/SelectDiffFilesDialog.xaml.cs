@@ -1,28 +1,27 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace MyPad.Views.Dialogs
-{
-    /// <summary>
-    /// SelectDiffFilesDialog.xaml の相互作用ロジック
-    /// </summary>
-    public partial class SelectDiffFilesDialog : UserControl
-    {
-        [LogInterceptor]
-        public SelectDiffFilesDialog()
-        {
-            InitializeComponent();
-        }
+namespace MyPad.Views.Dialogs;
 
-        [LogInterceptorIgnore]
-        private void Dialog_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (this.DiffSourcePath.SelectedValue == null)
-                this.DiffSourcePath.Focus();
-            if (this.DiffDestinationPath.SelectedValue == null)
-                this.DiffDestinationPath.Focus();
-            else
-                this.DiffSourcePath.Focus();
-        }
+/// <summary>
+/// SelectDiffFilesDialog.xaml の相互作用ロジック
+/// </summary>
+public partial class SelectDiffFilesDialog : UserControl
+{
+    [LogInterceptor]
+    public SelectDiffFilesDialog()
+    {
+        InitializeComponent();
+    }
+
+    [LogInterceptorIgnore]
+    private void Dialog_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (this.DiffSourcePath.SelectedValue == null)
+            this.DiffSourcePath.Focus();
+        if (this.DiffDestinationPath.SelectedValue == null)
+            this.DiffDestinationPath.Focus();
+        else
+            this.DiffSourcePath.Focus();
     }
 }

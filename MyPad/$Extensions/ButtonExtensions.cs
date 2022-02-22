@@ -2,22 +2,21 @@
 using System.Windows.Automation.Provider;
 using System.Windows.Controls;
 
-namespace MyPad
+namespace MyPad;
+
+/// <summary>
+/// <see cref="Button"/> クラスの拡張メソッドを提供します。
+/// </summary>
+public static class ButtonExtensions
 {
     /// <summary>
-    /// <see cref="Button"/> クラスの拡張メソッドを提供します。
+    /// ボタンのクリックイベントを発生させます。
     /// </summary>
-    public static class ButtonExtensions
+    /// <param name="self"><see cref="Button"/> クラスのインスタンス</param>
+    public static void PerformClick(this Button self)
     {
-        /// <summary>
-        /// ボタンのクリックイベントを発生させます。
-        /// </summary>
-        /// <param name="self"><see cref="Button"/> クラスのインスタンス</param>
-        public static void PerformClick(this Button self)
-        {
-            var peer = new ButtonAutomationPeer(self);
-            var provider = peer.GetPattern(PatternInterface.Invoke) as IInvokeProvider;
-            provider?.Invoke();
-        }
+        var peer = new ButtonAutomationPeer(self);
+        var provider = peer.GetPattern(PatternInterface.Invoke) as IInvokeProvider;
+        provider?.Invoke();
     }
 }

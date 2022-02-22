@@ -9,74 +9,73 @@ using System.ComponentModel.DataAnnotations;
 using System.Reactive.Linq;
 using Unity;
 
-namespace MyPad.ViewModels.Dialogs
+namespace MyPad.ViewModels.Dialogs;
+
+/// <summary>
+/// <see cref="Views.Dialogs.SelectDiffFilesDialog"/> に対応する ViewModel を表します。
+/// </summary>
+public class SelectDiffFilesDialogViewModel : DialogViewModelBase
 {
+    [Dependency]
+    public ICommonDialogService CommonDialogService { get; set; }
+    [Dependency]
+    public Settings Settings { get; set; }
+    [Dependency]
+    public SyntaxService SyntaxService { get; set; }
+
+    public ReactiveCollection<string> FileNames { get; }
+    [Required]
+    public ReactiveProperty<string> DiffSourcePath { get; }
+    [Required]
+    public ReactiveProperty<string> DiffDestinationPath { get; }
+    public ReactiveCommand OKCommand { get; }
+    public ReactiveCommand CancelCommand { get; }
+
     /// <summary>
-    /// <see cref="Views.Dialogs.SelectDiffFilesDialog"/> に対応する ViewModel を表します。
+    /// このクラスの新しいインスタンスを生成します。
     /// </summary>
-    public class SelectDiffFilesDialogViewModel : DialogViewModelBase
+    [InjectionConstructor]
+    [LogInterceptor]
+    public SelectDiffFilesDialogViewModel()
     {
-        [Dependency]
-        public ICommonDialogService CommonDialogService { get; set; }
-        [Dependency]
-        public Settings Settings { get; set; }
-        [Dependency]
-        public SyntaxService SyntaxService { get; set; }
+        this.FileNames = new ReactiveCollection<string>()
+            .AddTo(this.CompositeDisposable);
+        this.DiffSourcePath = new ReactiveProperty<string>()
+            .SetValidateAttribute(() => this.DiffSourcePath)
+            .AddTo(this.CompositeDisposable);
+        this.DiffDestinationPath = new ReactiveProperty<string>()
+            .SetValidateAttribute(() => this.DiffDestinationPath)
+            .AddTo(this.CompositeDisposable);
 
-        public ReactiveCollection<string> FileNames { get; }
-        [Required]
-        public ReactiveProperty<string> DiffSourcePath { get; }
-        [Required]
-        public ReactiveProperty<string> DiffDestinationPath { get; }
-        public ReactiveCommand OKCommand { get; }
-        public ReactiveCommand CancelCommand { get; }
+        this.OKCommand = Observable.Merge<object>(this.DiffSourcePath, this.DiffDestinationPath)
+            .Select(_ => string.IsNullOrEmpty(this.DiffSourcePath.Value) == false &&
+                         string.IsNullOrEmpty(this.DiffDestinationPath.Value) == false)
+            .ToReactiveCommand()
+            .WithSubscribe(() => this.OnRequestClose(
+                new DialogResult(ButtonResult.OK, new DialogParameters {
+                    { nameof(this.DiffSourcePath), this.DiffSourcePath.Value },
+                    { nameof(this.DiffDestinationPath), this.DiffDestinationPath.Value },
+                })))
+            .AddTo(this.CompositeDisposable);
 
-        /// <summary>
-        /// このクラスの新しいインスタンスを生成します。
-        /// </summary>
-        [InjectionConstructor]
-        [LogInterceptor]
-        public SelectDiffFilesDialogViewModel()
-        {
-            this.FileNames = new ReactiveCollection<string>()
-                .AddTo(this.CompositeDisposable);
-            this.DiffSourcePath = new ReactiveProperty<string>()
-                .SetValidateAttribute(() => this.DiffSourcePath)
-                .AddTo(this.CompositeDisposable);
-            this.DiffDestinationPath = new ReactiveProperty<string>()
-                .SetValidateAttribute(() => this.DiffDestinationPath)
-                .AddTo(this.CompositeDisposable);
+        this.CancelCommand = new ReactiveCommand()
+            .WithSubscribe(() => this.OnRequestClose(new DialogResult(ButtonResult.Cancel)))
+            .AddTo(this.CompositeDisposable);
+    }
 
-            this.OKCommand = Observable.Merge<object>(this.DiffSourcePath, this.DiffDestinationPath)
-                .Select(_ => string.IsNullOrEmpty(this.DiffSourcePath.Value) == false &&
-                             string.IsNullOrEmpty(this.DiffDestinationPath.Value) == false)
-                .ToReactiveCommand()
-                .WithSubscribe(() => this.OnRequestClose(
-                    new DialogResult(ButtonResult.OK, new DialogParameters {
-                        { nameof(this.DiffSourcePath), this.DiffSourcePath.Value },
-                        { nameof(this.DiffDestinationPath), this.DiffDestinationPath.Value },
-                    })))
-                .AddTo(this.CompositeDisposable);
-
-            this.CancelCommand = new ReactiveCommand()
-                .WithSubscribe(() => this.OnRequestClose(new DialogResult(ButtonResult.Cancel)))
-                .AddTo(this.CompositeDisposable);
-        }
-
-        /// <summary>
-        /// ダイアログが表示されたときに行う処理を定義します。
-        /// </summary>
-        /// <param name="parameters">ダイアログのパラメータ</param>
-        [LogInterceptor]
-        public override void OnDialogOpened(IDialogParameters parameters)
-        {
-            base.OnDialogOpened(parameters);
-            if (parameters.GetValue<IEnumerable<string>>(nameof(this.FileNames)) is IEnumerable<string> fileNames)
-                this.FileNames.AddRange(fileNames);
-            if (parameters.GetValue<string>(nameof(this.DiffSourcePath)) is string diffSourcePath)
-                this.DiffSourcePath.Value = diffSourcePath;
-            if (parameters.GetValue<string>(nameof(this.DiffDestinationPath)) is string diffDestinationPath)
-                this.DiffDestinationPath.Value = diffDestinationPath;
-        }
+    /// <summary>
+    /// ダイアログが表示されたときに行う処理を定義します。
+    /// </summary>
+    /// <param name="parameters">ダイアログのパラメータ</param>
+    [LogInterceptor]
+    public override void OnDialogOpened(IDialogParameters parameters)
+    {
+        base.OnDialogOpened(parameters);
+        if (parameters.GetValue<IEnumerable<string>>(nameof(this.FileNames)) is IEnumerable<string> fileNames)
+            this.FileNames.AddRange(fileNames);
+        if (parameters.GetValue<string>(nameof(this.DiffSourcePath)) is string diffSourcePath)
+            this.DiffSourcePath.Value = diffSourcePath;
+        if (parameters.GetValue<string>(nameof(this.DiffDestinationPath)) is string diffDestinationPath)
+            this.DiffDestinationPath.Value = diffDestinationPath;
     }
 }
