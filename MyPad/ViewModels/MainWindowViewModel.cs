@@ -599,12 +599,12 @@ public class MainWindowViewModel : ViewModelBase
     [LogInterceptor]
     public async Task InvokeLoad(string path, Encoding encoding)
     {
-        // View 起点で呼ばれるとは限らないため ViewModel で Activate を実行する
-        this.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
-
         var (result, textEditor) = await this.Load(path, encoding);
         if (textEditor != null)
             this.WakeUpTextEditor(textEditor);
+
+        // View 起点で呼ばれるとは限らないため ViewModel で Activate を実行する
+        this.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
     }
 
     /// <summary>
@@ -615,13 +615,13 @@ public class MainWindowViewModel : ViewModelBase
     [LogInterceptor]
     public async Task InvokeLoad(IEnumerable<string> paths)
     {
-        // View 起点で呼ばれるとは限らないため ViewModel で Activate を実行する
-        this.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
-
         var results = await this.Load(paths);
         var textEditor = results.LastOrDefault(tuple => tuple.textEditor != null).textEditor;
         if (textEditor != null)
             this.WakeUpTextEditor(textEditor);
+
+        // View 起点で呼ばれるとは限らないため ViewModel で Activate を実行する
+        this.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
     }
 
     /// <summary>

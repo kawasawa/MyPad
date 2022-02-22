@@ -462,8 +462,7 @@ public partial class MainWindow : MetroWindow
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         // フックメソッドを登録する
-        var interop = new WindowInteropHelper(this);
-        this._handleSource = HwndSource.FromHwnd(interop.EnsureHandle());
+        this._handleSource = this.GetHwndSource();
         this._handleSource.AddHook(this.WndProc);
 
         // システムメニューを構築する
