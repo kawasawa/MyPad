@@ -1,16 +1,15 @@
 ﻿using System.Windows.Controls;
 
-namespace MyPad.Views.Dialogs
+namespace MyPad.Views.Dialogs;
+
+/// <summary>
+/// ChangeEncodingDialog.xaml の相互作用ロジック
+/// </summary>
+public partial class ChangeEncodingDialog : UserControl
 {
-    /// <summary>
-    /// ChangeEncodingDialog.xaml の相互作用ロジック
-    /// </summary>
-    public partial class ChangeEncodingDialog : UserControl
+    [LogInterceptor]
+    public ChangeEncodingDialog()
     {
-        [LogInterceptor]
-        public ChangeEncodingDialog()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }
