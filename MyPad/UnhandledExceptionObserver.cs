@@ -116,7 +116,8 @@ public static class UnhandledExceptionObserver
             message.AppendLine();
             message.AppendLine($"{e?.GetType()?.Name}: {e?.Message}");
             message.AppendLine($"{e?.TargetSite?.Module?.Name}: {e?.TargetSite?.DeclaringType?.Name}.{e?.TargetSite?.Name}");
-            if (MessageBox.Show(message.ToString(), ProductInfo?.Product ?? "警告", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            var caption = $"{ProductInfo?.Product} {ProductInfo?.Version}";
+            if (MessageBox.Show(message.ToString(), caption, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
                 _canOpenConfirm = true;
                 return;
@@ -153,8 +154,9 @@ public static class UnhandledExceptionObserver
             message.AppendLine($"ハンドルされていない例外が発生しました。");
             message.AppendLine($"アプリケーションを終了します。");
             message.AppendLine();
-            message.AppendLine($"{e?.ToString()}");
-            MessageBox.Show(message.ToString(), ProductInfo?.Product ?? "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
+            message.AppendLine($"{e}");
+            var caption = $"{ProductInfo?.Product} {ProductInfo?.Version}";
+            MessageBox.Show(message.ToString(), caption, MessageBoxButton.OK, MessageBoxImage.Error);
         }
         catch
         {
