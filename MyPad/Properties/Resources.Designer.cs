@@ -926,6 +926,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   テキストエディタ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_TextEditor {
+            get {
+                return ResourceManager.GetString("Command_TextEditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   ツール に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Tools {

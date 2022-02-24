@@ -21,6 +21,7 @@
                xmlns:views="clr-namespace:MyPad.Views"
                xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
                xmlns:controls="clr-namespace:MyPad.Views.Controls"
+               xmlns:markup="clr-namespace:MyPad.Views.Markup"
                d:DataContext="{d:DesignInstance {x:Type viewModels:MainWindowViewModel}}"
                mc:Ignorable="d"
                p:ViewModelLocator.AutoWireViewModel="True"
@@ -78,29 +79,36 @@
 
     <!-- 入力バインディング -->
     <Window.InputBindings>
-        <KeyBinding Command="{Binding NewCommand,                  Mode=OneTime}" Key="N"        Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding NewWindowCommand,            Mode=OneTime}" Key="N"        Modifiers="Ctrl+Shift"/>
-        <KeyBinding Command="{Binding OpenCommand,                 Mode=OneTime}" Key="O"        Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding SaveCommand,                 Mode=OneTime}" Key="S"        Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding SaveAsCommand,               Mode=OneTime}" Key="S"        Modifiers="Ctrl+Shift"/>
-        <KeyBinding Command="{Binding SaveAllCommand,              Mode=OneTime}" Key="K"        Modifiers="Ctrl+Shift"/>
-        <KeyBinding Command="{Binding ExitApplicationCommand,      Mode=OneTime}" Key="F4"       Modifiers="Ctrl+Alt"/>
-        <KeyBinding Command="{Binding CloseCommand,                Mode=OneTime}" Key="F4"       Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding CloseCommand,                Mode=OneTime}" Key="W"        Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding CloseAllCommand,             Mode=OneTime}" Key="F4"       Modifiers="Ctrl+Shift"/>
-        <KeyBinding Command="{Binding CloseAllCommand,             Mode=OneTime}" Key="W"        Modifiers="Ctrl+Shift"/>
-        <KeyBinding Command="{Binding CloseOtherCommand,           Mode=OneTime}" Key="F4"       Modifiers="Shift"/>
-        <KeyBinding Command="{Binding PrintDirectCommand,          Mode=OneTime}" Key="P"        Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding PrintPreviewCommand,         Mode=OneTime}" Key="P"        Modifiers="Ctrl+Shift"/>
-        <KeyBinding Command="{Binding OptionCommand,               Mode=OneTime}" Key="OemComma" Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding MaintenanceCommand,          Mode=OneTime}" Key="OemComma" Modifiers="Ctrl+Shift"/>
-        <KeyBinding Command="{Binding AboutCommand,                Mode=OneTime}" Key="F1"       Modifiers="Ctrl+Shift"/>
-        <KeyBinding Command="{Binding GoToLineCommand,             Mode=OneTime}" Key="G"        Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding ChangeEncodingCommand,       Mode=OneTime}" Key="E"        Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding ChangeSyntaxCommand,         Mode=OneTime}" Key="M"        Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding DiffCommand,                 Mode=OneTime}" Key="D"        Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding DiffUnmodifiedCommand,       Mode=OneTime}" Key="D"        Modifiers="Ctrl+Shift"/>
-        <KeyBinding Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Key="F11"/>
+        <KeyBinding Command="{Binding NewCommand,             Mode=OneTime}" Gesture="{markup:CommandKeyGesuture NewCommand}"/>
+        <KeyBinding Command="{Binding NewWindowCommand,       Mode=OneTime}" Gesture="{markup:CommandKeyGesuture NewWindowCommand}"/>
+        <KeyBinding Command="{Binding OpenCommand,            Mode=OneTime}" Gesture="{markup:CommandKeyGesuture OpenCommand}"/>
+        <KeyBinding Command="{Binding SaveCommand,            Mode=OneTime}" Gesture="{markup:CommandKeyGesuture SaveCommand}"/>
+        <KeyBinding Command="{Binding SaveAsCommand,          Mode=OneTime}" Gesture="{markup:CommandKeyGesuture SaveAsCommand}"/>
+        <KeyBinding Command="{Binding SaveAllCommand,         Mode=OneTime}" Gesture="{markup:CommandKeyGesuture SaveAllCommand}"/>
+        <KeyBinding Command="{Binding ExitApplicationCommand, Mode=OneTime}" Gesture="{markup:CommandKeyGesuture ExitApplicationCommand}"/>
+        <KeyBinding Command="{Binding CloseCommand,           Mode=OneTime}" Gesture="{markup:CommandKeyGesuture CloseCommand}"/>
+        <KeyBinding Command="{Binding CloseAllCommand,        Mode=OneTime}" Gesture="{markup:CommandKeyGesuture CloseAllCommand}"/>
+        <KeyBinding Command="{Binding CloseOtherCommand,      Mode=OneTime}" Gesture="{markup:CommandKeyGesuture CloseOtherCommand}"/>
+        <KeyBinding Command="{Binding PrintDirectCommand,     Mode=OneTime}" Gesture="{markup:CommandKeyGesuture PrintDirectCommand}"/>
+        <KeyBinding Command="{Binding PrintPreviewCommand,    Mode=OneTime}" Gesture="{markup:CommandKeyGesuture PrintPreviewCommand}"/>
+        <KeyBinding Command="{Binding OptionCommand,          Mode=OneTime}" Gesture="{markup:CommandKeyGesuture OptionCommand}"/>
+        <KeyBinding Command="{Binding MaintenanceCommand,     Mode=OneTime}" Gesture="{markup:CommandKeyGesuture MaintenanceCommand}"/>
+        <KeyBinding Command="{Binding AboutCommand,           Mode=OneTime}" Gesture="{markup:CommandKeyGesuture AboutCommand}"/>
+        <KeyBinding Command="{Binding GoToLineCommand,        Mode=OneTime}" Gesture="{markup:CommandKeyGesuture GoToLineCommand}"/>
+        <KeyBinding Command="{Binding ChangeEncodingCommand,  Mode=OneTime}" Gesture="{markup:CommandKeyGesuture ChangeEncodingCommand}"/>
+        <KeyBinding Command="{Binding ChangeSyntaxCommand,    Mode=OneTime}" Gesture="{markup:CommandKeyGesuture ChangeSyntaxCommand}"/>
+        <KeyBinding Command="{Binding DiffCommand,            Mode=OneTime}" Gesture="{markup:CommandKeyGesuture DiffCommand}"/>
+        <KeyBinding Command="{Binding DiffUnmodifiedCommand,  Mode=OneTime}" Gesture="{markup:CommandKeyGesuture DiffUnmodifiedCommand}"/>
+        <KeyBinding Command="{Binding CloseCommand,           Mode=OneTime}" Key="W" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding CloseAllCommand,        Mode=OneTime}" Key="W" Modifiers="Ctrl+Shift"/>
+
+        <KeyBinding Command="{x:Static views:MainWindow.ActivateTextEditorCommand}"   Gesture="{markup:CommandKeyGesuture ActivateTextEditorCommand}"/>
+        <KeyBinding Command="{x:Static views:MainWindow.ActivateTerminalCommand}"     Gesture="{markup:CommandKeyGesuture ActivateTerminalCommand}"/>
+        <KeyBinding Command="{x:Static views:MainWindow.ActivateScriptRunnerCommand}" Gesture="{markup:CommandKeyGesuture ActivateScriptRunnerCommand}"/>
+        <KeyBinding Command="{x:Static views:MainWindow.ActivateFileExplorerCommand}" Gesture="{markup:CommandKeyGesuture ActivateFileExplorerCommand}"/>
+        <KeyBinding Command="{x:Static views:MainWindow.ActivateGrepPanelCommand}"    Gesture="{markup:CommandKeyGesuture ActivateGrepPanelCommand}"/>
+        <KeyBinding Command="{x:Static views:MainWindow.ActivatePropertyCommand}"     Gesture="{markup:CommandKeyGesuture ActivatePropertyCommand}"/>
+        <KeyBinding Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Gesture="{markup:CommandKeyGesuture SwitchFullScreenModeCommand}"/>
     </Window.InputBindings>
 
     <!-- ウィンドウコマンド(右) -->
@@ -272,7 +280,8 @@
                                             <Setter Property="ContextMenu">
                                                 <Setter.Value>
                                                     <ContextMenu>
-                                                        <MenuItem Click="{qc:QuickEvent 'Clipboard.SetText($dataContext.FileName)'}" Header="{le:Loc Command_CopyFullPath}">
+                                                        <MenuItem Click="{qc:QuickEvent 'Clipboard.SetText($dataContext.FileName)'}"
+                                                                  Header="{le:Loc Command_CopyFullPath}">
                                                             <MenuItem.Icon>
                                                                 <mi:Modern Kind="ClipboardVariantText"/>
                                                             </MenuItem.Icon>
@@ -289,7 +298,9 @@
                                                                 <mi:Material Kind="FolderOutline"/>
                                                             </MenuItem.Icon>
                                                         </MenuItem>
-                                                        <MenuItem Command="{Binding PropertyCommand, Mode=OneTime}" Header="{le:Loc Command_Property}" IsEnabled="{qc:Binding '!$P', P={Binding IsDummy, Mode=OneWay}}">
+                                                        <MenuItem Command="{Binding PropertyCommand, Mode=OneTime}"
+                                                                  Header="{le:Loc Command_Property}"
+                                                                  IsEnabled="{qc:Binding '!$P', P={Binding IsDummy, Mode=OneWay}}">
                                                             <MenuItem.Icon>
                                                                 <mi:FontAwesome Kind="WrenchSolid"/>
                                                             </MenuItem.Icon>
@@ -526,17 +537,23 @@
                     <Grid ge:GridEx.ColumnDefinition="Auto, *" Margin="5 0 0 0">
                         <Grid.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Command="{Binding NewCommand, Mode=OneTime}" Header="{le:Loc Command_New}" InputGestureText="Ctrl+N">
+                                <MenuItem Command="{Binding NewCommand, Mode=OneTime}"
+                                          Header="{le:Loc {markup:CommandResourceKey NewCommand}}"
+                                          InputGestureText="{markup:CommandKeyGesutureText NewCommand}">
                                     <MenuItem.Icon>
                                         <mi:Modern Kind="PageNew"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Command="{Binding SaveAllCommand, Mode=OneTime}" Header="{le:Loc Command_SaveAll}" InputGestureText="Ctrl+Shift+K">
+                                <MenuItem Command="{Binding SaveAllCommand, Mode=OneTime}"
+                                          Header="{le:Loc {markup:CommandResourceKey SaveAllCommand}}"
+                                          InputGestureText="{markup:CommandKeyGesutureText SaveAllCommand}">
                                     <MenuItem.Icon>
                                         <mi:Material Kind="ContentSaveAll"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Command="{Binding CloseAllCommand, Mode=OneTime}" Header="{le:Loc Command_CloseAll}" InputGestureText="Ctrl+Shift+F4">
+                                <MenuItem Command="{Binding CloseAllCommand, Mode=OneTime}"
+                                          Header="{le:Loc {markup:CommandResourceKey CloseAllCommand}}"
+                                          InputGestureText="{markup:CommandKeyGesutureText CloseAllCommand}">
                                     <MenuItem.Icon>
                                         <mi:Material Kind="LayersOff"/>
                                     </MenuItem.Icon>
@@ -583,39 +600,54 @@
                 </dr:TabablzControl.ItemContainerStyle>
                 <dr:TabablzControl.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Command="{Binding CloseCommand, Mode=OneTime}" Header="{le:Loc Command_Close}" InputGestureText="Ctrl+F4">
+                        <MenuItem Command="{Binding CloseCommand, Mode=OneTime}"
+                                  Header="{le:Loc {markup:CommandResourceKey CloseCommand}}"
+                                  InputGestureText="{markup:CommandKeyGesutureText CloseCommand}">
                             <MenuItem.Icon>
                                 <mi:Material Kind="Close"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Command="{Binding CloseAllCommand, Mode=OneTime}" Header="{le:Loc Command_CloseAll}" InputGestureText="Ctrl+Shift+F4">
+                        <MenuItem Command="{Binding CloseAllCommand, Mode=OneTime}"
+                                  Header="{le:Loc {markup:CommandResourceKey CloseAllCommand}}"
+                                  InputGestureText="{markup:CommandKeyGesutureText CloseAllCommand}">
                             <MenuItem.Icon>
                                 <mi:Material Kind="LayersOff"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Command="{Binding CloseOtherCommand, Mode=OneTime}" Header="{le:Loc Command_CloseOther}" InputGestureText="Shift+F4">
+                        <MenuItem Command="{Binding CloseOtherCommand, Mode=OneTime}"
+                                  Header="{le:Loc {markup:CommandResourceKey CloseOtherCommand}}"
+                                  InputGestureText="{markup:CommandKeyGesutureText CloseOtherCommand}">
                             <MenuItem.Icon>
                                 <mi:Material Kind="LayersRemove"/>
                             </MenuItem.Icon>
                         </MenuItem>
                         <Separator/>
-                        <MenuItem Command="{Binding SaveCommand, Mode=OneTime}" Header="{le:Loc Command_Save}" InputGestureText="Ctrl+S">
+                        <MenuItem Command="{Binding SaveCommand, Mode=OneTime}"
+                                  Header="{le:Loc {markup:CommandResourceKey SaveCommand}}"
+                                  InputGestureText="{markup:CommandKeyGesutureText SaveCommand}">
                             <MenuItem.Icon>
                                 <mi:Material Kind="ContentSave"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Command="{Binding SaveAsCommand, Mode=OneTime}" Header="{le:Loc Command_SaveAs}" HeaderStringFormat="{}{0}..." InputGestureText="Ctrl+Shift+S">
+                        <MenuItem Command="{Binding SaveAsCommand, Mode=OneTime}"
+                                  Header="{le:Loc {markup:CommandResourceKey SaveAsCommand}}"
+                                  HeaderStringFormat="{}{0}..."
+                                  InputGestureText="{markup:CommandKeyGesutureText SaveAsCommand}">
                             <MenuItem.Icon>
                                 <mi:Material Kind="ContentSaveSettings"/>
                             </MenuItem.Icon>
                         </MenuItem>
                         <Separator/>
-                        <MenuItem Command="{Binding DiffUnmodifiedCommand, Mode=OneTime}" Header="{le:Loc Command_DiffUnmodified}" HeaderStringFormat="{}{0}..." InputGestureText="Ctrl+Shift+D">
+                        <MenuItem Command="{Binding DiffUnmodifiedCommand, Mode=OneTime}"
+                                  Header="{le:Loc {markup:CommandResourceKey DiffUnmodifiedCommand}}"
+                                  HeaderStringFormat="{}{0}..."
+                                  InputGestureText="{markup:CommandKeyGesutureText DiffUnmodifiedCommand}">
                             <MenuItem.Icon>
                                 <mi:Modern Kind="ListAdd"/>
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="{le:Loc Command_OpenParentDirectory}" IsEnabled="{qc:Binding '!$P', P={Binding ActiveTextEditor.Value.IsNewFile, Mode=OneWay}}">
+                        <MenuItem Header="{le:Loc Command_OpenParentDirectory}"
+                                  IsEnabled="{qc:Binding '!$P', P={Binding ActiveTextEditor.Value.IsNewFile, Mode=OneWay}}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
                                     <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{qc:Binding '\'/select, \' + $P', P={Binding ActiveTextEditor.Value.FileName, Mode=OneWay}}"/>
@@ -675,45 +707,51 @@
                             <controls:TextEditor.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Command="Undo"
-                                              Header="{le:Loc Command_Undo}">
+                                              Header="{le:Loc {markup:CommandResourceKey Undo}}"
+                                              InputGestureText="{markup:CommandKeyGesutureText Undo}">
                                         <MenuItem.Icon>
                                             <mi:Modern Kind="UndoCurve"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <MenuItem Command="Redo"
-                                              Header="{le:Loc Command_Redo}">
+                                              Header="{le:Loc {markup:CommandResourceKey Redo}}"
+                                              InputGestureText="{markup:CommandKeyGesutureText Redo}">
                                         <MenuItem.Icon>
                                             <mi:Modern Kind="RedoCurve"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <Separator/>
                                     <MenuItem Command="Cut"
-                                              Header="{le:Loc Command_Cut}">
+                                              Header="{le:Loc {markup:CommandResourceKey Cut}}"
+                                              InputGestureText="{markup:CommandKeyGesutureText Cut}">
                                         <MenuItem.Icon>
                                             <mi:Modern Kind="Scissor"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <MenuItem Command="Copy"
-                                              Header="{le:Loc Command_Copy}">
+                                              Header="{le:Loc {markup:CommandResourceKey Copy}}"
+                                              InputGestureText="{markup:CommandKeyGesutureText Copy}">
                                         <MenuItem.Icon>
                                             <mi:Modern Kind="PageCopy"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <MenuItem Command="Paste"
-                                              Header="{le:Loc Command_Paste}">
+                                              Header="{le:Loc {markup:CommandResourceKey Paste}}"
+                                              InputGestureText="{markup:CommandKeyGesutureText Paste}">
                                         <MenuItem.Icon>
                                             <mi:Modern Kind="ClipboardPaste"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <MenuItem Command="EditingCommands.Delete"
-                                              Header="{le:Loc Command_Delete}"
-                                              InputGestureText="Del">
+                                              Header="{le:Loc {markup:CommandResourceKey Delete}}"
+                                              InputGestureText="{markup:CommandKeyGesutureText Delete}">
                                         <MenuItem.Icon>
                                             <mi:Material Kind="Eraser"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <MenuItem Command="SelectAll"
-                                              Header="{le:Loc Command_SelectAll}">
+                                              Header="{le:Loc {markup:CommandResourceKey SelectAll}}"
+                                              InputGestureText="{markup:CommandKeyGesutureText SelectAll}">
                                         <MenuItem.Icon>
                                             <mi:Modern Kind="CursorDefault"/>
                                         </MenuItem.Icon>
@@ -721,91 +759,99 @@
                                     <Separator/>
                                     <MenuItem Header="{le:Loc Command_Movement}">
                                         <MenuItem Command="EditingCommands.MoveLeftByWord"
-                                                  Header="{le:Loc Command_MoveLeftByWord}"
-                                                  InputGestureText="Ctrl+Left"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey MoveLeftByWord}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText MoveLeftByWord}"/>
                                         <MenuItem Command="EditingCommands.MoveRightByWord"
-                                                  Header="{le:Loc Command_MoveRightByWord}"
-                                                  InputGestureText="Ctrl+Right"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey MoveRightByWord}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText MoveRightByWord}"/>
                                         <MenuItem Command="EditingCommands.MoveToLineStart"
-                                                  Header="{le:Loc Command_MoveToLineStart}"
-                                                  InputGestureText="Home"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey MoveToLineStart}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText MoveToLineStart}"/>
                                         <MenuItem Command="EditingCommands.MoveToLineEnd"
-                                                  Header="{le:Loc Command_MoveToLineEnd}"
-                                                  InputGestureText="End"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey MoveToLineEnd}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText MoveToLineEnd}"/>
                                         <MenuItem Command="EditingCommands.MoveUpByPage"
-                                                  Header="{le:Loc Command_MoveUpByPage}"
-                                                  InputGestureText="PageUp"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey MoveUpByPage}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText MoveUpByPage}"/>
                                         <MenuItem Command="EditingCommands.MoveDownByPage"
-                                                  Header="{le:Loc Command_MoveDownByPage}"
-                                                  InputGestureText="PageDown"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey MoveDownByPage}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText MoveDownByPage}"/>
                                         <MenuItem Command="EditingCommands.MoveToDocumentStart"
-                                                  Header="{le:Loc Command_MoveToDocumentStart}"
-                                                  InputGestureText="Ctrl+Home"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey MoveToDocumentStart}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText MoveToDocumentStart}"/>
                                         <MenuItem Command="EditingCommands.MoveToDocumentEnd"
-                                                  Header="{le:Loc Command_MoveToDocumentEnd}"
-                                                  InputGestureText="Ctrl+End"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey MoveToDocumentEnd}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText MoveToDocumentEnd}"/>
                                     </MenuItem>
                                     <MenuItem Header="{le:Loc Command_Select}">
                                         <MenuItem Command="EditingCommands.SelectLeftByWord"
-                                                  Header="{le:Loc Command_SelectLeftByWord}"
-                                                  InputGestureText="Ctrl+Shift+Left"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey SelectLeftByWord}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText SelectLeftByWord}"/>
                                         <MenuItem Command="EditingCommands.SelectRightByWord"
-                                                  Header="{le:Loc Command_SelectRightByWord}"
-                                                  InputGestureText="Ctrl+Shift+Right"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey SelectRightByWord}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText SelectRightByWord}"/>
                                         <MenuItem Command="EditingCommands.SelectToLineStart"
-                                                  Header="{le:Loc Command_SelectToLineStart}"
-                                                  InputGestureText="Shift+Home"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey SelectToLineStart}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText SelectToLineStart}"/>
                                         <MenuItem Command="EditingCommands.SelectToLineEnd"
-                                                  Header="{le:Loc Command_SelectToLineEnd}"
-                                                  InputGestureText="Shift+End"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey SelectToLineEnd}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText SelectToLineEnd}"/>
                                         <MenuItem Command="EditingCommands.SelectUpByPage"
-                                                  Header="{le:Loc Command_SelectUpByPage}"
-                                                  InputGestureText="Shift+PageUp"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey SelectUpByPage}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText SelectUpByPage}"/>
                                         <MenuItem Command="EditingCommands.SelectDownByPage"
-                                                  Header="{le:Loc Command_SelectDownByPage}"
-                                                  InputGestureText="Shift+PageDown"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey SelectDownByPage}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText SelectDownByPage}"/>
                                         <MenuItem Command="EditingCommands.SelectToDocumentStart"
-                                                  Header="{le:Loc Command_SelectToDocumentStart}"
-                                                  InputGestureText="Ctrl+Shift+Home"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey SelectToDocumentStart}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText SelectToDocumentStart}"/>
                                         <MenuItem Command="EditingCommands.SelectToDocumentEnd"
-                                                  Header="{le:Loc Command_SelectToDocumentEnd}"
-                                                  InputGestureText="Ctrl+Shift+End"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey SelectToDocumentEnd}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText SelectToDocumentEnd}"/>
                                     </MenuItem>
                                     <MenuItem Header="{le:Loc Command_Formatting}">
                                         <MenuItem Command="controls:TextArea+Commands.ConvertToNarrow"
-                                                  Header="{le:Loc Command_ConvertToNarrow}"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey ConvertToNarrow}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText ConvertToNarrow}"/>
                                         <MenuItem Command="controls:TextArea+Commands.ConvertToWide"
-                                                  Header="{le:Loc Command_ConvertToWide}"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey ConvertToWide}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText ConvertToWide}"/>
                                         <Separator/>
                                         <MenuItem Command="ae:AvalonEditCommands.ConvertToLowercase"
-                                                  Header="{le:Loc Command_ConvertToLowerCase}"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey ConvertToLowercase}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText ConvertToLowercase}"/>
                                         <MenuItem Command="ae:AvalonEditCommands.ConvertToUppercase"
-                                                  Header="{le:Loc Command_ConvertToUpperCase}"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey ConvertToUppercase}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText ConvertToUppercase}"/>
                                         <MenuItem Command="ae:AvalonEditCommands.ConvertToTitleCase"
-                                                  Header="{le:Loc Command_ConvertToTitleCase}"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey ConvertToTitleCase}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText ConvertToTitleCase}"/>
                                         <Separator/>
                                         <MenuItem Command="ae:AvalonEditCommands.ConvertTabsToSpaces"
-                                                  Header="{le:Loc Command_ConvertTabsToSpaces}"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey ConvertTabsToSpaces}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText ConvertTabsToSpaces}"/>
                                         <MenuItem Command="ae:AvalonEditCommands.ConvertSpacesToTabs"
-                                                  Header="{le:Loc Command_ConvertSpacesToTabs}"/>
+                                                  Header="{le:Loc {markup:CommandResourceKey ConvertSpacesToTabs}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText ConvertSpacesToTabs}"/>
                                     </MenuItem>
                                     <MenuItem Header="{le:Loc Command_Coding}">
                                         <MenuItem Command="controls:TextArea+Commands.Completion"
-                                                  Header="{le:Loc Command_Completion}">
+                                                  Header="{le:Loc {markup:CommandResourceKey Completion}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText Completion}">
                                             <MenuItem.Icon>
                                                 <mi:Material Kind="AutoFix"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem Command="controls:TextArea+Commands.Folding"
-                                                  Header="{le:Loc Command_Folding}"
-                                                  InputGestureText="Ctrl+Shift+[">
+                                                  Header="{le:Loc {markup:CommandResourceKey Folding}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText Folding}">
                                             <MenuItem.Icon>
                                                 <mi:Octicons Kind="Fold"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem Command="controls:TextArea+Commands.Unfolding"
-                                                  Header="{le:Loc Command_Unfolding}"
-                                                  InputGestureText="Ctrl+Shift+]">
+                                                  Header="{le:Loc {markup:CommandResourceKey Unfolding}}"
+                                                  InputGestureText="{markup:CommandKeyGesutureText Unfolding}">
                                             <MenuItem.Icon>
                                                 <mi:Octicons Kind="Unfold"/>
                                             </MenuItem.Icon>

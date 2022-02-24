@@ -55,35 +55,36 @@ public partial class MainWindow : MetroWindow
     #region プロパティ
 
     public static readonly ICommand ActivateTextEditorCommand
-        = new RoutedCommand(
-            nameof(ActivateTextEditorCommand),
-            typeof(MainWindow),
-            new InputGestureCollection { new KeyGesture(Key.F6, ModifierKeys.Control) });
+        = new RoutedCommand(nameof(ActivateTextEditorCommand), typeof(MainWindow));
     public static readonly ICommand ActivateTerminalCommand
-        = new RoutedCommand(
-            nameof(ActivateTerminalCommand),
-            typeof(MainWindow),
-            new InputGestureCollection { new KeyGesture(Key.OemTilde, ModifierKeys.Control, "Ctrl+@") });
+        = new RoutedCommand(nameof(ActivateTerminalCommand), typeof(MainWindow));
     public static readonly ICommand ActivateScriptRunnerCommand
-        = new RoutedCommand(
-            nameof(ActivateScriptRunnerCommand),
-            typeof(MainWindow),
-            new InputGestureCollection { new KeyGesture(Key.OemTilde, ModifierKeys.Control | ModifierKeys.Shift, "Ctrl+Shift+@") });
+        = new RoutedCommand(nameof(ActivateScriptRunnerCommand), typeof(MainWindow));
     public static readonly ICommand ActivateFileExplorerCommand
-        = new RoutedCommand(
-            nameof(ActivateFileExplorerCommand),
-            typeof(MainWindow),
-            new InputGestureCollection { new KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Shift) });
+        = new RoutedCommand(nameof(ActivateFileExplorerCommand), typeof(MainWindow));
     public static readonly ICommand ActivateGrepPanelCommand
-        = new RoutedCommand(
-            nameof(ActivateGrepPanelCommand),
-            typeof(MainWindow),
-            new InputGestureCollection { new KeyGesture(Key.F, ModifierKeys.Control | ModifierKeys.Shift) });
+        = new RoutedCommand(nameof(ActivateGrepPanelCommand), typeof(MainWindow));
     public static readonly ICommand ActivatePropertyCommand
-        = new RoutedCommand(
-            nameof(ActivatePropertyCommand),
-            typeof(MainWindow),
-            new InputGestureCollection { new KeyGesture(Key.Enter, ModifierKeys.Alt) });
+        = new RoutedCommand(nameof(ActivatePropertyCommand), typeof(MainWindow));
+    public ICommand SwitchFullScreenModeCommand
+        => new DelegateCommand(() =>
+        {
+            if (this._fullScreenMode)
+            {
+                this._fullScreenMode = false;
+                this.ShowTitleBar = true;
+                this.IgnoreTaskbarOnMaximize = false;
+                this.WindowState = WindowState.Normal;
+            }
+            else
+            {
+                this._fullScreenMode = true;
+                this.ShowTitleBar = false;
+                this.IgnoreTaskbarOnMaximize = true;
+                this.WindowState = WindowState.Maximized;
+                this.ViewModel.DialogService.ToastNotify(Properties.Resources.Message_NotifyFullScreenMode);
+            }
+        });
 
     private static readonly DependencyProperty IsVisibleBottomContentProperty
         = DependencyPropertyExtensions.Register(
@@ -182,29 +183,6 @@ public partial class MainWindow : MetroWindow
         }
     }
 
-    /// <summary>
-    /// フルスクリーンと通常表示の切り替えコマンド
-    /// </summary>
-    public ICommand SwitchFullScreenModeCommand
-        => new DelegateCommand(() =>
-        {
-            if (this._fullScreenMode)
-            {
-                this._fullScreenMode = false;
-                this.ShowTitleBar = true;
-                this.IgnoreTaskbarOnMaximize = false;
-                this.WindowState = WindowState.Normal;
-            }
-            else
-            {
-                this._fullScreenMode = true;
-                this.ShowTitleBar = false;
-                this.IgnoreTaskbarOnMaximize = true;
-                this.WindowState = WindowState.Maximized;
-                this.ViewModel.DialogService.ToastNotify(Properties.Resources.Message_NotifyFullScreenMode);
-            }
-        });
-
     #endregion
 
     #region メソッド
@@ -231,8 +209,8 @@ public partial class MainWindow : MetroWindow
         });
 
         this.CommandBindings.AddRange(new[] {
-            // ApplicationCommands.Close の実装
             new CommandBinding(
+                // ApplicationCommands.Close の実装
                 ApplicationCommands.Close,
                 (sender, e) =>
                 {

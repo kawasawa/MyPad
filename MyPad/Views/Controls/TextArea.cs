@@ -1,5 +1,4 @@
-﻿using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Document;
+﻿using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
@@ -11,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -286,20 +284,6 @@ public class TextArea : ICSharpCode.AvalonEdit.Editing.TextArea, IDisposable
     /// <see cref="ICSharpCode.AvalonEdit.Editing.TextArea.OverstrikeMode"/> が変更されたときに呼び出されます。
     /// </summary>
     public event EventHandler OverstrikeModeChanged;
-
-    /// <summary>
-    /// 一度だけ呼び出され、静的フィールドを初期化します。
-    /// </summary>
-    static TextArea()
-    {
-        ApplicationCommands.Redo.InputGestures.Add(new KeyGesture(Key.Z, ModifierKeys.Control | ModifierKeys.Shift));
-        AvalonEditCommands.DeleteLine.InputGestures.Clear();
-        AvalonEditCommands.ConvertToLowercase.InputGestures.Add(new KeyGesture(Key.U, ModifierKeys.Control | ModifierKeys.Shift));
-        AvalonEditCommands.ConvertToUppercase.InputGestures.Add(new KeyGesture(Key.U, ModifierKeys.Control));
-        AvalonEditCommands.ConvertToTitleCase.InputGestures.Add(new KeyGesture(Key.U, ModifierKeys.Control | ModifierKeys.Alt));
-        AvalonEditCommands.ConvertTabsToSpaces.InputGestures.Add(new KeyGesture(Key.T, ModifierKeys.Control | ModifierKeys.Shift));
-        AvalonEditCommands.ConvertSpacesToTabs.InputGestures.Add(new KeyGesture(Key.T, ModifierKeys.Control));
-    }
 
     /// <summary>
     /// このクラスの新しいインスタンスを生成します。
@@ -937,37 +921,25 @@ public class TextArea : ICSharpCode.AvalonEdit.Editing.TextArea, IDisposable
     /// </summary>
     public static class Commands
     {
-        private static ICommand CreateRoutedCommand(InputGestureCollection inputGestures = null, [CallerMemberName] string commandName = "")
-            => new RoutedCommand(commandName, typeof(TextArea), inputGestures);
-
-        public static readonly ICommand ConvertToNarrow
-            = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.F10) });
-
-        public static readonly ICommand ConvertToWide
-            = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.F9) });
-
-        public static readonly ICommand ZoomIn
-            = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.OemPlus, ModifierKeys.Control) });
-
-        public static readonly ICommand ZoomOut
-            = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.OemMinus, ModifierKeys.Control) });
-
-        public static readonly ICommand ZoomReset
-            = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.D0, ModifierKeys.Control) });
-
-        public static readonly ICommand Folding
-            = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.OemOpenBrackets, ModifierKeys.Control | ModifierKeys.Shift) });
-
-        public static readonly ICommand Unfolding
-            = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.OemCloseBrackets, ModifierKeys.Control | ModifierKeys.Shift) });
-
-        public static readonly ICommand Completion
-            = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.Space, ModifierKeys.Control) });
-
-        public static readonly ICommand ReplaceNext
-            = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.R, ModifierKeys.Alt) });
-
-        public static readonly ICommand ReplaceAll
-            = CreateRoutedCommand(new InputGestureCollection { new KeyGesture(Key.A, ModifierKeys.Alt) });
+        public static readonly RoutedCommand ConvertToNarrow
+            = new(nameof(ConvertToNarrow), typeof(TextArea));
+        public static readonly RoutedCommand ConvertToWide
+            = new(nameof(ConvertToWide), typeof(TextArea));
+        public static readonly RoutedCommand Completion
+            = new(nameof(Completion), typeof(TextArea));
+        public static readonly RoutedCommand Folding
+            = new(nameof(Folding), typeof(TextArea));
+        public static readonly RoutedCommand Unfolding
+            = new(nameof(Unfolding), typeof(TextArea));
+        public static readonly RoutedCommand ReplaceNext
+            = new(nameof(ReplaceNext), typeof(TextArea));
+        public static readonly RoutedCommand ReplaceAll
+            = new(nameof(ReplaceAll), typeof(TextArea));
+        public static readonly RoutedCommand ZoomIn
+            = new(nameof(ZoomIn), typeof(TextArea));
+        public static readonly RoutedCommand ZoomOut
+            = new(nameof(ZoomOut), typeof(TextArea));
+        public static readonly RoutedCommand ZoomReset
+            = new(nameof(ZoomReset), typeof(TextArea));
     }
 }
