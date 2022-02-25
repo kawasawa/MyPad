@@ -93,8 +93,8 @@
                 <!-- ポモドーロのセットに合わせて色を変更する -->
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding SharedDataStore.IsInPomodoro.Value, Mode=OneWay}" Value="True"/>
-                        <Condition Binding="{Binding SharedDataStore.IsPomodoroWorking.Value, Mode=OneWay}" Value="True"/>
+                        <Condition Binding="{Binding SharedProperties.IsInPomodoro.Value, Mode=OneWay}" Value="True"/>
+                        <Condition Binding="{Binding SharedProperties.IsPomodoroWorking.Value, Mode=OneWay}" Value="True"/>
                     </MultiDataTrigger.Conditions>
                     <Setter Property="Background" Value="{DynamicResource PurpleColorBrush}"/>
                 </MultiDataTrigger>
@@ -144,12 +144,12 @@
                 </i:Interaction.Triggers>
                 <Button.Content>
                     <Grid>
-                        <Border Visibility="{qc:Binding '$P ? Visibility.Collapsed : Visibility.Visible', P={Binding SharedDataStore.IsInPomodoro.Value, Mode=OneWay}}">
+                        <Border Visibility="{qc:Binding '$P ? Visibility.Collapsed : Visibility.Visible', P={Binding SharedProperties.IsInPomodoro.Value, Mode=OneWay}}">
                             <mi:Material Kind="TimerOutline"/>
                         </Border>
-                        <Border Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding SharedDataStore.IsInPomodoro.Value, Mode=OneWay}}">
+                        <Border Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding SharedProperties.IsInPomodoro.Value, Mode=OneWay}}">
                             <m:TransitioningContentControl
-                                Content="{Binding SharedDataStore.PomodoroTimer.Value, Mode=OneWay}"
+                                Content="{Binding SharedProperties.PomodoroTimer.Value, Mode=OneWay}"
                                 Transition="Custom" CustomVisualStatesName="Transition0">
                                 <m:TransitioningContentControl.CustomVisualStates>
                                     <VisualState x:Name="Transition0" Storyboard="{StaticResource QuietlyAnimation}"/>

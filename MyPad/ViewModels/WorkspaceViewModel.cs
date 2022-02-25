@@ -1,7 +1,6 @@
 ﻿using MyBase;
 using MyBase.Logging;
 using MyPad.Models;
-using MyPad.Properties;
 using MyPad.PubSub;
 using Prism.Events;
 using Reactive.Bindings;
@@ -10,7 +9,6 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using Unity;
@@ -26,7 +24,6 @@ public class WorkspaceViewModel : ViewModelBase
 
     // Constructor Injection
     public IEventAggregator EventAggregator { get; set; }
-    public SharedDataStore SharedDataStore { get; set; }
 
     // Dependency Injection
     private ILoggerFacade _logger;
@@ -70,10 +67,9 @@ public class WorkspaceViewModel : ViewModelBase
     /// <param name="eventAggregator">イベントアグリゲーター</param>
     [InjectionConstructor]
     [LogInterceptor]
-    public WorkspaceViewModel(IEventAggregator eventAggregator, SharedDataStore sharedDataStore)
+    public WorkspaceViewModel(IEventAggregator eventAggregator)
     {
         this.EventAggregator = eventAggregator;
-        this.SharedDataStore = sharedDataStore;
 
         this.PerformanceCheckTimer = new();
         this.PerformanceCheckTimer.Tick += this.PerformanceCheckTimer_Tick;
@@ -83,15 +79,6 @@ public class WorkspaceViewModel : ViewModelBase
         async void exitApplication() => await this.ExitApplication();
         this.EventAggregator.GetEvent<ExitApplicationEvent>().Subscribe(exitApplication);
 
-        void switchPomodoroTimer()
-        {
-            if (this.SharedDataStore.IsInPomodoro.Value)
-                this.StopPomodoro();
-            else
-                this.TransitionPomodoroSet();
-        }
-        this.EventAggregator.GetEvent<SwitchPomodoroTimerEvent>().Subscribe(switchPomodoroTimer);
-
         this.NewWindowCommand = new ReactiveCommand()
             .WithSubscribe(() => this.EventAggregator.GetEvent<CreateWindowEvent>().Publish())
             .AddTo(this.CompositeDisposable);
@@ -99,19 +86,6 @@ public class WorkspaceViewModel : ViewModelBase
         this.ExitApplicationCommand = new ReactiveCommand()
             .WithSubscribe(() => exitApplication())
             .AddTo(this.CompositeDisposable);
-
-        Observable.Timer(TimeSpan.FromSeconds(1))
-            .Where(_ => this.SharedDataStore.IsInPomodoro.Value)
-            .Repeat()
-            .ObserveOn(SynchronizationContext.Current)
-            .Subscribe(_ =>
-            {
-                var timer = this.SharedDataStore.PomodoroTimer.Value - TimeSpan.FromSeconds(1);
-                if (SharedDataStore.DownedPomodoroTimerValue < timer)
-                    this.SharedDataStore.PomodoroTimer.Value = timer;
-                else
-                    this.TransitionPomodoroSet();
-            }).AddTo(this.CompositeDisposable);
     }
 
     /// <summary>
@@ -195,34 +169,5 @@ public class WorkspaceViewModel : ViewModelBase
                 this.EventAggregator.GetEvent<PerformanceCheckedEvent>().Publish((processorTime, workingSetPrivate));
             });
         });
-    }
-
-    /// <summary>
-    /// ポモドーロの作業セットと休憩セットを切り替えます。
-    /// </summary>
-    [LogInterceptor]
-    private void TransitionPomodoroSet()
-    {
-        if (this.SharedDataStore.IsPomodoroWorking.Value)
-        {
-            this.SharedDataStore.IsPomodoroWorking.Value = false;
-            this.SharedDataStore.PomodoroTimer.Value = TimeSpan.FromMinutes(this.Settings.OtherTools.PomodoroBreakInterval);
-            this.EventAggregator.GetEvent<RaiseBalloonEvent>().Publish((Resources.Label_PomodoroTimer, Resources.Message_NotifyPomodoroBreakTime));
-        }
-        else
-        {
-            this.SharedDataStore.IsPomodoroWorking.Value = true;
-            this.SharedDataStore.PomodoroTimer.Value = TimeSpan.FromMinutes(this.Settings.OtherTools.PomodoroWorkInterval);
-            this.EventAggregator.GetEvent<RaiseBalloonEvent>().Publish((Resources.Label_PomodoroTimer, Resources.Message_NotifyPomodoroWorkTime));
-        }
-    }
-
-    /// <summary>
-    /// ポモドーロを終了します。
-    /// </summary>
-    [LogInterceptor]
-    private void StopPomodoro()
-    {
-        this.SharedDataStore.PomodoroTimer.Value = SharedDataStore.DownedPomodoroTimerValue;
     }
 }

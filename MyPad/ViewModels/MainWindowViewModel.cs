@@ -44,7 +44,7 @@ public class MainWindowViewModel : ViewModelBase
     private IProductInfo _productInfo;
     private Settings _settings;
     private SyntaxService _syntaxService;
-    private SharedDataStore _sharedDataStore;
+    private SharedProperties _sharedProperties;
     [Dependency]
     public IContainerExtension Container { get; set; }
     [Dependency]
@@ -76,10 +76,10 @@ public class MainWindowViewModel : ViewModelBase
         set => this.SetProperty(ref this._syntaxService, value);
     }
     [Dependency]
-    public SharedDataStore SharedDataStore
+    public SharedProperties SharedProperties
     {
-        get => this._sharedDataStore;
-        set => this.SetProperty(ref this._sharedDataStore, value);
+        get => this._sharedProperties;
+        set => this.SetProperty(ref this._sharedProperties, value);
     }
 
     #endregion
