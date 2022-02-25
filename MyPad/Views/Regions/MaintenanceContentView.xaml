@@ -55,28 +55,28 @@
                             </Style>
                         </TabControl.Resources>
                         <TabItem Header="Info">
-                            <DataGrid ItemsSource="{Binding InfoLogs, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}">
+                            <DataGrid ItemsSource="{Binding SharedProperties.InfoLogs, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Binding="{Binding Mode=OneWay}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </TabItem>
                         <TabItem Header="Debug">
-                            <DataGrid ItemsSource="{Binding DebugLogs, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}">
+                            <DataGrid ItemsSource="{Binding SharedProperties.DebugLogs, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Binding="{Binding Mode=OneWay}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </TabItem>
                         <TabItem Header="Trace">
-                            <DataGrid ItemsSource="{Binding TraceLogs, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}">
+                            <DataGrid ItemsSource="{Binding SharedProperties.TraceLogs, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Binding="{Binding Mode=OneWay}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </TabItem>
                         <TabItem Header="Warn">
-                            <DataGrid ItemsSource="{Binding WarnLogs, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}">
+                            <DataGrid ItemsSource="{Binding SharedProperties.WarnLogs, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Binding="{Binding Mode=OneWay}"/>
                                 </DataGrid.Columns>
@@ -85,7 +85,7 @@
                     </TabControl>
 
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 -40 30 0">
-                        <Button Command="{Binding UpdateLogsCommand, Mode=OneTime}" Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_Refresh}" IsTabStop="False">
+                        <Button Command="{Binding CollectLogsCommand, Mode=OneTime}" Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_Refresh}" IsTabStop="False">
                             <mi:Material Kind="Refresh"/>
                         </Button>
                         <Border Width="10"/>
@@ -120,7 +120,7 @@
                             <lcw:Axis MinValue="0" MaxValue="100"/>
                         </lcw:CartesianChart.AxisY>
                         <lcw:CartesianChart.Series>
-                            <lcw:LineSeries Values="{Binding CpuUsage, Mode=OneWay}" Stroke="{DynamicResource BlueColorBrush}">
+                            <lcw:LineSeries Values="{Binding SharedProperties.CpuUsage, Mode=OneWay}" Stroke="{DynamicResource BlueColorBrush}">
                                 <lcw:LineSeries.Fill>
                                     <SolidColorBrush Color="{DynamicResource BlueColorKey}" Opacity="0.2"/>
                                 </lcw:LineSeries.Fill>
@@ -138,7 +138,7 @@
                             <lcw:Axis MinValue="0"/>
                         </lcw:CartesianChart.AxisY>
                         <lcw:CartesianChart.Series>
-                            <lcw:LineSeries Values="{Binding MemoryUsage, Mode=OneWay}" Stroke="{DynamicResource PurpleColorBrush}">
+                            <lcw:LineSeries Values="{Binding SharedProperties.MemoryUsage, Mode=OneWay}" Stroke="{DynamicResource PurpleColorBrush}">
                                 <lcw:LineSeries.Fill>
                                     <SolidColorBrush Color="{DynamicResource PurpleColorKey}" Opacity="0.2"/>
                                 </lcw:LineSeries.Fill>

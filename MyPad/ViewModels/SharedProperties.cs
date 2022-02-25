@@ -1,4 +1,7 @@
-﻿using MyBase;
+﻿using LiveCharts;
+using LiveCharts.Defaults;
+using MyBase;
+using MyBase.Logging;
 using MyPad.Models;
 using MyPad.Properties;
 using MyPad.PubSub;
@@ -6,9 +9,13 @@ using Prism.Events;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Data;
 using Unity;
 
 namespace MyPad.ViewModels;
@@ -23,7 +30,19 @@ public sealed class SharedProperties : ValidatableBase
     [Dependency]
     public IEventAggregator EventAggregator { get; set; }
     [Dependency]
+    public ILoggerFacade Logger { get; set; }
+    [Dependency]
     public Settings Settings { get; set; }
+
+    private PerformanceCounter ProcessorTimeCounter { get; set; }
+    private PerformanceCounter WorkingSetPrivateCounter { get; set; }
+    public ChartValues<ObservableValue> CpuUsage { get; }
+    public ChartValues<ObservableValue> MemoryUsage { get; }
+
+    public ReactiveCollection<string> TraceLogs { get; }
+    public ReactiveCollection<string> DebugLogs { get; }
+    public ReactiveCollection<string> InfoLogs { get; }
+    public ReactiveCollection<string> WarnLogs { get; }
 
     public ReactiveProperty<TimeSpan> PomodoroTimer { get; }
     public ReactiveProperty<bool> IsInPomodoro { get; }
@@ -37,6 +56,60 @@ public sealed class SharedProperties : ValidatableBase
     public SharedProperties(IEventAggregator eventAggregator)
     {
         this.EventAggregator = eventAggregator;
+
+        this.CpuUsage = new();
+        this.MemoryUsage = new();
+
+        Observable.Timer(TimeSpan.FromMilliseconds(AppSettingsReader.PerformanceCheckInterval))
+            .Repeat()
+            .ObserveOn(SynchronizationContext.Current)
+            .Subscribe(async _ =>
+            {
+                await Task.Run(() =>
+                {
+                    float? processorTime = null;
+                    float? workingSetPrivate = null;
+                    try
+                    {
+                        // INFO: PerformanceCounter の初期化には時間がかかる
+                        // コンストラクタや同期処理で実行しないように
+                        this.ProcessorTimeCounter ??= new PerformanceCounter("Process", "% Processor Time", Process.GetCurrentProcess().ProcessName, true).AddTo(this.CompositeDisposable);
+                        processorTime = this.ProcessorTimeCounter.NextValue();
+                    }
+                    catch
+                    {
+                        this.Logger.Log($"パフォーマンスカウンタの値を取得できませんでした。: Category={this.ProcessorTimeCounter.CategoryName}, Counter={this.ProcessorTimeCounter.CounterName}, Instance={this.ProcessorTimeCounter.InstanceName}, Machine={this.ProcessorTimeCounter.MachineName}", Category.Warn);
+                    }
+                    try
+                    {
+                        this.WorkingSetPrivateCounter ??= new PerformanceCounter("Process", "Working Set - Private", Process.GetCurrentProcess().ProcessName, true).AddTo(this.CompositeDisposable);
+                        workingSetPrivate = this.WorkingSetPrivateCounter.NextValue() / 1000 / 1000;
+                    }
+                    catch
+                    {
+                        this.Logger.Log($"パフォーマンスカウンタの値を取得できませんでした。: Category={this.WorkingSetPrivateCounter.CategoryName}, Counter={this.WorkingSetPrivateCounter.CounterName}, Instance={this.WorkingSetPrivateCounter.InstanceName}, Machine={this.WorkingSetPrivateCounter.MachineName}", Category.Warn);
+                    }
+
+                    if (processorTime.HasValue)
+                        this.CpuUsage.Add(new ObservableValue(processorTime.Value));
+                    if (AppSettingsReader.PerformanceGraphLimit < this.CpuUsage.Count)
+                        this.CpuUsage.RemoveAt(0);
+
+                    if (workingSetPrivate.HasValue)
+                        this.MemoryUsage.Add(new ObservableValue(workingSetPrivate.Value));
+                    if (AppSettingsReader.PerformanceGraphLimit < this.MemoryUsage.Count)
+                        this.MemoryUsage.RemoveAt(0);
+                });
+            }).AddTo(this.CompositeDisposable);
+
+        this.TraceLogs = new ReactiveCollection<string>().AddTo(this.CompositeDisposable);
+        BindingOperations.EnableCollectionSynchronization(this.TraceLogs, new object());
+        this.DebugLogs = new ReactiveCollection<string>().AddTo(this.CompositeDisposable);
+        BindingOperations.EnableCollectionSynchronization(this.DebugLogs, new object());
+        this.InfoLogs = new ReactiveCollection<string>().AddTo(this.CompositeDisposable);
+        BindingOperations.EnableCollectionSynchronization(this.InfoLogs, new object());
+        this.WarnLogs = new ReactiveCollection<string>().AddTo(this.CompositeDisposable);
+        BindingOperations.EnableCollectionSynchronization(this.WarnLogs, new object());
 
         this.PomodoroTimer = new ReactiveProperty<TimeSpan>(DownedPomodoroTimerValue).AddTo(this.CompositeDisposable);
         this.IsInPomodoro = this.PomodoroTimer.Select(t => t != DownedPomodoroTimerValue).ToReactiveProperty().AddTo(this.CompositeDisposable);
@@ -63,6 +136,30 @@ public sealed class SharedProperties : ValidatableBase
                 else
                     this.TransitionPomodoroSet();
             }).AddTo(this.CompositeDisposable);
+    }
+
+    /// <summary>
+    /// 最新のログを収集します。
+    /// </summary>
+    /// <returns>非同期タスク</returns>
+    [LogInterceptor]
+    public async Task CollectLogs()
+    {
+        static IEnumerable<string> getLogs(NLog.ILogger coreLogger, int startAt)
+            => coreLogger.Factory.Configuration.ConfiguredNamedTargets.OfType<NLog.Targets.MemoryTarget>().FirstOrDefault()?.Logs.Skip(startAt) ?? Enumerable.Empty<string>();
+
+        await Task.Run(() =>
+        {
+            var nlogger = ((CompositeLogger)this.Logger).OfType<NLogger>().First();
+            var logs = getLogs(nlogger.TraceCoreLogger.Value, this.TraceLogs.Count);
+            this.TraceLogs.AddRangeOnScheduler(logs);
+            logs = getLogs(nlogger.DebugCoreLogger.Value, this.DebugLogs.Count);
+            this.DebugLogs.AddRangeOnScheduler(logs);
+            logs = getLogs(nlogger.InfoCoreLogger.Value, this.InfoLogs.Count);
+            this.InfoLogs.AddRangeOnScheduler(logs);
+            logs = getLogs(nlogger.WarnCoreLogger.Value, this.WarnLogs.Count);
+            this.WarnLogs.AddRangeOnScheduler(logs);
+        });
     }
 
     /// <summary>
