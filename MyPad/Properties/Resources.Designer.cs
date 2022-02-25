@@ -1426,6 +1426,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   ポモドーロタイマー に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_PomodoroTimer {
+            get {
+                return ResourceManager.GetString("Label_PomodoroTimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   ファイル種別 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_SearchPattern {
@@ -2074,6 +2083,24 @@ namespace MyPad.Properties {
         public static string Message_NotifyNoMatchesText {
             get {
                 return ResourceManager.GetString("Message_NotifyNoMatchesText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   休憩の時間です。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_NotifyPomodoroBreakTime {
+            get {
+                return ResourceManager.GetString("Message_NotifyPomodoroBreakTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   作業を始めましょう。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_NotifyPomodoroWorkTime {
+            get {
+                return ResourceManager.GetString("Message_NotifyPomodoroWorkTime", resourceCulture);
             }
         }
         

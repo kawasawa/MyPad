@@ -832,4 +832,13 @@
   <data name="Command_ShortcutKeys" xml:space="preserve">
     <value>ショートカットキー一覧</value>
   </data>
+  <data name="Message_NotifyPomodoroBreakTime" xml:space="preserve">
+    <value>休憩の時間です。</value>
+  </data>
+  <data name="Message_NotifyPomodoroWorkTime" xml:space="preserve">
+    <value>作業を始めましょう。</value>
+  </data>
+  <data name="Label_PomodoroTimer" xml:space="preserve">
+    <value>ポモドーロタイマー</value>
+  </data>
 </root>

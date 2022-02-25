@@ -74,8 +74,8 @@
 
         <Style TargetType="{x:Type StatusBar}" BasedOn="{StaticResource Default.StatusBar}">
             <Setter Property="Background" Value="{DynamicResource CyanColorBrush}"/>
-            <!-- WindowTitleBrush に追従する処理を打ち消す -->
             <Style.Triggers>
+                <!-- WindowTitleBrush に追従する処理を打ち消す -->
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
                         <Condition Binding="{Binding IsVisible, RelativeSource={RelativeSource Self}, Mode=OneWay}" Value="True"/>
@@ -89,6 +89,14 @@
                         <Condition Binding="{Binding IsActive, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}" Value="False"/>
                     </MultiDataTrigger.Conditions>
                     <Setter Property="Background" Value="{DynamicResource CyanColorBrush}"/>
+                </MultiDataTrigger>
+                <!-- ポモドーロのセットに合わせて色を変更する -->
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding SharedDataStore.IsInPomodoro.Value, Mode=OneWay}" Value="True"/>
+                        <Condition Binding="{Binding SharedDataStore.IsPomodoroWorking.Value, Mode=OneWay}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Background" Value="{DynamicResource PurpleColorBrush}"/>
                 </MultiDataTrigger>
             </Style.Triggers>
         </Style>
@@ -124,20 +132,45 @@
     <StatusBar>
         <StatusBar.ItemsPanel>
             <ItemsPanelTemplate>
-                <Grid ge:GridEx.ColumnDefinition="*, Auto, Auto, Auto, Auto, Auto"/>
+                <Grid ge:GridEx.ColumnDefinition="Auto, *, Auto, Auto, Auto, Auto, Auto"/>
             </ItemsPanelTemplate>
         </StatusBar.ItemsPanel>
         <StatusBarItem Grid.Column="0">
+            <Button>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding SwitchPomodoroTimerCommand, Mode=OneTime}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <Button.Content>
+                    <Grid>
+                        <Border Visibility="{qc:Binding '$P ? Visibility.Collapsed : Visibility.Visible', P={Binding SharedDataStore.IsInPomodoro.Value, Mode=OneWay}}">
+                            <mi:Material Kind="TimerOutline"/>
+                        </Border>
+                        <Border Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding SharedDataStore.IsInPomodoro.Value, Mode=OneWay}}">
+                            <m:TransitioningContentControl
+                                Content="{Binding SharedDataStore.PomodoroTimer.Value, Mode=OneWay}"
+                                Transition="Custom" CustomVisualStatesName="Transition0">
+                                <m:TransitioningContentControl.CustomVisualStates>
+                                    <VisualState x:Name="Transition0" Storyboard="{StaticResource QuietlyAnimation}"/>
+                                </m:TransitioningContentControl.CustomVisualStates>
+                            </m:TransitioningContentControl>
+                        </Border>
+                    </Grid>
+                </Button.Content>
+            </Button>
+        </StatusBarItem>
+        <StatusBarItem Grid.Column="1">
             <m:TransitioningContentControl
                 DataContext="{Binding ActiveTextEditor.Value, Mode=OneWay}"
                 Content="{qc:MultiBinding '$P0 == 0 ? string.Empty : $P0 + \' chars (\' + $P1 + \' lines) selected\'', P0={Binding SelectionLength, Mode=OneWay}, P1={Binding SelectionLineCount, Mode=OneWay}}"
-                Transition="Custom" CustomVisualStatesName="Transition0">
+                Transition="Custom" CustomVisualStatesName="Transition1">
                 <m:TransitioningContentControl.CustomVisualStates>
-                    <VisualState x:Name="Transition0" Storyboard="{StaticResource QuietlyAnimation}"/>
+                    <VisualState x:Name="Transition1" Storyboard="{StaticResource QuietlyAnimation}"/>
                 </m:TransitioningContentControl.CustomVisualStates>
             </m:TransitioningContentControl>
         </StatusBarItem>
-        <StatusBarItem Grid.Column="1">
+        <StatusBarItem Grid.Column="2">
             <Button>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
@@ -148,15 +181,15 @@
                     <m:TransitioningContentControl
                         DataContext="{Binding ActiveTextEditor.Value, Mode=OneWay}"
                         Content="{qc:MultiBinding '\'Ln \' + $P0 + \', Col \' + $P1 + \' (\' + $P2 + \')\'', P0={Binding Line, Mode=OneWay}, P1={Binding Column, Mode=OneWay}, P2={Binding CharName, Mode=OneWay}}"
-                        Transition="Custom" CustomVisualStatesName="Transition1">
+                        Transition="Custom" CustomVisualStatesName="Transition2">
                         <m:TransitioningContentControl.CustomVisualStates>
-                            <VisualState x:Name="Transition1" Storyboard="{StaticResource QuietlyAnimation}"/>
+                            <VisualState x:Name="Transition2" Storyboard="{StaticResource QuietlyAnimation}"/>
                         </m:TransitioningContentControl.CustomVisualStates>
                     </m:TransitioningContentControl>
                 </Button.Content>
             </Button>
         </StatusBarItem>
-        <StatusBarItem Grid.Column="2">
+        <StatusBarItem Grid.Column="3">
             <Button>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
@@ -167,15 +200,15 @@
                     <m:TransitioningContentControl
                         DataContext="{Binding ActiveTextEditor.Value, Mode=OneWay}"
                         Content="{qc:Binding '$P.EncodingName', P={Binding Encoding, Mode=OneWay}}"
-                        Transition="Custom" CustomVisualStatesName="Transition2">
+                        Transition="Custom" CustomVisualStatesName="Transition3">
                         <m:TransitioningContentControl.CustomVisualStates>
-                            <VisualState x:Name="Transition2" Storyboard="{StaticResource BlinkingAnimation}"/>
+                            <VisualState x:Name="Transition3" Storyboard="{StaticResource BlinkingAnimation}"/>
                         </m:TransitioningContentControl.CustomVisualStates>
                     </m:TransitioningContentControl>
                 </Button.Content>
             </Button>
         </StatusBarItem>
-        <StatusBarItem Grid.Column="3">
+        <StatusBarItem Grid.Column="4">
             <Button>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
@@ -186,29 +219,29 @@
                     <m:TransitioningContentControl
                         DataContext="{Binding ActiveTextEditor.Value, Mode=OneWay}"
                         Content="{qc:Binding '$P?.Name ?? \'Plain Text\'', P={Binding SyntaxDefinition, Mode=OneWay}}"
-                        Transition="Custom" CustomVisualStatesName="Transition3">
-                        <m:TransitioningContentControl.CustomVisualStates>
-                            <VisualState x:Name="Transition3" Storyboard="{StaticResource BlinkingAnimation}"/>
-                        </m:TransitioningContentControl.CustomVisualStates>
-                    </m:TransitioningContentControl>
-                </Button.Content>
-            </Button>
-        </StatusBarItem>
-        <StatusBarItem Grid.Column="4">
-            <ToggleButton IsChecked="{Binding ActiveTextEditor.Value.OverstrikeMode, Mode=TwoWay}">
-                <ToggleButton.Content>
-                    <m:TransitioningContentControl
-                        DataContext="{Binding ActiveTextEditor.Value, Mode=OneWay}"
-                        Content="{qc:Binding '$P ? \'OVER\' : \'INS\'', P={Binding OverstrikeMode, Mode=OneWay}}"
                         Transition="Custom" CustomVisualStatesName="Transition4">
                         <m:TransitioningContentControl.CustomVisualStates>
                             <VisualState x:Name="Transition4" Storyboard="{StaticResource BlinkingAnimation}"/>
                         </m:TransitioningContentControl.CustomVisualStates>
                     </m:TransitioningContentControl>
+                </Button.Content>
+            </Button>
+        </StatusBarItem>
+        <StatusBarItem Grid.Column="5">
+            <ToggleButton IsChecked="{Binding ActiveTextEditor.Value.OverstrikeMode, Mode=TwoWay}">
+                <ToggleButton.Content>
+                    <m:TransitioningContentControl
+                        DataContext="{Binding ActiveTextEditor.Value, Mode=OneWay}"
+                        Content="{qc:Binding '$P ? \'OVER\' : \'INS\'', P={Binding OverstrikeMode, Mode=OneWay}}"
+                        Transition="Custom" CustomVisualStatesName="Transition5">
+                        <m:TransitioningContentControl.CustomVisualStates>
+                            <VisualState x:Name="Transition5" Storyboard="{StaticResource BlinkingAnimation}"/>
+                        </m:TransitioningContentControl.CustomVisualStates>
+                    </m:TransitioningContentControl>
                 </ToggleButton.Content>
             </ToggleButton>
         </StatusBarItem>
-        <StatusBarItem Grid.Column="5">
+        <StatusBarItem Grid.Column="6">
             <ResizeGrip IsHitTestVisible="False" Visibility="Hidden"/>
         </StatusBarItem>
     </StatusBar>

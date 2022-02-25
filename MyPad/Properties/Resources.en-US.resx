@@ -792,4 +792,13 @@ Please check and delete unnecessary files.</value>
   <data name="Command_ShortcutKeys" xml:space="preserve">
     <value>Shortcut keys</value>
   </data>
+  <data name="Message_NotifyPomodoroBreakTime" xml:space="preserve">
+    <value>Let's take a break.</value>
+  </data>
+  <data name="Message_NotifyPomodoroWorkTime" xml:space="preserve">
+    <value>Let's get started.</value>
+  </data>
+  <data name="Label_PomodoroTimer" xml:space="preserve">
+    <value>PomodoroTimer</value>
+  </data>
 </root>

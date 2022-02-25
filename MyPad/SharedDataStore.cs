@@ -1,20 +1,30 @@
 ﻿using MyBase;
 using MyBase.Logging;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 
 namespace MyPad;
 
 /// <summary>
 /// アプリケーション全体で共有される情報の保管庫を表します。
 /// </summary>
-public sealed class SharedDataStore
+public sealed class SharedDataStore : ValidatableBase
 {
     private readonly ILoggerFacade _logger;
     private readonly IProductInfo _productInfo;
     private readonly Process _process;
+
+    public static readonly TimeSpan DownedPomodoroTimerValue = TimeSpan.Zero;
+
+    public ReactiveProperty<TimeSpan> PomodoroTimer { get; }
+    public ReactiveProperty<bool> IsInPomodoro { get; }
+    public ReactiveProperty<bool> IsPomodoroWorking { get; }
 
     /// <summary>
     /// このアプリケーションの実行中のバージョンにおける固有の識別子
@@ -52,6 +62,10 @@ public sealed class SharedDataStore
         this._logger = logger;
         this._productInfo = productInfo;
         this._process = process;
+
+        this.PomodoroTimer = new ReactiveProperty<TimeSpan>(DownedPomodoroTimerValue).AddTo(this.CompositeDisposable);
+        this.IsInPomodoro = this.PomodoroTimer.Select(t => t != DownedPomodoroTimerValue).ToReactiveProperty().AddTo(this.CompositeDisposable);
+        this.IsPomodoroWorking = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
     }
 
     /// <summary>

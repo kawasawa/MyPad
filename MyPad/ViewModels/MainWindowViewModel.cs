@@ -44,6 +44,7 @@ public class MainWindowViewModel : ViewModelBase
     private IProductInfo _productInfo;
     private Settings _settings;
     private SyntaxService _syntaxService;
+    private SharedDataStore _sharedDataStore;
     [Dependency]
     public IContainerExtension Container { get; set; }
     [Dependency]
@@ -73,6 +74,12 @@ public class MainWindowViewModel : ViewModelBase
     {
         get => this._syntaxService;
         set => this.SetProperty(ref this._syntaxService, value);
+    }
+    [Dependency]
+    public SharedDataStore SharedDataStore
+    {
+        get => this._sharedDataStore;
+        set => this.SetProperty(ref this._sharedDataStore, value);
     }
 
     #endregion
@@ -130,6 +137,7 @@ public class MainWindowViewModel : ViewModelBase
     public ReactiveCommand GoToLineCommand { get; }
     public ReactiveCommand ChangeEncodingCommand { get; }
     public ReactiveCommand ChangeSyntaxCommand { get; }
+    public ReactiveCommand SwitchPomodoroTimerCommand { get; }
 
     public ReactiveCommand<DragEventArgs> DropHandler { get; }
     public ReactiveCommand<EventArgs> ContentRenderedHandler { get; }
@@ -558,6 +566,10 @@ public class MainWindowViewModel : ViewModelBase
                     this.IsPending.Value = false;
                 }
             })
+            .AddTo(this.CompositeDisposable);
+
+        this.SwitchPomodoroTimerCommand = this.IsEditMode.ToReactiveCommand()
+            .WithSubscribe(() => this.EventAggregator.GetEvent<SwitchPomodoroTimerEvent>().Publish())
             .AddTo(this.CompositeDisposable);
 
         this.DropHandler = this.IsEditMode.ToReactiveCommand<DragEventArgs>()
