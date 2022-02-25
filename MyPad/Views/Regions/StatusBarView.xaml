@@ -143,11 +143,17 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <Button.Content>
-                    <Grid>
-                        <Border Visibility="{qc:Binding '$P ? Visibility.Collapsed : Visibility.Visible', P={Binding SharedProperties.IsInPomodoro.Value, Mode=OneWay}}">
+                    <Grid ge:GridEx.ColumnDefinition="Auto, 3, Auto">
+                        <Border Grid.ColumnSpan="3" Visibility="{qc:Binding '$P ? Visibility.Collapsed : Visibility.Visible', P={Binding SharedProperties.IsInPomodoro.Value, Mode=OneWay}}">
                             <mi:Material Kind="TimerOutline"/>
                         </Border>
-                        <Border Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding SharedProperties.IsInPomodoro.Value, Mode=OneWay}}">
+                        <Border Grid.Column="0" Visibility="{qc:MultiBinding '$P0 ## $P1 ? Visibility.Visible : Visibility.Collapsed', P0={Binding SharedProperties.IsInPomodoro.Value, Mode=OneWay}, P1={Binding SharedProperties.IsPomodoroWorking.Value, Mode=OneWay}}">
+                            <mi:Material Kind="Draw"/>
+                        </Border>
+                        <Border Grid.Column="0" Visibility="{qc:MultiBinding '$P0 ## !$P1 ? Visibility.Visible : Visibility.Collapsed', P0={Binding SharedProperties.IsInPomodoro.Value, Mode=OneWay}, P1={Binding SharedProperties.IsPomodoroWorking.Value, Mode=OneWay}}">
+                            <mi:Material Kind="CoffeeOutline"/>
+                        </Border>
+                        <Border Grid.Column="2" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding SharedProperties.IsInPomodoro.Value, Mode=OneWay}}">
                             <m:TransitioningContentControl
                                 Content="{Binding SharedProperties.PomodoroTimer.Value, Mode=OneWay}"
                                 Transition="Custom" CustomVisualStatesName="Transition0">

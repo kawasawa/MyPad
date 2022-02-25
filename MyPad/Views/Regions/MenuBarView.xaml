@@ -405,7 +405,6 @@
                     <mi:Material Kind="LanguageCsharp"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <Separator/>
             <MenuItem Command="{Binding DiffCommand, Mode=OneTime}"
                       Header="{le:Loc {markup:CommandResourceKey DiffCommand}}"
                       HeaderStringFormat="{}{0}..."
@@ -420,6 +419,14 @@
                       InputGestureText="{markup:CommandKeyGesutureText DiffUnmodifiedCommand}">
                 <MenuItem.Icon>
                     <mi:Modern Kind="ListAdd"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Command="{Binding SwitchPomodoroTimerCommand, Mode=OneTime}"
+                      Header="{le:Loc {markup:CommandResourceKey SwitchPomodoroTimerCommand}}"
+                      HeaderStringFormat="{}{0}..."
+                      InputGestureText="{markup:CommandKeyGesutureText SwitchPomodoroTimerCommand}">
+                <MenuItem.Icon>
+                    <mi:Material Kind="TimerOutline"/>
                 </MenuItem.Icon>
             </MenuItem>
         </MenuItem>

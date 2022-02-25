@@ -79,29 +79,30 @@
 
     <!-- 入力バインディング -->
     <Window.InputBindings>
-        <KeyBinding Command="{Binding NewCommand,             Mode=OneTime}" Gesture="{markup:CommandKeyGesuture NewCommand}"/>
-        <KeyBinding Command="{Binding NewWindowCommand,       Mode=OneTime}" Gesture="{markup:CommandKeyGesuture NewWindowCommand}"/>
-        <KeyBinding Command="{Binding OpenCommand,            Mode=OneTime}" Gesture="{markup:CommandKeyGesuture OpenCommand}"/>
-        <KeyBinding Command="{Binding SaveCommand,            Mode=OneTime}" Gesture="{markup:CommandKeyGesuture SaveCommand}"/>
-        <KeyBinding Command="{Binding SaveAsCommand,          Mode=OneTime}" Gesture="{markup:CommandKeyGesuture SaveAsCommand}"/>
-        <KeyBinding Command="{Binding SaveAllCommand,         Mode=OneTime}" Gesture="{markup:CommandKeyGesuture SaveAllCommand}"/>
-        <KeyBinding Command="{Binding ExitApplicationCommand, Mode=OneTime}" Gesture="{markup:CommandKeyGesuture ExitApplicationCommand}"/>
-        <KeyBinding Command="{Binding CloseCommand,           Mode=OneTime}" Gesture="{markup:CommandKeyGesuture CloseCommand}"/>
-        <KeyBinding Command="{Binding CloseAllCommand,        Mode=OneTime}" Gesture="{markup:CommandKeyGesuture CloseAllCommand}"/>
-        <KeyBinding Command="{Binding CloseOtherCommand,      Mode=OneTime}" Gesture="{markup:CommandKeyGesuture CloseOtherCommand}"/>
-        <KeyBinding Command="{Binding PrintDirectCommand,     Mode=OneTime}" Gesture="{markup:CommandKeyGesuture PrintDirectCommand}"/>
-        <KeyBinding Command="{Binding PrintPreviewCommand,    Mode=OneTime}" Gesture="{markup:CommandKeyGesuture PrintPreviewCommand}"/>
-        <KeyBinding Command="{Binding OptionCommand,          Mode=OneTime}" Gesture="{markup:CommandKeyGesuture OptionCommand}"/>
-        <KeyBinding Command="{Binding MaintenanceCommand,     Mode=OneTime}" Gesture="{markup:CommandKeyGesuture MaintenanceCommand}"/>
-        <KeyBinding Command="{Binding AboutCommand,           Mode=OneTime}" Gesture="{markup:CommandKeyGesuture AboutCommand}"/>
-        <KeyBinding Command="{Binding ShortcutKeysCommand,    Mode=OneTime}" Gesture="{markup:CommandKeyGesuture ShortcutKeysCommand}"/>
-        <KeyBinding Command="{Binding GoToLineCommand,        Mode=OneTime}" Gesture="{markup:CommandKeyGesuture GoToLineCommand}"/>
-        <KeyBinding Command="{Binding ChangeEncodingCommand,  Mode=OneTime}" Gesture="{markup:CommandKeyGesuture ChangeEncodingCommand}"/>
-        <KeyBinding Command="{Binding ChangeSyntaxCommand,    Mode=OneTime}" Gesture="{markup:CommandKeyGesuture ChangeSyntaxCommand}"/>
-        <KeyBinding Command="{Binding DiffCommand,            Mode=OneTime}" Gesture="{markup:CommandKeyGesuture DiffCommand}"/>
-        <KeyBinding Command="{Binding DiffUnmodifiedCommand,  Mode=OneTime}" Gesture="{markup:CommandKeyGesuture DiffUnmodifiedCommand}"/>
-        <KeyBinding Command="{Binding CloseCommand,           Mode=OneTime}" Key="W" Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding CloseAllCommand,        Mode=OneTime}" Key="W" Modifiers="Ctrl+Shift"/>
+        <KeyBinding Command="{Binding NewCommand,                 Mode=OneTime}" Gesture="{markup:CommandKeyGesuture NewCommand}"/>
+        <KeyBinding Command="{Binding NewWindowCommand,           Mode=OneTime}" Gesture="{markup:CommandKeyGesuture NewWindowCommand}"/>
+        <KeyBinding Command="{Binding OpenCommand,                Mode=OneTime}" Gesture="{markup:CommandKeyGesuture OpenCommand}"/>
+        <KeyBinding Command="{Binding SaveCommand,                Mode=OneTime}" Gesture="{markup:CommandKeyGesuture SaveCommand}"/>
+        <KeyBinding Command="{Binding SaveAsCommand,              Mode=OneTime}" Gesture="{markup:CommandKeyGesuture SaveAsCommand}"/>
+        <KeyBinding Command="{Binding SaveAllCommand,             Mode=OneTime}" Gesture="{markup:CommandKeyGesuture SaveAllCommand}"/>
+        <KeyBinding Command="{Binding ExitApplicationCommand,     Mode=OneTime}" Gesture="{markup:CommandKeyGesuture ExitApplicationCommand}"/>
+        <KeyBinding Command="{Binding CloseCommand,               Mode=OneTime}" Gesture="{markup:CommandKeyGesuture CloseCommand}"/>
+        <KeyBinding Command="{Binding CloseAllCommand,            Mode=OneTime}" Gesture="{markup:CommandKeyGesuture CloseAllCommand}"/>
+        <KeyBinding Command="{Binding CloseOtherCommand,          Mode=OneTime}" Gesture="{markup:CommandKeyGesuture CloseOtherCommand}"/>
+        <KeyBinding Command="{Binding PrintDirectCommand,         Mode=OneTime}" Gesture="{markup:CommandKeyGesuture PrintDirectCommand}"/>
+        <KeyBinding Command="{Binding PrintPreviewCommand,        Mode=OneTime}" Gesture="{markup:CommandKeyGesuture PrintPreviewCommand}"/>
+        <KeyBinding Command="{Binding OptionCommand,              Mode=OneTime}" Gesture="{markup:CommandKeyGesuture OptionCommand}"/>
+        <KeyBinding Command="{Binding MaintenanceCommand,         Mode=OneTime}" Gesture="{markup:CommandKeyGesuture MaintenanceCommand}"/>
+        <KeyBinding Command="{Binding AboutCommand,               Mode=OneTime}" Gesture="{markup:CommandKeyGesuture AboutCommand}"/>
+        <KeyBinding Command="{Binding ShortcutKeysCommand,        Mode=OneTime}" Gesture="{markup:CommandKeyGesuture ShortcutKeysCommand}"/>
+        <KeyBinding Command="{Binding GoToLineCommand,            Mode=OneTime}" Gesture="{markup:CommandKeyGesuture GoToLineCommand}"/>
+        <KeyBinding Command="{Binding ChangeEncodingCommand,      Mode=OneTime}" Gesture="{markup:CommandKeyGesuture ChangeEncodingCommand}"/>
+        <KeyBinding Command="{Binding ChangeSyntaxCommand,        Mode=OneTime}" Gesture="{markup:CommandKeyGesuture ChangeSyntaxCommand}"/>
+        <KeyBinding Command="{Binding DiffCommand,                Mode=OneTime}" Gesture="{markup:CommandKeyGesuture DiffCommand}"/>
+        <KeyBinding Command="{Binding DiffUnmodifiedCommand,      Mode=OneTime}" Gesture="{markup:CommandKeyGesuture DiffUnmodifiedCommand}"/>
+        <KeyBinding Command="{Binding SwitchPomodoroTimerCommand, Mode=OneTime}" Gesture="{markup:CommandKeyGesuture SwitchPomodoroTimerCommand}"/>
+        <KeyBinding Command="{Binding CloseCommand,               Mode=OneTime}" Key="W" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding CloseAllCommand,            Mode=OneTime}" Key="W" Modifiers="Ctrl+Shift"/>
 
         <KeyBinding Command="{x:Static views:MainWindow.ActivateTextEditorCommand}"   Gesture="{markup:CommandKeyGesuture ActivateTextEditorCommand}"/>
         <KeyBinding Command="{x:Static views:MainWindow.ActivateTerminalCommand}"     Gesture="{markup:CommandKeyGesuture ActivateTerminalCommand}"/>

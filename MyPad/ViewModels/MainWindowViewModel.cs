@@ -569,7 +569,33 @@ public class MainWindowViewModel : ViewModelBase
             .AddTo(this.CompositeDisposable);
 
         this.SwitchPomodoroTimerCommand = this.IsEditMode.ToReactiveCommand()
-            .WithSubscribe(() => this.EventAggregator.GetEvent<SwitchPomodoroTimerEvent>().Publish())
+            .WithSubscribe(async () =>
+            {
+                try
+                {
+                    this.IsPending.Value = true;
+
+                    if (this.SharedProperties.IsInPomodoro.Value)
+                    {
+                        if (this.DialogService.Confirm(Resources.Message_ConfirmStopPomodoro) == false)
+                            return;
+                    }
+                    else
+                    {
+                        var (result, workMinutes, breakMinutes) = await this.DialogService.ChangePomodoroTimer(this.Settings.OtherTools);
+                        if (result == false)
+                            return;
+                        this.Settings.OtherTools.PomodoroWorkMinutes = workMinutes;
+                        this.Settings.OtherTools.PomodoroBreakMinutes = breakMinutes;
+                    }
+
+                    this.EventAggregator.GetEvent<SwitchPomodoroTimerEvent>().Publish();
+                }
+                finally
+                {
+                    this.IsPending.Value = false;
+                }
+            })
             .AddTo(this.CompositeDisposable);
 
         this.DropHandler = this.IsEditMode.ToReactiveCommand<DragEventArgs>()

@@ -101,6 +101,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Views\Dialogs\ChangePomodoroTimerDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
     <Page Update="Views\Regions\ShortcutKeysContentView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>

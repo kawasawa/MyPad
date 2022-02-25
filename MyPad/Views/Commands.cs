@@ -100,6 +100,7 @@ public static class Commands
             { nameof(MainWindowViewModel.ChangeSyntaxCommand), (nameof(Resources.Command_ChangeSyntax), new KeyGesture(Key.M, ModifierKeys.Control))},
             { nameof(MainWindowViewModel.DiffCommand), (nameof(Resources.Command_Diff), new KeyGesture(Key.D, ModifierKeys.Control))},
             { nameof(MainWindowViewModel.DiffUnmodifiedCommand), (nameof(Resources.Command_DiffUnmodified), new KeyGesture(Key.D, ModifierKeys.Control | ModifierKeys.Shift))},
+            { nameof(MainWindowViewModel.SwitchPomodoroTimerCommand), (nameof(Resources.Command_PomodoroTimer), new KeyGesture(Key.D, ModifierKeys.Control | ModifierKeys.Alt))},
 
             // ヘルプ
             { nameof(MainWindowViewModel.AboutCommand), (nameof(Resources.Command_About), new KeyGesture(Key.F1, ModifierKeys.Control | ModifierKeys.Shift))},

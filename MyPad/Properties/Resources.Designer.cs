@@ -647,6 +647,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   ポモドーロタイマー に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_PomodoroTimer {
+            get {
+                return ResourceManager.GetString("Command_PomodoroTimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   印刷 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Print {
@@ -1426,11 +1435,20 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   ポモドーロタイマー に類似しているローカライズされた文字列を検索します。
+        ///   休憩時間 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string Label_PomodoroTimer {
+        public static string Label_PomodoroBreakMinutes {
             get {
-                return ResourceManager.GetString("Label_PomodoroTimer", resourceCulture);
+                return ResourceManager.GetString("Label_PomodoroBreakMinutes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   作業時間 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_PomodoroWorkMinutes {
+            get {
+                return ResourceManager.GetString("Label_PomodoroWorkMinutes", resourceCulture);
             }
         }
         
@@ -1992,6 +2010,15 @@ namespace MyPad.Properties {
         public static string Message_ConfirmSaveChanges {
             get {
                 return ResourceManager.GetString("Message_ConfirmSaveChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   ポモドーロタイマーをストップします。よろしいですか？ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_ConfirmStopPomodoro {
+            get {
+                return ResourceManager.GetString("Message_ConfirmStopPomodoro", resourceCulture);
             }
         }
         

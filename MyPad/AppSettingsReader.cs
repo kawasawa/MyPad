@@ -56,6 +56,12 @@ public static class AppSettingsReader
         => int.TryParse(_lazyConfiguration.Value[nameof(ToastCountLimit).ToSnakeCase()], out var value) && 0 <= value ? value : 5;
 
     /// <summary>
+    /// ポモドーロタイマーのインターバルの最大値
+    /// </summary>
+    public static int PomodoroMaxInterval
+        => int.TryParse(_lazyConfiguration.Value[nameof(PomodoroMaxInterval).ToSnakeCase()], out var value) && 5 <= value ? value : 600;
+
+    /// <summary>
     /// パフォーマンス計測のインターバル
     /// </summary>
     public static int PerformanceCheckInterval

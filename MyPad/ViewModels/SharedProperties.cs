@@ -171,14 +171,14 @@ public sealed class SharedProperties : ValidatableBase
         if (this.IsPomodoroWorking.Value)
         {
             this.IsPomodoroWorking.Value = false;
-            this.PomodoroTimer.Value = TimeSpan.FromMinutes(this.Settings.OtherTools.PomodoroBreakInterval);
-            this.EventAggregator.GetEvent<RaiseBalloonEvent>().Publish((Resources.Label_PomodoroTimer, Resources.Message_NotifyPomodoroBreakTime));
+            this.PomodoroTimer.Value = TimeSpan.FromMinutes(this.Settings.OtherTools.PomodoroBreakMinutes);
+            this.EventAggregator.GetEvent<RaiseBalloonEvent>().Publish((Resources.Command_PomodoroTimer, Resources.Message_NotifyPomodoroBreakTime));
         }
         else
         {
             this.IsPomodoroWorking.Value = true;
-            this.PomodoroTimer.Value = TimeSpan.FromMinutes(this.Settings.OtherTools.PomodoroWorkInterval);
-            this.EventAggregator.GetEvent<RaiseBalloonEvent>().Publish((Resources.Label_PomodoroTimer, Resources.Message_NotifyPomodoroWorkTime));
+            this.PomodoroTimer.Value = TimeSpan.FromMinutes(this.Settings.OtherTools.PomodoroWorkMinutes);
+            this.EventAggregator.GetEvent<RaiseBalloonEvent>().Publish((Resources.Command_PomodoroTimer, Resources.Message_NotifyPomodoroWorkTime));
         }
     }
 
@@ -188,6 +188,7 @@ public sealed class SharedProperties : ValidatableBase
     [LogInterceptor]
     private void StopPomodoro()
     {
+        this.IsPomodoroWorking.Value = false;
         this.PomodoroTimer.Value = DownedPomodoroTimerValue;
     }
 }

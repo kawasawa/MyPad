@@ -798,7 +798,16 @@ Please check and delete unnecessary files.</value>
   <data name="Message_NotifyPomodoroWorkTime" xml:space="preserve">
     <value>Let's get started.</value>
   </data>
-  <data name="Label_PomodoroTimer" xml:space="preserve">
+  <data name="Command_PomodoroTimer" xml:space="preserve">
     <value>PomodoroTimer</value>
+  </data>
+  <data name="Message_ConfirmStopPomodoro" xml:space="preserve">
+    <value>Are you sure you want to stop the comodoro timer?</value>
+  </data>
+  <data name="Label_PomodoroBreakMinutes" xml:space="preserve">
+    <value>Break minutes</value>
+  </data>
+  <data name="Label_PomodoroWorkMinutes" xml:space="preserve">
+    <value>Work minutes</value>
   </data>
 </root>

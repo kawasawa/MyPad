@@ -171,6 +171,60 @@ public static class IDialogServiceExtensions
     #region 専用ダイアログ
 
     /// <summary>
+    /// ポモドーロタイマーのインターバルを選択させるためのダイアログを表示します。
+    /// </summary>
+    /// <param name="self"><see cref="IDialogService"/> を実装するインスタンス</param>
+    /// <param name="toolSettings">ツールの設定情報</param>
+    /// <returns>処理結果を示す値とインターバル</returns>
+    [LogInterceptor]
+    public async static Task<(bool result, int workMinutes, int breakMinutes)> ChangePomodoroTimer(this IDialogService self, ToolSettings toolSettings)
+    {
+        var parameters = new DialogParameters {
+            { nameof(DialogViewModelBase.Title), Resources.Command_PomodoroTimer },
+            { nameof(ChangePomodoroTimerDialogViewModel.WorkMinutes), toolSettings.PomodoroWorkMinutes },
+            { nameof(ChangePomodoroTimerDialogViewModel.BreakMinutes), toolSettings.PomodoroBreakMinutes },
+            { nameof(ChangePomodoroTimerDialogViewModel.MaxInterval), AppSettingsReader.PomodoroMaxInterval },
+        };
+
+        if (self.UseOverlayDialog(out var window))
+        {
+            var settings = CreateDialogSettings();
+            var dialog = new CustomDialog(window, settings)
+            {
+                Title = Resources.Command_PomodoroTimer,
+                Content = new ChangePomodoroTimerDialog(),
+            };
+            var isOpened = true;
+            var result = (false, toolSettings.PomodoroWorkMinutes, toolSettings.PomodoroBreakMinutes);
+            if (((FrameworkElement)dialog.Content).DataContext is ChangePomodoroTimerDialogViewModel viewModel)
+            {
+                viewModel.OnDialogOpened(parameters);
+                viewModel.RequestClose += async r =>
+                {
+                    if (ConvertToTernary(r.Result) == true)
+                        result = (true, r.Parameters.GetValue<int>(nameof(ChangePomodoroTimerDialogViewModel.WorkMinutes)), r.Parameters.GetValue<int>(nameof(ChangePomodoroTimerDialogViewModel.BreakMinutes)));
+                    try { await window.HideMetroDialogAsync(dialog, settings); } catch { }
+                    isOpened = false;
+                };
+            }
+            await window.ShowMetroDialogAsync(dialog);
+            while (isOpened)
+                await Task.Delay(100);
+            return result;
+        }
+        else
+        {
+            var result = (false, toolSettings.PomodoroWorkMinutes, toolSettings.PomodoroBreakMinutes);
+            self.ShowDialog(GetDialogName(), parameters, r =>
+            {
+                if (ConvertToTernary(r.Result) == true)
+                    result = (true, r.Parameters.GetValue<int>(nameof(ChangePomodoroTimerDialogViewModel.WorkMinutes)), r.Parameters.GetValue<int>(nameof(ChangePomodoroTimerDialogViewModel.BreakMinutes)));
+            });
+            return result;
+        }
+    }
+
+    /// <summary>
     /// 行番号を選択させるためのダイアログを表示します。
     /// </summary>
     /// <param name="self"><see cref="IDialogService"/> を実装するインスタンス</param>
