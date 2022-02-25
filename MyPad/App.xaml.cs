@@ -513,7 +513,8 @@ public partial class App : PrismApplication
             EquationTokenizer.AddNamespace(typeof(System.Windows.Controls.Control));         // System.Windows.Controls : PresentationFramework.dll
             EquationTokenizer.AddNamespace(typeof(System.Windows.Media.Brush));              // System.Windows.Media    : PresentationFramework.dll
             EquationTokenizer.AddNamespace(typeof(System.Linq.Enumerable));                  // System.Linq             : System.Linq.dll
-            EquationTokenizer.AddExtensionMethods(typeof(System.Linq.Enumerable));           // System.Linq             : System.Linq.dll
+            EquationTokenizer.AddExtensionMethods(typeof(System.Linq.Enumerable));
+            EquationTokenizer.AddExtensionMethods(typeof(MyPad.KeyGestureExtensinos));
 #pragma warning restore IDE0049
         }
         catch (Exception e)

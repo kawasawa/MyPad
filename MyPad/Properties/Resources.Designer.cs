@@ -854,6 +854,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   ショートカットキー一覧 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_ShortcutKeys {
+            get {
+                return ResourceManager.GetString("Command_ShortcutKeys", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   表示 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Show {
@@ -1025,7 +1034,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   リセット に類似しているローカライズされた文字列を検索します。
+        ///   ズームリセット に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ZoomReset {
             get {

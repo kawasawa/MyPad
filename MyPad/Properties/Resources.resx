@@ -380,7 +380,7 @@
     <value>縮小</value>
   </data>
   <data name="Command_ZoomReset" xml:space="preserve">
-    <value>リセット</value>
+    <value>ズームリセット</value>
   </data>
   <data name="Label_AllFiles" xml:space="preserve">
     <value>すべてのファイル</value>
@@ -828,5 +828,8 @@
   </data>
   <data name="Command_TextEditor" xml:space="preserve">
     <value>テキストエディタ</value>
+  </data>
+  <data name="Command_ShortcutKeys" xml:space="preserve">
+    <value>ショートカットキー一覧</value>
   </data>
 </root>

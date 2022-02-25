@@ -432,6 +432,14 @@
                     <mi:Modern Kind="InformationCircle"/>
                 </MenuItem.Icon>
             </MenuItem>
+            <MenuItem Command="{Binding ShortcutKeysCommand, Mode=OneTime}"
+                      Header="{le:Loc {markup:CommandResourceKey ShortcutKeysCommand}}"
+                      HeaderStringFormat="{}{0}..."
+                      InputGestureText="{markup:CommandKeyGesutureText ShortcutKeysCommand}">
+                <MenuItem.Icon>
+                    <mi:Material Kind="KeyboardOutline"/>
+                </MenuItem.Icon>
+            </MenuItem>
         </MenuItem>
     </Menu>
 

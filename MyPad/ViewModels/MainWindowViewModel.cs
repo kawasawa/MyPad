@@ -97,11 +97,12 @@ public class MainWindowViewModel : ViewModelBase
     public ReactiveProperty<FlowDocument> FlowDocument { get; }
 
     private List<IDisposable> CompositeContent { get; }
-    public ReactiveProperty<bool> IsOpenDiffContent { get; }
     public ReactiveProperty<bool> IsOpenPrintPreviewContent { get; }
     public ReactiveProperty<bool> IsOpenOptionContent { get; }
     public ReactiveProperty<bool> IsOpenMaintenanceContent { get; }
     public ReactiveProperty<bool> IsOpenAboutContent { get; }
+    public ReactiveProperty<bool> IsOpenShortcutKeysContent { get; }
+    public ReactiveProperty<bool> IsOpenDiffContent { get; }
 
     public ReactiveProperty<bool> IsFlyoutMode { get; }
     public ReactiveProperty<bool> IsEditMode { get; }
@@ -123,6 +124,7 @@ public class MainWindowViewModel : ViewModelBase
     public ReactiveCommand OptionCommand { get; }
     public ReactiveCommand MaintenanceCommand { get; }
     public ReactiveCommand AboutCommand { get; }
+    public ReactiveCommand ShortcutKeysCommand { get; }
     public ReactiveCommand DiffCommand { get; }
     public ReactiveCommand DiffUnmodifiedCommand { get; }
     public ReactiveCommand GoToLineCommand { get; }
@@ -186,6 +188,7 @@ public class MainWindowViewModel : ViewModelBase
         this.IsOpenOptionContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable).AddTo(this.CompositeContent);
         this.IsOpenMaintenanceContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable).AddTo(this.CompositeContent);
         this.IsOpenAboutContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable).AddTo(this.CompositeContent);
+        this.IsOpenShortcutKeysContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable).AddTo(this.CompositeContent);
         this.IsOpenDiffContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable).AddTo(this.CompositeContent);
 
         this.IsFlyoutMode = new[] {
@@ -193,6 +196,7 @@ public class MainWindowViewModel : ViewModelBase
                 this.IsOpenOptionContent,
                 this.IsOpenMaintenanceContent,
                 this.IsOpenAboutContent,
+                this.IsOpenShortcutKeysContent,
                 this.IsOpenDiffContent,
             }
             .CombineLatest(_ => _.Any(_ => _))
@@ -249,6 +253,15 @@ public class MainWindowViewModel : ViewModelBase
             {
                 closeContent(new[] { this.IsOpenAboutContent });
                 this.Logger.Log($"バージョン情報を表示します。", Category.Info);
+            })
+            .AddTo(this.CompositeDisposable);
+
+        this.IsOpenShortcutKeysContent
+            .Where(isOpen => isOpen)
+            .Subscribe(_ =>
+            {
+                closeContent(new[] { this.IsOpenShortcutKeysContent });
+                this.Logger.Log($"ショートカットキー一覧を表示します。", Category.Info);
             })
             .AddTo(this.CompositeDisposable);
 
@@ -425,6 +438,10 @@ public class MainWindowViewModel : ViewModelBase
 
         this.AboutCommand = this.IsEditMode.ToReactiveCommand()
             .WithSubscribe(() => this.IsOpenAboutContent.Value = true)
+            .AddTo(this.CompositeDisposable);
+
+        this.ShortcutKeysCommand = this.IsEditMode.ToReactiveCommand()
+            .WithSubscribe(() => this.IsOpenShortcutKeysContent.Value = true)
             .AddTo(this.CompositeDisposable);
 
         this.DiffCommand = this.IsEditMode.ToReactiveCommand()

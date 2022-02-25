@@ -507,6 +507,7 @@ public partial class MainWindow : MetroWindow
         injectRegionContent<OptionContentView>();
         injectRegionContent<MaintenanceContentView>();
         injectRegionContent<AboutContentView>();
+        injectRegionContent<ShortcutKeysContentView>();
         injectRegionContent<TerminalView>();
         injectRegionContent<ScriptRunnerView>();
     }

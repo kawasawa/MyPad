@@ -789,4 +789,7 @@ Please check and delete unnecessary files.</value>
   <data name="Command_TextEditor" xml:space="preserve">
     <value>Text editor</value>
   </data>
+  <data name="Command_ShortcutKeys" xml:space="preserve">
+    <value>Shortcut keys</value>
+  </data>
 </root>

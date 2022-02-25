@@ -94,6 +94,7 @@
         <KeyBinding Command="{Binding OptionCommand,          Mode=OneTime}" Gesture="{markup:CommandKeyGesuture OptionCommand}"/>
         <KeyBinding Command="{Binding MaintenanceCommand,     Mode=OneTime}" Gesture="{markup:CommandKeyGesuture MaintenanceCommand}"/>
         <KeyBinding Command="{Binding AboutCommand,           Mode=OneTime}" Gesture="{markup:CommandKeyGesuture AboutCommand}"/>
+        <KeyBinding Command="{Binding ShortcutKeysCommand,    Mode=OneTime}" Gesture="{markup:CommandKeyGesuture ShortcutKeysCommand}"/>
         <KeyBinding Command="{Binding GoToLineCommand,        Mode=OneTime}" Gesture="{markup:CommandKeyGesuture GoToLineCommand}"/>
         <KeyBinding Command="{Binding ChangeEncodingCommand,  Mode=OneTime}" Gesture="{markup:CommandKeyGesuture ChangeEncodingCommand}"/>
         <KeyBinding Command="{Binding ChangeSyntaxCommand,    Mode=OneTime}" Gesture="{markup:CommandKeyGesuture ChangeSyntaxCommand}"/>
@@ -907,6 +908,9 @@
             </m:Flyout>
             <m:Flyout Header="{le:Loc Command_About}" IsOpen="{Binding IsOpenAboutContent.Value, Mode=TwoWay}">
                 <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="AboutContentRegion"/>
+            </m:Flyout>
+            <m:Flyout Header="{le:Loc Command_ShortcutKeys}" IsOpen="{Binding IsOpenShortcutKeysContent.Value, Mode=TwoWay}">
+                <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="ShortcutKeysContentRegion"/>
             </m:Flyout>
             <m:Flyout Header="{le:Loc Command_Diff}" IsOpen="{Binding IsOpenDiffContent.Value, Mode=TwoWay}">
                 <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="DiffContentRegion"/>

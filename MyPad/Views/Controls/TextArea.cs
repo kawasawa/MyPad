@@ -391,6 +391,12 @@ public class TextArea : ICSharpCode.AvalonEdit.Editing.TextArea, IDisposable
             ApplicationCommands.Replace,
             (sender, e) => this.OpenSearchPanel(true)));
         this.SearchPanel.CommandBindings.Add(new CommandBinding(
+            SearchCommands.FindNext,
+            (sender, e) => this.FindNext()));
+        this.SearchPanel.CommandBindings.Add(new CommandBinding(
+            SearchCommands.FindPrevious,
+            (sender, e) => this.FindPrevious()));
+        this.SearchPanel.CommandBindings.Add(new CommandBinding(
             Commands.ReplaceNext,
             (sender, e) => this.ReplaceNext(),
             (sender, e) => e.CanExecute = this.CanReplaceNext));
@@ -931,15 +937,15 @@ public class TextArea : ICSharpCode.AvalonEdit.Editing.TextArea, IDisposable
             = new(nameof(Folding), typeof(TextArea));
         public static readonly RoutedCommand Unfolding
             = new(nameof(Unfolding), typeof(TextArea));
-        public static readonly RoutedCommand ReplaceNext
-            = new(nameof(ReplaceNext), typeof(TextArea));
-        public static readonly RoutedCommand ReplaceAll
-            = new(nameof(ReplaceAll), typeof(TextArea));
         public static readonly RoutedCommand ZoomIn
             = new(nameof(ZoomIn), typeof(TextArea));
         public static readonly RoutedCommand ZoomOut
             = new(nameof(ZoomOut), typeof(TextArea));
         public static readonly RoutedCommand ZoomReset
             = new(nameof(ZoomReset), typeof(TextArea));
+        public static readonly RoutedCommand ReplaceNext
+            = new(nameof(ReplaceNext), typeof(TextArea));
+        public static readonly RoutedCommand ReplaceAll
+            = new(nameof(ReplaceAll), typeof(TextArea));
     }
 }
