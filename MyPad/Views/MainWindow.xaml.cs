@@ -9,10 +9,8 @@ using Prism.Commands;
 using Prism.Ioc;
 using Prism.Regions;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,10 +20,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Interop;
 using ToastNotifications;
-using ToastNotifications.Core;
-using ToastNotifications.Display;
 using ToastNotifications.Lifetime;
-using ToastNotifications.Lifetime.Clear;
 using ToastNotifications.Position;
 using Unity;
 using Vanara.PInvoke;
@@ -522,9 +517,6 @@ public partial class MainWindow : MetroWindow
     {
         this.Logger.Log($"ウィンドウを破棄しました。win#{this.ViewModel.Sequense}", Category.Info);
 
-        // リソースを解放する
-        this.Notifier.Dispose();
-
         // 表示位置を退避する
         if (this.Settings.System.SaveWindowPlacement && this._handleSource.IsDisposed == false)
         {
@@ -566,17 +558,8 @@ public partial class MainWindow : MetroWindow
             ((ViewModelBase)sender).Disposed -= viewModel_Disposed;
 
             // HACK: ウィンドウのクローズ後にアプリ内トーストが表示されると例外になる現象への対応
-            // ウィンドウがクローズされる前に、表示中のメッセージ(_notifications)と保留中のメッセージ(_notificationsPending)をクリアし、画面要素(DisplayPart)をクローズする。
-            var _lifetimeSupervisor = this.Notifier.GetType().GetField("_lifetimeSupervisor", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(this.Notifier) as INotificationsLifetimeSupervisor;
-            var _notifications = _lifetimeSupervisor?.GetType().GetField("_notifications", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(_lifetimeSupervisor) as NotificationsList;
-            var _notificationsPending = _lifetimeSupervisor?.GetType().GetField("_notificationsPending", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(_lifetimeSupervisor) as Queue<INotification>;
-            var needCloseNotifications = _notifications?.Select(kvp => kvp.Value.Notification).ToList();
-            _notificationsPending?.Clear();
-            _notifications?.Clear();
-            _lifetimeSupervisor?.ClearMessages(new ClearAll());
-            var _displaySupervisor = this.Notifier.GetType().GetField("_displaySupervisor", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(this.Notifier) as NotificationsDisplaySupervisor;
-            var closeNotification = _displaySupervisor?.GetType().GetMethod("CloseNotification", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod);
-            needCloseNotifications?.ForEach(n => closeNotification?.Invoke(_displaySupervisor, new[] { n }));
+            // ウィンドウがクローズされる前に、トースト通知プロバイダーを解放する。
+            this.Notifier.Dispose();
 
             // ウィンドウを閉じる
             // ViewModel が破棄済みのためウィンドウは確実に終了する

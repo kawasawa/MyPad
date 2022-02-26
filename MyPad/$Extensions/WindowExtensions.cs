@@ -16,8 +16,15 @@ public static class WindowExtensions
     /// <returns><see cref="HwndSource"/> クラスのインスタンス</returns>
     public static HwndSource GetHwndSource(this Window self)
     {
-        var interop = new WindowInteropHelper(self);
-        return HwndSource.FromHwnd(interop.EnsureHandle());
+        try
+        {
+            var interop = new WindowInteropHelper(self);
+            return HwndSource.FromHwnd(interop.EnsureHandle());
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     /// <summary>
