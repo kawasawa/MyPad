@@ -17,7 +17,7 @@ public class MarkdownViewer : Markdig.Wpf.MarkdownViewer
     {
         this.Pipeline = new MarkdownPipelineBuilder().UseSupportedExtensions().Build();
         this.CommandBindings.Add(new CommandBinding(
-            Commands.Hyperlink,
+            Markdig.Wpf.Commands.Hyperlink,
             (sender, e) =>
             {
                 try

@@ -138,7 +138,7 @@ public partial class App : PrismApplication
                 },
             });
         this.ProductInfo = new ProductInfo();
-        this.SharedDataStore = new(this.Logger, this.ProductInfo, Process.GetCurrentProcess());
+        this.SharedDataStore = new(this.ProductInfo, Process.GetCurrentProcess());
 
         // イベントを購読する
         UnhandledExceptionObserver.Observe(this, this.Logger, this.ProductInfo);
@@ -152,9 +152,10 @@ public partial class App : PrismApplication
     [LogInterceptor]
     protected override void OnStartup(StartupEventArgs e)
     {
+        this.SharedDataStore.CommandLineArgs = e.Args;
+
         this.Logger.Log($"アプリケーションを開始しました。", Category.Info);
         this.Logger.Debug($"アプリケーションを開始しました。: Args=[{string.Join(", ", e.Args)}]");
-        this.SharedDataStore.CommandLineArgs = e.Args;
         base.OnStartup(e);
     }
 
@@ -228,6 +229,7 @@ public partial class App : PrismApplication
         // シングルトン
         containerRegistry.RegisterSingleton<Models.Settings>();
         containerRegistry.RegisterSingleton<Models.SyntaxService>();
+        containerRegistry.RegisterSingleton<ViewModels.SharedProperties>();
         containerRegistry.RegisterSingleton<ICommonDialogService, CommonDialogService>();
         containerRegistry.RegisterInstance(this.Logger);
         containerRegistry.RegisterInstance(this.ProductInfo);
@@ -239,6 +241,7 @@ public partial class App : PrismApplication
         containerRegistry.RegisterDialog<Views.Dialogs.WarnDialog, ViewModels.Dialogs.WarnDialogViewModel>();
         containerRegistry.RegisterDialog<Views.Dialogs.ConfirmDialog, ViewModels.Dialogs.ConfirmDialogViewModel>();
         containerRegistry.RegisterDialog<Views.Dialogs.CancelableConfirmDialog, ViewModels.Dialogs.CancelableConfirmDialogViewModel>();
+        containerRegistry.RegisterDialog<Views.Dialogs.ChangePomodoroTimerDialog, ViewModels.Dialogs.ChangePomodoroTimerDialogViewModel>();
         containerRegistry.RegisterDialog<Views.Dialogs.ChangeLineDialog, ViewModels.Dialogs.ChangeLineDialogViewModel>();
         containerRegistry.RegisterDialog<Views.Dialogs.ChangeEncodingDialog, ViewModels.Dialogs.ChangeEncodingDialogViewModel>();
         containerRegistry.RegisterDialog<Views.Dialogs.ChangeSyntaxDialog, ViewModels.Dialogs.ChangeSyntaxDialogViewModel>();
@@ -298,6 +301,7 @@ public partial class App : PrismApplication
 
         // 一時フォルダに関する処理を行う
         this.SharedDataStore.CreateTempDirectory();
+        this.Logger.Debug($"このプロセスが使用する一時フォルダのパスが決定しました。: Path={this.SharedDataStore.TempDirectoryPath}");
         var cachedDirectories = new DirectoryInfo(this.ProductInfo.Temporary)
             .EnumerateDirectories()
             .Where(i => i.FullName != this.SharedDataStore.TempDirectoryPath)
@@ -513,7 +517,8 @@ public partial class App : PrismApplication
             EquationTokenizer.AddNamespace(typeof(System.Windows.Controls.Control));         // System.Windows.Controls : PresentationFramework.dll
             EquationTokenizer.AddNamespace(typeof(System.Windows.Media.Brush));              // System.Windows.Media    : PresentationFramework.dll
             EquationTokenizer.AddNamespace(typeof(System.Linq.Enumerable));                  // System.Linq             : System.Linq.dll
-            EquationTokenizer.AddExtensionMethods(typeof(System.Linq.Enumerable));           // System.Linq             : System.Linq.dll
+            EquationTokenizer.AddExtensionMethods(typeof(System.Linq.Enumerable));
+            EquationTokenizer.AddExtensionMethods(typeof(MyPad.KeyGestureExtensinos));
 #pragma warning restore IDE0049
         }
         catch (Exception e)

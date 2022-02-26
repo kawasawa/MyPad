@@ -9,10 +9,8 @@ using Prism.Commands;
 using Prism.Ioc;
 using Prism.Regions;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,10 +20,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Interop;
 using ToastNotifications;
-using ToastNotifications.Core;
-using ToastNotifications.Display;
 using ToastNotifications.Lifetime;
-using ToastNotifications.Lifetime.Clear;
 using ToastNotifications.Position;
 using Unity;
 using Vanara.PInvoke;
@@ -55,35 +50,36 @@ public partial class MainWindow : MetroWindow
     #region プロパティ
 
     public static readonly ICommand ActivateTextEditorCommand
-        = new RoutedCommand(
-            nameof(ActivateTextEditorCommand),
-            typeof(MainWindow),
-            new InputGestureCollection { new KeyGesture(Key.F6, ModifierKeys.Control) });
+        = new RoutedCommand(nameof(ActivateTextEditorCommand), typeof(MainWindow));
     public static readonly ICommand ActivateTerminalCommand
-        = new RoutedCommand(
-            nameof(ActivateTerminalCommand),
-            typeof(MainWindow),
-            new InputGestureCollection { new KeyGesture(Key.OemTilde, ModifierKeys.Control, "Ctrl+@") });
+        = new RoutedCommand(nameof(ActivateTerminalCommand), typeof(MainWindow));
     public static readonly ICommand ActivateScriptRunnerCommand
-        = new RoutedCommand(
-            nameof(ActivateScriptRunnerCommand),
-            typeof(MainWindow),
-            new InputGestureCollection { new KeyGesture(Key.OemTilde, ModifierKeys.Control | ModifierKeys.Shift, "Ctrl+Shift+@") });
+        = new RoutedCommand(nameof(ActivateScriptRunnerCommand), typeof(MainWindow));
     public static readonly ICommand ActivateFileExplorerCommand
-        = new RoutedCommand(
-            nameof(ActivateFileExplorerCommand),
-            typeof(MainWindow),
-            new InputGestureCollection { new KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Shift) });
+        = new RoutedCommand(nameof(ActivateFileExplorerCommand), typeof(MainWindow));
     public static readonly ICommand ActivateGrepPanelCommand
-        = new RoutedCommand(
-            nameof(ActivateGrepPanelCommand),
-            typeof(MainWindow),
-            new InputGestureCollection { new KeyGesture(Key.F, ModifierKeys.Control | ModifierKeys.Shift) });
+        = new RoutedCommand(nameof(ActivateGrepPanelCommand), typeof(MainWindow));
     public static readonly ICommand ActivatePropertyCommand
-        = new RoutedCommand(
-            nameof(ActivatePropertyCommand),
-            typeof(MainWindow),
-            new InputGestureCollection { new KeyGesture(Key.Enter, ModifierKeys.Alt) });
+        = new RoutedCommand(nameof(ActivatePropertyCommand), typeof(MainWindow));
+    public ICommand SwitchFullScreenModeCommand
+        => new DelegateCommand(() =>
+        {
+            if (this._fullScreenMode)
+            {
+                this._fullScreenMode = false;
+                this.ShowTitleBar = true;
+                this.IgnoreTaskbarOnMaximize = false;
+                this.WindowState = WindowState.Normal;
+            }
+            else
+            {
+                this._fullScreenMode = true;
+                this.ShowTitleBar = false;
+                this.IgnoreTaskbarOnMaximize = true;
+                this.WindowState = WindowState.Maximized;
+                this.ViewModel.DialogService.ToastNotify(Properties.Resources.Message_NotifyFullScreenMode);
+            }
+        });
 
     private static readonly DependencyProperty IsVisibleBottomContentProperty
         = DependencyPropertyExtensions.Register(
@@ -182,29 +178,6 @@ public partial class MainWindow : MetroWindow
         }
     }
 
-    /// <summary>
-    /// フルスクリーンと通常表示の切り替えコマンド
-    /// </summary>
-    public ICommand SwitchFullScreenModeCommand
-        => new DelegateCommand(() =>
-        {
-            if (this._fullScreenMode)
-            {
-                this._fullScreenMode = false;
-                this.ShowTitleBar = true;
-                this.IgnoreTaskbarOnMaximize = false;
-                this.WindowState = WindowState.Normal;
-            }
-            else
-            {
-                this._fullScreenMode = true;
-                this.ShowTitleBar = false;
-                this.IgnoreTaskbarOnMaximize = true;
-                this.WindowState = WindowState.Maximized;
-                this.ViewModel.DialogService.ToastNotify(Properties.Resources.Message_NotifyFullScreenMode);
-            }
-        });
-
     #endregion
 
     #region メソッド
@@ -223,7 +196,7 @@ public partial class MainWindow : MetroWindow
         this.InterTabClient = this.Container.Resolve<InterTabClientWrapper>();
         this.Notifier = new(config =>
         {
-            config.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromSeconds(AppSettingsReader.ToastLifetime), MaximumNotificationCount.FromCount(AppSettingsReader.ToastCountLimit));
+            config.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromSeconds(AppSettingsReader.ToastDuration), MaximumNotificationCount.FromCount(AppSettingsReader.ToastCountLimit));
             config.PositionProvider = new WindowPositionProvider(this, Corner.BottomRight, 5, 0);
             config.Dispatcher = Application.Current.Dispatcher;
             config.DisplayOptions.Width = 280;
@@ -231,8 +204,8 @@ public partial class MainWindow : MetroWindow
         });
 
         this.CommandBindings.AddRange(new[] {
-            // ApplicationCommands.Close の実装
             new CommandBinding(
+                // ApplicationCommands.Close の実装
                 ApplicationCommands.Close,
                 (sender, e) =>
                 {
@@ -529,6 +502,7 @@ public partial class MainWindow : MetroWindow
         injectRegionContent<OptionContentView>();
         injectRegionContent<MaintenanceContentView>();
         injectRegionContent<AboutContentView>();
+        injectRegionContent<ShortcutKeysContentView>();
         injectRegionContent<TerminalView>();
         injectRegionContent<ScriptRunnerView>();
     }
@@ -542,9 +516,6 @@ public partial class MainWindow : MetroWindow
     private void Window_Closed(object sender, EventArgs e)
     {
         this.Logger.Log($"ウィンドウを破棄しました。win#{this.ViewModel.Sequense}", Category.Info);
-
-        // リソースを解放する
-        this.Notifier.Dispose();
 
         // 表示位置を退避する
         if (this.Settings.System.SaveWindowPlacement && this._handleSource.IsDisposed == false)
@@ -587,17 +558,8 @@ public partial class MainWindow : MetroWindow
             ((ViewModelBase)sender).Disposed -= viewModel_Disposed;
 
             // HACK: ウィンドウのクローズ後にアプリ内トーストが表示されると例外になる現象への対応
-            // ウィンドウがクローズされる前に、表示中のメッセージ(_notifications)と保留中のメッセージ(_notificationsPending)をクリアし、画面要素(DisplayPart)をクローズする。
-            var _lifetimeSupervisor = this.Notifier.GetType().GetField("_lifetimeSupervisor", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(this.Notifier) as INotificationsLifetimeSupervisor;
-            var _notifications = _lifetimeSupervisor?.GetType().GetField("_notifications", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(_lifetimeSupervisor) as NotificationsList;
-            var _notificationsPending = _lifetimeSupervisor?.GetType().GetField("_notificationsPending", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(_lifetimeSupervisor) as Queue<INotification>;
-            var needCloseNotifications = _notifications?.Select(kvp => kvp.Value.Notification).ToList();
-            _notificationsPending?.Clear();
-            _notifications?.Clear();
-            _lifetimeSupervisor?.ClearMessages(new ClearAll());
-            var _displaySupervisor = this.Notifier.GetType().GetField("_displaySupervisor", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(this.Notifier) as NotificationsDisplaySupervisor;
-            var closeNotification = _displaySupervisor?.GetType().GetMethod("CloseNotification", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod);
-            needCloseNotifications?.ForEach(n => closeNotification?.Invoke(_displaySupervisor, new[] { n }));
+            // ウィンドウがクローズされる前に、トースト通知プロバイダーを解放する。
+            this.Notifier.Dispose();
 
             // ウィンドウを閉じる
             // ViewModel が破棄済みのためウィンドウは確実に終了する

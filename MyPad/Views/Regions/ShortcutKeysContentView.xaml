@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="MyPad.Views.Regions.ShortcutKeysContentView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:p="http://prismlibrary.com/"
+             xmlns:m="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:mi="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:le="http://wpflocalizeextension.codeplex.com"
+             xmlns:qc="http://QuickConverter.CodePlex.com/"
+             xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
+             xmlns:views="clr-namespace:MyPad.Views"
+             xmlns:markup="clr-namespace:MyPad.Views.Markup"
+             mc:Ignorable="d" 
+             p:ViewModelLocator.AutoWireViewModel="True"
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <Grid Margin="20 0 20 20">
+        <Grid.Resources>
+            <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource Default.DataGrid}">
+                <Setter Property="AutoGenerateColumns" Value="False"/>
+                <Setter Property="HeadersVisibility" Value="None"/>
+                <Setter Property="ColumnWidth" Value="*"/>
+            </Style>
+        </Grid.Resources>
+        <DataGrid ItemsSource="{x:Static views:Commands.Definitions}">
+            <DataGrid.Resources>
+                <Style x:Key="TemplateColumnDataGridCell" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource Default.DataGridCell}">
+                    <Setter Property="IsTabStop" Value="False"/>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn IsReadOnly="True" CellStyle="{StaticResource TemplateColumnDataGridCell}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{le:Loc {qc:Binding '$P.Item1', P={Binding Value, Mode=OneWay}}}" Margin="5 0"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Binding="{qc:Binding '$P.Item2.GetText()', P={Binding Value, Mode=OneWay}}" CellStyle="{StaticResource TemplateColumnDataGridCell}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+
+</UserControl>

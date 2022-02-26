@@ -1,22 +1,15 @@
-﻿using LiveCharts;
-using LiveCharts.Defaults;
-using MyBase;
+﻿using MyBase;
 using MyBase.Logging;
 using MyBase.Wpf.CommonDialogs;
-using MyPad.PubSub;
-using Prism.Events;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
 using Unity;
 
 namespace MyPad.ViewModels.Regions;
@@ -26,10 +19,7 @@ namespace MyPad.ViewModels.Regions;
 /// </summary>
 public class MaintenanceContentViewModel : RegionViewModelBase
 {
-    // Constructor Injection
-    public IEventAggregator EventAggregator { get; set; }
-
-    // Dependency Injection
+    private SharedProperties _sharedProperties;
     [Dependency]
     public IDialogService DialogService { get; set; }
     [Dependency]
@@ -40,49 +30,27 @@ public class MaintenanceContentViewModel : RegionViewModelBase
     public IProductInfo ProductInfo { get; set; }
     [Dependency]
     public SharedDataStore SharedDataStore { get; set; }
-
-    public ReactiveCollection<string> TraceLogs { get; }
-    public ReactiveCollection<string> DebugLogs { get; }
-    public ReactiveCollection<string> InfoLogs { get; }
-    public ReactiveCollection<string> WarnLogs { get; }
-
-    public ChartValues<ObservableValue> CpuUsage { get; }
-    public ChartValues<ObservableValue> MemoryUsage { get; }
+    [Dependency]
+    public SharedProperties SharedProperties
+    {
+        get => this._sharedProperties;
+        set => this.SetProperty(ref this._sharedProperties, value);
+    }
 
     public ReactiveProperty<bool> IsPending { get; }
 
     public ReactiveCommand ExportLogArchiveCommand { get; }
-    public ReactiveCommand UpdateLogsCommand { get; }
+    public ReactiveCommand CollectLogsCommand { get; }
     public ReactiveCommand<DependencyPropertyChangedEventArgs> IsVisibleChangedHandler { get; }
 
     /// <summary>
     /// このクラスの新しいインスタンスを生成します。
     /// </summary>
-    /// <param name="eventAggregator"></param>
     [InjectionConstructor]
     [LogInterceptor]
-    public MaintenanceContentViewModel(IEventAggregator eventAggregator)
+    public MaintenanceContentViewModel()
     {
-        // ----- インジェクション ------------------------------
-
-        this.EventAggregator = eventAggregator;
-
-        // ----- プロパティの定義 ------------------------------
-        this.TraceLogs = new ReactiveCollection<string>().AddTo(this.CompositeDisposable);
-        BindingOperations.EnableCollectionSynchronization(this.TraceLogs, new object());
-        this.DebugLogs = new ReactiveCollection<string>().AddTo(this.CompositeDisposable);
-        BindingOperations.EnableCollectionSynchronization(this.DebugLogs, new object());
-        this.InfoLogs = new ReactiveCollection<string>().AddTo(this.CompositeDisposable);
-        BindingOperations.EnableCollectionSynchronization(this.InfoLogs, new object());
-        this.WarnLogs = new ReactiveCollection<string>().AddTo(this.CompositeDisposable);
-        BindingOperations.EnableCollectionSynchronization(this.WarnLogs, new object());
-
-        this.CpuUsage = new();
-        this.MemoryUsage = new();
-
         this.IsPending = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
-
-        // ----- コマンドの定義 ------------------------------
 
         this.ExportLogArchiveCommand = this.IsPending.Inverse().ToReactiveCommand()
            .WithSubscribe(async () =>
@@ -101,23 +69,26 @@ public class MaintenanceContentViewModel : RegionViewModelBase
            })
            .AddTo(this.CompositeDisposable);
 
-        this.UpdateLogsCommand = new ReactiveCommand()
-            .WithSubscribe(() => this.UpdateLogs())
-            .AddTo(this.CompositeDisposable);
-
-        this.IsVisibleChangedHandler = new ReactiveCommand<DependencyPropertyChangedEventArgs>()
-            .WithSubscribe(e =>
+        this.CollectLogsCommand = new ReactiveCommand()
+            .WithSubscribe(async () =>
             {
-                if (e.NewValue is bool isVisible && isVisible)
-                    this.UpdateLogs();
+                this.IsPending.Value = true;
+                await this.SharedProperties.CollectLogs();
+                this.IsPending.Value = false;
             })
             .AddTo(this.CompositeDisposable);
 
-        // ----- PUB/SUB メッセージ ------------------------------
-
-        void performanceChecked((double? processorTime, double? workingSetPrivate) payload)
-            => this.PerformanceChecked(payload.processorTime, payload.workingSetPrivate);
-        this.EventAggregator.GetEvent<PerformanceCheckedEvent>().Subscribe(performanceChecked);
+        this.IsVisibleChangedHandler = new ReactiveCommand<DependencyPropertyChangedEventArgs>()
+            .WithSubscribe(async e =>
+            {
+                if (e.NewValue is bool isVisible && isVisible)
+                {
+                    this.IsPending.Value = true;
+                    await this.SharedProperties.CollectLogs();
+                    this.IsPending.Value = false;
+                }
+            })
+            .AddTo(this.CompositeDisposable);
     }
 
     /// <summary>
@@ -177,42 +148,5 @@ public class MaintenanceContentViewModel : RegionViewModelBase
             this.IsPending.Value = false;
         }
         return true;
-    }
-
-    /// <summary>
-    /// 最新のログを取得します。
-    /// </summary>
-    [LogInterceptor]
-    private void UpdateLogs()
-    {
-        static IEnumerable<string> getLogs(NLog.ILogger coreLogger, int startAt)
-                    => coreLogger.Factory.Configuration.ConfiguredNamedTargets.OfType<NLog.Targets.MemoryTarget>().FirstOrDefault()?.Logs.Skip(startAt) ?? Enumerable.Empty<string>();
-
-        this.IsPending.Value = true;
-        var nlogger = ((CompositeLogger)this.Logger).OfType<NLogger>().First();
-        this.TraceLogs.AddRangeOnScheduler(getLogs(nlogger.TraceCoreLogger.Value, this.TraceLogs.Count));
-        this.DebugLogs.AddRangeOnScheduler(getLogs(nlogger.DebugCoreLogger.Value, this.DebugLogs.Count));
-        this.InfoLogs.AddRangeOnScheduler(getLogs(nlogger.InfoCoreLogger.Value, this.InfoLogs.Count));
-        this.WarnLogs.AddRangeOnScheduler(getLogs(nlogger.WarnCoreLogger.Value, this.WarnLogs.Count));
-        this.IsPending.Value = false;
-    }
-
-    /// <summary>
-    /// 計測されたパフォーマンス情報を保管します。
-    /// </summary>
-    /// <param name="processorTime">CPU 時間</param>
-    /// <param name="workingSetPrivate">ワーキングメモリ</param>
-    [LogInterceptorIgnore]
-    private void PerformanceChecked(double? processorTime, double? workingSetPrivate)
-    {
-        if (processorTime.HasValue)
-            this.CpuUsage.Add(new ObservableValue(processorTime.Value));
-        if (AppSettingsReader.PerformanceGraphLimit < this.CpuUsage.Count)
-            this.CpuUsage.RemoveAt(0);
-
-        if (workingSetPrivate.HasValue)
-            this.MemoryUsage.Add(new ObservableValue(workingSetPrivate.Value));
-        if (AppSettingsReader.PerformanceGraphLimit < this.MemoryUsage.Count)
-            this.MemoryUsage.RemoveAt(0);
     }
 }

@@ -647,6 +647,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   ポモドーロタイマー に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_PomodoroTimer {
+            get {
+                return ResourceManager.GetString("Command_PomodoroTimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   印刷 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Print {
@@ -854,6 +863,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   ショートカットキー一覧 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_ShortcutKeys {
+            get {
+                return ResourceManager.GetString("Command_ShortcutKeys", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   表示 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_Show {
@@ -922,6 +940,15 @@ namespace MyPad.Properties {
         public static string Command_Terminal {
             get {
                 return ResourceManager.GetString("Command_Terminal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   テキストエディタ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Command_TextEditor {
+            get {
+                return ResourceManager.GetString("Command_TextEditor", resourceCulture);
             }
         }
         
@@ -1016,7 +1043,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   リセット に類似しているローカライズされた文字列を検索します。
+        ///   ズームリセット に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ZoomReset {
             get {
@@ -1404,6 +1431,24 @@ namespace MyPad.Properties {
         public static string Label_PerformanceMonitor {
             get {
                 return ResourceManager.GetString("Label_PerformanceMonitor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   休憩時間 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_PomodoroBreakDuration {
+            get {
+                return ResourceManager.GetString("Label_PomodoroBreakDuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   作業時間 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_PomodoroDuration {
+            get {
+                return ResourceManager.GetString("Label_PomodoroDuration", resourceCulture);
             }
         }
         
@@ -1969,6 +2014,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   ポモドーロタイマーをストップします。よろしいですか？ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_ConfirmStopPomodoro {
+            get {
+                return ResourceManager.GetString("Message_ConfirmStopPomodoro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   一時ファイルに保存されました。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Message_NotifyAutoSaved {
@@ -2056,6 +2110,24 @@ namespace MyPad.Properties {
         public static string Message_NotifyNoMatchesText {
             get {
                 return ResourceManager.GetString("Message_NotifyNoMatchesText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   休憩の時間です。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_NotifyPomodoroBreakTime {
+            get {
+                return ResourceManager.GetString("Message_NotifyPomodoroBreakTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   作業を始めましょう。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_NotifyPomodoroWorkTime {
+            get {
+                return ResourceManager.GetString("Message_NotifyPomodoroWorkTime", resourceCulture);
             }
         }
         

@@ -12,6 +12,7 @@
              xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
              xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
              xmlns:controls="clr-namespace:MyPad.Views.Controls"
+             xmlns:markup="clr-namespace:MyPad.Views.Markup"
              mc:Ignorable="d"
              p:ViewModelLocator.AutoWireViewModel="True"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -98,21 +99,28 @@
             </m:DropDownButton.Icon>
             <m:DropDownButton.Items>
                 <MenuItem Command="controls:TextArea+Commands.ConvertToNarrow"
-                          Header="{le:Loc Command_ConvertToNarrow}"/>
+                          Header="{le:Loc {markup:CommandResourceKey ConvertToNarrow}}"
+                          InputGestureText="{markup:CommandKeyGesutureText ConvertToNarrow}"/>
                 <MenuItem Command="controls:TextArea+Commands.ConvertToWide"
-                          Header="{le:Loc Command_ConvertToWide}"/>
+                          Header="{le:Loc {markup:CommandResourceKey ConvertToWide}}"
+                          InputGestureText="{markup:CommandKeyGesutureText ConvertToWide}"/>
                 <Separator/>
                 <MenuItem Command="ae:AvalonEditCommands.ConvertToLowercase"
-                          Header="{le:Loc Command_ConvertToLowerCase}"/>
+                          Header="{le:Loc {markup:CommandResourceKey ConvertToLowercase}}"
+                          InputGestureText="{markup:CommandKeyGesutureText ConvertToLowercase}"/>
                 <MenuItem Command="ae:AvalonEditCommands.ConvertToUppercase"
-                          Header="{le:Loc Command_ConvertToUpperCase}"/>
+                          Header="{le:Loc {markup:CommandResourceKey ConvertToUppercase}}"
+                          InputGestureText="{markup:CommandKeyGesutureText ConvertToUppercase}"/>
                 <MenuItem Command="ae:AvalonEditCommands.ConvertToTitleCase"
-                          Header="{le:Loc Command_ConvertToTitleCase}"/>
+                          Header="{le:Loc {markup:CommandResourceKey ConvertToTitleCase}}"
+                          InputGestureText="{markup:CommandKeyGesutureText ConvertToTitleCase}"/>
                 <Separator/>
                 <MenuItem Command="ae:AvalonEditCommands.ConvertTabsToSpaces"
-                          Header="{le:Loc Command_ConvertTabsToSpaces}"/>
+                          Header="{le:Loc {markup:CommandResourceKey ConvertTabsToSpaces}}"
+                          InputGestureText="{markup:CommandKeyGesutureText ConvertTabsToSpaces}"/>
                 <MenuItem Command="ae:AvalonEditCommands.ConvertSpacesToTabs"
-                          Header="{le:Loc Command_ConvertSpacesToTabs}"/>
+                          Header="{le:Loc {markup:CommandResourceKey ConvertSpacesToTabs}}"
+                          InputGestureText="{markup:CommandKeyGesutureText ConvertSpacesToTabs}"/>
             </m:DropDownButton.Items>
         </m:DropDownButton>
 
@@ -122,21 +130,22 @@
             </m:DropDownButton.Icon>
             <m:DropDownButton.Items>
                 <MenuItem Command="controls:TextArea+Commands.Completion"
-                          Header="{le:Loc Command_Completion}">
+                          Header="{le:Loc {markup:CommandResourceKey Completion}}"
+                          InputGestureText="{markup:CommandKeyGesutureText Completion}">
                     <MenuItem.Icon>
                         <mi:Material Kind="AutoFix"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Command="controls:TextArea+Commands.Folding"
-                          Header="{le:Loc Command_Folding}"
-                          InputGestureText="Ctrl+Shift+[">
+                          Header="{le:Loc {markup:CommandResourceKey Folding}}"
+                          InputGestureText="{markup:CommandKeyGesutureText Folding}">
                     <MenuItem.Icon>
                         <mi:Octicons Kind="Fold"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Command="controls:TextArea+Commands.Unfolding"
-                          Header="{le:Loc Command_Unfolding}"
-                          InputGestureText="Ctrl+Shift+]">
+                          Header="{le:Loc {markup:CommandResourceKey Unfolding}}"
+                          InputGestureText="{markup:CommandKeyGesutureText Unfolding}">
                     <MenuItem.Icon>
                         <mi:Octicons Kind="Unfold"/>
                     </MenuItem.Icon>

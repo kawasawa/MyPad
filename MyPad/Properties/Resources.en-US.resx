@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Command_About" xml:space="preserve">
     <value>About</value>
@@ -785,5 +785,29 @@ Please check and delete unnecessary files.</value>
   </data>
   <data name="Message_NotifySearchCompleted" xml:space="preserve">
     <value>The search has been completed.</value>
+  </data>
+  <data name="Command_TextEditor" xml:space="preserve">
+    <value>Text editor</value>
+  </data>
+  <data name="Command_ShortcutKeys" xml:space="preserve">
+    <value>Shortcut keys</value>
+  </data>
+  <data name="Message_NotifyPomodoroBreakTime" xml:space="preserve">
+    <value>Let's take a break.</value>
+  </data>
+  <data name="Message_NotifyPomodoroWorkTime" xml:space="preserve">
+    <value>Let's get started.</value>
+  </data>
+  <data name="Command_PomodoroTimer" xml:space="preserve">
+    <value>PomodoroTimer</value>
+  </data>
+  <data name="Message_ConfirmStopPomodoro" xml:space="preserve">
+    <value>Are you sure you want to stop the comodoro timer?</value>
+  </data>
+  <data name="Label_PomodoroBreakDuration" xml:space="preserve">
+    <value>Break duration</value>
+  </data>
+  <data name="Label_PomodoroDuration" xml:space="preserve">
+    <value>Pomodoro duration</value>
   </data>
 </root>

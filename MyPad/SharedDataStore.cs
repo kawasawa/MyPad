@@ -1,5 +1,4 @@
 ﻿using MyBase;
-using MyBase.Logging;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -12,29 +11,20 @@ namespace MyPad;
 /// </summary>
 public sealed class SharedDataStore
 {
-    private readonly ILoggerFacade _logger;
-    private readonly IProductInfo _productInfo;
-    private readonly Process _process;
-
     /// <summary>
     /// このアプリケーションの実行中のバージョンにおける固有の識別子
     /// </summary>
-    public string Identifier => $"__{this._productInfo.Company}:{this._productInfo.Product}:{this._productInfo.Version}__";
+    public string Identifier { get; }
 
     /// <summary>
     /// ログフォルダのパス
     /// </summary>
-    public string LogDirectoryPath => Path.Combine(this._productInfo.Local, "log");
+    public string LogDirectoryPath { get; }
 
     /// <summary>
     /// 一時フォルダのパス
     /// </summary>
-    public string TempDirectoryPath => Path.Combine(this._productInfo.Temporary, this._process.StartTime.ToString("yyyyMMddHHmmssfff"));
-
-    /// <summary>
-    /// キャッシュフォルダのパス
-    /// </summary>
-    public IEnumerable<string> CachedDirectories { get; set; } = Enumerable.Empty<string>();
+    public string TempDirectoryPath { get; }
 
     /// <summary>
     /// コマンドライン引数
@@ -42,28 +32,32 @@ public sealed class SharedDataStore
     public IEnumerable<string> CommandLineArgs { get; set; } = Enumerable.Empty<string>();
 
     /// <summary>
+    /// キャッシュフォルダのパス
+    /// </summary>
+    public IEnumerable<string> CachedDirectories { get; set; } = Enumerable.Empty<string>();
+
+    /// <summary>
     /// このクラスの新しいインスタンスを生成します。
     /// </summary>
-    /// <param name="logger">ロガー</param>
     /// <param name="productInfo">プロダクト情報</param>
     /// <param name="process">プロセス情報</param>
-    public SharedDataStore(ILoggerFacade logger, IProductInfo productInfo, Process process)
+    [LogInterceptorIgnore]
+    public SharedDataStore(IProductInfo productInfo, Process process)
     {
-        this._logger = logger;
-        this._productInfo = productInfo;
-        this._process = process;
+        this.Identifier = $"__{productInfo.Company}:{productInfo.Product}:{productInfo.Version}__";
+        this.LogDirectoryPath = Path.Combine(productInfo.Local, "log");
+        this.TempDirectoryPath = Path.Combine(productInfo.Temporary, process.StartTime.ToString("yyyyMMddHHmmssfff"));
     }
 
     /// <summary>
     /// このプロセスで使用する一時フォルダを生成する。
     /// </summary>
+    [LogInterceptor]
     public void CreateTempDirectory()
     {
         // フォルダを作成し、隠し属性を付与する
         var info = new DirectoryInfo(this.TempDirectoryPath);
         info.Create();
         info.Attributes |= FileAttributes.Hidden;
-
-        this._logger.Debug($"実行中のプロセスが使用する一時フォルダを作成しました。: Path={this.TempDirectoryPath}");
     }
 }

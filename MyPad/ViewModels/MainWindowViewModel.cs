@@ -44,6 +44,7 @@ public class MainWindowViewModel : ViewModelBase
     private IProductInfo _productInfo;
     private Settings _settings;
     private SyntaxService _syntaxService;
+    private SharedProperties _sharedProperties;
     [Dependency]
     public IContainerExtension Container { get; set; }
     [Dependency]
@@ -74,6 +75,12 @@ public class MainWindowViewModel : ViewModelBase
         get => this._syntaxService;
         set => this.SetProperty(ref this._syntaxService, value);
     }
+    [Dependency]
+    public SharedProperties SharedProperties
+    {
+        get => this._sharedProperties;
+        set => this.SetProperty(ref this._sharedProperties, value);
+    }
 
     #endregion
 
@@ -97,11 +104,12 @@ public class MainWindowViewModel : ViewModelBase
     public ReactiveProperty<FlowDocument> FlowDocument { get; }
 
     private List<IDisposable> CompositeContent { get; }
-    public ReactiveProperty<bool> IsOpenDiffContent { get; }
     public ReactiveProperty<bool> IsOpenPrintPreviewContent { get; }
     public ReactiveProperty<bool> IsOpenOptionContent { get; }
     public ReactiveProperty<bool> IsOpenMaintenanceContent { get; }
     public ReactiveProperty<bool> IsOpenAboutContent { get; }
+    public ReactiveProperty<bool> IsOpenShortcutKeysContent { get; }
+    public ReactiveProperty<bool> IsOpenDiffContent { get; }
 
     public ReactiveProperty<bool> IsFlyoutMode { get; }
     public ReactiveProperty<bool> IsEditMode { get; }
@@ -123,11 +131,13 @@ public class MainWindowViewModel : ViewModelBase
     public ReactiveCommand OptionCommand { get; }
     public ReactiveCommand MaintenanceCommand { get; }
     public ReactiveCommand AboutCommand { get; }
+    public ReactiveCommand ShortcutKeysCommand { get; }
     public ReactiveCommand DiffCommand { get; }
     public ReactiveCommand DiffUnmodifiedCommand { get; }
     public ReactiveCommand GoToLineCommand { get; }
     public ReactiveCommand ChangeEncodingCommand { get; }
     public ReactiveCommand ChangeSyntaxCommand { get; }
+    public ReactiveCommand SwitchPomodoroTimerCommand { get; }
 
     public ReactiveCommand<DragEventArgs> DropHandler { get; }
     public ReactiveCommand<EventArgs> ContentRenderedHandler { get; }
@@ -186,6 +196,7 @@ public class MainWindowViewModel : ViewModelBase
         this.IsOpenOptionContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable).AddTo(this.CompositeContent);
         this.IsOpenMaintenanceContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable).AddTo(this.CompositeContent);
         this.IsOpenAboutContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable).AddTo(this.CompositeContent);
+        this.IsOpenShortcutKeysContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable).AddTo(this.CompositeContent);
         this.IsOpenDiffContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable).AddTo(this.CompositeContent);
 
         this.IsFlyoutMode = new[] {
@@ -193,6 +204,7 @@ public class MainWindowViewModel : ViewModelBase
                 this.IsOpenOptionContent,
                 this.IsOpenMaintenanceContent,
                 this.IsOpenAboutContent,
+                this.IsOpenShortcutKeysContent,
                 this.IsOpenDiffContent,
             }
             .CombineLatest(_ => _.Any(_ => _))
@@ -249,6 +261,15 @@ public class MainWindowViewModel : ViewModelBase
             {
                 closeContent(new[] { this.IsOpenAboutContent });
                 this.Logger.Log($"バージョン情報を表示します。", Category.Info);
+            })
+            .AddTo(this.CompositeDisposable);
+
+        this.IsOpenShortcutKeysContent
+            .Where(isOpen => isOpen)
+            .Subscribe(_ =>
+            {
+                closeContent(new[] { this.IsOpenShortcutKeysContent });
+                this.Logger.Log($"ショートカットキー一覧を表示します。", Category.Info);
             })
             .AddTo(this.CompositeDisposable);
 
@@ -427,6 +448,10 @@ public class MainWindowViewModel : ViewModelBase
             .WithSubscribe(() => this.IsOpenAboutContent.Value = true)
             .AddTo(this.CompositeDisposable);
 
+        this.ShortcutKeysCommand = this.IsEditMode.ToReactiveCommand()
+            .WithSubscribe(() => this.IsOpenShortcutKeysContent.Value = true)
+            .AddTo(this.CompositeDisposable);
+
         this.DiffCommand = this.IsEditMode.ToReactiveCommand()
             .WithSubscribe(async () =>
             {
@@ -543,6 +568,36 @@ public class MainWindowViewModel : ViewModelBase
             })
             .AddTo(this.CompositeDisposable);
 
+        this.SwitchPomodoroTimerCommand = this.IsEditMode.ToReactiveCommand()
+            .WithSubscribe(async () =>
+            {
+                try
+                {
+                    this.IsPending.Value = true;
+
+                    if (this.SharedProperties.IsInPomodoro.Value)
+                    {
+                        if (this.DialogService.Confirm(Resources.Message_ConfirmStopPomodoro) == false)
+                            return;
+                    }
+                    else
+                    {
+                        var (result, pomodoroDuration, pomodoroBreakDuration) = await this.DialogService.ChangePomodoroTimer(this.Settings.OtherTools);
+                        if (result == false)
+                            return;
+                        this.Settings.OtherTools.PomodoroDuration = pomodoroDuration;
+                        this.Settings.OtherTools.PomodoroBreakDuration = pomodoroBreakDuration;
+                    }
+
+                    this.EventAggregator.GetEvent<SwitchPomodoroTimerEvent>().Publish();
+                }
+                finally
+                {
+                    this.IsPending.Value = false;
+                }
+            })
+            .AddTo(this.CompositeDisposable);
+
         this.DropHandler = this.IsEditMode.ToReactiveCommand<DragEventArgs>()
             .WithSubscribe(e =>
             {
@@ -599,12 +654,12 @@ public class MainWindowViewModel : ViewModelBase
     [LogInterceptor]
     public async Task InvokeLoad(string path, Encoding encoding)
     {
+        // View 起点で呼ばれるとは限らないため ViewModel で Activate を実行する
+        this.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
+
         var (result, textEditor) = await this.Load(path, encoding);
         if (textEditor != null)
             this.WakeUpTextEditor(textEditor);
-
-        // View 起点で呼ばれるとは限らないため ViewModel で Activate を実行する
-        this.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
     }
 
     /// <summary>
@@ -615,13 +670,13 @@ public class MainWindowViewModel : ViewModelBase
     [LogInterceptor]
     public async Task InvokeLoad(IEnumerable<string> paths)
     {
+        // View 起点で呼ばれるとは限らないため ViewModel で Activate を実行する
+        this.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
+
         var results = await this.Load(paths);
         var textEditor = results.LastOrDefault(tuple => tuple.textEditor != null).textEditor;
         if (textEditor != null)
             this.WakeUpTextEditor(textEditor);
-
-        // View 起点で呼ばれるとは限らないため ViewModel で Activate を実行する
-        this.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
     }
 
     /// <summary>
@@ -866,7 +921,7 @@ public class MainWindowViewModel : ViewModelBase
 
             // ファイルサイズを確認する
             var info = new FileInfo(path);
-            if (AppSettingsReader.EditorFileSizeThreshold <= info.Length &&
+            if (AppSettingsReader.HugeSizeThreshold <= info.Length &&
                 this.DialogService.Confirm(Resources.Message_ConfirmOpenLargeFile) == false)
             {
                 return (false, null);
