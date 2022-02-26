@@ -177,13 +177,13 @@ public static class IDialogServiceExtensions
     /// <param name="toolSettings">ツールの設定情報</param>
     /// <returns>処理結果を示す値とインターバル</returns>
     [LogInterceptor]
-    public async static Task<(bool result, int workMinutes, int breakMinutes)> ChangePomodoroTimer(this IDialogService self, ToolSettings toolSettings)
+    public async static Task<(bool result, int pomodoroDuration, int pomodoroBreakDuration)> ChangePomodoroTimer(this IDialogService self, ToolSettings toolSettings)
     {
         var parameters = new DialogParameters {
             { nameof(DialogViewModelBase.Title), Resources.Command_PomodoroTimer },
-            { nameof(ChangePomodoroTimerDialogViewModel.WorkMinutes), toolSettings.PomodoroWorkMinutes },
-            { nameof(ChangePomodoroTimerDialogViewModel.BreakMinutes), toolSettings.PomodoroBreakMinutes },
-            { nameof(ChangePomodoroTimerDialogViewModel.MaxInterval), AppSettingsReader.PomodoroMaxInterval },
+            { nameof(ChangePomodoroTimerDialogViewModel.PomodoroDuration), toolSettings.PomodoroDuration },
+            { nameof(ChangePomodoroTimerDialogViewModel.PomodoroBreakDuration), toolSettings.PomodoroBreakDuration },
+            { nameof(ChangePomodoroTimerDialogViewModel.PomodoroDurationLimit), AppSettingsReader.PomodoroDurationLimit },
         };
 
         if (self.UseOverlayDialog(out var window))
@@ -195,14 +195,14 @@ public static class IDialogServiceExtensions
                 Content = new ChangePomodoroTimerDialog(),
             };
             var isOpened = true;
-            var result = (false, toolSettings.PomodoroWorkMinutes, toolSettings.PomodoroBreakMinutes);
+            var result = (false, toolSettings.PomodoroDuration, toolSettings.PomodoroBreakDuration);
             if (((FrameworkElement)dialog.Content).DataContext is ChangePomodoroTimerDialogViewModel viewModel)
             {
                 viewModel.OnDialogOpened(parameters);
                 viewModel.RequestClose += async r =>
                 {
                     if (ConvertToTernary(r.Result) == true)
-                        result = (true, r.Parameters.GetValue<int>(nameof(ChangePomodoroTimerDialogViewModel.WorkMinutes)), r.Parameters.GetValue<int>(nameof(ChangePomodoroTimerDialogViewModel.BreakMinutes)));
+                        result = (true, r.Parameters.GetValue<int>(nameof(ChangePomodoroTimerDialogViewModel.PomodoroDuration)), r.Parameters.GetValue<int>(nameof(ChangePomodoroTimerDialogViewModel.PomodoroBreakDuration)));
                     try { await window.HideMetroDialogAsync(dialog, settings); } catch { }
                     isOpened = false;
                 };
@@ -214,11 +214,11 @@ public static class IDialogServiceExtensions
         }
         else
         {
-            var result = (false, toolSettings.PomodoroWorkMinutes, toolSettings.PomodoroBreakMinutes);
+            var result = (false, toolSettings.PomodoroDuration, toolSettings.PomodoroBreakDuration);
             self.ShowDialog(GetDialogName(), parameters, r =>
             {
                 if (ConvertToTernary(r.Result) == true)
-                    result = (true, r.Parameters.GetValue<int>(nameof(ChangePomodoroTimerDialogViewModel.WorkMinutes)), r.Parameters.GetValue<int>(nameof(ChangePomodoroTimerDialogViewModel.BreakMinutes)));
+                    result = (true, r.Parameters.GetValue<int>(nameof(ChangePomodoroTimerDialogViewModel.PomodoroDuration)), r.Parameters.GetValue<int>(nameof(ChangePomodoroTimerDialogViewModel.PomodoroBreakDuration)));
             });
             return result;
         }

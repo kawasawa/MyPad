@@ -60,7 +60,7 @@ public sealed class SharedProperties : ValidatableBase
         this.CpuUsage = new();
         this.MemoryUsage = new();
 
-        Observable.Timer(TimeSpan.FromMilliseconds(AppSettingsReader.PerformanceCheckInterval))
+        Observable.Timer(TimeSpan.FromSeconds(AppSettingsReader.PerformanceCheckInterval))
             .Repeat()
             .ObserveOn(SynchronizationContext.Current)
             .Subscribe(async _ =>
@@ -92,12 +92,12 @@ public sealed class SharedProperties : ValidatableBase
 
                     if (processorTime.HasValue)
                         this.CpuUsage.Add(new ObservableValue(processorTime.Value));
-                    if (AppSettingsReader.PerformanceGraphLimit < this.CpuUsage.Count)
+                    if (AppSettingsReader.PerformanceCountLimit < this.CpuUsage.Count)
                         this.CpuUsage.RemoveAt(0);
 
                     if (workingSetPrivate.HasValue)
                         this.MemoryUsage.Add(new ObservableValue(workingSetPrivate.Value));
-                    if (AppSettingsReader.PerformanceGraphLimit < this.MemoryUsage.Count)
+                    if (AppSettingsReader.PerformanceCountLimit < this.MemoryUsage.Count)
                         this.MemoryUsage.RemoveAt(0);
                 });
             }).AddTo(this.CompositeDisposable);
@@ -171,13 +171,13 @@ public sealed class SharedProperties : ValidatableBase
         if (this.IsPomodoroWorking.Value)
         {
             this.IsPomodoroWorking.Value = false;
-            this.PomodoroTimer.Value = TimeSpan.FromMinutes(this.Settings.OtherTools.PomodoroBreakMinutes);
+            this.PomodoroTimer.Value = TimeSpan.FromMinutes(this.Settings.OtherTools.PomodoroBreakDuration);
             this.EventAggregator.GetEvent<RaiseBalloonEvent>().Publish((Resources.Command_PomodoroTimer, Resources.Message_NotifyPomodoroBreakTime));
         }
         else
         {
             this.IsPomodoroWorking.Value = true;
-            this.PomodoroTimer.Value = TimeSpan.FromMinutes(this.Settings.OtherTools.PomodoroWorkMinutes);
+            this.PomodoroTimer.Value = TimeSpan.FromMinutes(this.Settings.OtherTools.PomodoroDuration);
             this.EventAggregator.GetEvent<RaiseBalloonEvent>().Publish((Resources.Command_PomodoroTimer, Resources.Message_NotifyPomodoroWorkTime));
         }
     }

@@ -22,18 +22,18 @@ public class ToolSettings : ModelBase
         set => this.SetProperty(ref this._showInlineDiffViewer, value);
     }
 
-    private int _pomodoroWorkMinutes = 25;
-    public int PomodoroWorkMinutes
+    private int _pomodoroWorkDuration = 25;
+    public int PomodoroDuration
     {
-        get => this._pomodoroWorkMinutes;
-        set => this.SetProperty(ref this._pomodoroWorkMinutes, value);
+        get => this._pomodoroWorkDuration;
+        set => this.SetProperty(ref this._pomodoroWorkDuration, value);
     }
 
-    private int _pomodoroBreakMinutes = 5;
-    public int PomodoroBreakMinutes
+    private int _pomodoroBreakDuration = 5;
+    public int PomodoroBreakDuration
     {
-        get => this._pomodoroBreakMinutes;
-        set => this.SetProperty(ref this._pomodoroBreakMinutes, value);
+        get => this._pomodoroBreakDuration;
+        set => this.SetProperty(ref this._pomodoroBreakDuration, value);
     }
 
     public class PathInfo : ModelBase

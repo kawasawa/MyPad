@@ -844,10 +844,10 @@
   <data name="Message_ConfirmStopPomodoro" xml:space="preserve">
     <value>ポモドーロタイマーをストップします。よろしいですか？</value>
   </data>
-  <data name="Label_PomodoroBreakMinutes" xml:space="preserve">
+  <data name="Label_PomodoroBreakDuration" xml:space="preserve">
     <value>休憩時間</value>
   </data>
-  <data name="Label_PomodoroWorkMinutes" xml:space="preserve">
+  <data name="Label_PomodoroDuration" xml:space="preserve">
     <value>作業時間</value>
   </data>
 </root>

@@ -196,7 +196,7 @@ public partial class MainWindow : MetroWindow
         this.InterTabClient = this.Container.Resolve<InterTabClientWrapper>();
         this.Notifier = new(config =>
         {
-            config.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromSeconds(AppSettingsReader.ToastLifetime), MaximumNotificationCount.FromCount(AppSettingsReader.ToastCountLimit));
+            config.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(TimeSpan.FromSeconds(AppSettingsReader.ToastDuration), MaximumNotificationCount.FromCount(AppSettingsReader.ToastCountLimit));
             config.PositionProvider = new WindowPositionProvider(this, Corner.BottomRight, 5, 0);
             config.Dispatcher = Application.Current.Dispatcher;
             config.DisplayOptions.Width = 280;

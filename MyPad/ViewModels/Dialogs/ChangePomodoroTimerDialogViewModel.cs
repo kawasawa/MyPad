@@ -12,10 +12,10 @@ namespace MyPad.ViewModels.Dialogs;
 public class ChangePomodoroTimerDialogViewModel : DialogViewModelBase
 {
     [Required]
-    public ReactiveProperty<int?> WorkMinutes { get; }
+    public ReactiveProperty<int?> PomodoroDuration { get; }
     [Required]
-    public ReactiveProperty<int?> BreakMinutes { get; }
-    public ReactiveProperty<int> MaxInterval { get; }
+    public ReactiveProperty<int?> PomodoroBreakDuration { get; }
+    public ReactiveProperty<int> PomodoroDurationLimit { get; }
     public ReactiveCommand OKCommand { get; }
     public ReactiveCommand CancelCommand { get; }
 
@@ -26,25 +26,25 @@ public class ChangePomodoroTimerDialogViewModel : DialogViewModelBase
     [LogInterceptor]
     public ChangePomodoroTimerDialogViewModel()
     {
-        this.WorkMinutes = new ReactiveProperty<int?>()
-            .SetValidateAttribute(() => this.WorkMinutes)
+        this.PomodoroDuration = new ReactiveProperty<int?>()
+            .SetValidateAttribute(() => this.PomodoroDuration)
             .AddTo(this.CompositeDisposable);
-        this.BreakMinutes = new ReactiveProperty<int?>()
-            .SetValidateAttribute(() => this.BreakMinutes)
+        this.PomodoroBreakDuration = new ReactiveProperty<int?>()
+            .SetValidateAttribute(() => this.PomodoroBreakDuration)
             .AddTo(this.CompositeDisposable);
-        this.MaxInterval = new ReactiveProperty<int>()
+        this.PomodoroDurationLimit = new ReactiveProperty<int>()
             .AddTo(this.CompositeDisposable);
 
         this.OKCommand = new[] {
-                this.WorkMinutes.ObserveHasErrors.Inverse(),
-                this.BreakMinutes.ObserveHasErrors.Inverse(),
+                this.PomodoroDuration.ObserveHasErrors.Inverse(),
+                this.PomodoroBreakDuration.ObserveHasErrors.Inverse(),
             }
             .CombineLatestValuesAreAllTrue()
             .ToReactiveCommand()
             .WithSubscribe(() => this.OnRequestClose(
                 new DialogResult(ButtonResult.OK, new DialogParameters {
-                    { nameof(this.WorkMinutes), this.WorkMinutes.Value },
-                    { nameof(this.BreakMinutes), this.BreakMinutes.Value },
+                    { nameof(this.PomodoroDuration), this.PomodoroDuration.Value },
+                    { nameof(this.PomodoroBreakDuration), this.PomodoroBreakDuration.Value },
                 })))
             .AddTo(this.CompositeDisposable);
 
@@ -61,8 +61,8 @@ public class ChangePomodoroTimerDialogViewModel : DialogViewModelBase
     public override void OnDialogOpened(IDialogParameters parameters)
     {
         base.OnDialogOpened(parameters);
-        this.WorkMinutes.Value = parameters.GetValue<int>(nameof(this.WorkMinutes));
-        this.BreakMinutes.Value = parameters.GetValue<int>(nameof(this.BreakMinutes));
-        this.MaxInterval.Value = parameters.GetValue<int>(nameof(this.MaxInterval));
+        this.PomodoroDuration.Value = parameters.GetValue<int>(nameof(this.PomodoroDuration));
+        this.PomodoroBreakDuration.Value = parameters.GetValue<int>(nameof(this.PomodoroBreakDuration));
+        this.PomodoroDurationLimit.Value = parameters.GetValue<int>(nameof(this.PomodoroDurationLimit));
     }
 }

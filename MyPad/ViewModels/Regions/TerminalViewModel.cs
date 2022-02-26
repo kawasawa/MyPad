@@ -188,7 +188,7 @@ public class TerminalViewModel : RegionViewModelBase
             this.OutputLastLine.Value = $"{this._terminalProcess.StartInfo.WorkingDirectory}>";
         }
 
-        while (AppSettingsReader.TerminalBufferSize < this.ResultHistories.Count)
+        while (AppSettingsReader.TerminalLineLimit < this.ResultHistories.Count)
             this.ResultHistories.RemoveAt(0);
     }
 }

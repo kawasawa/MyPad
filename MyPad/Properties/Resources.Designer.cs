@@ -1437,18 +1437,18 @@ namespace MyPad.Properties {
         /// <summary>
         ///   休憩時間 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string Label_PomodoroBreakMinutes {
+        public static string Label_PomodoroBreakDuration {
             get {
-                return ResourceManager.GetString("Label_PomodoroBreakMinutes", resourceCulture);
+                return ResourceManager.GetString("Label_PomodoroBreakDuration", resourceCulture);
             }
         }
         
         /// <summary>
         ///   作業時間 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string Label_PomodoroWorkMinutes {
+        public static string Label_PomodoroDuration {
             get {
-                return ResourceManager.GetString("Label_PomodoroWorkMinutes", resourceCulture);
+                return ResourceManager.GetString("Label_PomodoroDuration", resourceCulture);
             }
         }
         

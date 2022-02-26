@@ -20,21 +20,21 @@
     </p:Dialog.WindowStyle>
 
     <Grid Margin="20 10 20 15" ge:GridEx.RowDefinition="*, 10, Auto"
-          behaviors:KeyboardFocusManager.FocusedElement="{Binding ElementName=WorkMinutes}">
+          behaviors:KeyboardFocusManager.FocusedElement="{Binding ElementName=PomodoroDuration}">
         <Grid Grid.Row="0" ge:GridEx.ColumnDefinition="*, 15, *" VerticalAlignment="Center">
             <controls:NumericUpDown Grid.Column="0"
-                                    x:Name="WorkMinutes"
-                                    Value="{Binding WorkMinutes.Value, Mode=TwoWay}"
+                                    x:Name="PomodoroDuration"
+                                    Value="{Binding PomodoroDuration.Value, Mode=TwoWay}"
                                     Minimum="1"
-                                    Maximum="{Binding MaxInterval.Value, Mode=OneWay}"
-                                    m:TextBoxHelper.Watermark="{le:Loc Label_PomodoroWorkMinutes}" 
+                                    Maximum="{Binding PomodoroDurationLimit.Value, Mode=OneWay}"
+                                    m:TextBoxHelper.Watermark="{le:Loc Label_PomodoroDuration}" 
                                     m:TextBoxHelper.UseFloatingWatermark="True"
                                     m:TextBoxHelper.SelectAllOnFocus="True"/>
             <controls:NumericUpDown Grid.Column="2"
-                                    Value="{Binding BreakMinutes.Value, Mode=TwoWay}"
+                                    Value="{Binding PomodoroBreakDuration.Value, Mode=TwoWay}"
                                     Minimum="1"
-                                    Maximum="{Binding MaxInterval.Value, Mode=OneWay}"
-                                    m:TextBoxHelper.Watermark="{le:Loc Label_PomodoroBreakMinutes}" 
+                                    Maximum="{Binding PomodoroDurationLimit.Value, Mode=OneWay}"
+                                    m:TextBoxHelper.Watermark="{le:Loc Label_PomodoroBreakDuration}" 
                                     m:TextBoxHelper.UseFloatingWatermark="True"
                                     m:TextBoxHelper.SelectAllOnFocus="True"/>
         </Grid>

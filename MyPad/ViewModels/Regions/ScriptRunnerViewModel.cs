@@ -74,7 +74,7 @@ public class ScriptRunnerViewModel : RegionViewModelBase
         if (string.IsNullOrEmpty(result) == false)
             this.ResultHistories.Add(result);
 
-        while (AppSettingsReader.TerminalBufferSize < this.ResultHistories.Count)
+        while (AppSettingsReader.TerminalLineLimit < this.ResultHistories.Count)
             this.ResultHistories.RemoveAt(0);
 
         this.Script.Value = string.Empty;

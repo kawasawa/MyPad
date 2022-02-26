@@ -804,10 +804,10 @@ Please check and delete unnecessary files.</value>
   <data name="Message_ConfirmStopPomodoro" xml:space="preserve">
     <value>Are you sure you want to stop the comodoro timer?</value>
   </data>
-  <data name="Label_PomodoroBreakMinutes" xml:space="preserve">
-    <value>Break minutes</value>
+  <data name="Label_PomodoroBreakDuration" xml:space="preserve">
+    <value>Break duration</value>
   </data>
-  <data name="Label_PomodoroWorkMinutes" xml:space="preserve">
-    <value>Work minutes</value>
+  <data name="Label_PomodoroDuration" xml:space="preserve">
+    <value>Pomodoro duration</value>
   </data>
 </root>

@@ -582,11 +582,11 @@ public class MainWindowViewModel : ViewModelBase
                     }
                     else
                     {
-                        var (result, workMinutes, breakMinutes) = await this.DialogService.ChangePomodoroTimer(this.Settings.OtherTools);
+                        var (result, pomodoroDuration, pomodoroBreakDuration) = await this.DialogService.ChangePomodoroTimer(this.Settings.OtherTools);
                         if (result == false)
                             return;
-                        this.Settings.OtherTools.PomodoroWorkMinutes = workMinutes;
-                        this.Settings.OtherTools.PomodoroBreakMinutes = breakMinutes;
+                        this.Settings.OtherTools.PomodoroDuration = pomodoroDuration;
+                        this.Settings.OtherTools.PomodoroBreakDuration = pomodoroBreakDuration;
                     }
 
                     this.EventAggregator.GetEvent<SwitchPomodoroTimerEvent>().Publish();
@@ -654,12 +654,12 @@ public class MainWindowViewModel : ViewModelBase
     [LogInterceptor]
     public async Task InvokeLoad(string path, Encoding encoding)
     {
+        // View 起点で呼ばれるとは限らないため ViewModel で Activate を実行する
+        this.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
+
         var (result, textEditor) = await this.Load(path, encoding);
         if (textEditor != null)
             this.WakeUpTextEditor(textEditor);
-
-        // View 起点で呼ばれるとは限らないため ViewModel で Activate を実行する
-        this.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
     }
 
     /// <summary>
@@ -670,13 +670,13 @@ public class MainWindowViewModel : ViewModelBase
     [LogInterceptor]
     public async Task InvokeLoad(IEnumerable<string> paths)
     {
+        // View 起点で呼ばれるとは限らないため ViewModel で Activate を実行する
+        this.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
+
         var results = await this.Load(paths);
         var textEditor = results.LastOrDefault(tuple => tuple.textEditor != null).textEditor;
         if (textEditor != null)
             this.WakeUpTextEditor(textEditor);
-
-        // View 起点で呼ばれるとは限らないため ViewModel で Activate を実行する
-        this.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
     }
 
     /// <summary>
@@ -921,7 +921,7 @@ public class MainWindowViewModel : ViewModelBase
 
             // ファイルサイズを確認する
             var info = new FileInfo(path);
-            if (AppSettingsReader.EditorFileSizeThreshold <= info.Length &&
+            if (AppSettingsReader.HugeSizeThreshold <= info.Length &&
                 this.DialogService.Confirm(Resources.Message_ConfirmOpenLargeFile) == false)
             {
                 return (false, null);
