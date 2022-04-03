@@ -99,7 +99,7 @@ public class SystemSettings : ModelBase
         set => this.SetProperty(ref this._useOverlayDialog, value);
     }
 
-    private bool _showFullName = true;
+    private bool _showFullName;
     public bool ShowFullName
     {
         get => this._showFullName;
