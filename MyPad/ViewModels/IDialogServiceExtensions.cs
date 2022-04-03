@@ -180,7 +180,7 @@ public static class IDialogServiceExtensions
     public async static Task<(bool result, int pomodoroDuration, int pomodoroBreakDuration)> ChangePomodoroTimer(this IDialogService self, ToolSettings toolSettings)
     {
         var parameters = new DialogParameters {
-            { nameof(DialogViewModelBase.Title), Resources.Command_PomodoroTimer },
+            { nameof(ChangePomodoroTimerDialogViewModel.Title), Resources.Command_PomodoroTimer },
             { nameof(ChangePomodoroTimerDialogViewModel.PomodoroDuration), toolSettings.PomodoroDuration },
             { nameof(ChangePomodoroTimerDialogViewModel.PomodoroBreakDuration), toolSettings.PomodoroBreakDuration },
             { nameof(ChangePomodoroTimerDialogViewModel.PomodoroDurationLimit), AppSettingsReader.PomodoroDurationLimit },
@@ -196,7 +196,7 @@ public static class IDialogServiceExtensions
             };
             var isOpened = true;
             var result = (false, toolSettings.PomodoroDuration, toolSettings.PomodoroBreakDuration);
-            if (((FrameworkElement)dialog.Content).DataContext is ChangePomodoroTimerDialogViewModel viewModel)
+            if (((FrameworkElement)dialog.Content).DataContext is DialogViewModelBase viewModel)
             {
                 viewModel.OnDialogOpened(parameters);
                 viewModel.RequestClose += async r =>
@@ -234,7 +234,7 @@ public static class IDialogServiceExtensions
     public async static Task<(bool result, int line)> ChangeLine(this IDialogService self, TextEditorViewModel textEditor)
     {
         var parameters = new DialogParameters {
-            { nameof(DialogViewModelBase.Title), Resources.Command_GoToLine },
+            { nameof(ChangeLineDialogViewModel.Title), Resources.Command_GoToLine },
             { nameof(ChangeLineDialogViewModel.Line), textEditor.Line },
             { nameof(ChangeLineDialogViewModel.MaxLine), textEditor.Document.LineCount },
         };
@@ -249,7 +249,7 @@ public static class IDialogServiceExtensions
             };
             var isOpened = true;
             var result = (false, textEditor.Line);
-            if (((FrameworkElement)dialog.Content).DataContext is ChangeLineDialogViewModel viewModel)
+            if (((FrameworkElement)dialog.Content).DataContext is DialogViewModelBase viewModel)
             {
                 viewModel.OnDialogOpened(parameters);
                 viewModel.RequestClose += async r =>
@@ -301,7 +301,7 @@ public static class IDialogServiceExtensions
             };
             var isOpened = true;
             var result = (false, textEditor.Encoding);
-            if (((FrameworkElement)dialog.Content).DataContext is ChangeEncodingDialogViewModel viewModel)
+            if (((FrameworkElement)dialog.Content).DataContext is DialogViewModelBase viewModel)
             {
                 viewModel.OnDialogOpened(parameters);
                 viewModel.RequestClose += async r =>
@@ -353,7 +353,7 @@ public static class IDialogServiceExtensions
             };
             var isOpened = true;
             var result = (false, textEditor.SyntaxDefinition?.Name);
-            if (((FrameworkElement)dialog.Content).DataContext is ChangeSyntaxDialogViewModel viewModel)
+            if (((FrameworkElement)dialog.Content).DataContext is DialogViewModelBase viewModel)
             {
                 viewModel.OnDialogOpened(parameters);
                 viewModel.RequestClose += async r =>
@@ -409,7 +409,7 @@ public static class IDialogServiceExtensions
             };
             var isOpened = true;
             var result = (false, string.Empty, string.Empty);
-            if (((FrameworkElement)dialog.Content).DataContext is SelectDiffFilesDialogViewModel viewModel)
+            if (((FrameworkElement)dialog.Content).DataContext is DialogViewModelBase viewModel)
             {
                 viewModel.OnDialogOpened(parameters);
                 viewModel.RequestClose += async r =>

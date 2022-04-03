@@ -169,5 +169,55 @@ public static class Commands
     {
         command.InputGestures.Clear();
         command.InputGestures.Add(Definitions[command.Name].keyGesture);
+
+        // テンキーに対応する
+        var numpadKey = Key.None;
+        switch (Definitions[command.Name].keyGesture.Key)
+        {
+            case Key.D0:
+                numpadKey = Key.NumPad0;
+                break;
+            case Key.D1:
+                numpadKey = Key.NumPad1;
+                break;
+            case Key.D2:
+                numpadKey = Key.NumPad2;
+                break;
+            case Key.D3:
+                numpadKey = Key.NumPad3;
+                break;
+            case Key.D4:
+                numpadKey = Key.NumPad4;
+                break;
+            case Key.D5:
+                numpadKey = Key.NumPad5;
+                break;
+            case Key.D6:
+                numpadKey = Key.NumPad6;
+                break;
+            case Key.D7:
+                numpadKey = Key.NumPad7;
+                break;
+            case Key.D8:
+                numpadKey = Key.NumPad8;
+                break;
+            case Key.D9:
+                numpadKey = Key.NumPad9;
+                break;
+            case Key.OemPlus: // "+" キー
+                numpadKey = Key.Add;
+                break;
+            case Key.OemMinus: // "-" キー
+                numpadKey = Key.Subtract;
+                break;
+            case Key.OemPeriod: // "." キー
+                numpadKey = Key.Decimal;
+                break;
+            case Key.Oem2: // "/" キー
+                numpadKey = Key.Divide;
+                break;
+        }
+        if (numpadKey != Key.None)
+            command.InputGestures.Add(new KeyGesture(numpadKey, Definitions[command.Name].keyGesture.Modifiers));
     }
 }
