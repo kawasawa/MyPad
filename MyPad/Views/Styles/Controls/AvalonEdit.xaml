@@ -11,7 +11,7 @@
                     xmlns:controls="clr-namespace:MyPad.Views.Controls"
                     xmlns:completion="clr-namespace:MyPad.Views.Controls.Completion">
 
-    <Style x:Key="Default.TextView" TargetType="{x:Type ae:TextView}">
+    <Style x:Key="Common.TextView" TargetType="{x:Type ae:TextView}">
         <!-- WARN: ColumnRulerPen はオンコードで指定する -->
         <Setter Property="LinkTextForegroundBrush" Value="{DynamicResource MahApps.Brushes.AccentBase}"/>
         <Setter Property="NonPrintableCharacterBrush" Value="{DynamicResource MahApps.Brushes.Gray2}"/>
@@ -23,14 +23,14 @@
         </Setter>
     </Style>
 
-    <Style x:Key="Default.TextArea" TargetType="{x:Type ae:TextArea}" BasedOn="{StaticResource {x:Type ae:TextArea}}">
+    <Style x:Key="Common.TextArea" TargetType="{x:Type ae:TextArea}" BasedOn="{StaticResource {x:Type ae:TextArea}}">
         <Setter Property="SelectionBrush" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
         <Setter Property="SelectionBorder" Value="{x:Null}"/>
         <Setter Property="SelectionForeground" Value="{x:Null}"/>
         <Setter Property="SelectionCornerRadius" Value="0"/>
     </Style>
 
-    <Style x:Key="Default.TextEditor" TargetType="{x:Type ae:TextEditor}" BasedOn="{StaticResource {x:Type ae:TextEditor}}">
+    <Style x:Key="Common.TextEditor" TargetType="{x:Type ae:TextEditor}" BasedOn="{StaticResource {x:Type ae:TextEditor}}">
         <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}"/>
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Control.Background}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Control.Background}"/>
@@ -39,7 +39,7 @@
         <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
     </Style>
 
-    <Style x:Key="Default.CompletionWindow" TargetType="{x:Type aec:CompletionWindow}">
+    <Style x:Key="Common.CompletionWindow" TargetType="{x:Type aec:CompletionWindow}">
         <Setter Property="ResizeMode" Value="NoResize"/>
         <Setter Property="WindowStyle" Value="None"/>
         <Setter Property="AllowsTransparency" Value="True"/>
@@ -49,8 +49,8 @@
                 <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}"/>
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Control.Background}"/>
             </Style>
-            <Style TargetType="{x:Type aec:CompletionListBox}" BasedOn="{StaticResource Default.ListBox}">
-                <Setter Property="ItemContainerStyle" Value="{StaticResource Default.ListBoxItem}"/>
+            <Style TargetType="{x:Type aec:CompletionListBox}" BasedOn="{StaticResource Common.ListBox}">
+                <Setter Property="ItemContainerStyle" Value="{DynamicResource Common.ListBoxItem}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.ComboBox.PopupBorder}"/>
                 <Setter Property="BorderThickness" Value="1"/>
             </Style>
@@ -58,14 +58,14 @@
     </Style>
     
 
-    <Style x:Key="Default.FoldingMargin" TargetType="{x:Type aef:FoldingMargin}">
+    <Style x:Key="Common.FoldingMargin" TargetType="{x:Type aef:FoldingMargin}">
         <Setter Property="FoldingMarkerBrush"                   Value="{DynamicResource MahApps.Brushes.CheckBox}"/>
         <Setter Property="SelectedFoldingMarkerBrush"           Value="{DynamicResource MahApps.Brushes.CheckBox.MouseOver}"/>
         <Setter Property="FoldingMarkerBackgroundBrush"         Value="{DynamicResource MahApps.Brushes.Control.Background}"/>
         <Setter Property="SelectedFoldingMarkerBackgroundBrush" Value="{DynamicResource MahApps.Brushes.Control.Background}"/>
     </Style>
 
-    <Style x:Key="Default.SearchPanel" TargetType="{x:Type ae:SearchPanel}">
+    <Style x:Key="Common.SearchPanel" TargetType="{x:Type ae:SearchPanel}">
         <!-- WARN: MarkerBrush, MarkerCornerRadius はオンコードで指定する -->
         <Setter Property="Template">
             <Setter.Value>
@@ -86,20 +86,20 @@
                             </Grid.RowDefinitions>
 
                             <Grid.Resources>
-                                <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+                                <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Common.TextBox}">
                                     <Setter Property="Background"  Value="{DynamicResource MahApps.Brushes.Gray8}"/>
                                     <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray}"/>
                                     <Setter Property="FontFamily"  Value="{Binding FontFamily, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
                                     <Setter Property="FontSize"    Value="{Binding FontSize, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
                                     <Setter Property="MinWidth"    Value="150"/>
                                 </Style>
-                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Common.Button}">
                                     <Setter Property="Background"  Value="{x:Null}"/>
                                     <Setter Property="BorderBrush" Value="{x:Null}"/>
                                     <Setter Property="Height"      Value="20"/>
                                     <Setter Property="Padding"     Value="2"/>
                                 </Style>
-                                <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButton}">
+                                <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Common.ToggleButton}">
                                     <Setter Property="Background"  Value="{x:Null}"/>
                                     <Setter Property="BorderBrush" Value="{x:Null}"/>
                                     <Setter Property="Height"      Value="20"/>
@@ -185,11 +185,11 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type controls:TextView}"           BasedOn="{StaticResource Default.TextView}"/>
-    <Style TargetType="{x:Type controls:TextArea}"           BasedOn="{StaticResource Default.TextArea}"/>
-    <Style TargetType="{x:Type controls:TextEditor}"         BasedOn="{StaticResource Default.TextEditor}"/>
-    <Style TargetType="{x:Type completion:CompletionWindow}" BasedOn="{StaticResource Default.CompletionWindow}"/>
-    <Style TargetType="{x:Type aef:FoldingMargin}"           BasedOn="{StaticResource Default.FoldingMargin}"/>
-    <Style TargetType="{x:Type ae:SearchPanel}"              BasedOn="{StaticResource Default.SearchPanel}"/>
+    <Style TargetType="{x:Type controls:TextView}"           BasedOn="{StaticResource Common.TextView}"/>
+    <Style TargetType="{x:Type controls:TextArea}"           BasedOn="{StaticResource Common.TextArea}"/>
+    <Style TargetType="{x:Type controls:TextEditor}"         BasedOn="{StaticResource Common.TextEditor}"/>
+    <Style TargetType="{x:Type completion:CompletionWindow}" BasedOn="{StaticResource Common.CompletionWindow}"/>
+    <Style TargetType="{x:Type aef:FoldingMargin}"           BasedOn="{StaticResource Common.FoldingMargin}"/>
+    <Style TargetType="{x:Type ae:SearchPanel}"              BasedOn="{StaticResource Common.SearchPanel}"/>
 
 </ResourceDictionary>

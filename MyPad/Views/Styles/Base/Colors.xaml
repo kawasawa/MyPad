@@ -10,6 +10,7 @@
     <Color x:Key="PurpleColorKey"   >#FF80397B</Color>
     <Color x:Key="RedColorKey"      >#FFA4373A</Color>
     <Color x:Key="OrangeColorKey"   >#FFB7472A</Color>
+
     <SolidColorBrush x:Key="GreenColorBrush"     Color="{DynamicResource GreenColorKey}"     o:Freeze="True"/>
     <SolidColorBrush x:Key="DarkGreenColorBrush" Color="{DynamicResource DarkGreenColorKey}" o:Freeze="True"/>
     <SolidColorBrush x:Key="BlueColorBrush"      Color="{DynamicResource BlueColorKey}"      o:Freeze="True"/>

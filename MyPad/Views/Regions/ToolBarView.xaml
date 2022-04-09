@@ -25,7 +25,7 @@
             <Style x:Key="{x:Static ToolBar.ToggleButtonStyleKey}" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MahApps.Styles.ToggleButton.ToolBar}">
                 <Setter Property="Padding" Value="3"/>
             </Style>
-            <Style TargetType="{x:Type m:DropDownButton}" BasedOn="{StaticResource Default.DropDownButton}">
+            <Style TargetType="{x:Type m:DropDownButton}" BasedOn="{StaticResource Common.DropDownButton}">
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Transparent}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Transparent}"/>
                 <Setter Property="BorderThickness" Value="1"/>

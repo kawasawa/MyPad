@@ -22,37 +22,37 @@
     <Grid Margin="20 0 20 20">
         <TabControl Padding="5 5 0 0" m:HeaderedControlHelper.HeaderFontWeight="Bold">
             <TabControl.Resources>
-                <Style x:Key="ComboBoxTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
+                <Style x:Key="ComboBoxTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
                 </Style>
-                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
                     <Setter Property="Margin" Value="5"/>
                     <Setter Property="VerticalAlignment" Value="Center"/>
                 </Style>
-                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Common.Button}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
-                <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource Default.RadioButton}">
+                <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource Common.RadioButton}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
-                <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource Default.CheckBox}">
+                <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource Common.CheckBox}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
-                <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+                <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Common.TextBox}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
-                <Style TargetType="{x:Type m:NumericUpDown}" BasedOn="{StaticResource Default.NumericUpDown}">
+                <Style TargetType="{x:Type m:NumericUpDown}" BasedOn="{StaticResource Common.NumericUpDown}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
-                <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Default.ComboBox}">
+                <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Common.ComboBox}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
-                <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource Default.DataGrid}">
+                <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource Common.DataGrid}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
-                <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource Default.GroupBox}">
+                <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource Common.GroupBox}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
-                <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource Default.Expander}">
+                <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource Common.Expander}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
             </TabControl.Resources>
@@ -228,14 +228,14 @@
                                 </Setter>
                             </Style>
                             <!-- テンプレートカラム用のセル -->
-                            <Style x:Key="TemplateColumnDataGridCell" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource Default.DataGridCell}">
+                            <Style x:Key="TemplateColumnDataGridCell" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource Common.DataGridCell}">
                                 <Setter Property="IsTabStop" Value="False"/>
                             </Style>
                         </DataGrid.Resources>
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{le:Loc Label_Path}">
                                 <DataGridTextColumn.EditingElementStyle>
-                                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+                                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Common.TextBox}">
                                         <Setter Property="BorderThickness" Value="0"/>
                                         <Setter Property="m:TextBoxHelper.SelectAllOnFocus" Value="True"/>
                                         <Setter Property="m:TextBoxHelper.ClearTextButton" Value="True"/>
@@ -292,7 +292,7 @@
                         <GroupBox Header="{le:Loc Label_SystemDirectory}">
                             <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, 5" ge:GridEx.RowDefinition="Auto, Auto, Auto">
                                 <Grid.Resources>
-                                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+                                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Common.TextBox}">
                                         <Setter Property="Margin" Value="5"/>
                                         <Setter Property="IsTabStop" Value="False"/>
                                         <Setter Property="IsReadOnly" Value="True"/>
@@ -303,7 +303,7 @@
                                             </Trigger>
                                         </Style.Triggers>
                                     </Style>
-                                    <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+                                    <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Common.Button}">
                                         <Setter Property="Margin" Value="0 5"/>
                                         <Setter Property="Padding" Value="0"/>
                                         <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
@@ -350,12 +350,12 @@
                         <GroupBox Header="{le:Loc Label_SystemSettings}">
                             <ge:ResponsiveGrid>
                                 <ge:ResponsiveGrid.Resources>
-                                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+                                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Common.Button}">
                                         <Setter Property="Margin" Value="5"/>
                                         <Setter Property="ge:ResponsiveGrid.XS" Value="6"/>
                                         <Setter Property="ge:ResponsiveGrid.SM" Value="4"/>
                                         <Style.Resources>
-                                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
+                                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
                                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                             </Style>
                                         </Style.Resources>
@@ -365,7 +365,7 @@
                                         <Setter Property="ge:ResponsiveGrid.XS" Value="6"/>
                                         <Setter Property="ge:ResponsiveGrid.SM" Value="4"/>
                                         <Style.Resources>
-                                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
+                                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
                                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                             </Style>
                                         </Style.Resources>
