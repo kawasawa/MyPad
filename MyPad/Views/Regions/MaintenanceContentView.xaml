@@ -45,7 +45,7 @@
             <!-- ********** ログビューワー ********** -->
             <TabItem Header="{le:Loc Label_LogViewer}">
                 <Grid>
-                    <TabControl TabStripPlacement="Bottom" m:HeaderedControlHelper.HeaderFontWeight="Bold" m:HeaderedControlHelper.HeaderFontSize="10">
+                    <TabControl TabStripPlacement="Bottom" m:HeaderedControlHelper.HeaderFontWeight="Bold" m:HeaderedControlHelper.HeaderFontSize="{DynamicResource MahApps.Font.Size.FloatingWatermark}">
                         <TabControl.Resources>
                             <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource Default.DataGrid}">
                                 <Setter Property="AutoGenerateColumns" Value="False"/>

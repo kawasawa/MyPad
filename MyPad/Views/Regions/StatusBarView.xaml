@@ -29,7 +29,6 @@
                     <Setter Property="FontFamily" Value="{DynamicResource {x:Static SystemFonts.StatusFontFamilyKey}}"/>
                     <Setter Property="FontStyle" Value="{DynamicResource {x:Static SystemFonts.StatusFontStyleKey}}"/>
                     <Setter Property="FontWeight" Value="{DynamicResource {x:Static SystemFonts.StatusFontWeightKey}}"/>
-                    <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.StatusBar}"/>
                     <Setter Property="BorderThickness" Value="0"/>
                     <Style.Resources>
                         <!-- HACK: ボタンが押された状態の背景色を上書きする -->
@@ -46,7 +45,6 @@
                     <Setter Property="FontFamily" Value="{DynamicResource {x:Static SystemFonts.StatusFontFamilyKey}}"/>
                     <Setter Property="FontStyle" Value="{DynamicResource {x:Static SystemFonts.StatusFontStyleKey}}"/>
                     <Setter Property="FontWeight" Value="{DynamicResource {x:Static SystemFonts.StatusFontWeightKey}}"/>
-                    <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.StatusBar}"/>
                     <Setter Property="BorderThickness" Value="0"/>
                     <Setter Property="m:ControlsHelper.MouseOverBorderBrush" Value="{StaticResource DarkBlueColorBrush}"/>
                     <Style.Triggers>

@@ -29,7 +29,7 @@
             <Grid ge:GridEx.ColumnDefinition="Auto, 15, Auto, 15, Auto, 30, Auto, 15, Auto, 15, Auto">
                 <Image     Grid.Column="0" Source="{markup:IconSource /Resources/app.ico}" Width="40" VerticalAlignment="Center"/>
                 <TextBlock Grid.Column="2" Text="{Binding ProductInfo.Product, Mode=OneWay}" FontWeight="Bold" FontSize="32" Margin="0 0 0 5" VerticalAlignment="Center"/>
-                <TextBlock Grid.Column="4" TextWrapping="Wrap" VerticalAlignment="Center">
+                <TextBlock Grid.Column="4" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="14">
                     <Run Text="{qc:MultiBinding '\'Version \' + $P0.Major + \'.\' + $P0.Minor + \'.\' + $P0.Build + ($P1 ? \' - Debug Build\' : null)', P0={Binding ProductInfo.Version, Mode=OneWay}, P1={Binding ProductInfo.IsDebugBuild, Mode=OneWay}}"/>
                     <LineBreak/>
                     <Run Text="{Binding ProductInfo.Copyright, Mode=OneWay}"/>

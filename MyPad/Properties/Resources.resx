@@ -850,4 +850,13 @@
   <data name="Label_PomodoroDuration" xml:space="preserve">
     <value>作業時間</value>
   </data>
+  <data name="Label_Large" xml:space="preserve">
+    <value>大きい</value>
+  </data>
+  <data name="Label_Small" xml:space="preserve">
+    <value>小さい</value>
+  </data>
+  <data name="Label_UISize" xml:space="preserve">
+    <value>UI サイズ</value>
+  </data>
 </root>

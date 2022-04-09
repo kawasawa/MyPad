@@ -1345,6 +1345,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   大きい に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_Large {
+            get {
+                return ResourceManager.GetString("Label_Large", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   白 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Light {
@@ -1480,6 +1489,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   小さい に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_Small {
+            get {
+                return ResourceManager.GetString("Label_Small", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   システムに連動 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_SyncAppTheme {
@@ -1557,6 +1575,15 @@ namespace MyPad.Properties {
         public static string Label_Type {
             get {
                 return ResourceManager.GetString("Label_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   UI サイズ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_UISize {
+            get {
+                return ResourceManager.GetString("Label_UISize", resourceCulture);
             }
         }
         

@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:s="clr-namespace:System;assembly=System.Runtime">
+
+    <s:Double x:Key="MahApps.Font.Size.Header">40</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.SubHeader">28</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.Window.Title">13</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.Default">14</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.Content">12</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.Button.Flat">14</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.TabItem">20</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.Button">12</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.FloatingWatermark">10</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.Button.ClearText">16</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.Tooltip">12</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.Menu">12</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.ContextMenu">12</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.StatusBar">12</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.Dialog.Title">22</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.Dialog.Message">15</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.Dialog.Button">12</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.Flyout.Header">20</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.ToggleSwitch">14</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.ToggleSwitch.Header">14</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.ColorPicker.TabItemHeader">16</s:Double>
+
+</ResourceDictionary>

@@ -172,6 +172,7 @@
 
     <!-- リストボックス -->
     <Style x:Key="Default.ListBox" TargetType="{x:Type ListBox}" BasedOn="{StaticResource MahApps.Styles.ListBox}">
+        <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.Content}"/>
     </Style>
 
     <!-- リストビューアイテム -->
@@ -180,6 +181,7 @@
 
     <!-- リストビュー -->
     <Style x:Key="Default.ListView" TargetType="{x:Type ListView}" BasedOn="{StaticResource MahApps.Styles.ListView}">
+        <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.Content}"/>
     </Style>
 
     <!-- ツリービューアイテム -->
@@ -254,15 +256,14 @@
 
     <!-- グループボックス -->
     <Style x:Key="Default.GroupBox" TargetType="{x:Type GroupBox}" BasedOn="{StaticResource MahApps.Styles.GroupBox}">
-        <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
         <Setter Property="m:HeaderedControlHelper.HeaderFontWeight" Value="Normal"/>
+        <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
     </Style>
 
     <!-- エクスパンダー -->
     <Style x:Key="Default.Expander" TargetType="{x:Type Expander}" BasedOn="{StaticResource MahApps.Styles.Expander}">
-        <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
         <Setter Property="m:HeaderedControlHelper.HeaderFontWeight" Value="Normal"/>
-        <Setter Property="IsExpanded" Value="True"/>
+        <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
     </Style>
 
     <!-- スクロールバー -->
