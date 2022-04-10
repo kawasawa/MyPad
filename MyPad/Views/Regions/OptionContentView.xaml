@@ -20,39 +20,39 @@
              Cursor="{qc:Binding '$P ? Cursors.Wait : Cursors.Arrow', P={Binding IsPending.Value, Mode=TwoWay}}">
 
     <Grid Margin="20 0 20 20">
-        <TabControl Padding="5 10 0 0" m:HeaderedControlHelper.HeaderFontWeight="Bold">
+        <TabControl Padding="5 5 0 0" m:HeaderedControlHelper.HeaderFontWeight="Bold">
             <TabControl.Resources>
-                <Style x:Key="ComboBoxTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
+                <Style x:Key="ComboBoxTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
                 </Style>
-                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
                     <Setter Property="Margin" Value="5"/>
                     <Setter Property="VerticalAlignment" Value="Center"/>
                 </Style>
-                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Common.Button}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
-                <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource Default.RadioButton}">
+                <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource Common.RadioButton}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
-                <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource Default.CheckBox}">
+                <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource Common.CheckBox}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
-                <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+                <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Common.TextBox}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
-                <Style TargetType="{x:Type m:NumericUpDown}" BasedOn="{StaticResource Default.NumericUpDown}">
+                <Style TargetType="{x:Type m:NumericUpDown}" BasedOn="{StaticResource Common.NumericUpDown}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
-                <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Default.ComboBox}">
+                <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource Common.ComboBox}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
-                <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource Default.DataGrid}">
+                <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource Common.DataGrid}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
-                <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource Default.GroupBox}">
+                <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource Common.GroupBox}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
-                <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource Default.Expander}">
+                <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource Common.Expander}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
             </TabControl.Resources>
@@ -61,7 +61,7 @@
             <TabItem DataContext="{Binding Settings.System, Mode=OneWay}" Header="{le:Loc Label_System}">
                 <ScrollViewer>
                     <StackPanel>
-                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto">
+                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto, Auto">
                             <TextBlock  Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_Theme}"/>
                             <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
                                 <RadioButton Content="{le:Loc Label_SyncAppTheme}" IsChecked="{qc:Binding Convert='(int)$P == 0', ConvertBack='$value ? 0 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
@@ -69,8 +69,15 @@
                                 <RadioButton Content="{le:Loc Label_Light}"        IsChecked="{qc:Binding Convert='(int)$P == 2', ConvertBack='$value ? 2 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
                             </StackPanel>
 
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="{le:Loc Label_Language}"/>
-                            <ComboBox  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
+                            <TextBlock  Grid.Row="1" Grid.Column="0" Text="{le:Loc Label_UISize}"/>
+                            <StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
+                                <RadioButton Content="{le:Loc Label_Small}"  IsChecked="{qc:Binding Convert='(int)$P == 0', ConvertBack='$value ? 0 : DependencyProperty.UnsetValue', P={Binding UISize, Mode=TwoWay}}"/>
+                                <RadioButton Content="{le:Loc Label_Medium}" IsChecked="{qc:Binding Convert='(int)$P == 1', ConvertBack='$value ? 1 : DependencyProperty.UnsetValue', P={Binding UISize, Mode=TwoWay}}"/>
+                                <RadioButton Content="{le:Loc Label_Large}"  IsChecked="{qc:Binding Convert='(int)$P == 2', ConvertBack='$value ? 2 : DependencyProperty.UnsetValue', P={Binding UISize, Mode=TwoWay}}"/>
+                            </StackPanel>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="{le:Loc Label_Language}"/>
+                            <ComboBox  Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"
                                        ItemsSource="{x:Static root:Constants.CULTURES}"
                                        SelectedValue="{Binding Culture, Mode=TwoWay}"
                                        SelectedValuePath="Name">
@@ -81,8 +88,8 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
 
-                            <TextBlock Grid.Row="2" Grid.Column="0" Text="{le:Loc Label_Encoding}"/>
-                            <ComboBox  Grid.Row="2" Grid.Column="1"
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="{le:Loc Label_Encoding}"/>
+                            <ComboBox  Grid.Row="3" Grid.Column="1"
                                        ItemsSource="{x:Static root:Constants.ENCODINGS}"
                                        SelectedValue="{Binding Encoding, Mode=TwoWay}">
                                 <ComboBox.ItemTemplate>
@@ -91,10 +98,10 @@
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
-                            <CheckBox Grid.Row="2" Grid.Column="3" IsChecked="{Binding AutoDetectEncoding, Mode=TwoWay}" Content="{le:Loc LabelText_AutoDetectByDefault}"/>
+                            <CheckBox Grid.Row="3" Grid.Column="3" IsChecked="{Binding AutoDetectEncoding, Mode=TwoWay}" Content="{le:Loc LabelText_AutoDetectByDefault}"/>
 
-                            <TextBlock Grid.Row="3" Grid.Column="0" Text="{le:Loc Label_Syntax}"/>
-                            <ComboBox  Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="{le:Loc Label_Syntax}"/>
+                            <ComboBox  Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3"
                                        ItemsSource="{qc:Binding 'new string[] { string.Empty }.Concat($P.Keys)', P={Binding DataContext.SyntaxService.Definitions, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Mode=OneWay}}"
                                        SelectedValue="{qc:Binding Convert='$P ?? string.Empty', ConvertBack='string.IsNullOrEmpty($value) ? null : $value', P={Binding SyntaxDefinitionName, Mode=TwoWay}}">
                                 <ComboBox.ItemTemplate>
@@ -104,8 +111,8 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
 
-                            <TextBlock Grid.Row="4" Grid.Column="0" Text="{le:Loc Label_Font}"/>
-                            <ComboBox  Grid.Row="4" Grid.Column="1" 
+                            <TextBlock Grid.Row="5" Grid.Column="0" Text="{le:Loc Label_Font}"/>
+                            <ComboBox  Grid.Row="5" Grid.Column="1" 
                                        ItemsSource="{x:Static root:Constants.FONT_FAMILIES}"
                                        SelectedValue="{Binding DataContext.Settings.TextEditor.FontFamily, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
                                 <ComboBox.ItemTemplate>
@@ -114,38 +121,30 @@
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
-                            <ComboBox Grid.Row="4" Grid.Column="3"
+                            <ComboBox Grid.Row="5" Grid.Column="3"
                                       ItemsSource="{x:Static root:Constants.FONT_SIZES}"
                                       SelectedValue="{Binding DataContext.Settings.TextEditor.ActualFontSize, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"/>
                         </Grid>
 
-                        <Border Height="10"/>
-
                         <ge:ResponsiveGrid>
                             <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
-                                <StackPanel>
-                                    <CheckBox IsChecked="{Binding SaveWindowPlacement, Mode=TwoWay}"        Content="{le:Loc LabelText_SaveWindowPlacement}"/>
-                                    <CheckBox IsChecked="{Binding UseOverlayDialog, Mode=TwoWay}"           Content="{le:Loc LabelText_UseOverlayDialog}"/>
-                                    <CheckBox IsChecked="{Binding UseInAppToastNotifications, Mode=TwoWay}" Content="{le:Loc LabelText_UseInAppToastNotifications}"/>
-                                    <CheckBox IsChecked="{Binding ShowFullName, Mode=TwoWay}"               Content="{le:Loc LabelText_ShowFullName}"/>
-                                    <CheckBox IsChecked="{Binding ShowFileIcon, Mode=TwoWay}"               Content="{le:Loc LabelText_ShowFileIcon}"/>
-                                    <CheckBox IsChecked="{Binding ShowSingleTab, Mode=TwoWay}"              Content="{le:Loc LabelText_ShowSingleTab}"/>
-                                </StackPanel>
+                                <CheckBox IsChecked="{Binding SaveWindowPlacement, Mode=TwoWay}"        Content="{le:Loc LabelText_SaveWindowPlacement}"/>
+                                <CheckBox IsChecked="{Binding UseOverlayDialog, Mode=TwoWay}"           Content="{le:Loc LabelText_UseOverlayDialog}"/>
+                                <CheckBox IsChecked="{Binding UseInAppToastNotifications, Mode=TwoWay}" Content="{le:Loc LabelText_UseInAppToastNotifications}"/>
+                                <CheckBox IsChecked="{Binding ShowFullName, Mode=TwoWay}"               Content="{le:Loc LabelText_ShowFullName}"/>
+                                <CheckBox IsChecked="{Binding ShowFileIcon, Mode=TwoWay}"               Content="{le:Loc LabelText_ShowFileIcon}"/>
+                                <CheckBox IsChecked="{Binding ShowSingleTab, Mode=TwoWay}"              Content="{le:Loc LabelText_ShowSingleTab}"/>
                             </StackPanel>
 
                             <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
-                                <StackPanel>
-                                    <CheckBox IsChecked="{Binding EnableNotificationIcon, Mode=TwoWay}"     Content="{le:Loc LabelText_EnableNotificationIcon}"/>
-                                    <CheckBox IsChecked="{Binding EnableResident, Mode=TwoWay}"             Content="{le:Loc LabelText_EnableResident}" IsEnabled="{Binding EnableNotificationIcon, Mode=OneWay}"/>
-                                </StackPanel>
+                                <CheckBox IsChecked="{Binding EnableNotificationIcon, Mode=TwoWay}"     Content="{le:Loc LabelText_EnableNotificationIcon}"/>
+                                <CheckBox IsChecked="{Binding EnableResident, Mode=TwoWay}"             Content="{le:Loc LabelText_EnableResident}" IsEnabled="{Binding EnableNotificationIcon, Mode=OneWay}"/>
                                 <Border Height="10"/>
-                                <StackPanel>
-                                    <CheckBox IsChecked="{Binding EnableAutoSave, Mode=TwoWay}"             Content="{le:Loc LabelText_EnableAutoSave}"/>
-                                    <Grid ge:GridEx.RowDefinition="Auto" ge:GridEx.ColumnDefinition="Auto, 10, Auto" Margin="30 0 0 0">
-                                        <TextBlock       Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_AutoSaveInterval}"/>
-                                        <m:NumericUpDown Grid.Row="0" Grid.Column="2" Value="{Binding AutoSaveInterval, Mode=TwoWay}" Minimum="1" MinWidth="100"/>
-                                    </Grid>
-                                </StackPanel>
+                                <CheckBox IsChecked="{Binding EnableAutoSave, Mode=TwoWay}"             Content="{le:Loc LabelText_EnableAutoSave}"/>
+                                <Grid ge:GridEx.RowDefinition="Auto" ge:GridEx.ColumnDefinition="Auto, 10, Auto" Margin="30 0 0 0">
+                                    <TextBlock       Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_AutoSaveInterval}"/>
+                                    <m:NumericUpDown Grid.Row="0" Grid.Column="2" Value="{Binding AutoSaveInterval, Mode=TwoWay}" Minimum="1" MinWidth="100"/>
+                                </Grid>
                             </StackPanel>
                         </ge:ResponsiveGrid>
                     </StackPanel>
@@ -158,50 +157,44 @@
                     <StackPanel>
                         <ge:ResponsiveGrid>
                             <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
-                                <StackPanel>
-                                    <CheckBox IsChecked="{Binding HighlightCurrentLine, Mode=TwoWay}"        Content="{le:Loc LabelText_HighlightCurrentLine}"/>
-                                    <CheckBox IsChecked="{Binding ShowSpaces, Mode=TwoWay}"                  Content="{le:Loc LabelText_ShowSpaces}"/>
-                                    <CheckBox IsChecked="{Binding ShowTabs, Mode=TwoWay}"                    Content="{le:Loc LabelText_ShowTabs}"/>
-                                    <CheckBox IsChecked="{Binding ShowBoxForControlCharacters, Mode=TwoWay}" Content="{le:Loc LabelText_ShowBoxForControlCharacters}"/>
-                                    <CheckBox IsChecked="{Binding ShowEndOfLine, Mode=TwoWay}"               Content="{le:Loc LabelText_ShowEndOfLine}"/>
-                                    <CheckBox IsChecked="{Binding ShowLineNumbers, Mode=TwoWay}"             Content="{le:Loc LabelText_ShowLineNumbers}"/>
-                                    <CheckBox IsChecked="{Binding ShowChangeMarker, Mode=TwoWay}"            Content="{le:Loc LabelText_ShowChangeMarker}"/>
-                                </StackPanel>
+                                <CheckBox IsChecked="{Binding HighlightCurrentLine, Mode=TwoWay}"        Content="{le:Loc LabelText_HighlightCurrentLine}"/>
+                                <CheckBox IsChecked="{Binding ShowSpaces, Mode=TwoWay}"                  Content="{le:Loc LabelText_ShowSpaces}"/>
+                                <CheckBox IsChecked="{Binding ShowTabs, Mode=TwoWay}"                    Content="{le:Loc LabelText_ShowTabs}"/>
+                                <CheckBox IsChecked="{Binding ShowBoxForControlCharacters, Mode=TwoWay}" Content="{le:Loc LabelText_ShowBoxForControlCharacters}"/>
+                                <CheckBox IsChecked="{Binding ShowEndOfLine, Mode=TwoWay}"               Content="{le:Loc LabelText_ShowEndOfLine}"/>
+                                <CheckBox IsChecked="{Binding ShowLineNumbers, Mode=TwoWay}"             Content="{le:Loc LabelText_ShowLineNumbers}"/>
+                                <CheckBox IsChecked="{Binding ShowChangeMarker, Mode=TwoWay}"            Content="{le:Loc LabelText_ShowChangeMarker}"/>
 
                                 <Border Height="10"/>
 
-                                <StackPanel>
-                                    <CheckBox IsChecked="{Binding ShowColumnRuler, Mode=TwoWay}" Content="{le:Loc LabelText_ShowColumnRuler}"/>
-                                    <Grid ge:GridEx.RowDefinition="Auto" ge:GridEx.ColumnDefinition="Auto, 10, Auto" Margin="30 0 0 0">
-                                        <TextBlock       Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_ColumnRulerPosition}"/>
-                                        <m:NumericUpDown Grid.Row="0" Grid.Column="2" Value="{Binding ColumnRulerPosition, Mode=TwoWay}" Minimum="1" Maximum="10000" MinWidth="100"/>
-                                    </Grid>
-                                    <CheckBox IsChecked="{Binding WordWrap, Mode=TwoWay}"            Content="{le:Loc LabelText_EnableWordWrap}"/>
-                                    <CheckBox IsChecked="{Binding ConvertTabsToSpaces, Mode=TwoWay}" Content="{le:Loc LabelText_ConvertTabsToSpaces}"/>
-                                    <Grid ge:GridEx.RowDefinition="Auto" ge:GridEx.ColumnDefinition="Auto, 10, Auto" Margin="30 0 0 0">
-                                        <TextBlock       Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_IndentationSize}"/>
-                                        <m:NumericUpDown Grid.Row="0" Grid.Column="2" Value="{Binding IndentationSize, Mode=TwoWay}" Minimum="1" Maximum="64" MinWidth="100"/>
-                                    </Grid>
-                                </StackPanel>
+                                <CheckBox IsChecked="{Binding ShowColumnRuler, Mode=TwoWay}" Content="{le:Loc LabelText_ShowColumnRuler}"/>
+                                <Grid ge:GridEx.RowDefinition="Auto" ge:GridEx.ColumnDefinition="Auto, 10, Auto" Margin="30 0 0 0">
+                                    <TextBlock       Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_ColumnRulerPosition}"/>
+                                    <m:NumericUpDown Grid.Row="0" Grid.Column="2" Value="{Binding ColumnRulerPosition, Mode=TwoWay}" Minimum="1" Maximum="10000" MinWidth="100"/>
+                                </Grid>
+                                <CheckBox IsChecked="{Binding WordWrap, Mode=TwoWay}"            Content="{le:Loc LabelText_EnableWordWrap}"/>
+                                <CheckBox IsChecked="{Binding ConvertTabsToSpaces, Mode=TwoWay}" Content="{le:Loc LabelText_ConvertTabsToSpaces}"/>
+                                <Grid ge:GridEx.RowDefinition="Auto" ge:GridEx.ColumnDefinition="Auto, 10, Auto" Margin="30 0 0 0">
+                                    <TextBlock       Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_IndentationSize}"/>
+                                    <m:NumericUpDown Grid.Row="0" Grid.Column="2" Value="{Binding IndentationSize, Mode=TwoWay}" Minimum="1" Maximum="64" MinWidth="100"/>
+                                </Grid>
                             </StackPanel>
 
                             <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
-                                <StackPanel>
-                                    <CheckBox IsChecked="{Binding EnableFoldings, Mode=TwoWay}"                          Content="{le:Loc LabelText_EnableFoldings}"/>
-                                    <CheckBox IsChecked="{Binding EnableAutoCompletion, Mode=TwoWay}"                    Content="{le:Loc LabelText_EnableAutoCompletion}"/>
-                                    <CheckBox IsChecked="{Binding EnableVirtualSpace, Mode=TwoWay}"                      Content="{le:Loc LabelText_EnableVirtualSpace}"/>
-                                    <CheckBox IsChecked="{Binding EnableRectangularSelection, Mode=TwoWay}"              Content="{le:Loc LabelText_EnableRectangularSelection}"/>
-                                    <CheckBox IsChecked="{Binding EnableTextDragDrop, Mode=TwoWay}"                      Content="{le:Loc LabelText_EnableTextDragDrop}"/>
-                                    <CheckBox IsChecked="{Binding EnableImeSupport, Mode=TwoWay}"                        Content="{le:Loc LabelText_EnableImeSupport}"/>
-                                    <CheckBox IsChecked="{Binding EnableHyperlinks, Mode=TwoWay}"                        Content="{le:Loc LabelText_EnableHyperlinks}"/>
-                                    <CheckBox IsChecked="{Binding EnableEmailHyperlinks, Mode=TwoWay}"                   Content="{le:Loc LabelText_EnableEmailHyperlinks}"/>
-                                    <CheckBox IsChecked="{Binding RequireControlModifierForHyperlinkClick, Mode=TwoWay}" Content="{le:Loc LabelText_RequireControlModifierForHyperlinkClick}"/>
-                                    <CheckBox IsChecked="{Binding HideCursorWhileTyping, Mode=TwoWay}"                   Content="{le:Loc LabelText_HideCursorWhileTyping}"/>
-                                    <CheckBox IsChecked="{Binding CutCopyWholeLine, Mode=TwoWay}"                        Content="{le:Loc LabelText_EnableCutCopyWholeLine}"/>
-                                    <CheckBox IsChecked="{Binding CutCopyHtmlFormat, Mode=TwoWay}"                       Content="{le:Loc LabelText_EnableCutCopyHtmlFormat}"/>
-                                    <CheckBox IsChecked="{Binding AllowToggleOverstrikeMode, Mode=TwoWay}"               Content="{le:Loc LabelText_AllowToggleOverstrikeMode}"/>
-                                    <CheckBox IsChecked="{Binding AllowScrollBelowDocument, Mode=TwoWay}"                Content="{le:Loc LabelText_AllowScrollBelowDocument}"/>
-                                </StackPanel>
+                                <CheckBox IsChecked="{Binding EnableFoldings, Mode=TwoWay}"                          Content="{le:Loc LabelText_EnableFoldings}"/>
+                                <CheckBox IsChecked="{Binding EnableAutoCompletion, Mode=TwoWay}"                    Content="{le:Loc LabelText_EnableAutoCompletion}"/>
+                                <CheckBox IsChecked="{Binding EnableVirtualSpace, Mode=TwoWay}"                      Content="{le:Loc LabelText_EnableVirtualSpace}"/>
+                                <CheckBox IsChecked="{Binding EnableRectangularSelection, Mode=TwoWay}"              Content="{le:Loc LabelText_EnableRectangularSelection}"/>
+                                <CheckBox IsChecked="{Binding EnableTextDragDrop, Mode=TwoWay}"                      Content="{le:Loc LabelText_EnableTextDragDrop}"/>
+                                <CheckBox IsChecked="{Binding EnableImeSupport, Mode=TwoWay}"                        Content="{le:Loc LabelText_EnableImeSupport}"/>
+                                <CheckBox IsChecked="{Binding EnableHyperlinks, Mode=TwoWay}"                        Content="{le:Loc LabelText_EnableHyperlinks}"/>
+                                <CheckBox IsChecked="{Binding EnableEmailHyperlinks, Mode=TwoWay}"                   Content="{le:Loc LabelText_EnableEmailHyperlinks}"/>
+                                <CheckBox IsChecked="{Binding RequireControlModifierForHyperlinkClick, Mode=TwoWay}" Content="{le:Loc LabelText_RequireControlModifierForHyperlinkClick}"/>
+                                <CheckBox IsChecked="{Binding HideCursorWhileTyping, Mode=TwoWay}"                   Content="{le:Loc LabelText_HideCursorWhileTyping}"/>
+                                <CheckBox IsChecked="{Binding CutCopyWholeLine, Mode=TwoWay}"                        Content="{le:Loc LabelText_EnableCutCopyWholeLine}"/>
+                                <CheckBox IsChecked="{Binding CutCopyHtmlFormat, Mode=TwoWay}"                       Content="{le:Loc LabelText_EnableCutCopyHtmlFormat}"/>
+                                <CheckBox IsChecked="{Binding AllowToggleOverstrikeMode, Mode=TwoWay}"               Content="{le:Loc LabelText_AllowToggleOverstrikeMode}"/>
+                                <CheckBox IsChecked="{Binding AllowScrollBelowDocument, Mode=TwoWay}"                Content="{le:Loc LabelText_AllowScrollBelowDocument}"/>
                             </StackPanel>
                         </ge:ResponsiveGrid>
                     </StackPanel>
@@ -236,14 +229,14 @@
                                 </Setter>
                             </Style>
                             <!-- テンプレートカラム用のセル -->
-                            <Style x:Key="TemplateColumnDataGridCell" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource Default.DataGridCell}">
+                            <Style x:Key="TemplateColumnDataGridCell" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource Common.DataGridCell}">
                                 <Setter Property="IsTabStop" Value="False"/>
                             </Style>
                         </DataGrid.Resources>
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="{le:Loc Label_Path}">
                                 <DataGridTextColumn.EditingElementStyle>
-                                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+                                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Common.TextBox}">
                                         <Setter Property="BorderThickness" Value="0"/>
                                         <Setter Property="m:TextBoxHelper.SelectAllOnFocus" Value="True"/>
                                         <Setter Property="m:TextBoxHelper.ClearTextButton" Value="True"/>
@@ -300,7 +293,7 @@
                         <GroupBox Header="{le:Loc Label_SystemDirectory}">
                             <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, 5" ge:GridEx.RowDefinition="Auto, Auto, Auto">
                                 <Grid.Resources>
-                                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+                                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Common.TextBox}">
                                         <Setter Property="Margin" Value="5"/>
                                         <Setter Property="IsTabStop" Value="False"/>
                                         <Setter Property="IsReadOnly" Value="True"/>
@@ -311,7 +304,7 @@
                                             </Trigger>
                                         </Style.Triggers>
                                     </Style>
-                                    <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+                                    <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Common.Button}">
                                         <Setter Property="Margin" Value="0 5"/>
                                         <Setter Property="Padding" Value="0"/>
                                         <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
@@ -358,12 +351,12 @@
                         <GroupBox Header="{le:Loc Label_SystemSettings}">
                             <ge:ResponsiveGrid>
                                 <ge:ResponsiveGrid.Resources>
-                                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+                                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Common.Button}">
                                         <Setter Property="Margin" Value="5"/>
                                         <Setter Property="ge:ResponsiveGrid.XS" Value="6"/>
                                         <Setter Property="ge:ResponsiveGrid.SM" Value="4"/>
                                         <Style.Resources>
-                                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
+                                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
                                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                             </Style>
                                         </Style.Resources>
@@ -373,7 +366,7 @@
                                         <Setter Property="ge:ResponsiveGrid.XS" Value="6"/>
                                         <Setter Property="ge:ResponsiveGrid.SM" Value="4"/>
                                         <Style.Resources>
-                                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
+                                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
                                                 <Setter Property="VerticalAlignment" Value="Center"/>
                                             </Style>
                                         </Style.Resources>

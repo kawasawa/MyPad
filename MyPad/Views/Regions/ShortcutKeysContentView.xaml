@@ -18,7 +18,7 @@
 
     <Grid Margin="20 0 20 20">
         <Grid.Resources>
-            <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource Default.DataGrid}">
+            <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource Common.DataGrid}">
                 <Setter Property="AutoGenerateColumns" Value="False"/>
                 <Setter Property="HeadersVisibility" Value="None"/>
                 <Setter Property="ColumnWidth" Value="*"/>
@@ -26,7 +26,7 @@
         </Grid.Resources>
         <DataGrid ItemsSource="{x:Static views:Commands.Definitions}">
             <DataGrid.Resources>
-                <Style x:Key="TemplateColumnDataGridCell" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource Default.DataGridCell}">
+                <Style x:Key="TemplateColumnDataGridCell" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource Common.DataGridCell}">
                     <Setter Property="IsTabStop" Value="False"/>
                 </Style>
             </DataGrid.Resources>

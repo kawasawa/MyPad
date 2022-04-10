@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:s="clr-namespace:System;assembly=System.Runtime">
+
+    <s:Double x:Key="Common.Size.Icon">16</s:Double>
+    <s:Double x:Key="Common.Size.Tile">100</s:Double>
+    <s:Double x:Key="Common.Size.TileIcon">24</s:Double>
+    <s:Double x:Key="Common.Size.CircleButton">40</s:Double>
+    <s:Double x:Key="Common.Size.CircleButtonIcon">20</s:Double>
+
+</ResourceDictionary>

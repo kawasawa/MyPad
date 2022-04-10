@@ -2,10 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:lcw="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf">
 
-    <Style x:Key="Default.CartesianChart" TargetType="{x:Type lcw:CartesianChart}">
+    <Style x:Key="Common.CartesianChart" TargetType="{x:Type lcw:CartesianChart}">
         <Setter Property="DisableAnimations" Value="False"/>
     </Style>
 
-    <Style TargetType="{x:Type lcw:CartesianChart}" BasedOn="{StaticResource Default.CartesianChart}"/>
+    <Style TargetType="{x:Type lcw:CartesianChart}" BasedOn="{StaticResource Common.CartesianChart}"/>
 
 </ResourceDictionary>

@@ -1,28 +1,20 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:m="http://metro.mahapps.com/winfx/xaml/controls"
-                    xmlns:p="http://prismlibrary.com/" 
-                    xmlns:s="clr-namespace:System;assembly=System.Runtime"
+                    xmlns:p="http://prismlibrary.com/"
                     xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
                     xmlns:controls="clr-namespace:MyPad.Views.Controls">
     
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="./Controls/AvalonEdit.xaml"/>
-        <ResourceDictionary Source="./Controls/DiffViewer.xaml"/>
-        <ResourceDictionary Source="./Controls/Dragablz.xaml"/>
-        <ResourceDictionary Source="./Controls/LiveCharts.xaml"/>
-        <ResourceDictionary Source="./Controls/MarkDig.xaml"/>
-        <ResourceDictionary Source="./Controls/ToastNotifications.xaml"/>
+        <ResourceDictionary Source="./AvalonEdit.xaml"/>
+        <ResourceDictionary Source="./DiffViewer.xaml"/>
+        <ResourceDictionary Source="./Dragablz.xaml"/>
+        <ResourceDictionary Source="./LiveCharts.xaml"/>
+        <ResourceDictionary Source="./MarkDig.xaml"/>
+        <ResourceDictionary Source="./ToastNotifications.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <s:Double x:Key="MahApps.Font.Size.Window.Title">13</s:Double>
-    <s:Double x:Key="MahApps.Font.Size.Menu">12</s:Double>
-    <s:Double x:Key="MahApps.Font.Size.ContextMenu">12</s:Double>
-    <s:Double x:Key="MahApps.Font.Size.TabItem">20</s:Double>
-    <s:Double x:Key="App.Font.Size.Dialog.Message">14</s:Double>
-    <s:Double x:Key="App.Font.Size.Overlay.Message">20</s:Double>
-
-    <Style TargetType="{x:Type controls:NumericUpDown}" BasedOn="{StaticResource Default.NumericUpDown}"/>
+    <Style TargetType="{x:Type controls:NumericUpDown}" BasedOn="{StaticResource Common.NumericUpDown}"/>
 
     <m:WindowButtonCommands x:Key="_windowButtonCommands" x:Shared="False">
         <m:WindowButtonCommands.Style>
@@ -81,11 +73,11 @@
         <Setter Property="p:Dialog.WindowStartupLocation" Value="CenterScreen"/>
         <Setter Property="behaviors:WindowAttachedBehavior.DraggableAnywhere" Value="True"/>
         <Style.Resources>
-            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
-                <Setter Property="FontSize" Value="{StaticResource App.Font.Size.Dialog.Message}"/>
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
+                <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.Dialog.Message}"/>
                 <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
             </Style>
-            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Common.Button}">
                 <Setter Property="MinWidth" Value="80"/>
             </Style>
         </Style.Resources>
@@ -95,9 +87,9 @@
         <Setter Property="Opacity" Value="0.9"/>
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray.SemiTransparent}"/>
         <Style.Resources>
-            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
                 <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
-                <Setter Property="FontSize" Value="{StaticResource App.Font.Size.Overlay.Message}"/>
+                <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.Dialog.Title}"/>
             </Style>
         </Style.Resources>
     </Style>

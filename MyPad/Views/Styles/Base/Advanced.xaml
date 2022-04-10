@@ -1,0 +1,181 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:m="http://metro.mahapps.com/winfx/xaml/controls"
+                    xmlns:mi="http://metro.mahapps.com/winfx/xaml/iconpacks">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="./Sizes.xaml"/>
+        <ResourceDictionary Source="./Colors.xaml"/>
+        <ResourceDictionary Source="./Common.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- ボタン (ボーダーレス) -->
+    <Style x:Key="Common.ChromelessButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.Chromeless}">
+    </Style>
+
+    <!-- ボタン (アクセント) -->
+    <Style x:Key="Common.AccentButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Common.Button}">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}"/>
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
+            </Trigger>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ボタン (警告) -->
+    <Style x:Key="Common.DangerButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Common.Button}">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ValidationSummary2}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.ValidationSummary2}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}"/>
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ValidationSummary3}"/>
+            </Trigger>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ValidationSummary3}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ValidationSummary4}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ドロップダウンボタン (アクセント) -->
+    <Style x:Key="Common.AccentDropDownButton" TargetType="{x:Type m:DropDownButton}" BasedOn="{StaticResource Common.DropDownButton}">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}"/>
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
+            </Trigger>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
+            </Trigger>
+            <Trigger Property="IsExpanded" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.FlatButton.PressedBackground}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ドロップダウンボタン (警告) -->
+    <Style x:Key="Common.DangerDropDownButton" TargetType="{x:Type m:DropDownButton}" BasedOn="{StaticResource Common.DropDownButton}">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ValidationSummary2}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.ValidationSummary2}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}"/>
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ValidationSummary3}"/>
+            </Trigger>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ValidationSummary3}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ValidationSummary4}"/>
+            </Trigger>
+            <Trigger Property="IsExpanded" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.FlatButton.PressedBackground}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- サークルボタン -->
+    <Style x:Key="Common.CircleButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource MahApps.Styles.Button.Circle}">
+        <Setter Property="Width" Value="{DynamicResource Common.Size.CircleButton}"/>
+        <Setter Property="Height" Value="{DynamicResource Common.Size.CircleButton}"/>
+        <Style.Resources>
+            <Style TargetType="{x:Type mi:PackIconModern}">
+                <Setter Property="Width" Value="{DynamicResource Common.Size.CircleButtonIcon}"/>
+                <Setter Property="Height" Value="{DynamicResource Common.Size.CircleButtonIcon}"/>
+            </Style>
+            <Style TargetType="{x:Type mi:PackIconMaterial}">
+                <Setter Property="Width" Value="{DynamicResource Common.Size.CircleButtonIcon}"/>
+                <Setter Property="Height" Value="{DynamicResource Common.Size.CircleButtonIcon}"/>
+            </Style>
+            <Style TargetType="{x:Type mi:PackIconFontAwesome}">
+                <Setter Property="Width" Value="{DynamicResource Common.Size.CircleButtonIcon}"/>
+                <Setter Property="Height" Value="{DynamicResource Common.Size.CircleButtonIcon}"/>
+            </Style>
+            <Style TargetType="{x:Type mi:PackIconOcticons}">
+                <Setter Property="Width" Value="{DynamicResource Common.Size.CircleButtonIcon}"/>
+                <Setter Property="Height" Value="{DynamicResource Common.Size.CircleButtonIcon}"/>
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <!-- サークルボタン (アクセント) -->
+    <Style x:Key="Common.CircleAccentButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource Common.CircleButton}">
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+    </Style>
+
+    <!-- サークルボタン (警告) -->
+    <Style x:Key="Common.CircleDangerButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource Common.CircleButton}">
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ValidationSummary2}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.ValidationSummary2}"/>
+    </Style>
+
+    <!-- サークルトグルボタン -->
+    <Style x:Key="Common.CircleToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MahApps.Styles.ToggleButton.Circle}">
+        <Setter Property="Width" Value="{DynamicResource Common.Size.CircleButton}"/>
+        <Setter Property="Height" Value="{DynamicResource Common.Size.CircleButton}"/>
+        <Style.Resources>
+            <Style x:Key="Common.CirclePackIcon" TargetType="{x:Type mi:PackIconBase}" BasedOn="{StaticResource Common.PackIcon}">
+                <Setter Property="Width" Value="{DynamicResource Common.Size.CircleButtonIcon}"/>
+                <Setter Property="Height" Value="{DynamicResource Common.Size.CircleButtonIcon}"/>
+            </Style>
+            <Style TargetType="{x:Type mi:PackIconBootstrapIcons}" BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconBoxIcons}"       BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconCodicons}"       BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconCoolicons}"      BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconEntypo}"         BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconEvaIcons}"       BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFeatherIcons}"   BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFileIcons}"      BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFontaudio}"      BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFontAwesome}"    BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFontisto}"       BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconForkAwesome}"    BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconIonicons}"       BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconJamIcons}"       BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconMaterialDesign}" BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconMaterial}"       BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconMaterialLight}"  BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconMicrons}"        BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconModern}"         BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconOcticons}"       BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconPicolIcons}"     BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconPixelartIcons}"  BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconRadixIcons}"     BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconRemixIcon}"      BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconRPGAwesome}"     BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconSimpleIcons}"    BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconTypicons}"       BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconUnicons}"        BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconVaadinIcons}"    BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconWeatherIcons}"   BasedOn="{StaticResource Common.CirclePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconZondicons}"      BasedOn="{StaticResource Common.CirclePackIcon}"/>
+        </Style.Resources>
+    </Style>
+
+</ResourceDictionary>

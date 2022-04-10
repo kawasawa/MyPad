@@ -42,6 +42,17 @@ public class SystemSettings : ModelBase
         }
     }
 
+    private UISizeType _uiSize = UISizeType.Small;
+    public UISizeType UISize
+    {
+        get => this._uiSize;
+        set
+        {
+            if (this.SetProperty(ref this._uiSize, value))
+                this.ApplyUISize();
+        }
+    }
+
     private string _culture = "ja-JP";
     public string Culture
     {
@@ -180,6 +191,7 @@ public class SystemSettings : ModelBase
     public SystemSettings()
     {
         this.ApplyTheme();
+        this.ApplyUISize();
         this.ApplyCulture();
     }
 
@@ -206,6 +218,16 @@ public class SystemSettings : ModelBase
         }
     }
 
+    public void ApplyUISize()
+    {
+        var dictionaries = Application.Current.Resources.MergedDictionaries;
+        var resourcePath = Enum.GetNames(typeof(UISizeType)).Select(t => $"./Views/Styles/Size/{t}.xaml").ToArray();
+        var currentResource = dictionaries.FirstOrDefault(dd => resourcePath.Contains(dd.Source?.OriginalString));
+        if (currentResource != null)
+            dictionaries.Remove(currentResource);
+        dictionaries.Add(new ResourceDictionary { Source = new Uri($"./Views/Styles/Size/{this.UISize}.xaml", UriKind.Relative) });
+    }
+
     public void ApplyCulture()
     {
         LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(this.Culture);
@@ -216,5 +238,12 @@ public class SystemSettings : ModelBase
         Sync,
         Dark,
         Light,
+    }
+
+    public enum UISizeType
+    {
+        Small,
+        Medium,
+        Large,
     }
 }

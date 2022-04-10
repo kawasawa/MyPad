@@ -4,11 +4,11 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="./Sizes.xaml"/>
         <ResourceDictionary Source="./Colors.xaml"/>
-        <ResourceDictionary Source="./Common.xaml"/>
-        <ResourceDictionary Source="./Advanced.xaml"/>
-        <ResourceDictionary Source="./Override.xaml"/>
     </ResourceDictionary.MergedDictionaries>
-
-    <Style x:Key="MahApps.Styles.Button.FlipView.Navigation" TargetType="{x:Type Button}" BasedOn="{StaticResource Common.FlipView.Navigation}"/>
+    
+    <!-- フリップビュー ナビゲーションボタン -->
+    <Style x:Key="Common.FlipView.Navigation" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.FlipView.Navigation}">
+        <Setter Property="Height" Value="50"/>
+    </Style>
 
 </ResourceDictionary>

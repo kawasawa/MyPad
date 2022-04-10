@@ -62,7 +62,7 @@
             <Setter Property="p:RegionManager.RegionManager" Value="{Binding RegionManager, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
             <Setter Property="Focusable" Value="False"/>
         </Style>
-        <Style TargetType="{x:Type m:Flyout}" BasedOn="{StaticResource Default.Flyout}">
+        <Style TargetType="{x:Type m:Flyout}" BasedOn="{StaticResource Common.Flyout}">
             <EventSetter Event="IsOpenChanged" Handler="Flyout_IsOpenChanged"/>
             <Setter Property="Position" Value="Left"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -137,14 +137,18 @@
             
             <!-- 全画面表示ボタン -->
             <Button Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}" Focusable="False">
-                <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
+                    <mi:PackIconModern.Resources>
+                        <Style TargetType="{x:Type mi:PackIconModern}"/>
+                    </mi:PackIconModern.Resources>
+                </mi:PackIconModern>
             </Button>
         </m:WindowCommands>
     </m:MetroWindow.RightWindowCommands>
 
     <!-- ウィンドウコマンド(左) -->
     <m:MetroWindow.LeftWindowCommands>
-        <m:WindowCommands Margin="0 2 0 0">
+        <m:WindowCommands Margin="0 1 0 0">
             <!-- メニューバー -->
             <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="MenuBarRegion1"
                             Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowMenuBar, Mode=OneWay}}"
@@ -258,7 +262,7 @@
                             <Grid.ContextMenu>
                                 <ContextMenu/>
                             </Grid.ContextMenu>
-                            <TextBlock      Grid.Row="1" Margin="3 0" Text="{Binding Label, Mode=OneWay}" FontSize="14"/>
+                            <TextBlock      Grid.Row="1" Margin="3 0" Text="{Binding Label, Mode=OneWay}" FontSize="{DynamicResource MahApps.Font.Size.Default}"/>
                             <ContentControl Grid.Row="3" Margin="3 0" Content="{Binding Tag, Mode=OneWay}" IsTabStop="False" Focusable="False"/>
                         </Grid>
                     </DataTemplate>
@@ -273,7 +277,7 @@
                             <m:HamburgerMenuIconItem.Tag>
                                 <TreeView ItemsSource="{Binding Data.FileExplorer.Value.FileTreeNodes, Source={StaticResource Proxy}, Mode=OneWay}">
                                     <TreeView.ItemContainerStyle>
-                                        <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource Default.TreeViewItem}">
+                                        <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource Common.TreeViewItem}">
                                             <EventSetter Event="MouseRightButtonDown" Handler="FileTreeNode_MouseRightButtonDown"/>
                                             <EventSetter Event="MouseDoubleClick" Handler="FileTreeNode_MouseDoubleClick"/>
                                             <EventSetter Event="KeyDown" Handler="FileTreeNode_KeyDown"/>
@@ -350,12 +354,12 @@
                                             <Style x:Key="AccentButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Common.AccentButton}">
                                                 <Setter Property="Padding"     Value="2"/>
                                             </Style>
-                                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
+                                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Common.Button}">
                                                 <Setter Property="Background"  Value="{x:Null}"/>
                                                 <Setter Property="BorderBrush" Value="{x:Null}"/>
                                                 <Setter Property="Padding"     Value="2"/>
                                             </Style>
-                                            <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Default.ToggleButton}">
+                                            <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Common.ToggleButton}">
                                                 <Setter Property="Background"  Value="{x:Null}"/>
                                                 <Setter Property="BorderBrush" Value="{x:Null}"/>
                                                 <Setter Property="Padding"     Value="2"/>
@@ -364,7 +368,7 @@
                                                     <SolidColorBrush x:Key="MahApps.Brushes.Gray5" Color="{DynamicResource MahApps.Colors.Gray2}" o:Freeze="True"/>
                                                 </Style.Resources>
                                             </Style>
-                                            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Default.TextBox}">
+                                            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Common.TextBox}">
                                                 <!-- 既定のバリデーションエラーとポップアップを停止する -->
                                                 <Setter Property="Validation.ErrorTemplate" Value="{x:Null}"/>
                                                 <Style.Triggers>
@@ -401,7 +405,7 @@
                                     
                                     <ListBox Grid.Row="2" ItemsSource="{Binding Results, Mode=OneWay}">
                                         <ListBox.ItemContainerStyle>
-                                            <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Default.ListBoxItem}">
+                                            <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Common.ListBoxItem}">
                                                 <EventSetter Event="MouseDoubleClick" Handler="GrepResult_MouseDoubleClick"/>
                                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                             </Style>
@@ -441,10 +445,10 @@
                                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                                     <StackPanel DataContext="{Binding Data.ActiveTextEditor.Value, Source={StaticResource Proxy}, Mode=OneWay}" Margin="5 0 0 0">
                                         <StackPanel.Resources>
-                                            <Style x:Key="PropertyName" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
-                                                <Setter Property="FontSize" Value="14"/>
+                                            <Style x:Key="PropertyName" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
+                                                <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.Default}"/>
                                             </Style>
-                                            <Style x:Key="PropertyValue" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Default.TextBlock}">
+                                            <Style x:Key="PropertyValue" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
                                                 <Setter Property="Margin" Value="20 0 0 5"/>
                                                 <Setter Property="TextWrapping" Value="Wrap"/>
                                             </Style>
@@ -578,7 +582,7 @@
                     </DataTemplate>
                 </dr:TabablzControl.HeaderItemTemplate>
                 <dr:TabablzControl.ItemContainerStyle>
-                    <Style TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource Default.DragablzItem}">
+                    <Style TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource Common.DragablzItem}">
                         <EventSetter Event="MouseRightButtonDown" Handler="MainContentItem_MouseRightButtonDown"/>
                         <Setter Property="ToolTipService.IsEnabled" Value="{qc:Binding '!$P', P={Binding IsNewFile, Mode=OneWay}}"/>
                         <Setter Property="ToolTip" Value="{qc:MultiBinding '($P0 ? \'[R/O] \' : null) + $P1', P0={Binding IsReadOnly, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}"/>
@@ -666,12 +670,12 @@
                         <!-- テキストエディター -->
                         <controls:TextEditor x:Name="TextEditor">
                             <controls:TextEditor.Resources>
-                                <Style TargetType="{x:Type ae:SearchPanel}" BasedOn="{StaticResource Default.SearchPanel}">
+                                <Style TargetType="{x:Type ae:SearchPanel}" BasedOn="{StaticResource Common.SearchPanel}">
                                     <Setter Property="Localization" Value="{Binding Localization, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
                                 </Style>
                             </controls:TextEditor.Resources>
                             <controls:TextEditor.Style>
-                                <Style TargetType="{x:Type controls:TextEditor}" BasedOn="{StaticResource Default.TextEditor}">
+                                <Style TargetType="{x:Type controls:TextEditor}" BasedOn="{StaticResource Common.TextEditor}">
                                     <EventSetter Event="Loaded" Handler="TextEditor_Loaded"/>
                                     <EventSetter Event="Unloaded" Handler="TextEditor_Unloaded"/>
                                     <Setter Property="Settings"         Value="{Binding DataContext.Settings.TextEditor, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
@@ -872,7 +876,7 @@
 
             <!-- タブコントロール(ボトム) -->
             <TabControl Grid.Column="2" Grid.Row="2" x:Name="BottomContent"
-                        TabStripPlacement="Bottom" m:HeaderedControlHelper.HeaderFontWeight="Bold" m:HeaderedControlHelper.HeaderFontSize="10"
+                        TabStripPlacement="Bottom" m:HeaderedControlHelper.HeaderFontWeight="Bold" m:HeaderedControlHelper.HeaderFontSize="{DynamicResource MahApps.Font.Size.FloatingWatermark}"
                         Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsVisibleBottomContent, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}">
                 <TabItem Header="{le:Loc Command_Terminal}">
                     <!-- ターミナル -->

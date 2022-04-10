@@ -9,7 +9,7 @@
         <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/Generic.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <Style x:Key="Default.DragablzItem" TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource {x:Type dr:DragablzItem}}">
+    <Style x:Key="Common.DragablzItem" TargetType="{x:Type dr:DragablzItem}" BasedOn="{StaticResource {x:Type dr:DragablzItem}}">
         <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}"/>
         <Setter Property="Background" Value="{x:Null}"/>
         <Setter Property="BorderBrush" Value="{x:Null}"/>
@@ -117,16 +117,16 @@
         </Setter>
     </Style>
 
-    <Style x:Key="Default.TabablzControl" TargetType="{x:Type dr:TabablzControl}" BasedOn="{StaticResource {x:Type dr:TabablzControl}}">
-        <Setter Property="ItemContainerStyle" Value="{StaticResource Default.DragablzItem}"/>
+    <Style x:Key="Common.TabablzControl" TargetType="{x:Type dr:TabablzControl}" BasedOn="{StaticResource {x:Type dr:TabablzControl}}">
+        <Setter Property="ItemContainerStyle" Value="{StaticResource Common.DragablzItem}"/>
         <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}"/>
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Control.Background}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Control.Background}"/>
         <Setter Property="BorderThickness" Value="0"/>
     </Style>
     
-    <Style TargetType="{x:Type dr:DragablzItem}"              BasedOn="{StaticResource Default.DragablzItem}"/>
-    <Style TargetType="{x:Type dr:TabablzControl}"            BasedOn="{StaticResource Default.TabablzControl}"/>
-    <Style TargetType="{x:Type controls:DraggableTabControl}" BasedOn="{StaticResource Default.TabablzControl}"/>
+    <Style TargetType="{x:Type dr:DragablzItem}"              BasedOn="{StaticResource Common.DragablzItem}"/>
+    <Style TargetType="{x:Type dr:TabablzControl}"            BasedOn="{StaticResource Common.TabablzControl}"/>
+    <Style TargetType="{x:Type controls:DraggableTabControl}" BasedOn="{StaticResource Common.TabablzControl}"/>
 
 </ResourceDictionary>

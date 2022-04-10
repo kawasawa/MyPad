@@ -1,169 +1,473 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
-                    xmlns:s="clr-namespace:System;assembly=System.Runtime"
                     xmlns:m="http://metro.mahapps.com/winfx/xaml/controls"
-                    xmlns:mi="http://metro.mahapps.com/winfx/xaml/iconpacks">
+                    xmlns:mi="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                    xmlns:md="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro">
 
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml"/>
+        <ResourceDictionary Source="./Sizes.xaml"/>
         <ResourceDictionary Source="./Colors.xaml"/>
-        <ResourceDictionary Source="./Default.xaml"/>
     </ResourceDictionary.MergedDictionaries>
-
-    <s:Double x:Key="Common.CircleButton.ButtonSize">40</s:Double>
-    <s:Double x:Key="Common.CircleButton.IconSize">20</s:Double>
 
     <!--
     ************************************************************
     |
-    | コモンスタイル
-    |
-    | カスタマイズされたコントロールスタイルを定義します。
-    | プレフィックスを Common. で統一します。
+    | 基本的なコントロールのスタイルを定義します。
+    | プレフィックスは Common. で統一します。
     |
     ************************************************************
     -->
 
-    <!-- ボタン (ボーダーレス) -->
-    <Style x:Key="Common.ChromelessButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.Chromeless}">
+    <!-- アイコン -->
+    <Style x:Key="Common.PackIcon" TargetType="{x:Type mi:PackIconBase}" BasedOn="{StaticResource {x:Type mi:PackIconBase}}">
+        <Setter Property="Width" Value="{DynamicResource Common.Size.Icon}"/>
+        <Setter Property="Height" Value="{DynamicResource Common.Size.Icon}"/>
     </Style>
 
-    <!-- ボタン (アクセント) -->
-    <Style x:Key="Common.AccentButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Style.Triggers>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}"/>
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
-            </Trigger>
-            <Trigger Property="IsFocused" Value="True">
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
-            </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
-            </Trigger>
-        </Style.Triggers>
+    <!-- テキストブロック -->
+    <Style x:Key="Common.TextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MahApps.Styles.TextBlock}">
     </Style>
 
-    <!-- ボタン (警告) -->
-    <Style x:Key="Common.DangerButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Default.Button}">
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ValidationSummary2}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.ValidationSummary2}"/>
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Style.Triggers>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}"/>
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ValidationSummary3}"/>
-            </Trigger>
-            <Trigger Property="IsFocused" Value="True">
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ValidationSummary3}"/>
-            </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ValidationSummary4}"/>
-            </Trigger>
-        </Style.Triggers>
+    <!-- ラベル -->
+    <Style x:Key="Common.Label" TargetType="{x:Type Label}" BasedOn="{StaticResource MahApps.Styles.Label}">
     </Style>
 
-    <!-- ドロップダウンボタン (アクセント) -->
-    <Style x:Key="Common.AccentDropDownButton" TargetType="{x:Type m:DropDownButton}" BasedOn="{StaticResource Default.DropDownButton}">
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Style.Triggers>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}"/>
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
-            </Trigger>
-            <Trigger Property="IsFocused" Value="True">
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
-            </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
-            </Trigger>
-            <Trigger Property="IsExpanded" Value="True">
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.FlatButton.PressedBackground}"/>
-            </Trigger>
-        </Style.Triggers>
+    <!-- ツールチップ -->
+    <Style x:Key="Common.ToolTip" TargetType="{x:Type ToolTip}" BasedOn="{StaticResource MahApps.Styles.ToolTip}">
     </Style>
 
-    <!-- ドロップダウンボタン (警告) -->
-    <Style x:Key="Common.DangerDropDownButton" TargetType="{x:Type m:DropDownButton}" BasedOn="{StaticResource Default.DropDownButton}">
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ValidationSummary2}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.ValidationSummary2}"/>
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Style.Triggers>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}"/>
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ValidationSummary3}"/>
-            </Trigger>
-            <Trigger Property="IsFocused" Value="True">
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ValidationSummary3}"/>
-            </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ValidationSummary4}"/>
-            </Trigger>
-            <Trigger Property="IsExpanded" Value="True">
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.FlatButton.PressedBackground}"/>
-            </Trigger>
-        </Style.Triggers>
+    <!-- バリデーションポップアップ -->
+    <Style x:Key="Common.CustomValidationPopup" TargetType="{x:Type m:CustomValidationPopup}" BasedOn="{StaticResource MahApps.Styles.CustomValidationPopup}">
     </Style>
 
-    <!-- サークルボタン -->
-    <Style x:Key="Common.CircleButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource MahApps.Styles.Button.Circle}">
-        <Setter Property="Width" Value="{StaticResource Common.CircleButton.ButtonSize}"/>
-        <Setter Property="Height" Value="{StaticResource Common.CircleButton.ButtonSize}"/>
+    <!-- バッジ -->
+    <Style x:Key="Common.Badged" TargetType="{x:Type m:Badged}" BasedOn="{StaticResource {x:Type m:Badged}}">
+    </Style>
+
+    <!-- プログレスリング -->
+    <Style x:Key="Common.ProgressRing" TargetType="{x:Type m:ProgressRing}" BasedOn="{StaticResource {x:Type m:ProgressRing}}">
+    </Style>
+
+    <!-- プログレスバー -->
+    <Style x:Key="Common.ProgressBar" TargetType="{x:Type ProgressBar}" BasedOn="{StaticResource MahApps.Styles.ProgressBar}">
+    </Style>
+
+    <!-- メトロプログレスバー -->
+    <Style x:Key="Common.MetroProgressBar" TargetType="{x:Type m:MetroProgressBar}" BasedOn="{StaticResource MahApps.Styles.MetroProgressBar}">
+    </Style>
+
+    <!-- スライダー -->
+    <Style x:Key="Common.Slider" TargetType="{x:Type Slider}" BasedOn="{StaticResource MahApps.Styles.Slider}">
+    </Style>
+
+    <!-- タイル -->
+    <Style x:Key="Common.Tile" TargetType="{x:Type m:Tile}" BasedOn="{StaticResource {x:Type m:Tile}}">
+        <Setter Property="TitleFontSize" Value="{DynamicResource MahApps.Font.Size.Default}"/>
+        <Setter Property="CountFontSize" Value="{DynamicResource MahApps.Font.Size.Content}"/>
+        <Setter Property="Width" Value="{DynamicResource Common.Size.Tile}"/>
+        <Setter Property="Height" Value="{DynamicResource Common.Size.Tile}"/>
         <Style.Resources>
-            <Style TargetType="{x:Type mi:PackIconModern}">
-                <Setter Property="Width" Value="{StaticResource Common.CircleButton.IconSize}"/>
-                <Setter Property="Height" Value="{StaticResource Common.CircleButton.IconSize}"/>
+            <Style x:Key="Common.TilePackIcon" TargetType="{x:Type mi:PackIconBase}" BasedOn="{StaticResource Common.PackIcon}">
+                <Setter Property="Width" Value="{DynamicResource Common.Size.TileIcon}"/>
+                <Setter Property="Height" Value="{DynamicResource Common.Size.TileIcon}"/>
             </Style>
-            <Style TargetType="{x:Type mi:PackIconMaterial}">
-                <Setter Property="Width" Value="{StaticResource Common.CircleButton.IconSize}"/>
-                <Setter Property="Height" Value="{StaticResource Common.CircleButton.IconSize}"/>
-            </Style>
-            <Style TargetType="{x:Type mi:PackIconFontAwesome}">
-                <Setter Property="Width" Value="{StaticResource Common.CircleButton.IconSize}"/>
-                <Setter Property="Height" Value="{StaticResource Common.CircleButton.IconSize}"/>
-            </Style>
+            <Style TargetType="{x:Type mi:PackIconBootstrapIcons}" BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconBoxIcons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconCodicons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconCoolicons}"      BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconEntypo}"         BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconEvaIcons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFeatherIcons}"   BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFileIcons}"      BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFontaudio}"      BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFontAwesome}"    BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFontisto}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconForkAwesome}"    BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconIonicons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconJamIcons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconMaterialDesign}" BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconMaterial}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconMaterialLight}"  BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconMicrons}"        BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconModern}"         BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconOcticons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconPicolIcons}"     BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconPixelartIcons}"  BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconRadixIcons}"     BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconRemixIcon}"      BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconRPGAwesome}"     BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconSimpleIcons}"    BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconTypicons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconUnicons}"        BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconVaadinIcons}"    BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconWeatherIcons}"   BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconZondicons}"      BasedOn="{StaticResource Common.TilePackIcon}"/>
         </Style.Resources>
     </Style>
 
-    <!-- サークルボタン (アクセント) -->
-    <Style x:Key="Common.CircleAccentButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource Common.CircleButton}">
-        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+    <!-- ボタン -->
+    <Style x:Key="Common.Button" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button}">
+        <Setter Property="m:ControlsHelper.CornerRadius" Value="0"/>
+        <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
     </Style>
 
-    <!-- サークルボタン (警告) -->
-    <Style x:Key="Common.CircleDangerButton" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource Common.CircleButton}">
-        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ValidationSummary2}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.ValidationSummary2}"/>
+    <!-- トグルボタン -->
+    <Style x:Key="Common.ToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MahApps.Styles.ToggleButton}">
+        <Setter Property="m:ControlsHelper.CornerRadius" Value="0"/>
+        <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
     </Style>
 
-    <!-- サークルトグルボタン -->
-    <Style x:Key="Common.CircleToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MahApps.Styles.ToggleButton.Circle}">
-        <Setter Property="Width" Value="{StaticResource Common.CircleButton.ButtonSize}"/>
-        <Setter Property="Height" Value="{StaticResource Common.CircleButton.ButtonSize}"/>
+    <!-- ドロップダウンボタン -->
+    <Style x:Key="Common.DropDownButton" TargetType="{x:Type m:DropDownButton}" BasedOn="{StaticResource {x:Type m:DropDownButton}}">
+        <!-- ボタンのスタイルに合わせる -->
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border}"/>
+        <!-- コンテキストメニューのスタイルに合わせる -->
+        <Setter Property="MenuStyle" Value="{DynamicResource Common.ContextMenu}"/>
+    </Style>
+
+    <!-- ラジオボタン -->
+    <Style x:Key="Common.RadioButton" TargetType="{x:Type RadioButton}" BasedOn="{StaticResource MahApps.Styles.RadioButton}">
+    </Style>
+
+    <!-- チェックボックス -->
+    <Style x:Key="Common.CheckBox" TargetType="{x:Type CheckBox}" BasedOn="{StaticResource MahApps.Styles.CheckBox}">
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- テキストボックス -->
+    <Style x:Key="Common.TextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource MahApps.Styles.TextBox}">
+    </Style>
+
+    <!-- リッチテキストボックス -->
+    <Style x:Key="Common.RichTextBox" TargetType="{x:Type RichTextBox}" BasedOn="{StaticResource MahApps.Styles.RichTextBox}">
+    </Style>
+
+    <!-- パスワードボックス -->
+    <Style x:Key="Common.PasswordBox" TargetType="{x:Type PasswordBox}" BasedOn="{StaticResource MahApps.Styles.PasswordBox}">
+    </Style>
+
+    <!-- 数値入力 -->
+    <Style x:Key="Common.NumericUpDown" TargetType="{x:Type m:NumericUpDown}" BasedOn="{StaticResource {x:Type m:NumericUpDown}}">
+        <Style.Triggers>
+            <Trigger Property="IsReadOnly" Value="True">
+                <Setter Property="HideUpDownButtons" Value="True"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- カレンダー -->
+    <Style x:Key="Common.Calendar" TargetType="{x:Type Calendar}" BasedOn="{StaticResource MahApps.Styles.Calendar}">
+    </Style>
+
+    <!-- 日付入力-->
+    <Style x:Key="Common.DatePicker" TargetType="{x:Type DatePicker}" BasedOn="{StaticResource MahApps.Styles.DatePicker}">
+        <Setter Property="m:TextBoxHelper.Watermark" Value="{x:Null}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="CalendarStyle">
+            <Setter.Value>
+                <Style TargetType="{x:Type Calendar}" BasedOn="{StaticResource Common.Calendar}">
+                    <Setter Property="LayoutTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- コンボボックスアイテム -->
+    <Style x:Key="Common.ComboBoxItem" TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource MahApps.Styles.ComboBoxItem}">
+    </Style>
+
+    <!-- コンボボックス -->
+    <Style x:Key="Common.ComboBox" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MahApps.Styles.ComboBox}">
+    </Style>
+
+    <!-- リストボックスアイテム -->
+    <Style x:Key="Common.ListBoxItem" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
+    </Style>
+
+    <!-- リストボックス -->
+    <Style x:Key="Common.ListBox" TargetType="{x:Type ListBox}" BasedOn="{StaticResource MahApps.Styles.ListBox}">
+        <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.Content}"/>
+    </Style>
+
+    <!-- リストビューアイテム -->
+    <Style x:Key="Common.ListViewItem" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource MahApps.Styles.ListViewItem}">
+    </Style>
+
+    <!-- リストビュー -->
+    <Style x:Key="Common.ListView" TargetType="{x:Type ListView}" BasedOn="{StaticResource MahApps.Styles.ListView}">
+        <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.Content}"/>
+    </Style>
+
+    <!-- ツリービューアイテム -->
+    <Style x:Key="Common.TreeViewItem" TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource MahApps.Styles.TreeViewItem}">
+    </Style>
+
+    <!-- ツリービュー -->
+    <Style x:Key="Common.TreeView" TargetType="{x:Type TreeView}" BasedOn="{StaticResource MahApps.Styles.TreeView}">
+    </Style>
+
+    <!-- グリッドビュー 列ヘッダ -->
+    <Style x:Key="Common.GridViewColumnHeader" TargetType="{x:Type GridViewColumnHeader}" BasedOn="{StaticResource MahApps.Styles.GridViewColumnHeader}">
+        <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+    </Style>
+
+    <!-- データグリッド 全選択ボタン -->
+    <ControlTemplate x:Key="Common.DataGridSelectAllButtonTemplate" TargetType="{x:Type Button}">
+        <Grid>
+            <Rectangle x:Name="Border" Fill="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
+            <Polygon x:Name="Arrow" Fill="{DynamicResource MahApps.Brushes.Gray1}" Margin="8 8 3 3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Opacity="0.15" Points="0,10 10,10 10,0" Stretch="Uniform"/>
+            <Border Background="{DynamicResource MahApps.Brushes.Gray7}" VerticalAlignment="Bottom" Height="1.8"/>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="Border" Property="Fill" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="Arrow" Property="Visibility" Value="Collapsed"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- データグリッド 列ヘッダ -->
+    <Style x:Key="Common.DataGridColumnHeader" TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource MahApps.Styles.DataGridColumnHeader}">
+        <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="BorderThickness" Value="0 0 0 2"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray7}"/>
+    </Style>
+
+    <!-- データグリッド 行ヘッダ -->
+    <Style x:Key="Common.DataGridRowHeader" TargetType="{x:Type DataGridRowHeader}" BasedOn="{StaticResource MahApps.Styles.DataGridRowHeader}">
+        <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="BorderThickness" Value="0 0 0 1"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray7}"/>
+    </Style>
+   
+    <!-- データグリッド 行 -->
+    <Style x:Key="Common.DataGridRow" TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource MahApps.Styles.DataGridRow}">
+    </Style>
+
+    <!-- データグリッド セル -->
+    <Style x:Key="Common.DataGridCell" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MahApps.Styles.DataGridCell}">
+    </Style>
+
+    <!-- データグリッド -->
+    <Style x:Key="Common.DataGrid" TargetType="{x:Type DataGrid}" BasedOn="{StaticResource MahApps.Styles.DataGrid}">
+        <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource MahApps.Brushes.Gray7}"/>
+    </Style>
+
+    <!-- グリッドスプリッター -->
+    <Style x:Key="Common.GridSplitter" TargetType="{x:Type GridSplitter}" BasedOn="{StaticResource MahApps.Styles.GridSplitter}">
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="Focusable" Value="False"/>
+    </Style>
+
+    <!-- グループボックス -->
+    <Style x:Key="Common.GroupBox" TargetType="{x:Type GroupBox}" BasedOn="{StaticResource MahApps.Styles.GroupBox}">
+        <Setter Property="m:HeaderedControlHelper.HeaderFontWeight" Value="Normal"/>
+        <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+    </Style>
+
+    <!-- エクスパンダー -->
+    <Style x:Key="Common.Expander" TargetType="{x:Type Expander}" BasedOn="{StaticResource MahApps.Styles.Expander}">
+        <Setter Property="m:HeaderedControlHelper.HeaderFontWeight" Value="Normal"/>
+        <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
+    </Style>
+
+    <!-- スクロールバー -->
+    <Style x:Key="Common.ScrollBar" TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource MahApps.Styles.ScrollBar}">
+    </Style>
+
+    <!-- スクロールビューワー -->
+    <Style x:Key="Common.ScrollViewer" TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource MahApps.Styles.ScrollViewer}">
+    </Style>
+
+    <!-- タブアイテム -->
+    <Style x:Key="Common.TabItem" TargetType="{x:Type TabItem}" BasedOn="{StaticResource MahApps.Styles.TabItem}">
+    </Style>
+
+    <!-- タブコントロール -->
+    <Style x:Key="Common.TabControl" TargetType="{x:Type TabControl}" BasedOn="{StaticResource MahApps.Styles.TabControl.Animated}">
+        <Setter Property="m:TabControlHelper.Underlined" Value="SelectedTabItem"/>
+    </Style>
+
+    <!-- メニューアイテム -->
+    <Style x:Key="Common.MenuItem" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MahApps.Styles.MenuItem}">
+    </Style>
+
+    <!-- メニュー -->
+    <Style x:Key="Common.Menu" TargetType="{x:Type Menu}" BasedOn="{StaticResource MahApps.Styles.Menu}">
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
         <Style.Resources>
-            <Style TargetType="{x:Type mi:PackIconModern}">
-                <Setter Property="Width" Value="{StaticResource Common.CircleButton.IconSize}"/>
-                <Setter Property="Height" Value="{StaticResource Common.CircleButton.IconSize}"/>
-            </Style>
-            <Style TargetType="{x:Type mi:PackIconMaterial}">
-                <Setter Property="Width" Value="{StaticResource Common.CircleButton.IconSize}"/>
-                <Setter Property="Height" Value="{StaticResource Common.CircleButton.IconSize}"/>
-            </Style>
-            <Style TargetType="{x:Type mi:PackIconFontAwesome}">
-                <Setter Property="Width" Value="{StaticResource Common.CircleButton.IconSize}"/>
-                <Setter Property="Height" Value="{StaticResource Common.CircleButton.IconSize}"/>
-            </Style>
+            <!-- 既定のリソースを打ち消す -->
+            <SolidColorBrush x:Key="MahApps.Brushes.SubMenu.Border" Color="{DynamicResource MahApps.Colors.Gray4}" o:Freeze="True"/>
         </Style.Resources>
+    </Style>
+
+    <!-- コンテキストメニュー -->
+    <Style x:Key="Common.ContextMenu" TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource MahApps.Styles.ContextMenu}">
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.ComboBox.PopupBorder}"/>
+        <Style.Resources>
+            <!-- 既定のリソースを打ち消す -->
+            <SolidColorBrush x:Key="MahApps.Brushes.SubMenu.Border" Color="{DynamicResource MahApps.Colors.Gray4}" o:Freeze="True"/>
+        </Style.Resources>
+    </Style>
+
+    <!-- ツールバー -->
+    <Style x:Key="Common.ToolBar" TargetType="{x:Type ToolBar}" BasedOn="{StaticResource MahApps.Styles.ToolBar}">
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+        <Setter Property="ToolBarTray.IsLocked" Value="True"/>
+    </Style>
+
+    <!-- ステータスバーアイテム -->
+    <Style x:Key="Common.StatusBarItem" TargetType="{x:Type StatusBarItem}" BasedOn="{StaticResource MahApps.Styles.StatusBarItem}">
+        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
+    </Style>
+
+    <!-- ステータスバー -->
+    <Style x:Key="Common.StatusBar" TargetType="{x:Type StatusBar}" BasedOn="{StaticResource MahApps.Styles.StatusBar}">
+    </Style>
+
+    <!-- ウィンドウコマンド -->
+    <Style x:Key="Common.WindowCommands" TargetType="{x:Type m:WindowCommands}" BasedOn="{StaticResource MahApps.Styles.WindowCommands}">
+        <Setter Property="ShowSeparators" Value="False"/>
+        <Setter Property="ShowLastSeparator" Value="False"/>
+    </Style>
+
+    <!-- ハンバーガーメニュー -->
+    <Style x:Key="Common.HamburgerMenu" TargetType="{x:Type m:HamburgerMenu}" BasedOn="{StaticResource MahApps.Styles.HamburgerMenu}">
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+        <Setter Property="PaneForeground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+        <Setter Property="PaneBackground" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
+    </Style>
+
+    <!-- フライアウト -->
+    <Style x:Key="Common.Flyout" TargetType="{x:Type m:Flyout}" BasedOn="{StaticResource {x:Type m:Flyout}}">
+        <Setter Property="Theme" Value="Adapt"/>
+        <Setter Property="AnimateOpacity" Value="True"/>
+        <Setter Property="Opacity" Value="0.95"/>
+    </Style>
+
+    <!-- カスタムダイアログ -->
+    <Style x:Key="Common.CustomDialog" TargetType="{x:Type md:CustomDialog}" BasedOn="{StaticResource {x:Type md:CustomDialog}}">
+        <!-- ウィンドウの状態にかかわらずダイアログはアローカーソルに設定する -->
+        <Setter Property="Cursor" Value="Arrow"/>
+    </Style>
+
+    <!--
+    ************************************************************
+    |
+    | コントロールのスタイルの既定値を上書きします。
+    |
+    ************************************************************
+    -->
+
+    <Style TargetType="{x:Type mi:PackIconBootstrapIcons}" BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconBoxIcons}"       BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconCodicons}"       BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconCoolicons}"      BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconEntypo}"         BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconEvaIcons}"       BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconFeatherIcons}"   BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconFileIcons}"      BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconFontaudio}"      BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconFontAwesome}"    BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconFontisto}"       BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconForkAwesome}"    BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconIonicons}"       BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconJamIcons}"       BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconMaterialDesign}" BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconMaterial}"       BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconMaterialLight}"  BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconMicrons}"        BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconModern}"         BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconOcticons}"       BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconPicolIcons}"     BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconPixelartIcons}"  BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconRadixIcons}"     BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconRemixIcon}"      BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconRPGAwesome}"     BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconSimpleIcons}"    BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconTypicons}"       BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconUnicons}"        BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconVaadinIcons}"    BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconWeatherIcons}"   BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconZondicons}"      BasedOn="{StaticResource Common.PackIcon}"/>
+
+    <Style TargetType="{x:Type TextBlock}"                 BasedOn="{StaticResource Common.TextBlock}"/>
+    <Style TargetType="{x:Type Label}"                     BasedOn="{StaticResource Common.Label}"/>
+    <Style TargetType="{x:Type ToolTip}"                   BasedOn="{StaticResource Common.ToolTip}"/>
+    <Style TargetType="{x:Type m:CustomValidationPopup}"   BasedOn="{StaticResource Common.CustomValidationPopup}"/>
+    <Style TargetType="{x:Type m:Badged}"                  BasedOn="{StaticResource Common.Badged}"/>
+    <Style TargetType="{x:Type m:ProgressRing}"            BasedOn="{StaticResource Common.ProgressRing}"/>
+    <Style TargetType="{x:Type ProgressBar}"               BasedOn="{StaticResource Common.ProgressBar}"/>
+    <Style TargetType="{x:Type m:MetroProgressBar}"        BasedOn="{StaticResource Common.MetroProgressBar}"/>
+    <Style TargetType="{x:Type Slider}"                    BasedOn="{StaticResource Common.Slider}"/>
+    <Style TargetType="{x:Type m:Tile}"                    BasedOn="{StaticResource Common.Tile}"/>
+    <Style TargetType="{x:Type Button}"                    BasedOn="{StaticResource Common.Button}"/>
+    <Style TargetType="{x:Type ToggleButton}"              BasedOn="{StaticResource Common.ToggleButton}"/>
+    <Style TargetType="{x:Type m:DropDownButton}"          BasedOn="{StaticResource Common.DropDownButton}"/>
+    <Style TargetType="{x:Type RadioButton}"               BasedOn="{StaticResource Common.RadioButton}"/>
+    <Style TargetType="{x:Type CheckBox}"                  BasedOn="{StaticResource Common.CheckBox}"/>
+    <Style TargetType="{x:Type TextBox}"                   BasedOn="{StaticResource Common.TextBox}"/>
+    <Style TargetType="{x:Type RichTextBox}"               BasedOn="{StaticResource Common.RichTextBox}"/>
+    <Style TargetType="{x:Type PasswordBox}"               BasedOn="{StaticResource Common.PasswordBox}"/>
+    <Style TargetType="{x:Type m:NumericUpDown}"           BasedOn="{StaticResource Common.NumericUpDown}"/>
+    <Style TargetType="{x:Type DatePicker}"                BasedOn="{StaticResource Common.DatePicker}"/>
+    <Style TargetType="{x:Type Calendar}"                  BasedOn="{StaticResource Common.Calendar}"/>
+    <Style TargetType="{x:Type ComboBoxItem}"              BasedOn="{StaticResource Common.ComboBoxItem}"/>
+    <Style TargetType="{x:Type ComboBox}"                  BasedOn="{StaticResource Common.ComboBox}"/>
+    <Style TargetType="{x:Type ListBoxItem}"               BasedOn="{StaticResource Common.ListBoxItem}"/>
+    <Style TargetType="{x:Type ListBox}"                   BasedOn="{StaticResource Common.ListBox}"/>
+    <Style TargetType="{x:Type ListViewItem}"              BasedOn="{StaticResource Common.ListViewItem}"/>
+    <Style TargetType="{x:Type ListView}"                  BasedOn="{StaticResource Common.ListView}"/>
+    <Style TargetType="{x:Type TreeViewItem}"              BasedOn="{StaticResource Common.TreeViewItem}"/>
+    <Style TargetType="{x:Type TreeView}"                  BasedOn="{StaticResource Common.TreeView}"/>
+    <Style TargetType="{x:Type GridViewColumnHeader}"      BasedOn="{StaticResource Common.GridViewColumnHeader}"/>
+    <Style TargetType="{x:Type DataGridColumnHeader}"      BasedOn="{StaticResource Common.DataGridColumnHeader}"/>
+    <Style TargetType="{x:Type DataGridRowHeader}"         BasedOn="{StaticResource Common.DataGridRowHeader}"/>
+    <Style TargetType="{x:Type DataGridRow}"               BasedOn="{StaticResource Common.DataGridRow}"/>
+    <Style TargetType="{x:Type DataGridCell}"              BasedOn="{StaticResource Common.DataGridCell}"/>
+    <Style TargetType="{x:Type DataGrid}"                  BasedOn="{StaticResource Common.DataGrid}"/>
+    <Style TargetType="{x:Type GridSplitter}"              BasedOn="{StaticResource Common.GridSplitter}"/>
+    <Style TargetType="{x:Type GroupBox}"                  BasedOn="{StaticResource Common.GroupBox}"/>
+    <Style TargetType="{x:Type Expander}"                  BasedOn="{StaticResource Common.Expander}"/>
+    <Style TargetType="{x:Type ScrollBar}"                 BasedOn="{StaticResource Common.ScrollBar}"/>
+    <Style TargetType="{x:Type ScrollViewer}"              BasedOn="{StaticResource Common.ScrollViewer}"/>
+    <Style TargetType="{x:Type TabItem}"                   BasedOn="{StaticResource Common.TabItem}"/>
+    <Style TargetType="{x:Type TabControl}"                BasedOn="{StaticResource Common.TabControl}"/>
+    <Style TargetType="{x:Type MenuItem}"                  BasedOn="{StaticResource Common.MenuItem}"/>
+    <Style TargetType="{x:Type Menu}"                      BasedOn="{StaticResource Common.Menu}"/>
+    <Style TargetType="{x:Type ContextMenu}"               BasedOn="{StaticResource Common.ContextMenu}"/>
+    <Style TargetType="{x:Type ToolBar}"                   BasedOn="{StaticResource Common.ToolBar}"/>
+    <Style TargetType="{x:Type StatusBarItem}"             BasedOn="{StaticResource Common.StatusBarItem}"/>
+    <Style TargetType="{x:Type StatusBar}"                 BasedOn="{StaticResource Common.StatusBar}"/>
+    <Style TargetType="{x:Type m:WindowCommands}"          BasedOn="{StaticResource Common.WindowCommands}"/>
+    <Style TargetType="{x:Type m:HamburgerMenu}"           BasedOn="{StaticResource Common.HamburgerMenu}"/>
+    <Style TargetType="{x:Type m:Flyout}"                  BasedOn="{StaticResource Common.Flyout}"/>
+    <Style TargetType="{x:Type md:CustomDialog}"           BasedOn="{StaticResource Common.CustomDialog}"/>
+
+    <Style x:Key="{ComponentResourceKey ResourceId=MetroDataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
+        <Setter Property="Template" Value="{DynamicResource Common.DataGridSelectAllButtonTemplate}"/>
     </Style>
 
 </ResourceDictionary>

@@ -28,7 +28,7 @@
             <ContextMenu>
                 <MenuItem x:Name="WindowListItem" Header="{le:Loc Command_WindowList}" IsEnabled="{qc:Binding '$P.CompareTo(0) == 1', P={Binding Items.Count, RelativeSource={RelativeSource Self}, Mode=OneWay}}">
                     <MenuItem.ItemContainerStyle>
-                        <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Default.MenuItem}">
+                        <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Common.MenuItem}">
                             <EventSetter Event="Click" Handler="WindowListItem_Click"/>
                             <Setter Property="Header" Value="{Binding DataContext.ActiveTextEditor.Value.FileName, Mode=OneWay}"/>
                             <Style.Triggers>
