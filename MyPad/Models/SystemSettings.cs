@@ -243,6 +243,7 @@ public class SystemSettings : ModelBase
     public enum UISizeType
     {
         Small,
+        Medium,
         Large,
     }
 }
