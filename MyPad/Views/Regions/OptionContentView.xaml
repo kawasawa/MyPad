@@ -71,8 +71,9 @@
 
                             <TextBlock  Grid.Row="1" Grid.Column="0" Text="{le:Loc Label_UISize}"/>
                             <StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
-                                <RadioButton Content="{le:Loc Label_Small}" IsChecked="{qc:Binding Convert='(int)$P == 0', ConvertBack='$value ? 0 : DependencyProperty.UnsetValue', P={Binding UISize, Mode=TwoWay}}"/>
-                                <RadioButton Content="{le:Loc Label_Large}" IsChecked="{qc:Binding Convert='(int)$P == 1', ConvertBack='$value ? 1 : DependencyProperty.UnsetValue', P={Binding UISize, Mode=TwoWay}}"/>
+                                <RadioButton Content="{le:Loc Label_Small}"  IsChecked="{qc:Binding Convert='(int)$P == 0', ConvertBack='$value ? 0 : DependencyProperty.UnsetValue', P={Binding UISize, Mode=TwoWay}}"/>
+                                <RadioButton Content="{le:Loc Label_Medium}" IsChecked="{qc:Binding Convert='(int)$P == 1', ConvertBack='$value ? 1 : DependencyProperty.UnsetValue', P={Binding UISize, Mode=TwoWay}}"/>
+                                <RadioButton Content="{le:Loc Label_Large}"  IsChecked="{qc:Binding Convert='(int)$P == 2', ConvertBack='$value ? 2 : DependencyProperty.UnsetValue', P={Binding UISize, Mode=TwoWay}}"/>
                             </StackPanel>
 
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="{le:Loc Label_Language}"/>

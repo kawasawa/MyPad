@@ -8,6 +8,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml"/>
+        <ResourceDictionary Source="./Sizes.xaml"/>
         <ResourceDictionary Source="./Colors.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
@@ -20,8 +21,14 @@
     ************************************************************
     -->
 
+    <!-- アイコン -->
+    <Style x:Key="Common.PackIcon" TargetType="{x:Type mi:PackIconBase}" BasedOn="{StaticResource {x:Type mi:PackIconBase}}">
+        <Setter Property="Width" Value="{DynamicResource Common.Size.Icon}"/>
+        <Setter Property="Height" Value="{DynamicResource Common.Size.Icon}"/>
+    </Style>
+
     <!-- テキストブロック -->
-    <Style x:Key="Common.TextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource  MahApps.Styles.TextBlock}">
+    <Style x:Key="Common.TextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MahApps.Styles.TextBlock}">
     </Style>
 
     <!-- ラベル -->
@@ -58,23 +65,46 @@
 
     <!-- タイル -->
     <Style x:Key="Common.Tile" TargetType="{x:Type m:Tile}" BasedOn="{StaticResource {x:Type m:Tile}}">
-        <Setter Property="Width" Value="100"/>
-        <Setter Property="Height" Value="100"/>
-        <Setter Property="TitleFontSize" Value="13"/>
-        <Setter Property="CountFontSize" Value="13"/>
+        <Setter Property="TitleFontSize" Value="{DynamicResource MahApps.Font.Size.Default}"/>
+        <Setter Property="CountFontSize" Value="{DynamicResource MahApps.Font.Size.Content}"/>
+        <Setter Property="Width" Value="{DynamicResource Common.Size.Tile}"/>
+        <Setter Property="Height" Value="{DynamicResource Common.Size.Tile}"/>
         <Style.Resources>
-            <Style TargetType="{x:Type mi:PackIconModern}">
-                <Setter Property="Width" Value="25"/>
-                <Setter Property="Height" Value="25"/>
+            <Style x:Key="Common.TilePackIcon" TargetType="{x:Type mi:PackIconBase}" BasedOn="{StaticResource Common.PackIcon}">
+                <Setter Property="Width" Value="{DynamicResource Common.Size.TileIcon}"/>
+                <Setter Property="Height" Value="{DynamicResource Common.Size.TileIcon}"/>
             </Style>
-            <Style TargetType="{x:Type mi:PackIconMaterial}">
-                <Setter Property="Width" Value="25"/>
-                <Setter Property="Height" Value="25"/>
-            </Style>
-            <Style TargetType="{x:Type mi:PackIconFontAwesome}">
-                <Setter Property="Width" Value="25"/>
-                <Setter Property="Height" Value="25"/>
-            </Style>
+            <Style TargetType="{x:Type mi:PackIconBootstrapIcons}" BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconBoxIcons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconCodicons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconCoolicons}"      BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconEntypo}"         BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconEvaIcons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFeatherIcons}"   BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFileIcons}"      BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFontaudio}"      BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFontAwesome}"    BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFontisto}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconForkAwesome}"    BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconIonicons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconJamIcons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconMaterialDesign}" BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconMaterial}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconMaterialLight}"  BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconMicrons}"        BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconModern}"         BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconOcticons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconPicolIcons}"     BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconPixelartIcons}"  BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconRadixIcons}"     BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconRemixIcon}"      BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconRPGAwesome}"     BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconSimpleIcons}"    BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconTypicons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconUnicons}"        BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconVaadinIcons}"    BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconWeatherIcons}"   BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconZondicons}"      BasedOn="{StaticResource Common.TilePackIcon}"/>
         </Style.Resources>
     </Style>
 
@@ -351,58 +381,90 @@
     ************************************************************
     -->
 
-    <Style TargetType="{x:Type TextBlock}"               BasedOn="{StaticResource Common.TextBlock}"/>
-    <Style TargetType="{x:Type Label}"                   BasedOn="{StaticResource Common.Label}"/>
-    <Style TargetType="{x:Type ToolTip}"                 BasedOn="{StaticResource Common.ToolTip}"/>
-    <Style TargetType="{x:Type m:CustomValidationPopup}" BasedOn="{StaticResource Common.CustomValidationPopup}"/>
-    <Style TargetType="{x:Type m:Badged}"                BasedOn="{StaticResource Common.Badged}"/>
-    <Style TargetType="{x:Type m:ProgressRing}"          BasedOn="{StaticResource Common.ProgressRing}"/>
-    <Style TargetType="{x:Type ProgressBar}"             BasedOn="{StaticResource Common.ProgressBar}"/>
-    <Style TargetType="{x:Type m:MetroProgressBar}"      BasedOn="{StaticResource Common.MetroProgressBar}"/>
-    <Style TargetType="{x:Type Slider}"                  BasedOn="{StaticResource Common.Slider}"/>
-    <Style TargetType="{x:Type m:Tile}"                  BasedOn="{StaticResource Common.Tile}"/>
-    <Style TargetType="{x:Type Button}"                  BasedOn="{StaticResource Common.Button}"/>
-    <Style TargetType="{x:Type ToggleButton}"            BasedOn="{StaticResource Common.ToggleButton}"/>
-    <Style TargetType="{x:Type m:DropDownButton}"        BasedOn="{StaticResource Common.DropDownButton}"/>
-    <Style TargetType="{x:Type RadioButton}"             BasedOn="{StaticResource Common.RadioButton}"/>
-    <Style TargetType="{x:Type CheckBox}"                BasedOn="{StaticResource Common.CheckBox}"/>
-    <Style TargetType="{x:Type TextBox}"                 BasedOn="{StaticResource Common.TextBox}"/>
-    <Style TargetType="{x:Type RichTextBox}"             BasedOn="{StaticResource Common.RichTextBox}"/>
-    <Style TargetType="{x:Type PasswordBox}"             BasedOn="{StaticResource Common.PasswordBox}"/>
-    <Style TargetType="{x:Type m:NumericUpDown}"         BasedOn="{StaticResource Common.NumericUpDown}"/>
-    <Style TargetType="{x:Type DatePicker}"              BasedOn="{StaticResource Common.DatePicker}"/>
-    <Style TargetType="{x:Type Calendar}"                BasedOn="{StaticResource Common.Calendar}"/>
-    <Style TargetType="{x:Type ComboBoxItem}"            BasedOn="{StaticResource Common.ComboBoxItem}"/>
-    <Style TargetType="{x:Type ComboBox}"                BasedOn="{StaticResource Common.ComboBox}"/>
-    <Style TargetType="{x:Type ListBoxItem}"             BasedOn="{StaticResource Common.ListBoxItem}"/>
-    <Style TargetType="{x:Type ListBox}"                 BasedOn="{StaticResource Common.ListBox}"/>
-    <Style TargetType="{x:Type ListViewItem}"            BasedOn="{StaticResource Common.ListViewItem}"/>
-    <Style TargetType="{x:Type ListView}"                BasedOn="{StaticResource Common.ListView}"/>
-    <Style TargetType="{x:Type TreeViewItem}"            BasedOn="{StaticResource Common.TreeViewItem}"/>
-    <Style TargetType="{x:Type TreeView}"                BasedOn="{StaticResource Common.TreeView}"/>
-    <Style TargetType="{x:Type GridViewColumnHeader}"    BasedOn="{StaticResource Common.GridViewColumnHeader}"/>
-    <Style TargetType="{x:Type DataGridColumnHeader}"    BasedOn="{StaticResource Common.DataGridColumnHeader}"/>
-    <Style TargetType="{x:Type DataGridRowHeader}"       BasedOn="{StaticResource Common.DataGridRowHeader}"/>
-    <Style TargetType="{x:Type DataGridRow}"             BasedOn="{StaticResource Common.DataGridRow}"/>
-    <Style TargetType="{x:Type DataGridCell}"            BasedOn="{StaticResource Common.DataGridCell}"/>
-    <Style TargetType="{x:Type DataGrid}"                BasedOn="{StaticResource Common.DataGrid}"/>
-    <Style TargetType="{x:Type GridSplitter}"            BasedOn="{StaticResource Common.GridSplitter}"/>
-    <Style TargetType="{x:Type GroupBox}"                BasedOn="{StaticResource Common.GroupBox}"/>
-    <Style TargetType="{x:Type Expander}"                BasedOn="{StaticResource Common.Expander}"/>
-    <Style TargetType="{x:Type ScrollBar}"               BasedOn="{StaticResource Common.ScrollBar}"/>
-    <Style TargetType="{x:Type ScrollViewer}"            BasedOn="{StaticResource Common.ScrollViewer}"/>
-    <Style TargetType="{x:Type TabItem}"                 BasedOn="{StaticResource Common.TabItem}"/>
-    <Style TargetType="{x:Type TabControl}"              BasedOn="{StaticResource Common.TabControl}"/>
-    <Style TargetType="{x:Type MenuItem}"                BasedOn="{StaticResource Common.MenuItem}"/>
-    <Style TargetType="{x:Type Menu}"                    BasedOn="{StaticResource Common.Menu}"/>
-    <Style TargetType="{x:Type ContextMenu}"             BasedOn="{StaticResource Common.ContextMenu}"/>
-    <Style TargetType="{x:Type ToolBar}"                 BasedOn="{StaticResource Common.ToolBar}"/>
-    <Style TargetType="{x:Type StatusBarItem}"           BasedOn="{StaticResource Common.StatusBarItem}"/>
-    <Style TargetType="{x:Type StatusBar}"               BasedOn="{StaticResource Common.StatusBar}"/>
-    <Style TargetType="{x:Type m:WindowCommands}"        BasedOn="{StaticResource Common.WindowCommands}"/>
-    <Style TargetType="{x:Type m:HamburgerMenu}"         BasedOn="{StaticResource Common.HamburgerMenu}"/>
-    <Style TargetType="{x:Type m:Flyout}"                BasedOn="{StaticResource Common.Flyout}"/>
-    <Style TargetType="{x:Type md:CustomDialog}"         BasedOn="{StaticResource Common.CustomDialog}"/>
+    <Style TargetType="{x:Type mi:PackIconBootstrapIcons}" BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconBoxIcons}"       BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconCodicons}"       BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconCoolicons}"      BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconEntypo}"         BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconEvaIcons}"       BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconFeatherIcons}"   BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconFileIcons}"      BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconFontaudio}"      BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconFontAwesome}"    BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconFontisto}"       BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconForkAwesome}"    BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconIonicons}"       BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconJamIcons}"       BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconMaterialDesign}" BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconMaterial}"       BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconMaterialLight}"  BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconMicrons}"        BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconModern}"         BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconOcticons}"       BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconPicolIcons}"     BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconPixelartIcons}"  BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconRadixIcons}"     BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconRemixIcon}"      BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconRPGAwesome}"     BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconSimpleIcons}"    BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconTypicons}"       BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconUnicons}"        BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconVaadinIcons}"    BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconWeatherIcons}"   BasedOn="{StaticResource Common.PackIcon}"/>
+    <Style TargetType="{x:Type mi:PackIconZondicons}"      BasedOn="{StaticResource Common.PackIcon}"/>
+
+    <Style TargetType="{x:Type TextBlock}"                 BasedOn="{StaticResource Common.TextBlock}"/>
+    <Style TargetType="{x:Type Label}"                     BasedOn="{StaticResource Common.Label}"/>
+    <Style TargetType="{x:Type ToolTip}"                   BasedOn="{StaticResource Common.ToolTip}"/>
+    <Style TargetType="{x:Type m:CustomValidationPopup}"   BasedOn="{StaticResource Common.CustomValidationPopup}"/>
+    <Style TargetType="{x:Type m:Badged}"                  BasedOn="{StaticResource Common.Badged}"/>
+    <Style TargetType="{x:Type m:ProgressRing}"            BasedOn="{StaticResource Common.ProgressRing}"/>
+    <Style TargetType="{x:Type ProgressBar}"               BasedOn="{StaticResource Common.ProgressBar}"/>
+    <Style TargetType="{x:Type m:MetroProgressBar}"        BasedOn="{StaticResource Common.MetroProgressBar}"/>
+    <Style TargetType="{x:Type Slider}"                    BasedOn="{StaticResource Common.Slider}"/>
+    <Style TargetType="{x:Type m:Tile}"                    BasedOn="{StaticResource Common.Tile}"/>
+    <Style TargetType="{x:Type Button}"                    BasedOn="{StaticResource Common.Button}"/>
+    <Style TargetType="{x:Type ToggleButton}"              BasedOn="{StaticResource Common.ToggleButton}"/>
+    <Style TargetType="{x:Type m:DropDownButton}"          BasedOn="{StaticResource Common.DropDownButton}"/>
+    <Style TargetType="{x:Type RadioButton}"               BasedOn="{StaticResource Common.RadioButton}"/>
+    <Style TargetType="{x:Type CheckBox}"                  BasedOn="{StaticResource Common.CheckBox}"/>
+    <Style TargetType="{x:Type TextBox}"                   BasedOn="{StaticResource Common.TextBox}"/>
+    <Style TargetType="{x:Type RichTextBox}"               BasedOn="{StaticResource Common.RichTextBox}"/>
+    <Style TargetType="{x:Type PasswordBox}"               BasedOn="{StaticResource Common.PasswordBox}"/>
+    <Style TargetType="{x:Type m:NumericUpDown}"           BasedOn="{StaticResource Common.NumericUpDown}"/>
+    <Style TargetType="{x:Type DatePicker}"                BasedOn="{StaticResource Common.DatePicker}"/>
+    <Style TargetType="{x:Type Calendar}"                  BasedOn="{StaticResource Common.Calendar}"/>
+    <Style TargetType="{x:Type ComboBoxItem}"              BasedOn="{StaticResource Common.ComboBoxItem}"/>
+    <Style TargetType="{x:Type ComboBox}"                  BasedOn="{StaticResource Common.ComboBox}"/>
+    <Style TargetType="{x:Type ListBoxItem}"               BasedOn="{StaticResource Common.ListBoxItem}"/>
+    <Style TargetType="{x:Type ListBox}"                   BasedOn="{StaticResource Common.ListBox}"/>
+    <Style TargetType="{x:Type ListViewItem}"              BasedOn="{StaticResource Common.ListViewItem}"/>
+    <Style TargetType="{x:Type ListView}"                  BasedOn="{StaticResource Common.ListView}"/>
+    <Style TargetType="{x:Type TreeViewItem}"              BasedOn="{StaticResource Common.TreeViewItem}"/>
+    <Style TargetType="{x:Type TreeView}"                  BasedOn="{StaticResource Common.TreeView}"/>
+    <Style TargetType="{x:Type GridViewColumnHeader}"      BasedOn="{StaticResource Common.GridViewColumnHeader}"/>
+    <Style TargetType="{x:Type DataGridColumnHeader}"      BasedOn="{StaticResource Common.DataGridColumnHeader}"/>
+    <Style TargetType="{x:Type DataGridRowHeader}"         BasedOn="{StaticResource Common.DataGridRowHeader}"/>
+    <Style TargetType="{x:Type DataGridRow}"               BasedOn="{StaticResource Common.DataGridRow}"/>
+    <Style TargetType="{x:Type DataGridCell}"              BasedOn="{StaticResource Common.DataGridCell}"/>
+    <Style TargetType="{x:Type DataGrid}"                  BasedOn="{StaticResource Common.DataGrid}"/>
+    <Style TargetType="{x:Type GridSplitter}"              BasedOn="{StaticResource Common.GridSplitter}"/>
+    <Style TargetType="{x:Type GroupBox}"                  BasedOn="{StaticResource Common.GroupBox}"/>
+    <Style TargetType="{x:Type Expander}"                  BasedOn="{StaticResource Common.Expander}"/>
+    <Style TargetType="{x:Type ScrollBar}"                 BasedOn="{StaticResource Common.ScrollBar}"/>
+    <Style TargetType="{x:Type ScrollViewer}"              BasedOn="{StaticResource Common.ScrollViewer}"/>
+    <Style TargetType="{x:Type TabItem}"                   BasedOn="{StaticResource Common.TabItem}"/>
+    <Style TargetType="{x:Type TabControl}"                BasedOn="{StaticResource Common.TabControl}"/>
+    <Style TargetType="{x:Type MenuItem}"                  BasedOn="{StaticResource Common.MenuItem}"/>
+    <Style TargetType="{x:Type Menu}"                      BasedOn="{StaticResource Common.Menu}"/>
+    <Style TargetType="{x:Type ContextMenu}"               BasedOn="{StaticResource Common.ContextMenu}"/>
+    <Style TargetType="{x:Type ToolBar}"                   BasedOn="{StaticResource Common.ToolBar}"/>
+    <Style TargetType="{x:Type StatusBarItem}"             BasedOn="{StaticResource Common.StatusBarItem}"/>
+    <Style TargetType="{x:Type StatusBar}"                 BasedOn="{StaticResource Common.StatusBar}"/>
+    <Style TargetType="{x:Type m:WindowCommands}"          BasedOn="{StaticResource Common.WindowCommands}"/>
+    <Style TargetType="{x:Type m:HamburgerMenu}"           BasedOn="{StaticResource Common.HamburgerMenu}"/>
+    <Style TargetType="{x:Type m:Flyout}"                  BasedOn="{StaticResource Common.Flyout}"/>
+    <Style TargetType="{x:Type md:CustomDialog}"           BasedOn="{StaticResource Common.CustomDialog}"/>
 
     <Style x:Key="{ComponentResourceKey ResourceId=MetroDataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
         <Setter Property="Template" Value="{DynamicResource Common.DataGridSelectAllButtonTemplate}"/>

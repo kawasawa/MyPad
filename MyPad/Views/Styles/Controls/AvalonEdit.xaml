@@ -89,20 +89,16 @@
                                 <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Common.TextBox}">
                                     <Setter Property="Background"  Value="{DynamicResource MahApps.Brushes.Gray8}"/>
                                     <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray}"/>
-                                    <Setter Property="FontFamily"  Value="{Binding FontFamily, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
-                                    <Setter Property="FontSize"    Value="{Binding FontSize, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
                                     <Setter Property="MinWidth"    Value="150"/>
                                 </Style>
                                 <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Common.Button}">
                                     <Setter Property="Background"  Value="{x:Null}"/>
                                     <Setter Property="BorderBrush" Value="{x:Null}"/>
-                                    <Setter Property="Height"      Value="20"/>
                                     <Setter Property="Padding"     Value="2"/>
                                 </Style>
                                 <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Common.ToggleButton}">
                                     <Setter Property="Background"  Value="{x:Null}"/>
                                     <Setter Property="BorderBrush" Value="{x:Null}"/>
-                                    <Setter Property="Height"      Value="20"/>
                                     <Setter Property="Padding"     Value="2"/>
                                     <Style.Resources>
                                         <!-- チェック状態での BorderBrush を上書きする -->

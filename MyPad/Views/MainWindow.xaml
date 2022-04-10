@@ -137,7 +137,11 @@
             
             <!-- 全画面表示ボタン -->
             <Button Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}" Focusable="False">
-                <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
+                    <mi:PackIconModern.Resources>
+                        <Style TargetType="{x:Type mi:PackIconModern}"/>
+                    </mi:PackIconModern.Resources>
+                </mi:PackIconModern>
             </Button>
         </m:WindowCommands>
     </m:MetroWindow.RightWindowCommands>

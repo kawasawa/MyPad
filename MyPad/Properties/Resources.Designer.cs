@@ -1390,6 +1390,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   ふつう に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_Medium {
+            get {
+                return ResourceManager.GetString("Label_Medium", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   更新日時 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_ModifiredDate {

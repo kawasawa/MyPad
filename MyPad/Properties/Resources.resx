@@ -859,4 +859,7 @@
   <data name="Label_UISize" xml:space="preserve">
     <value>UI サイズ</value>
   </data>
+  <data name="Label_Medium" xml:space="preserve">
+    <value>ふつう</value>
+  </data>
 </root>

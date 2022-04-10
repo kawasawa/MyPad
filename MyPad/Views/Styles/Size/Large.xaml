@@ -24,4 +24,10 @@
     <s:Double x:Key="MahApps.Font.Size.ToggleSwitch.Header">18</s:Double>
     <s:Double x:Key="MahApps.Font.Size.ColorPicker.TabItemHeader">20</s:Double>
 
+    <s:Double x:Key="Common.Size.Icon">20</s:Double>
+    <s:Double x:Key="Common.Size.Tile">120</s:Double>
+    <s:Double x:Key="Common.Size.TileIcon">28</s:Double>
+    <s:Double x:Key="Common.Size.CircleButton">48</s:Double>
+    <s:Double x:Key="Common.Size.CircleButtonIcon">24</s:Double>
+
 </ResourceDictionary>
