@@ -822,4 +822,16 @@ Please check and delete unnecessary files.</value>
   <data name="Label_Medium" xml:space="preserve">
     <value>Medium</value>
   </data>
+  <data name="Label_FontFamily" xml:space="preserve">
+    <value>Font family</value>
+  </data>
+  <data name="Label_FontStyle" xml:space="preserve">
+    <value>Font style</value>
+  </data>
+  <data name="Label_FontWeight" xml:space="preserve">
+    <value>Font weight</value>
+  </data>
+  <data name="Label_FontSize" xml:space="preserve">
+    <value>Font size</value>
+  </data>
 </root>

@@ -61,23 +61,23 @@
             <TabItem DataContext="{Binding Settings.System, Mode=OneWay}" Header="{le:Loc Label_System}">
                 <ScrollViewer>
                     <StackPanel>
-                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto, Auto">
+                        <Grid ge:GridEx.ColumnDefinition="Auto, *" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto, Auto">
                             <TextBlock  Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_Theme}"/>
-                            <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
+                            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
                                 <RadioButton Content="{le:Loc Label_SyncAppTheme}" IsChecked="{qc:Binding Convert='(int)$P == 0', ConvertBack='$value ? 0 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
                                 <RadioButton Content="{le:Loc Label_Dark}"         IsChecked="{qc:Binding Convert='(int)$P == 1', ConvertBack='$value ? 1 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
                                 <RadioButton Content="{le:Loc Label_Light}"        IsChecked="{qc:Binding Convert='(int)$P == 2', ConvertBack='$value ? 2 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
                             </StackPanel>
 
                             <TextBlock  Grid.Row="1" Grid.Column="0" Text="{le:Loc Label_UISize}"/>
-                            <StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
+                            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
                                 <RadioButton Content="{le:Loc Label_Small}"  IsChecked="{qc:Binding Convert='(int)$P == 0', ConvertBack='$value ? 0 : DependencyProperty.UnsetValue', P={Binding UISize, Mode=TwoWay}}"/>
                                 <RadioButton Content="{le:Loc Label_Medium}" IsChecked="{qc:Binding Convert='(int)$P == 1', ConvertBack='$value ? 1 : DependencyProperty.UnsetValue', P={Binding UISize, Mode=TwoWay}}"/>
                                 <RadioButton Content="{le:Loc Label_Large}"  IsChecked="{qc:Binding Convert='(int)$P == 2', ConvertBack='$value ? 2 : DependencyProperty.UnsetValue', P={Binding UISize, Mode=TwoWay}}"/>
                             </StackPanel>
 
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="{le:Loc Label_Language}"/>
-                            <ComboBox  Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"
+                            <ComboBox  Grid.Row="2" Grid.Column="1"
                                        ItemsSource="{x:Static root:Constants.CULTURES}"
                                        SelectedValue="{Binding Culture, Mode=TwoWay}"
                                        SelectedValuePath="Name">
@@ -89,19 +89,21 @@
                             </ComboBox>
 
                             <TextBlock Grid.Row="3" Grid.Column="0" Text="{le:Loc Label_Encoding}"/>
-                            <ComboBox  Grid.Row="3" Grid.Column="1"
-                                       ItemsSource="{x:Static root:Constants.ENCODINGS}"
-                                       SelectedValue="{Binding Encoding, Mode=TwoWay}">
+                            <Grid      Grid.Row="3" Grid.Column="1" ge:GridEx.ColumnDefinition="*, Auto">
+                                <ComboBox Grid.Column="0"
+                                          ItemsSource="{x:Static root:Constants.ENCODINGS}"
+                                          SelectedValue="{Binding Encoding, Mode=TwoWay}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{qc:MultiBinding '$P0 + \' - \' + $P1', P0={Binding CodePage, Mode=OneWay}, P1={Binding EncodingName, Mode=OneWay}}" Style="{StaticResource ComboBoxTextBlock}"/>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
-                            </ComboBox>
-                            <CheckBox Grid.Row="3" Grid.Column="3" IsChecked="{Binding AutoDetectEncoding, Mode=TwoWay}" Content="{le:Loc LabelText_AutoDetectByDefault}"/>
+                                </ComboBox>
+                                <CheckBox Grid.Column="1" IsChecked="{Binding AutoDetectEncoding, Mode=TwoWay}" Content="{le:Loc LabelText_AutoDetectByDefault}"/>
+                            </Grid>
 
                             <TextBlock Grid.Row="4" Grid.Column="0" Text="{le:Loc Label_Syntax}"/>
-                            <ComboBox  Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3"
+                            <ComboBox  Grid.Row="4" Grid.Column="1"
                                        ItemsSource="{qc:Binding 'new string[] { string.Empty }.Concat($P.Keys)', P={Binding DataContext.SyntaxService.Definitions, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Mode=OneWay}}"
                                        SelectedValue="{qc:Binding Convert='$P ?? string.Empty', ConvertBack='string.IsNullOrEmpty($value) ? null : $value', P={Binding SyntaxDefinitionName, Mode=TwoWay}}">
                                 <ComboBox.ItemTemplate>
@@ -112,18 +114,32 @@
                             </ComboBox>
 
                             <TextBlock Grid.Row="5" Grid.Column="0" Text="{le:Loc Label_Font}"/>
-                            <ComboBox  Grid.Row="5" Grid.Column="1" 
-                                       ItemsSource="{x:Static root:Constants.FONT_FAMILIES}"
-                                       SelectedValue="{Binding DataContext.Settings.TextEditor.FontFamily, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Converter={markup:FontFamilyToNameConverter}}" FontFamily="{Binding}" Style="{StaticResource ComboBoxTextBlock}"/>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                            <ComboBox Grid.Row="5" Grid.Column="3"
-                                      ItemsSource="{x:Static root:Constants.FONT_SIZES}"
-                                      SelectedValue="{Binding DataContext.Settings.TextEditor.ActualFontSize, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"/>
+                            <Grid      Grid.Row="5" Grid.Column="1" ge:GridEx.ColumnDefinition="*, Auto, Auto, Auto"
+                                       DataContext="{Binding DataContext.Settings.TextEditor, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" >
+                                <ComboBox Grid.Column="0" 
+                                          ItemsSource="{x:Static root:Constants.FONT_FAMILIES}"
+                                          SelectedValue="{Binding FontFamily, Mode=TwoWay}"
+                                          m:TextBoxHelper.Watermark="{le:Loc Label_FontFamily}" m:TextBoxHelper.UseFloatingWatermark="True">
+                                    <!-- 選択肢にフォントファミリを適用する -->
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={markup:FontFamilyToNameConverter}}" FontFamily="{Binding}" Style="{StaticResource ComboBoxTextBlock}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                                <ComboBox Grid.Column="1"
+                                          ItemsSource="{x:Static root:Constants.FONT_WEIGHTS}"
+                                          SelectedValue="{Binding FontWeight, Mode=TwoWay}"
+                                          m:TextBoxHelper.Watermark="{le:Loc Label_FontWeight}" m:TextBoxHelper.UseFloatingWatermark="True"/>
+                                <ComboBox Grid.Column="2"
+                                          ItemsSource="{x:Static root:Constants.FONT_STYLES}"
+                                          SelectedValue="{Binding FontStyle, Mode=TwoWay}"
+                                          m:TextBoxHelper.Watermark="{le:Loc Label_FontStyle}" m:TextBoxHelper.UseFloatingWatermark="True"/>
+                                <ComboBox Grid.Column="3"
+                                          ItemsSource="{x:Static root:Constants.FONT_SIZES}"
+                                          SelectedValue="{Binding ActualFontSize, Mode=TwoWay}"
+                                          m:TextBoxHelper.Watermark="{le:Loc Label_FontSize}" m:TextBoxHelper.UseFloatingWatermark="True"/>
+                            </Grid>
                         </Grid>
 
                         <ge:ResponsiveGrid>

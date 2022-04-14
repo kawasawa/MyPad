@@ -21,13 +21,63 @@ public class TextEditorSettings : ModelBase
     }
 
     private string _fontFamilyName = SystemFonts.CaptionFontFamily.Source;
+    [JsonProperty(propertyName: "FontFamily")]
     public string FontFamilyName
     {
         get => this._fontFamilyName;
         set => this.SetProperty(ref this._fontFamilyName, value);
     }
 
+    [JsonIgnore]
+    public FontWeight FontWeight
+    {
+        get
+        {
+            if (!string.IsNullOrEmpty(this._fontWeightValue))
+                try { return (FontWeight)typeof(FontWeights).GetProperty(this._fontWeightValue).GetValue(null); } catch { }
+            return FontWeights.Normal;
+        }
+        set
+        {
+            if (this.SetProperty(ref this._fontWeightValue, value.ToString(), nameof(this.FontWeightValue)))
+                this.RaisePropertyChanged(nameof(this.FontWeight));
+        }
+    }
+
+    private string _fontWeightValue = nameof(FontWeights.Normal);
+    [JsonProperty(propertyName: "FontWeight")]
+    public string FontWeightValue
+    {
+        get => this._fontWeightValue;
+        set => this.SetProperty(ref this._fontWeightValue, value);
+    }
+
+    [JsonIgnore]
+    public FontStyle FontStyle
+    {
+        get
+        {
+            if (!string.IsNullOrEmpty(this._fontStyleValue))
+                try { return (FontStyle)typeof(FontStyles).GetProperty(this._fontStyleValue).GetValue(null); } catch { }
+            return FontStyles.Normal;
+        }
+        set
+        {
+            if (this.SetProperty(ref this._fontStyleValue, value.ToString(), nameof(this.FontStyleValue)))
+                this.RaisePropertyChanged(nameof(this.FontStyle));
+        }
+    }
+
+    private string _fontStyleValue = nameof(FontStyles.Normal);
+    [JsonProperty(propertyName: "FontStyle")]
+    public string FontStyleValue
+    {
+        get => this._fontStyleValue;
+        set => this.SetProperty(ref this._fontStyleValue, value);
+    }
+
     private double _actualFontSize = 13.0;
+    [JsonProperty(propertyName: "FontSize")]
     public double ActualFontSize
     {
         get => this._actualFontSize;

@@ -862,4 +862,16 @@
   <data name="Label_Medium" xml:space="preserve">
     <value>ふつう</value>
   </data>
+  <data name="Label_FontFamily" xml:space="preserve">
+    <value>フォントファミリ</value>
+  </data>
+  <data name="Label_FontStyle" xml:space="preserve">
+    <value>フォントスタイル</value>
+  </data>
+  <data name="Label_FontWeight" xml:space="preserve">
+    <value>フォントウエイト</value>
+  </data>
+  <data name="Label_FontSize" xml:space="preserve">
+    <value>フォントサイズ</value>
+  </data>
 </root>
