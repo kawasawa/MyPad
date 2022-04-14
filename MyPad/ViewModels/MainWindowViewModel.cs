@@ -642,7 +642,7 @@ public class MainWindowViewModel : ViewModelBase
     [LogInterceptor]
     public async Task InvokeLoad(string path)
     {
-        await this.Load(path, null);
+        await this.InvokeLoad(path, null);
     }
 
     /// <summary>
