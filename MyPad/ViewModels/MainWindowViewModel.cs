@@ -37,6 +37,7 @@ public class MainWindowViewModel : ViewModelBase
     #region インジェクション
 
     // Constructor Injection
+    public IContainerExtension Container { get; set; }
     public IEventAggregator EventAggregator { get; set; }
 
     // Dependency Injection
@@ -45,8 +46,6 @@ public class MainWindowViewModel : ViewModelBase
     private Settings _settings;
     private SyntaxService _syntaxService;
     private SharedProperties _sharedProperties;
-    [Dependency]
-    public IContainerExtension Container { get; set; }
     [Dependency]
     public IDialogService DialogService { get; set; }
     [Dependency]
@@ -140,7 +139,6 @@ public class MainWindowViewModel : ViewModelBase
     public ReactiveCommand SwitchPomodoroTimerCommand { get; }
 
     public ReactiveCommand<DragEventArgs> DropHandler { get; }
-    public ReactiveCommand<EventArgs> ContentRenderedHandler { get; }
     public ReactiveCommand<CancelEventArgs> ClosingHandler { get; }
 
     public Func<object> TextEditorFactory =>
@@ -166,13 +164,15 @@ public class MainWindowViewModel : ViewModelBase
     /// <summary>
     /// このクラスの新しいインスタンスを生成します。
     /// </summary>
+    /// <param name="container">DI コンテナ</param>
     /// <param name="eventAggregator">イベントアグリゲーター</param>
     [InjectionConstructor]
     [LogInterceptor]
-    public MainWindowViewModel(IEventAggregator eventAggregator)
+    public MainWindowViewModel(IContainerExtension container, IEventAggregator eventAggregator)
     {
         // ----- インジェクション ------------------------------
 
+        this.Container = container;
         this.EventAggregator = eventAggregator;
 
 
@@ -190,6 +190,9 @@ public class MainWindowViewModel : ViewModelBase
         this.FileExplorer = new ReactiveProperty<FileExplorerViewModel>().AddTo(this.CompositeDisposable);
         this.GrepPanel = new ReactiveProperty<GrepPanelViewModel>().AddTo(this.CompositeDisposable);
         this.FlowDocument = new ReactiveProperty<FlowDocument>().AddTo(this.CompositeDisposable);
+
+        this.FileExplorer.Value = this.Container.Resolve<FileExplorerViewModel>();
+        this.GrepPanel.Value = this.Container.Resolve<GrepPanelViewModel>();
 
         this.CompositeContent = new();
         this.IsOpenPrintPreviewContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable).AddTo(this.CompositeContent);
@@ -607,15 +610,6 @@ public class MainWindowViewModel : ViewModelBase
                     _ = this.InvokeLoad(paths);
                     e.Handled = true;
                 }
-            })
-            .AddTo(this.CompositeDisposable);
-
-        this.ContentRenderedHandler = new ReactiveCommand<EventArgs>()
-            .WithSubscribe(e =>
-            {
-                this.FileExplorer.Value = this.Container.Resolve<FileExplorerViewModel>();
-                this.FileExplorer.Value.RecreateExplorer();
-                this.GrepPanel.Value = this.Container.Resolve<GrepPanelViewModel>();
             })
             .AddTo(this.CompositeDisposable);
 

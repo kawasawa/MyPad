@@ -22,6 +22,7 @@
                xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
                xmlns:controls="clr-namespace:MyPad.Views.Controls"
                xmlns:markup="clr-namespace:MyPad.Views.Markup"
+               xmlns:regions="clr-namespace:MyPad.Views.Regions"
                d:DataContext="{d:DesignInstance {x:Type viewModels:MainWindowViewModel}}"
                mc:Ignorable="d"
                p:ViewModelLocator.AutoWireViewModel="True"
@@ -34,7 +35,7 @@
                Cursor="{qc:Binding '$P ? Cursors.Wait : Cursors.Arrow', P={Binding IsPending.Value, Mode=OneWay}}"
                ResizeMode="{qc:Binding '$P ? ResizeMode.CanResizeWithGrip : ResizeMode.CanResize', P={Binding Settings.System.ShowStatusBar, Mode=OneWay}}" 
                Height="525" Width="850" WindowStartupLocation="CenterScreen" AllowDrop="{Binding IsEditMode.Value, Mode=OneWay}"
-               Loaded="Window_Loaded" Closed="Window_Closed" DataContextChanged="Window_DataContextChanged">
+               Loaded="Window_Loaded" ContentRendered="Window_ContentRendered" Closed="Window_Closed" DataContextChanged="Window_DataContextChanged">
 
     <!-- イベントトリガー -->
     <i:Interaction.Triggers>
@@ -44,12 +45,11 @@
         <l:InteractionMessageTrigger MessageKey="ScrollToCaret" Messenger="{Binding Messenger, Mode=OneWay}">
             <i:CallMethodAction MethodName="ScrollToCaret" TargetObject="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
         </l:InteractionMessageTrigger>
+        <i:EventTrigger EventName="ContentRendered">
+            <behaviors:WindowActivateAction/>
+        </i:EventTrigger>
         <i:EventTrigger EventName="Drop">
             <i:InvokeCommandAction Command="{Binding DropHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
-        </i:EventTrigger>
-        <i:EventTrigger EventName="ContentRendered">
-            <i:InvokeCommandAction Command="{Binding ContentRenderedHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
-            <behaviors:WindowActivateAction/>
         </i:EventTrigger>
         <i:EventTrigger EventName="Closing">
             <i:InvokeCommandAction Command="{Binding ClosingHandler, Mode=OneTime}" PassEventArgsToCommand="True"/>
@@ -149,44 +149,37 @@
     <!-- ウィンドウコマンド(左) -->
     <m:MetroWindow.LeftWindowCommands>
         <m:WindowCommands Margin="0 1 0 0">
-            <!-- メニューバー -->
-            <ContentControl Style="{StaticResource RegionContent}" p:RegionManager.RegionName="MenuBarRegion1"
-                            Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowMenuBar, Mode=OneWay}}"
-                            IsEnabled="{Binding IsEditMode.Value, Mode=OneWay}"/>
+            <!-- メニューバー(ウィンドウ表示時) -->
+            <regions:MenuBarView Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowMenuBar, Mode=OneWay}}"
+                                 IsEnabled="{Binding IsEditMode.Value, Mode=OneWay}"/>
         </m:WindowCommands>
     </m:MetroWindow.LeftWindowCommands>
 
     <!-- コンテンツ -->
     <Grid ge:GridEx.RowDefinition="Auto, Auto, *, Auto">
         <!-- メニューバー(全画面表示時) -->
-        <ContentControl Grid.Row="0" Style="{StaticResource RegionContent}" p:RegionManager.RegionName="MenuBarRegion2"
+        <ContentControl Grid.Row="0" Style="{StaticResource RegionContent}" p:RegionManager.RegionName="MenuBarRegion"
                         Visibility="{qc:MultiBinding '!$P0 ## $P1 ? Visibility.Visible : Visibility.Collapsed',
                                      P0={Binding ShowTitleBar, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}},
                                      P1={Binding Settings.System.ShowMenuBar, Mode=OneWay}}"
                         IsEnabled="{Binding IsEditMode.Value, Mode=OneWay}"
                         ContextMenu="{StaticResource ContextMenu}"/>
-        
+
         <!-- ツールバー -->
-        <ContentControl Grid.Row="1" Style="{StaticResource RegionContent}" p:RegionManager.RegionName="ToolBarRegion"
-                        Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowToolBar, Mode=OneWay}}"
-                        ContextMenu="{StaticResource ContextMenu}"/>
-        
+        <regions:ToolBarView Grid.Row="1"
+                             Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowToolBar, Mode=OneWay}}"
+                             ContextMenu="{StaticResource ContextMenu}"/>
+
         <!-- ステータスバー -->
-        <ContentControl Grid.Row="3" Style="{StaticResource RegionContent}" p:RegionManager.RegionName="StatusBarRegion"
-                        Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowStatusBar, Mode=OneWay}}"
-                        ContextMenu="{StaticResource ContextMenu}"/>
+        <regions:StatusBarView Grid.Row="3" 
+                               Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowStatusBar, Mode=OneWay}}"
+                               ContextMenu="{StaticResource ContextMenu}"/>
 
         <!-- ウィンドウ表示ボタン(全画面表示時) -->
-        <Button Grid.Row="0" Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}" Focusable="False"
+        <Button Grid.Row="{qc:Binding '$P ? 0 : 1', P={Binding Settings.System.ShowMenuBar, Mode=OneWay}}"
+                Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}" Focusable="False"
                 Style="{DynamicResource Common.ChromelessButton}" Padding="10 5" VerticalAlignment="Top" HorizontalAlignment="Right"
-                Visibility="{qc:MultiBinding '!$P0 ## $P1 ? Visibility.Visible : Visibility.Collapsed',
-                             P0={Binding ShowTitleBar, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}},
-                             P1={Binding Settings.System.ShowMenuBar, Mode=OneWay}}">
-            <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
-        </Button>
-        <Button Grid.Row="1" Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}" Focusable="False"
-                Style="{DynamicResource Common.ChromelessButton}" Padding="10 5" VerticalAlignment="Top" HorizontalAlignment="Right"
-                Visibility="{qc:MultiBinding '!$P0 ## !$P1 ## $P2 ? Visibility.Visible : Visibility.Collapsed',
+                Visibility="{qc:MultiBinding '!$P0 ## ($P1 || $P2) ? Visibility.Visible : Visibility.Collapsed',
                              P0={Binding ShowTitleBar, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}},
                              P1={Binding Settings.System.ShowMenuBar, Mode=OneWay},
                              P2={Binding Settings.System.ShowToolBar, Mode=OneWay}}">
@@ -223,7 +216,6 @@
                              Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowSideBar, Mode=OneWay}}"
                              IsTabStop="False"
                              ContextMenu="{StaticResource ContextMenu}"
-                             IsVisibleChanged="SideContent_IsVisibleChanged"
                              ItemInvoked="SideContent_ItemInvoked">
                 <i:Interaction.Triggers>
                     <i:PropertyChangedTrigger Binding="{Binding Visibility, ElementName=SideContent, Mode=OneWay}">

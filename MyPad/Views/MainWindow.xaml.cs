@@ -66,6 +66,7 @@ public partial class MainWindow : MetroWindow
         {
             if (this._fullScreenMode)
             {
+                // ウィンドウモードに切り替える
                 this._fullScreenMode = false;
                 this.ShowTitleBar = true;
                 this.IgnoreTaskbarOnMaximize = false;
@@ -73,10 +74,13 @@ public partial class MainWindow : MetroWindow
             }
             else
             {
+                // 全画面モードに切り替える
                 this._fullScreenMode = true;
                 this.ShowTitleBar = false;
                 this.IgnoreTaskbarOnMaximize = true;
                 this.WindowState = WindowState.Maximized;
+
+                this.TryInjectRegion(typeof(MenuBarView));
                 this.ViewModel.DialogService.ToastNotify(Properties.Resources.Message_NotifyFullScreenMode);
             }
         });
@@ -366,8 +370,13 @@ public partial class MainWindow : MetroWindow
     [LogInterceptor]
     private void OpenSideContent(object targetItem)
     {
-        // 指定されたコンテンツを選択し、ハンバーガーメニューを開く
+        // 指定されたコンテンツを選択する
         this.SideContent.Content = targetItem;
+
+        if (this.IsOpenedSideContent)
+            return;
+
+        // ハンバーガーメニューを開く
         this.SideContent.Width = double.NaN;
 
         // グリッドの列構成を調整する
@@ -400,18 +409,16 @@ public partial class MainWindow : MetroWindow
     {
         this.Settings.System.ShowSideBar = true;
 
-        if (this.IsOpenedSideContent == false)
+        if (this.IsOpenedSideContent == false || this.SideContent.Content != targetItem)
         {
-            // 閉じた状態の場合
-            this.OpenSideContent(targetItem);
-            this.FocusSideContent();
-        }
-        else if (targetItem?.Equals(this.SideContent.Content) != true)
-        {
+            // 閉じた状態の場合 または
             // 開いた状態 かつ 非アクティブな項目が選択された場合
             // 選択された項目をアクティブにする
-            this.SideContent.Content = targetItem;
+            this.OpenSideContent(targetItem);
             this.FocusSideContent();
+
+            if (targetItem == this.FileExplorerItem && this.ViewModel.FileExplorer.Value.FileTreeNodes.Any() == false)
+                this.ViewModel.FileExplorer.Value.RecreateExplorer();
         }
         else
         {
@@ -419,6 +426,64 @@ public partial class MainWindow : MetroWindow
             // 選択状態を解除し、ハンバーガーメニューを閉じる
             this.CloseSideContent();
             this.FocusTextEditor();
+        }
+    }
+
+    /// <summary>
+    /// ウィンドウ内のリージョンに View のインスタンスを設定します。
+    /// </summary>
+    /// <param name="regionName">リージョン名</param>
+    [LogInterceptor]
+    private void TryInjectRegion(string regionName)
+    {
+        if (this.RegionManager.Regions.First(r => r.Name == regionName).Views.Any())
+            return;
+
+        var regionType = PrismConverter.RegionNameToRegionType(regionName);
+        var view = this.Container.Resolve(regionType);
+        this.InjectRegion(regionName, view);
+    }
+
+    /// <summary>
+    /// ウィンドウ内のリージョンに View のインスタンスを設定します。
+    /// </summary>
+    /// <param name="regionType">リージョンの型</param>
+    [LogInterceptor]
+    private void TryInjectRegion(Type regionType)
+    {
+        var regionName = PrismConverter.ConvertToRegionName(regionType);
+        if (this.RegionManager.Regions.First(r => r.Name == regionName).Views.Any())
+            return;
+
+        var view = this.Container.Resolve(regionType);
+        this.InjectRegion(regionName, view);
+    }
+
+    /// <summary>
+    /// ウィンドウ内のリージョンに View のインスタンスを設定します。
+    /// </summary>
+    /// <param name="regionName">リージョン名</param>
+    /// <param name="view">View のインスタンス</param>
+    [LogInterceptor]
+    private void InjectRegion(string regionName, object view)
+    {
+        try
+        {
+            this.RegionManager.AddToRegion(regionName, view);
+            return;
+        }
+        catch (Exception e)
+        {
+            this.Logger.Log($"IRegionManager.AddToRegion() が失敗しました。別メソッドで再試行します。: RegionName={regionName}", Category.Warn, e);
+        }
+        try
+        {
+            this.RegionManager.RegisterViewWithRegion(regionName, () => view);
+            return;
+        }
+        catch (Exception e)
+        {
+            this.Logger.Log($"IRegionManager.RegisterViewWithRegion() が失敗しました。: RegionName={regionName}", Category.Error, e);
         }
     }
 
@@ -466,45 +531,20 @@ public partial class MainWindow : MetroWindow
                 TabablzControl.AddItemCommand.Execute(null, this.MainContent);
             }
         }
+    }
 
-        // リージョンにビューを設定する
-        void injectRegionContent<T>(string suffix = null)
-        {
-            var regionName = $"{PrismConverter.ConvertToRegionName<T>()}{suffix}";
-            var content = this.Container.Resolve<T>();
-
-            try
-            {
-                this.RegionManager.AddToRegion(regionName, content);
-                return;
-            }
-            catch (Exception e)
-            {
-                this.Logger.Log($"IRegionManager.AddToRegion() が失敗しました。別メソッドで再試行します。: RegionName={regionName}", Category.Warn, e);
-            }
-
-            try
-            {
-                this.RegionManager.RegisterViewWithRegion(regionName, () => content);
-                return;
-            }
-            catch (Exception e)
-            {
-                this.Logger.Log($"IRegionManager.RegisterViewWithRegion() が失敗しました。: RegionName={regionName}", Category.Error, e);
-            }
-        }
-        injectRegionContent<MenuBarView>("1");
-        injectRegionContent<MenuBarView>("2");
-        injectRegionContent<ToolBarView>();
-        injectRegionContent<StatusBarView>();
-        injectRegionContent<DiffContentView>();
-        injectRegionContent<PrintPreviewContentView>();
-        injectRegionContent<OptionContentView>();
-        injectRegionContent<MaintenanceContentView>();
-        injectRegionContent<AboutContentView>();
-        injectRegionContent<ShortcutKeysContentView>();
-        injectRegionContent<TerminalView>();
-        injectRegionContent<ScriptRunnerView>();
+    /// <summary>
+    /// ウィンドウのコンテンツの描画が完了したときに行う処理を定義します。
+    /// </summary>
+    /// <param name="sender">イベントの発生源</param>
+    /// <param name="e">イベントの情報</param>
+    [LogInterceptor]
+    private void Window_ContentRendered(object sender, EventArgs e)
+    {
+        // イベントを購読する
+        // INFO: 以下のイベントはウィンドウのロード前にも発生しており、トレースログが汚れるのでこのタイミングで紐づける
+        this.SideContent.IsVisibleChanged += this.SideContent_IsVisibleChanged;
+        this.BottomContent.IsVisibleChanged += this.BottomContent_IsVisibleChanged;
     }
 
     /// <summary>
@@ -516,6 +556,10 @@ public partial class MainWindow : MetroWindow
     private void Window_Closed(object sender, EventArgs e)
     {
         this.Logger.Log($"ウィンドウを破棄しました。win#{this.ViewModel.Sequense}", Category.Info);
+
+        // イベントの購読を解除する
+        this.SideContent.IsVisibleChanged -= this.SideContent_IsVisibleChanged;
+        this.BottomContent.IsVisibleChanged -= this.BottomContent_IsVisibleChanged;
 
         // 表示位置を退避する
         if (this.Settings.System.SaveWindowPlacement && this._handleSource.IsDisposed == false)
@@ -580,10 +624,18 @@ public partial class MainWindow : MetroWindow
     [LogInterceptor]
     private void Flyout_IsOpenChanged(object sender, RoutedEventArgs e)
     {
-        if ((sender as Flyout)?.IsOpen != false)
+        if (sender is not Flyout flyout)
             return;
 
-        this.FocusTextEditor();
+        if (flyout.IsOpen)
+        {
+            var regionName = Prism.Regions.RegionManager.GetRegionName((ContentControl)flyout.Content);
+            this.TryInjectRegion(regionName);
+        }
+        else
+        {
+            this.FocusTextEditor();
+        }
         e.Handled = true;
     }
 
@@ -595,6 +647,8 @@ public partial class MainWindow : MetroWindow
     [LogInterceptor]
     private void SideContent_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
+        if (this.IsLoaded == false)
+            return;
         if (e.NewValue is not bool visible || visible)
             return;
         if (this.IsOpenedSideContent == false)
@@ -772,6 +826,21 @@ public partial class MainWindow : MetroWindow
     {
         var textEditor = (TextEditor)sender;
         textEditor.Dispose();
+    }
+
+    /// <summary>
+    /// ボトムコンテンツの表示設定が変更されたときに行う処理を定義します。
+    /// </summary>
+    /// <param name="sender">イベントの発生源</param>
+    /// <param name="e">イベントの情報</param>
+    [LogInterceptor]
+    private void BottomContent_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (this.IsLoaded == false || this.BottomContent.IsVisible == false)
+            return;
+
+        TryInjectRegion(typeof(TerminalView));
+        TryInjectRegion(typeof(ScriptRunnerView));
     }
 
     /// <summary>

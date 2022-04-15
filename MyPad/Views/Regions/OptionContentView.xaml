@@ -157,10 +157,10 @@
                                 <CheckBox IsChecked="{Binding EnableResident, Mode=TwoWay}"             Content="{le:Loc LabelText_EnableResident}" IsEnabled="{Binding EnableNotificationIcon, Mode=OneWay}"/>
                                 <Border Height="10"/>
                                 <CheckBox IsChecked="{Binding EnableAutoSave, Mode=TwoWay}"             Content="{le:Loc LabelText_EnableAutoSave}"/>
-                                <Grid ge:GridEx.RowDefinition="Auto" ge:GridEx.ColumnDefinition="Auto, 10, Auto" Margin="30 0 0 0">
-                                    <TextBlock       Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_AutoSaveInterval}"/>
-                                    <m:NumericUpDown Grid.Row="0" Grid.Column="2" Value="{Binding AutoSaveInterval, Mode=TwoWay}" Minimum="1" MinWidth="100"/>
-                                </Grid>
+                                <StackPanel Orientation="Horizontal" Margin="25 0 0 0">
+                                    <TextBlock       Text="{le:Loc Label_AutoSaveInterval}"/>
+                                    <m:NumericUpDown Value="{Binding AutoSaveInterval, Mode=TwoWay}" Minimum="1" MinWidth="100"/>
+                                </StackPanel>
                             </StackPanel>
                         </ge:ResponsiveGrid>
                     </StackPanel>
@@ -170,50 +170,48 @@
             <!-- ********** テキストエディタ ********** -->
             <TabItem DataContext="{Binding Settings.TextEditor, Mode=OneWay}" Header="{le:Loc Label_TextEditor}">
                 <ScrollViewer>
-                    <StackPanel>
-                        <ge:ResponsiveGrid>
-                            <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
-                                <CheckBox IsChecked="{Binding HighlightCurrentLine, Mode=TwoWay}"        Content="{le:Loc LabelText_HighlightCurrentLine}"/>
-                                <CheckBox IsChecked="{Binding ShowSpaces, Mode=TwoWay}"                  Content="{le:Loc LabelText_ShowSpaces}"/>
-                                <CheckBox IsChecked="{Binding ShowTabs, Mode=TwoWay}"                    Content="{le:Loc LabelText_ShowTabs}"/>
-                                <CheckBox IsChecked="{Binding ShowBoxForControlCharacters, Mode=TwoWay}" Content="{le:Loc LabelText_ShowBoxForControlCharacters}"/>
-                                <CheckBox IsChecked="{Binding ShowEndOfLine, Mode=TwoWay}"               Content="{le:Loc LabelText_ShowEndOfLine}"/>
-                                <CheckBox IsChecked="{Binding ShowLineNumbers, Mode=TwoWay}"             Content="{le:Loc LabelText_ShowLineNumbers}"/>
-                                <CheckBox IsChecked="{Binding ShowChangeMarker, Mode=TwoWay}"            Content="{le:Loc LabelText_ShowChangeMarker}"/>
+                    <ge:ResponsiveGrid>
+                        <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
+                            <CheckBox IsChecked="{Binding HighlightCurrentLine, Mode=TwoWay}"        Content="{le:Loc LabelText_HighlightCurrentLine}"/>
+                            <CheckBox IsChecked="{Binding ShowSpaces, Mode=TwoWay}"                  Content="{le:Loc LabelText_ShowSpaces}"/>
+                            <CheckBox IsChecked="{Binding ShowTabs, Mode=TwoWay}"                    Content="{le:Loc LabelText_ShowTabs}"/>
+                            <CheckBox IsChecked="{Binding ShowBoxForControlCharacters, Mode=TwoWay}" Content="{le:Loc LabelText_ShowBoxForControlCharacters}"/>
+                            <CheckBox IsChecked="{Binding ShowEndOfLine, Mode=TwoWay}"               Content="{le:Loc LabelText_ShowEndOfLine}"/>
+                            <CheckBox IsChecked="{Binding ShowLineNumbers, Mode=TwoWay}"             Content="{le:Loc LabelText_ShowLineNumbers}"/>
+                            <CheckBox IsChecked="{Binding ShowChangeMarker, Mode=TwoWay}"            Content="{le:Loc LabelText_ShowChangeMarker}"/>
 
-                                <Border Height="10"/>
+                            <Border Height="10"/>
 
-                                <CheckBox IsChecked="{Binding ShowColumnRuler, Mode=TwoWay}" Content="{le:Loc LabelText_ShowColumnRuler}"/>
-                                <Grid ge:GridEx.RowDefinition="Auto" ge:GridEx.ColumnDefinition="Auto, 10, Auto" Margin="30 0 0 0">
-                                    <TextBlock       Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_ColumnRulerPosition}"/>
-                                    <m:NumericUpDown Grid.Row="0" Grid.Column="2" Value="{Binding ColumnRulerPosition, Mode=TwoWay}" Minimum="1" Maximum="10000" MinWidth="100"/>
-                                </Grid>
-                                <CheckBox IsChecked="{Binding WordWrap, Mode=TwoWay}"            Content="{le:Loc LabelText_EnableWordWrap}"/>
-                                <CheckBox IsChecked="{Binding ConvertTabsToSpaces, Mode=TwoWay}" Content="{le:Loc LabelText_ConvertTabsToSpaces}"/>
-                                <Grid ge:GridEx.RowDefinition="Auto" ge:GridEx.ColumnDefinition="Auto, 10, Auto" Margin="30 0 0 0">
-                                    <TextBlock       Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_IndentationSize}"/>
-                                    <m:NumericUpDown Grid.Row="0" Grid.Column="2" Value="{Binding IndentationSize, Mode=TwoWay}" Minimum="1" Maximum="64" MinWidth="100"/>
-                                </Grid>
+                            <CheckBox IsChecked="{Binding ShowColumnRuler, Mode=TwoWay}" Content="{le:Loc LabelText_ShowColumnRuler}"/>
+                            <StackPanel Orientation="Horizontal" Margin="25 0 0 0">
+                                <TextBlock       Text="{le:Loc Label_ColumnRulerPosition}"/>
+                                <m:NumericUpDown Value="{Binding ColumnRulerPosition, Mode=TwoWay}" Minimum="1" Maximum="10000" MinWidth="100"/>
                             </StackPanel>
-
-                            <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
-                                <CheckBox IsChecked="{Binding EnableFoldings, Mode=TwoWay}"                          Content="{le:Loc LabelText_EnableFoldings}"/>
-                                <CheckBox IsChecked="{Binding EnableAutoCompletion, Mode=TwoWay}"                    Content="{le:Loc LabelText_EnableAutoCompletion}"/>
-                                <CheckBox IsChecked="{Binding EnableVirtualSpace, Mode=TwoWay}"                      Content="{le:Loc LabelText_EnableVirtualSpace}"/>
-                                <CheckBox IsChecked="{Binding EnableRectangularSelection, Mode=TwoWay}"              Content="{le:Loc LabelText_EnableRectangularSelection}"/>
-                                <CheckBox IsChecked="{Binding EnableTextDragDrop, Mode=TwoWay}"                      Content="{le:Loc LabelText_EnableTextDragDrop}"/>
-                                <CheckBox IsChecked="{Binding EnableImeSupport, Mode=TwoWay}"                        Content="{le:Loc LabelText_EnableImeSupport}"/>
-                                <CheckBox IsChecked="{Binding EnableHyperlinks, Mode=TwoWay}"                        Content="{le:Loc LabelText_EnableHyperlinks}"/>
-                                <CheckBox IsChecked="{Binding EnableEmailHyperlinks, Mode=TwoWay}"                   Content="{le:Loc LabelText_EnableEmailHyperlinks}"/>
-                                <CheckBox IsChecked="{Binding RequireControlModifierForHyperlinkClick, Mode=TwoWay}" Content="{le:Loc LabelText_RequireControlModifierForHyperlinkClick}"/>
-                                <CheckBox IsChecked="{Binding HideCursorWhileTyping, Mode=TwoWay}"                   Content="{le:Loc LabelText_HideCursorWhileTyping}"/>
-                                <CheckBox IsChecked="{Binding CutCopyWholeLine, Mode=TwoWay}"                        Content="{le:Loc LabelText_EnableCutCopyWholeLine}"/>
-                                <CheckBox IsChecked="{Binding CutCopyHtmlFormat, Mode=TwoWay}"                       Content="{le:Loc LabelText_EnableCutCopyHtmlFormat}"/>
-                                <CheckBox IsChecked="{Binding AllowToggleOverstrikeMode, Mode=TwoWay}"               Content="{le:Loc LabelText_AllowToggleOverstrikeMode}"/>
-                                <CheckBox IsChecked="{Binding AllowScrollBelowDocument, Mode=TwoWay}"                Content="{le:Loc LabelText_AllowScrollBelowDocument}"/>
+                            <CheckBox IsChecked="{Binding WordWrap, Mode=TwoWay}"            Content="{le:Loc LabelText_EnableWordWrap}"/>
+                            <CheckBox IsChecked="{Binding ConvertTabsToSpaces, Mode=TwoWay}" Content="{le:Loc LabelText_ConvertTabsToSpaces}"/>
+                            <StackPanel Orientation="Horizontal" Margin="25 0 0 0">
+                                <TextBlock       Text="{le:Loc Label_IndentationSize}"/>
+                                <m:NumericUpDown Value="{Binding IndentationSize, Mode=TwoWay}" Minimum="1" Maximum="64" MinWidth="100"/>
                             </StackPanel>
-                        </ge:ResponsiveGrid>
-                    </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
+                            <CheckBox IsChecked="{Binding EnableFoldings, Mode=TwoWay}"                          Content="{le:Loc LabelText_EnableFoldings}"/>
+                            <CheckBox IsChecked="{Binding EnableAutoCompletion, Mode=TwoWay}"                    Content="{le:Loc LabelText_EnableAutoCompletion}"/>
+                            <CheckBox IsChecked="{Binding EnableVirtualSpace, Mode=TwoWay}"                      Content="{le:Loc LabelText_EnableVirtualSpace}"/>
+                            <CheckBox IsChecked="{Binding EnableRectangularSelection, Mode=TwoWay}"              Content="{le:Loc LabelText_EnableRectangularSelection}"/>
+                            <CheckBox IsChecked="{Binding EnableTextDragDrop, Mode=TwoWay}"                      Content="{le:Loc LabelText_EnableTextDragDrop}"/>
+                            <CheckBox IsChecked="{Binding EnableImeSupport, Mode=TwoWay}"                        Content="{le:Loc LabelText_EnableImeSupport}"/>
+                            <CheckBox IsChecked="{Binding EnableHyperlinks, Mode=TwoWay}"                        Content="{le:Loc LabelText_EnableHyperlinks}"/>
+                            <CheckBox IsChecked="{Binding EnableEmailHyperlinks, Mode=TwoWay}"                   Content="{le:Loc LabelText_EnableEmailHyperlinks}"/>
+                            <CheckBox IsChecked="{Binding RequireControlModifierForHyperlinkClick, Mode=TwoWay}" Content="{le:Loc LabelText_RequireControlModifierForHyperlinkClick}"/>
+                            <CheckBox IsChecked="{Binding HideCursorWhileTyping, Mode=TwoWay}"                   Content="{le:Loc LabelText_HideCursorWhileTyping}"/>
+                            <CheckBox IsChecked="{Binding CutCopyWholeLine, Mode=TwoWay}"                        Content="{le:Loc LabelText_EnableCutCopyWholeLine}"/>
+                            <CheckBox IsChecked="{Binding CutCopyHtmlFormat, Mode=TwoWay}"                       Content="{le:Loc LabelText_EnableCutCopyHtmlFormat}"/>
+                            <CheckBox IsChecked="{Binding AllowToggleOverstrikeMode, Mode=TwoWay}"               Content="{le:Loc LabelText_AllowToggleOverstrikeMode}"/>
+                            <CheckBox IsChecked="{Binding AllowScrollBelowDocument, Mode=TwoWay}"                Content="{le:Loc LabelText_AllowScrollBelowDocument}"/>
+                        </StackPanel>
+                    </ge:ResponsiveGrid>
                 </ScrollViewer>
             </TabItem>
 

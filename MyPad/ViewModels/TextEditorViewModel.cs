@@ -567,10 +567,12 @@ public class TextEditorViewModel : ViewModelBase
     [LogInterceptor]
     private void DeleteTemporary()
     {
+        if (File.Exists(this.Temporary.path) == false)
+            return;
+
         try
         {
-            if (File.Exists(this.Temporary.path))
-                File.Delete(this.Temporary.path);
+            File.Delete(this.Temporary.path);
         }
         catch (Exception e)
         {
