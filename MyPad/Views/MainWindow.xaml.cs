@@ -306,7 +306,7 @@ public partial class MainWindow : MetroWindow
     }
 
     /// <summary>
-    /// テキストエディターをキャレット位置までスクロールさせます。
+    /// テキストエディタをキャレット位置までスクロールさせます。
     /// </summary>
     [LogInterceptor]
     public void ScrollToCaret()
@@ -315,7 +315,7 @@ public partial class MainWindow : MetroWindow
     }
 
     /// <summary>
-    /// テキストエディターにフォーカスを設定します。
+    /// テキストエディタにフォーカスを設定します。
     /// </summary>
     [LogInterceptor]
     private void FocusTextEditor()
@@ -804,7 +804,7 @@ public partial class MainWindow : MetroWindow
     }
 
     /// <summary>
-    /// テキストエディターがロードされたときに行う処理を定義します。
+    /// テキストエディタがロードされたときに行う処理を定義します。
     /// </summary>
     /// <param name="sender">イベントの発生源</param>
     /// <param name="e">イベントの情報</param>
@@ -817,7 +817,7 @@ public partial class MainWindow : MetroWindow
     }
 
     /// <summary>
-    /// テキストエディターがアンロードされたときに行う処理を定義します。
+    /// テキストエディタがアンロードされたときに行う処理を定義します。
     /// </summary>
     /// <param name="sender">イベントの発生源</param>
     /// <param name="e">イベントの情報</param>

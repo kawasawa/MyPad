@@ -29,7 +29,7 @@ namespace MyPad.ViewModels;
 
 /// <summary>
 /// <see cref="Views.Controls.TextEditor"/> に対応する ViewModel を表します。
-/// このクラスはテキストエディターに占有されるファイルストリームとそのドキュメントモデルを保持します。
+/// このクラスはテキストエディタに占有されるファイルストリームとそのドキュメントモデルを保持します。
 /// </summary>
 public class TextEditorViewModel : ViewModelBase
 {

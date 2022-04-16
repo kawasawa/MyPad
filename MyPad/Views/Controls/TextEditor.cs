@@ -10,7 +10,7 @@ using System.Windows;
 namespace MyPad.Views.Controls;
 
 /// <summary>
-/// テキストエディターのコントロールを表します。
+/// テキストエディタのコントロールを表します。
 /// 
 /// このクラスは、UI を司る <see cref="Controls.TextArea"/>、
 /// ドキュメントを保管するモデルである <see cref="TextDocument"/>、
@@ -317,7 +317,7 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor, IDisposable
     }
 
     /// <summary>
-    /// テキストエディターのオプション設定
+    /// テキストエディタのオプション設定
     /// </summary>
     public INotifyPropertyChanged Settings
     {
@@ -427,9 +427,9 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor, IDisposable
     }
 
     /// <summary>
-    /// テキストエディターのオプション設定を移入します。
+    /// テキストエディタのオプション設定を移入します。
     /// </summary>
-    /// <param name="sourceSettings">移入元となるテキストエディターのオプション設定</param>
+    /// <param name="sourceSettings">移入元となるテキストエディタのオプション設定</param>
     private void PopulateSettings(INotifyPropertyChanged sourceSettings)
     {
         // 同じ名前のプロパティに値をマッピングする

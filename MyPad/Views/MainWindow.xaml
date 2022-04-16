@@ -659,7 +659,7 @@
                 </dr:TabablzControl.ContextMenu>
                 <dr:TabablzControl.ContentTemplate>
                     <DataTemplate>
-                        <!-- テキストエディター -->
+                        <!-- テキストエディタ -->
                         <controls:TextEditor x:Name="TextEditor">
                             <controls:TextEditor.Resources>
                                 <Style TargetType="{x:Type ae:SearchPanel}" BasedOn="{StaticResource Common.SearchPanel}">

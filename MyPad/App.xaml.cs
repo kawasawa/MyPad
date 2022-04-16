@@ -266,7 +266,7 @@ public partial class App : PrismApplication
     [LogInterceptor]
     protected override Window CreateShell()
     {
-        // バックアップ起動中のプロセスの探索する
+        // バックグラウンド起動中のプロセスの探索する
         var process = Process.GetCurrentProcess();
         var getHandleTask = Task.Run(() => this.GetOtherProcessHandle(process));
 

@@ -5,7 +5,7 @@ using System.Windows.Media;
 namespace MyPad.Models;
 
 /// <summary>
-/// テキストエディターの設定を管理するモデルを表します。
+/// テキストエディタの設定を管理するモデルを表します。
 /// </summary>
 public class TextEditorSettings : ModelBase
 {

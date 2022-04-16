@@ -1144,7 +1144,7 @@ public class MainWindowViewModel : ViewModelBase
 
     #endregion
 
-    #region テキストエディターの制御
+    #region テキストエディタの制御
 
     /// <summary>
     /// <see cref="TextEditorViewModel"/> クラスの新しいインスタンスを生成します。
@@ -1217,7 +1217,7 @@ public class MainWindowViewModel : ViewModelBase
     }
 
     /// <summary>
-    /// 指定されたインスタンスをアクティブなテキストエディターに設定します。
+    /// 指定されたインスタンスをアクティブなテキストエディタに設定します。
     /// </summary>
     /// <param name="textEditor"><see cref="TextEditorViewModel"/> クラスのインスタンス</param>
     [LogInterceptor]
