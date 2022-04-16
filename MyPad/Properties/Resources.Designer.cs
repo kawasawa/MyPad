@@ -1948,7 +1948,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   単一タブを表示する。 に類似しているローカライズされた文字列を検索します。
+        ///   タブが一つのみの場合もタブバーを表示する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_ShowSingleTab {
             get {

@@ -564,7 +564,7 @@ These changes will be applied on restart. Are you sure you want to continue?</va
     <value>Show menu bar.</value>
   </data>
   <data name="LabelText_ShowSingleTab" xml:space="preserve">
-    <value>Show single tab.</value>
+    <value>Show tab bar even when there is only one tab.</value>
   </data>
   <data name="LabelText_ShowSpaces" xml:space="preserve">
     <value>Show spaces.</value>
