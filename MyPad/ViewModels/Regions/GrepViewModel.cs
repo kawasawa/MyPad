@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using Unity;
 
-namespace MyPad.ViewModels;
+namespace MyPad.ViewModels.Regions;
 
 /// <summary>
 /// Grep パネルに対応する ViewModel を表します。
 /// </summary>
-public class GrepPanelViewModel : ViewModelBase
+public class GrepViewModel : ViewModelBase
 {
     // Constructor Injection
     public Settings Settings { get; set; }
@@ -57,7 +57,7 @@ public class GrepPanelViewModel : ViewModelBase
     /// <param name="settings">システム設定</param>
     [InjectionConstructor]
     [LogInterceptor]
-    public GrepPanelViewModel(Settings settings)
+    public GrepViewModel(Settings settings)
     {
         this.Settings = settings;
 

@@ -9,11 +9,8 @@ using Prism.Commands;
 using Prism.Ioc;
 using Prism.Regions;
 using System;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -36,12 +33,11 @@ public partial class MainWindow : MetroWindow
 
     // Constructor Injection
     public IContainerExtension Container { get; set; }
+    public IRegionManager RegionManager { get; set; }
 
     // Dependency Injection
     [Dependency]
     public ILoggerFacade Logger { get; set; }
-    [Dependency]
-    public IRegionManager RegionManager { get; set; }
     [Dependency]
     public Settings Settings { get; set; }
 
@@ -55,10 +51,10 @@ public partial class MainWindow : MetroWindow
         = new RoutedCommand(nameof(ActivateTerminalCommand), typeof(MainWindow));
     public static readonly ICommand ActivateScriptRunnerCommand
         = new RoutedCommand(nameof(ActivateScriptRunnerCommand), typeof(MainWindow));
-    public static readonly ICommand ActivateFileExplorerCommand
-        = new RoutedCommand(nameof(ActivateFileExplorerCommand), typeof(MainWindow));
-    public static readonly ICommand ActivateGrepPanelCommand
-        = new RoutedCommand(nameof(ActivateGrepPanelCommand), typeof(MainWindow));
+    public static readonly ICommand ActivateExplorerCommand
+        = new RoutedCommand(nameof(ActivateExplorerCommand), typeof(MainWindow));
+    public static readonly ICommand ActivateGrepCommand
+        = new RoutedCommand(nameof(ActivateGrepCommand), typeof(MainWindow));
     public static readonly ICommand ActivatePropertyCommand
         = new RoutedCommand(nameof(ActivatePropertyCommand), typeof(MainWindow));
     public ICommand SwitchFullScreenModeCommand
@@ -190,12 +186,24 @@ public partial class MainWindow : MetroWindow
     /// このクラスの新しいインスタンスを生成します。
     /// </summary>
     /// <param name="container">DI コンテナ</param>
+    /// <param name="regionManager">リージョンマネージャー</param>
     [InjectionConstructor]
     [LogInterceptor]
-    public MainWindow(IContainerExtension container)
+    public MainWindow(IContainerExtension container, IRegionManager regionManager)
     {
-        this.InitializeComponent();
         this.Container = container;
+        this.RegionManager = regionManager;
+
+        this.InitializeComponent();
+
+        // INFO: HamburgerMenu 内のコンテンツは遅延初期化されるため p:RegionManager.RegionName では紐づけできない
+        Prism.Regions.RegionManager.SetRegionName(this.ExplorerRegion, nameof(this.ExplorerRegion));
+        Prism.Regions.RegionManager.SetRegionManager(this.ExplorerRegion, this.RegionManager);
+        Prism.Regions.RegionManager.SetRegionName(this.GrepRegion, nameof(this.GrepRegion));
+        Prism.Regions.RegionManager.SetRegionManager(this.GrepRegion, this.RegionManager);
+        Prism.Regions.RegionManager.SetRegionName(this.PropertyRegion, nameof(this.PropertyRegion));
+        Prism.Regions.RegionManager.SetRegionManager(this.PropertyRegion, this.RegionManager);
+
         this.Localization = new LocalizationWrapper();
         this.InterTabClient = this.Container.Resolve<InterTabClientWrapper>();
         this.Notifier = new(config =>
@@ -265,13 +273,13 @@ public partial class MainWindow : MetroWindow
                 (sender, e) => e.CanExecute = this.ViewModel.IsEditMode.Value
             ),
             new CommandBinding(
-                ActivateFileExplorerCommand,
-                (sender, e) => this.PerformClickSideContent(this.FileExplorerItem),
+                ActivateExplorerCommand,
+                (sender, e) => this.PerformClickSideContent(this.ExplorerItem),
                 (sender, e) => e.CanExecute = this.ViewModel.IsEditMode.Value
             ),
             new CommandBinding(
-                ActivateGrepPanelCommand,
-                (sender, e) => this.PerformClickSideContent(this.GrepPanelItem),
+                ActivateGrepCommand,
+                (sender, e) => this.PerformClickSideContent(this.GrepItem),
                 (sender, e) => e.CanExecute = this.ViewModel.IsEditMode.Value
             ),
             new CommandBinding(
@@ -405,7 +413,7 @@ public partial class MainWindow : MetroWindow
     /// </summary>
     /// <param name="targetItem">対象の項目</param>
     [LogInterceptor]
-    private void PerformClickSideContent(object targetItem)
+    private void PerformClickSideContent(HamburgerMenuItem targetItem)
     {
         this.Settings.System.ShowSideBar = true;
 
@@ -417,8 +425,8 @@ public partial class MainWindow : MetroWindow
             this.OpenSideContent(targetItem);
             this.FocusSideContent();
 
-            if (targetItem == this.FileExplorerItem && this.ViewModel.FileExplorer.Value.FileTreeNodes.Any() == false)
-                this.ViewModel.FileExplorer.Value.RecreateExplorer();
+            if (targetItem.Tag is ContentControl region && string.IsNullOrEmpty(region.Name) == false)
+                this.TryInjectRegion(region.Name);
         }
         else
         {
@@ -433,30 +441,32 @@ public partial class MainWindow : MetroWindow
     /// ウィンドウ内のリージョンに View のインスタンスを設定します。
     /// </summary>
     /// <param name="regionName">リージョン名</param>
+    /// <returns>正常に処理されたかどうかを示す値</returns>
     [LogInterceptor]
-    private void TryInjectRegion(string regionName)
+    private bool TryInjectRegion(string regionName)
     {
         if (this.RegionManager.Regions.First(r => r.Name == regionName).Views.Any())
-            return;
+            return false;
 
         var regionType = PrismConverter.RegionNameToRegionType(regionName);
         var view = this.Container.Resolve(regionType);
-        this.InjectRegion(regionName, view);
+        return this.InjectRegion(regionName, view);
     }
 
     /// <summary>
     /// ウィンドウ内のリージョンに View のインスタンスを設定します。
     /// </summary>
     /// <param name="regionType">リージョンの型</param>
+    /// <returns>正常に処理されたかどうかを示す値</returns>
     [LogInterceptor]
-    private void TryInjectRegion(Type regionType)
+    private bool TryInjectRegion(Type regionType)
     {
         var regionName = PrismConverter.ConvertToRegionName(regionType);
         if (this.RegionManager.Regions.First(r => r.Name == regionName).Views.Any())
-            return;
+            return false;
 
         var view = this.Container.Resolve(regionType);
-        this.InjectRegion(regionName, view);
+        return this.InjectRegion(regionName, view);
     }
 
     /// <summary>
@@ -464,13 +474,14 @@ public partial class MainWindow : MetroWindow
     /// </summary>
     /// <param name="regionName">リージョン名</param>
     /// <param name="view">View のインスタンス</param>
+    /// <returns>正常に処理されたかどうかを示す値</returns>
     [LogInterceptor]
-    private void InjectRegion(string regionName, object view)
+    private bool InjectRegion(string regionName, object view)
     {
         try
         {
             this.RegionManager.AddToRegion(regionName, view);
-            return;
+            return true;
         }
         catch (Exception e)
         {
@@ -479,12 +490,13 @@ public partial class MainWindow : MetroWindow
         try
         {
             this.RegionManager.RegisterViewWithRegion(regionName, () => view);
-            return;
+            return true;
         }
         catch (Exception e)
         {
             this.Logger.Log($"IRegionManager.RegisterViewWithRegion() が失敗しました。: RegionName={regionName}", Category.Error, e);
         }
+        return false;
     }
 
     #endregion
@@ -617,29 +629,6 @@ public partial class MainWindow : MetroWindow
     }
 
     /// <summary>
-    /// フライアウトの開閉状態が変更されたときに行う処理を定義します。
-    /// </summary>
-    /// <param name="sender">イベントの発生源</param>
-    /// <param name="e">イベントの情報</param>
-    [LogInterceptor]
-    private void Flyout_IsOpenChanged(object sender, RoutedEventArgs e)
-    {
-        if (sender is not Flyout flyout)
-            return;
-
-        if (flyout.IsOpen)
-        {
-            var regionName = Prism.Regions.RegionManager.GetRegionName((ContentControl)flyout.Content);
-            this.TryInjectRegion(regionName);
-        }
-        else
-        {
-            this.FocusTextEditor();
-        }
-        e.Handled = true;
-    }
-
-    /// <summary>
     /// サイドコンテンツの表示設定が変更されたときに行う処理を定義します。
     /// </summary>
     /// <param name="sender">イベントの発生源</param>
@@ -666,111 +655,10 @@ public partial class MainWindow : MetroWindow
     private void SideContent_ItemInvoked(object sender, HamburgerMenuItemInvokedEventArgs e)
     {
         if (System.Windows.Input.MouseButtonState.Pressed == Mouse.LeftButton && e.IsItemOptions == false)
-            this.PerformClickSideContent(e.InvokedItem);
+            this.PerformClickSideContent((HamburgerMenuItem)e.InvokedItem);
         e.Handled = true;
     }
 
-    /// <summary>
-    /// ファイルツリーノードが右クリックされたときに行う処理を定義します。
-    /// </summary>
-    /// <param name="sender">イベントの発生源</param>
-    /// <param name="e">イベントの情報</param>
-    [LogInterceptor]
-    private void FileTreeNode_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        if (e.Handled)
-            return;
-
-        if ((e.OriginalSource as DependencyObject)?.Ancestor().FirstOrDefault(d => d is TreeViewItem) is not TreeViewItem item)
-            return;
-
-        item.IsSelected = true;
-        e.Handled = true;
-    }
-
-    /// <summary>
-    /// ファイルツリーノードがダブルクリックされたときに行う処理を定義します。
-    /// </summary>
-    /// <param name="sender">イベントの発生源</param>
-    /// <param name="e">イベントの情報</param>
-    [LogInterceptor]
-    private void FileTreeNode_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-    {
-        if (e.Handled)
-            return;
-
-        var node = (FileExplorerViewModel.FileTreeNode)((TreeViewItem)sender).DataContext;
-        if (File.Exists(node.FileName))
-        {
-            _ = this.ViewModel.InvokeLoad(node.FileName);
-            e.Handled = true;
-            return;
-        }
-    }
-
-    /// <summary>
-    /// ファイルツリーノード上でキーが押されたときに行う処理を定義します。
-    /// </summary>
-    /// <param name="sender">イベントの発生源</param>
-    /// <param name="e">イベントの情報</param>
-    [LogInterceptor]
-    private void FileTreeNode_KeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.Handled)
-            return;
-
-        switch (e.Key)
-        {
-            case Key.Enter:
-                {
-                    var node = (FileExplorerViewModel.FileTreeNode)((TreeViewItem)sender).DataContext;
-                    if (node.IsDummy)
-                    {
-                        e.Handled = true;
-                        return;
-                    }
-                    if (File.Exists(node.FileName))
-                    {
-                        _ = this.ViewModel.InvokeLoad(node.FileName);
-                        e.Handled = true;
-                        return;
-                    }
-                    if (Directory.Exists(node.FileName))
-                    {
-                        node.IsExpanded = !node.IsExpanded;
-                        e.Handled = true;
-                        return;
-                    }
-                    break;
-                }
-        }
-    }
-
-    /// <summary>
-    /// Grep 結果のレコードがダブルクリックされたときに行う処理を定義します。
-    /// </summary>
-    /// <param name="sender">イベントの発生源</param>
-    /// <param name="e">イベントの情報</param>
-    [LogInterceptor]
-    private async void GrepResult_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-    {
-        if (e.Handled)
-            return;
-
-        dynamic content = ((ListBoxItem)sender).Content;
-        var path = (string)content.path;
-        var line = (int)content.line;
-        var encoding = (Encoding)content.encoding;
-        await this.ViewModel.InvokeLoad(path, encoding);
-
-        // ViewModel が変更されてから View へ反映されるまでにラグがあるため待機する
-        while (this.ActiveTextEditor?.DataContext != this.ViewModel.ActiveTextEditor.Value)
-            await Task.Delay(100);
-        this.ActiveTextEditor.Line = line;
-        this.ScrollToCaret();
-
-        e.Handled = true;
-    }
 
     /// <summary>
     /// メインコンテンツの選択中の項目が変更されたときに行う処理を定義します。
@@ -839,8 +727,12 @@ public partial class MainWindow : MetroWindow
         if (this.IsLoaded == false || this.BottomContent.IsVisible == false)
             return;
 
-        TryInjectRegion(typeof(TerminalView));
-        TryInjectRegion(typeof(ScriptRunnerView));
+        foreach (var tabItem in this.BottomContent.Items.Cast<TabItem>())
+        {
+            var regionName = Prism.Regions.RegionManager.GetRegionName((ContentControl)tabItem.Content);
+            if (this.TryInjectRegion(regionName) == false)
+                break;
+        }
     }
 
     /// <summary>
@@ -871,6 +763,29 @@ public partial class MainWindow : MetroWindow
             return;
 
         this.IsVisibleBottomContent = false;
+    }
+
+    /// <summary>
+    /// フライアウトの開閉状態が変更されたときに行う処理を定義します。
+    /// </summary>
+    /// <param name="sender">イベントの発生源</param>
+    /// <param name="e">イベントの情報</param>
+    [LogInterceptor]
+    private void Flyout_IsOpenChanged(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Flyout flyout)
+            return;
+
+        if (flyout.IsOpen)
+        {
+            var regionName = Prism.Regions.RegionManager.GetRegionName((ContentControl)flyout.Content);
+            this.TryInjectRegion(regionName);
+        }
+        else
+        {
+            this.FocusTextEditor();
+        }
+        e.Handled = true;
     }
 
     /// <summary>

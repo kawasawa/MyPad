@@ -8,7 +8,6 @@ using Prism.Ioc;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -35,7 +34,7 @@ public static class IDialogServiceExtensions
     public static void ToastNotify(this IDialogService self, string message)
     {
         if (self.UseInAppToastNotifications(out var window))
-            GetActiveMainWindow()?.Notifier.ShowInformation(message, CreateToastSettings());
+            MvvmHelper.GetActiveMainWindow()?.Notifier.ShowInformation(message, CreateToastSettings());
     }
 
     /// <summary>
@@ -46,7 +45,7 @@ public static class IDialogServiceExtensions
     [LogInterceptor]
     public static void ToastWarn(this IDialogService self, string message)
     {
-        GetActiveMainWindow()?.Notifier.ShowWarning(message, CreateToastSettings());
+        MvvmHelper.GetActiveMainWindow()?.Notifier.ShowWarning(message, CreateToastSettings());
     }
 
     #endregion
@@ -446,13 +445,6 @@ public static class IDialogServiceExtensions
     #region ヘルパーメソッド
 
     /// <summary>
-    /// アクティブな <see cref="MainWindow"/> を取得します。
-    /// </summary>
-    /// <returns><see cref="MainWindow"/> のインスタンス</returns>
-    private static MainWindow GetActiveMainWindow()
-        => MvvmHelper.GetMainWindows().FirstOrDefault(x => x.IsActive);
-
-    /// <summary>
     /// ダイアログ名を取得します。
     /// </summary>
     /// <param name="callerName">呼び出し元のメソッド名</param>
@@ -482,7 +474,7 @@ public static class IDialogServiceExtensions
     /// </returns>
     private static bool UseInAppToastNotifications(this IDialogService self, out MainWindow window)
     {
-        window = GetActiveMainWindow();
+        window = MvvmHelper.GetActiveMainWindow();
         if (window == null)
             return false;
 
@@ -505,7 +497,7 @@ public static class IDialogServiceExtensions
     /// </returns>
     private static bool UseOverlayDialog(this IDialogService self, out MainWindow window)
     {
-        window = GetActiveMainWindow();
+        window = MvvmHelper.GetActiveMainWindow();
         if (window == null)
             return false;
 

@@ -28,6 +28,14 @@ public static class MvvmHelper
         => Application.Current?.Windows.OfType<MainWindow>() ?? Enumerable.Empty<MainWindow>();
 
     /// <summary>
+    /// アクティブな <see cref="MainWindow"/> を取得します。
+    /// </summary>
+    /// <returns><see cref="MainWindow"/> のインスタンス</returns>
+    [LogInterceptor]
+    public static MainWindow GetActiveMainWindow()
+        => GetMainWindows().FirstOrDefault(x => x.IsActive);
+
+    /// <summary>
     /// このプロセスが持つすべての <see cref="MainWindowViewModel"/> のインスタンスを取得します。
     /// </summary>
     /// <returns><see cref="MainWindowViewModel"/> のインスタンス</returns>

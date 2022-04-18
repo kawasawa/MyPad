@@ -19,12 +19,12 @@ using System.Windows.Media.Imaging;
 using Unity;
 using Vanara.PInvoke;
 
-namespace MyPad.ViewModels;
+namespace MyPad.ViewModels.Regions;
 
 /// <summary>
 /// ファイルエクスプローラーに対応する ViewModel を表します。
 /// </summary>
-public class FileExplorerViewModel : ViewModelBase
+public class ExplorerViewModel : ViewModelBase
 {
     // Constructor Injection
     public IEventAggregator EventAggregator { get; set; }
@@ -45,7 +45,7 @@ public class FileExplorerViewModel : ViewModelBase
     /// <param name="eventAggregator">イベントアグリゲーター</param>
     [InjectionConstructor]
     [LogInterceptor]
-    public FileExplorerViewModel(IEventAggregator eventAggregator)
+    public ExplorerViewModel(IEventAggregator eventAggregator)
     {
         // ----- インジェクション ------------------------------
 

@@ -1,7 +1,6 @@
 ﻿<m:MetroWindow x:Class="MyPad.Views.MainWindow"
                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-               xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
@@ -16,7 +15,6 @@
                xmlns:dr="clr-namespace:Dragablz;assembly=Dragablz"
                xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
                xmlns:s="clr-namespace:System;assembly=System.Runtime"
-               xmlns:root="clr-namespace:MyPad"
                xmlns:viewModels="clr-namespace:MyPad.ViewModels"
                xmlns:views="clr-namespace:MyPad.Views"
                xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
@@ -107,8 +105,8 @@
         <KeyBinding Command="{x:Static views:MainWindow.ActivateTextEditorCommand}"   Gesture="{markup:CommandKeyGesuture ActivateTextEditorCommand}"/>
         <KeyBinding Command="{x:Static views:MainWindow.ActivateTerminalCommand}"     Gesture="{markup:CommandKeyGesuture ActivateTerminalCommand}"/>
         <KeyBinding Command="{x:Static views:MainWindow.ActivateScriptRunnerCommand}" Gesture="{markup:CommandKeyGesuture ActivateScriptRunnerCommand}"/>
-        <KeyBinding Command="{x:Static views:MainWindow.ActivateFileExplorerCommand}" Gesture="{markup:CommandKeyGesuture ActivateFileExplorerCommand}"/>
-        <KeyBinding Command="{x:Static views:MainWindow.ActivateGrepPanelCommand}"    Gesture="{markup:CommandKeyGesuture ActivateGrepPanelCommand}"/>
+        <KeyBinding Command="{x:Static views:MainWindow.ActivateExplorerCommand}"     Gesture="{markup:CommandKeyGesuture ActivateExplorerCommand}"/>
+        <KeyBinding Command="{x:Static views:MainWindow.ActivateGrepCommand}"         Gesture="{markup:CommandKeyGesuture ActivateGrepCommand}"/>
         <KeyBinding Command="{x:Static views:MainWindow.ActivatePropertyCommand}"     Gesture="{markup:CommandKeyGesuture ActivatePropertyCommand}"/>
         <KeyBinding Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Gesture="{markup:CommandKeyGesuture SwitchFullScreenModeCommand}"/>
     </Window.InputBindings>
@@ -262,169 +260,22 @@
                 <m:HamburgerMenu.ItemsSource>
                     <m:HamburgerMenuItemCollection>
                         <!-- エクスプローラー -->
-                        <m:HamburgerMenuIconItem x:Name="FileExplorerItem" Label="{le:Loc Command_Explorer}">
+                        <m:HamburgerMenuIconItem x:Name="ExplorerItem" Label="{le:Loc Command_Explorer}">
                             <m:HamburgerMenuIconItem.Icon>
                                 <mi:Material Kind="FileTree"/>
                             </m:HamburgerMenuIconItem.Icon>
                             <m:HamburgerMenuIconItem.Tag>
-                                <TreeView ItemsSource="{Binding Data.FileExplorer.Value.FileTreeNodes, Source={StaticResource Proxy}, Mode=OneWay}">
-                                    <TreeView.ItemContainerStyle>
-                                        <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource Common.TreeViewItem}">
-                                            <EventSetter Event="MouseRightButtonDown" Handler="FileTreeNode_MouseRightButtonDown"/>
-                                            <EventSetter Event="MouseDoubleClick" Handler="FileTreeNode_MouseDoubleClick"/>
-                                            <EventSetter Event="KeyDown" Handler="FileTreeNode_KeyDown"/>
-                                            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
-                                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
-                                            <Setter Property="ContextMenu">
-                                                <Setter.Value>
-                                                    <ContextMenu>
-                                                        <MenuItem Click="{qc:QuickEvent 'Clipboard.SetText($dataContext.FileName)'}"
-                                                                  Header="{le:Loc Command_CopyFullPath}">
-                                                            <MenuItem.Icon>
-                                                                <mi:Modern Kind="ClipboardVariantText"/>
-                                                            </MenuItem.Icon>
-                                                        </MenuItem>
-                                                        <MenuItem Header="{le:Loc Command_OpenWithExplorer}">
-                                                            <i:Interaction.Triggers>
-                                                                <i:EventTrigger EventName="Click">
-                                                                    <behaviors:ProcessStartAction
-                                                                        FileName="explorer.exe"
-                                                                        Arguments="{qc:Binding '$P.IsDummy ? $P.Parent.FileName : ($P.IsDirectory ? $P.FileName : (\'/select, \' + $P.FileName))', P={Binding Mode=OneWay}}"/>
-                                                                </i:EventTrigger>
-                                                            </i:Interaction.Triggers>
-                                                            <MenuItem.Icon>
-                                                                <mi:Material Kind="FolderOutline"/>
-                                                            </MenuItem.Icon>
-                                                        </MenuItem>
-                                                        <MenuItem Command="{Binding PropertyCommand, Mode=OneTime}"
-                                                                  Header="{le:Loc Command_Property}"
-                                                                  IsEnabled="{qc:Binding '!$P', P={Binding IsDummy, Mode=OneWay}}">
-                                                            <MenuItem.Icon>
-                                                                <mi:FontAwesome Kind="WrenchSolid"/>
-                                                            </MenuItem.Icon>
-                                                        </MenuItem>
-                                                    </ContextMenu>
-                                                </Setter.Value>
-                                            </Setter>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsExists, Mode=OneWay}" Value="False">
-                                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding IsHidden, Mode=OneWay}" Value="True">
-                                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding IsDummy, Mode=OneWay}" Value="True">
-                                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TreeView.ItemContainerStyle>
-                                    <TreeView.ItemTemplate>
-                                        <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="{x:Type viewModels:FileExplorerViewModel+FileTreeNode}">
-                                            <Border Background="Transparent" ToolTip="{qc:MultiBinding '$P0 ? $P1 : \'not exists\'', P0={Binding IsExists, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" ToolTipService.IsEnabled="{qc:Binding '!$P', P={Binding IsDummy, Mode=OneWay}}">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Image Source="{Binding Image, Mode=OneWay}" Opacity="{qc:Binding '$P ? 0.5 : 1.0', P={Binding IsHidden, Mode=OneWay}}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsExists, Mode=OneWay}}" Height="18"/>
-                                                    <mi:PackIconModern Kind="Question" Opacity="0.5" Visibility="{qc:MultiBinding '!$P0 ## !$P1 ? Visibility.Visible : Visibility.Collapsed', P0={Binding IsExists, Mode=OneWay}, P1={Binding IsDummy, Mode=OneWay}}" Height="18"/>
-                                                    <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsDummy, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" VerticalAlignment="Center" Margin="3 0 0 0"/>
-                                                </StackPanel>
-                                            </Border>
-                                        </HierarchicalDataTemplate>
-                                    </TreeView.ItemTemplate>
-                                </TreeView>
+                                <ContentControl x:Name="ExplorerRegion" Style="{StaticResource RegionContent}"/>
                             </m:HamburgerMenuIconItem.Tag>
                         </m:HamburgerMenuIconItem>
 
                         <!-- Grep -->
-                        <m:HamburgerMenuIconItem x:Name="GrepPanelItem" Label="{le:Loc Command_Grep}">
+                        <m:HamburgerMenuIconItem x:Name="GrepItem" Label="{le:Loc Command_Grep}">
                             <m:HamburgerMenuIconItem.Icon>
                                 <mi:Material Kind="Magnify"/>
                             </m:HamburgerMenuIconItem.Icon>
                             <m:HamburgerMenuIconItem.Tag>
-                                <Grid DataContext="{Binding Data.GrepPanel.Value, Source={StaticResource Proxy}, Mode=OneWay}" ge:GridEx.RowDefinition="Auto, 10, *, 3, Auto">
-                                    <Grid Grid.Row="0" ge:GridEx.RowDefinition="Auto, 3, Auto, 5, Auto, 10, Auto, 5, Auto, 3, Auto" ge:GridEx.ColumnDefinition="*, Auto, 5, Auto, Auto">
-                                        <Grid.Resources>
-                                            <Style x:Key="AccentButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Common.AccentButton}">
-                                                <Setter Property="Padding"     Value="2"/>
-                                            </Style>
-                                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Common.Button}">
-                                                <Setter Property="Background"  Value="{x:Null}"/>
-                                                <Setter Property="BorderBrush" Value="{x:Null}"/>
-                                                <Setter Property="Padding"     Value="2"/>
-                                            </Style>
-                                            <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Common.ToggleButton}">
-                                                <Setter Property="Background"  Value="{x:Null}"/>
-                                                <Setter Property="BorderBrush" Value="{x:Null}"/>
-                                                <Setter Property="Padding"     Value="2"/>
-                                                <Style.Resources>
-                                                    <!-- チェック状態での BorderBrush を上書きする -->
-                                                    <SolidColorBrush x:Key="MahApps.Brushes.Gray5" Color="{DynamicResource MahApps.Colors.Gray2}" o:Freeze="True"/>
-                                                </Style.Resources>
-                                            </Style>
-                                            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Common.TextBox}">
-                                                <!-- 既定のバリデーションエラーとポップアップを停止する -->
-                                                <Setter Property="Validation.ErrorTemplate" Value="{x:Null}"/>
-                                                <Style.Triggers>
-                                                    <!-- バリデーションエラー時にボーダーアニメーションを表示する -->
-                                                    <Trigger Property="Validation.HasError" Value="True">
-                                                        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.ValidationSummary2}"/>
-                                                        <Setter Property="m:ControlsHelper.FocusBorderBrush" Value="{DynamicResource MahApps.Brushes.ValidationSummary3}"/>
-                                                        <Setter Property="m:ControlsHelper.MouseOverBorderBrush" Value="{DynamicResource MahApps.Brushes.ValidationSummary4}"/>
-                                                        <Setter Property="m:TextBoxHelper.IsWaitingForData" Value="True"/>
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Grid.Resources>
-
-                                        <TextBox  Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="4" Text="{Binding Directory.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{le:Loc Label_Directory}" m:TextBoxHelper.UseFloatingWatermark="True" m:TextBoxHelper.ClearTextButton="True"/>
-                                        <Button   Grid.Row="0"  Grid.Column="4" Command="{Binding SelectDirectoryCommand, Mode=OneTime}" ToolTip="{le:Loc Command_Open}">
-                                            <mi:Modern Kind="FolderOpen"/>
-                                        </Button>
-                                        <CheckBox Grid.Row="2"  Grid.ColumnSpan="5" Margin="3 0 0 0" IsChecked="{Binding AllDirectories.Value, Mode=TwoWay}" Content="{le:Loc Label_AllDirectories}"/>
-                                        <TextBox  Grid.Row="4"  Grid.Column="0" Text="{Binding SearchText.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{le:Loc Command_Find}" m:TextBoxHelper.UseFloatingWatermark="True" m:TextBoxHelper.ClearTextButton="True"/>
-                                        <Button   Grid.Row="4"  Grid.Column="1" Style="{StaticResource AccentButton}" Command="{Binding GrepCommand, Mode=OneTime}" ToolTip="{le:Loc Command_Find}">
-                                            <mi:Material Kind="Magnify"/>
-                                        </Button>
-                                        <ToggleButton Grid.Row="4" Grid.Column="3" IsChecked="{qc:Binding Convert='!$P', ConvertBack='!$value', P={Binding IgnoreCase.Value, Mode=TwoWay}}" ToolTip="{le:Loc Label_CaseSensitive}">
-                                            <mi:Material Kind="FormatLetterCase"/>
-                                        </ToggleButton>
-                                        <ToggleButton Grid.Row="4" Grid.Column="4" IsChecked="{Binding UseRegex.Value, Mode=TwoWay}" ToolTip="{le:Loc Label_UseRegex}">
-                                            <mi:Material Kind="Regex"/>
-                                        </ToggleButton>
-                                        <TextBox  Grid.Row="6"  Grid.ColumnSpan="5" Text="{Binding SearchPattern.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{le:Loc Label_SearchPattern}" m:TextBoxHelper.UseFloatingWatermark="True" m:TextBoxHelper.ClearTextButton="True"/>
-                                        <ComboBox Grid.Row="8"  Grid.ColumnSpan="5" SelectedValue="{Binding Encoding.Value, Mode=TwoWay}" ItemsSource="{x:Static root:Constants.ENCODINGS}" DisplayMemberPath="EncodingName" m:TextBoxHelper.Watermark="{le:Loc Label_DefaultEncoding}" m:TextBoxHelper.UseFloatingWatermark="True"/>
-                                        <CheckBox Grid.Row="10" Grid.ColumnSpan="5" Margin="3 0 0 0" IsChecked="{Binding AutoDetectEncoding.Value, Mode=TwoWay}" Content="{le:Loc Label_AutoDetect}"/>
-                                    </Grid>
-                                    
-                                    <ListBox Grid.Row="2" ItemsSource="{Binding Results, Mode=OneWay}">
-                                        <ListBox.ItemContainerStyle>
-                                            <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource Common.ListBoxItem}">
-                                                <EventSetter Event="MouseDoubleClick" Handler="GrepResult_MouseDoubleClick"/>
-                                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                            </Style>
-                                        </ListBox.ItemContainerStyle>
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{qc:MultiBinding 'Path.GetFileName($P0) + \'(\' + $P1 + \') [\' + $P2.EncodingName + \']\'', P0={Binding path, Mode=OneWay}, P1={Binding line, Mode=OneWay}, P2={Binding encoding, Mode=OneWay}}">
-                                                    <TextBlock.ToolTip>
-                                                        <TextBlock>
-                                                            <Run Text="{qc:MultiBinding '\'Path: \' + $P1.Substring($P0.Length)', P0={Binding Data.GrepPanel.Value.Directory.Value, Source={StaticResource Proxy}, Mode=OneTime}, P1={Binding path, Mode=OneWay}}"/>
-                                                            <LineBreak/>
-                                                            <Run Text="{qc:Binding '\'Line: \' + $P', P={Binding line, Mode=OneWay}}"/>
-                                                            <LineBreak/>
-                                                            <Run Text="{qc:Binding '\'Encoding: \' + $P.EncodingName', P={Binding encoding, Mode=OneWay}}"/>
-                                                        </TextBlock>
-                                                    </TextBlock.ToolTip>
-                                                </TextBlock>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
-                                    
-                                    <TextBlock Grid.Row="4" HorizontalAlignment="Right" Text="{Binding Results.Count, StringFormat=Matched lines: {0}, Mode=OneWay}"/>
-                                    
-                                    <Border d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
-                                        <m:ProgressRing/>
-                                    </Border>
-                                </Grid>
+                                <ContentControl x:Name="GrepRegion" Style="{StaticResource RegionContent}"/>
                             </m:HamburgerMenuIconItem.Tag>
                         </m:HamburgerMenuIconItem>
 
@@ -434,68 +285,7 @@
                                 <mi:Material Kind="FileOutline"/>
                             </m:HamburgerMenuIconItem.Icon>
                             <m:HamburgerMenuIconItem.Tag>
-                                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                    <StackPanel DataContext="{Binding Data.ActiveTextEditor.Value, Source={StaticResource Proxy}, Mode=OneWay}" Margin="5 0 0 0">
-                                        <StackPanel.Resources>
-                                            <Style x:Key="PropertyName" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
-                                                <Setter Property="FontSize" Value="{DynamicResource MahApps.Font.Size.Default}"/>
-                                            </Style>
-                                            <Style x:Key="PropertyValue" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
-                                                <Setter Property="Margin" Value="20 0 0 5"/>
-                                                <Setter Property="TextWrapping" Value="Wrap"/>
-                                            </Style>
-                                        </StackPanel.Resources>
-
-                                        <Button Click="{qc:QuickEvent 'Clipboard.SetText($dataContext.FileName)'}"
-                                                Style="{StaticResource Common.ChromelessButton}"
-                                                HorizontalContentAlignment="Left">
-                                            <StackPanel Orientation="Horizontal">
-                                                <mi:Modern Kind="ClipboardVariantText"/>
-                                                <Border Width="5"/>
-                                                <TextBlock Text="{le:Loc Command_CopyFullPath}"/>
-                                            </StackPanel>
-                                        </Button>
-
-                                        <Border Height="10"/>
-                                        
-                                        <TextBlock Text="{le:Loc Label_Name}"
-                                                   Style="{StaticResource PropertyName}"/>
-                                        <TextBlock Text="{qc:Binding 'Path.GetFileName($P)', P={Binding FileName, Mode=OneWay}}"
-                                                   Style="{StaticResource PropertyValue}"/>
-                                        <TextBlock Text="{le:Loc Label_Type}"
-                                                   Style="{StaticResource PropertyName}"/>
-                                        <TextBlock Text="{Binding FileType, Mode=OneWay}"
-                                                   Style="{StaticResource PropertyValue}"/>
-                                        <TextBlock Text="{le:Loc Label_Location}"
-                                                   Style="{StaticResource PropertyName}"/>
-                                        <TextBlock Text="{Binding FileInfo.DirectoryName, Mode=OneWay}"
-                                                   Style="{StaticResource PropertyValue}"/>
-                                        <TextBlock Text="{le:Loc Label_Size}"
-                                                   Style="{StaticResource PropertyName}"/>
-                                        <TextBlock Text="{Binding FileInfo.Length, StringFormat={}{0:N0} bytes, Mode=OneWay}"
-                                                   Style="{StaticResource PropertyValue}"/>
-                                        <TextBlock Text="{le:Loc Label_CreationDate}"
-                                                   Style="{StaticResource PropertyName}"/>
-                                        <TextBlock Text="{Binding FileInfo.CreationTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"
-                                                   Style="{StaticResource PropertyValue}"/>
-                                        <TextBlock Text="{le:Loc Label_ModifiredDate}"
-                                                   Style="{StaticResource PropertyName}"/>
-                                        <TextBlock Text="{Binding FileInfo.LastWriteTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"
-                                                   Style="{StaticResource PropertyValue}"/>
-                                        <TextBlock Text="{le:Loc Label_AccessDate}"
-                                                   Style="{StaticResource PropertyName}"/>
-                                        <TextBlock Text="{Binding FileInfo.LastAccessTime, StringFormat=yyyy/MM/dd HH:mm:ss, Mode=OneWay}"
-                                                   Style="{StaticResource PropertyValue}"/>
-                                        <TextBlock Text="{le:Loc Label_Attributes}"
-                                                   Style="{StaticResource PropertyName}"/>
-                                        <TextBlock Text="{Binding FileInfo.Attributes, Mode=OneWay}"
-                                                   Style="{StaticResource PropertyValue}"/>
-                                        <TextBlock Text="{le:Loc Label_Owner}"
-                                                   Style="{StaticResource PropertyName}"/>
-                                        <TextBlock Text="{Binding FileOwner, Mode=OneWay}"
-                                                   Style="{StaticResource PropertyValue}"/>
-                                    </StackPanel>
-                                </ScrollViewer>
+                                <ContentControl x:Name="PropertyRegion" Style="{StaticResource RegionContent}" DataContext="{Binding Data.ActiveTextEditor.Value, Source={StaticResource Proxy}, Mode=OneWay}" />
                             </m:HamburgerMenuIconItem.Tag>
                         </m:HamburgerMenuIconItem>
                     </m:HamburgerMenuItemCollection>
@@ -514,8 +304,8 @@
 
             <GridSplitter Grid.Column="1" Grid.RowSpan="3"
                           Width="{qc:MultiBinding '$P0 == Visibility.Visible ## double.IsNaN($P1) ? 5 : 0',
-                                 P0={Binding Visibility, ElementName=SideContent, Mode=OneWay},
-                                 P1={Binding Width, ElementName=SideContent, Mode=OneWay}}"
+                                  P0={Binding Visibility, ElementName=SideContent, Mode=OneWay},
+                                  P1={Binding Width, ElementName=SideContent, Mode=OneWay}}"
                           DragCompleted="ColumnSplitter_DragCompleted"/>
 
             <!-- タブコントロール(メイン) -->

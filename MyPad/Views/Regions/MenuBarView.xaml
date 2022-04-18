@@ -322,16 +322,16 @@
                 </MenuItem.Icon>
             </MenuItem>
             <Separator/>
-            <MenuItem Command="{x:Static views:MainWindow.ActivateFileExplorerCommand}"
-                      Header="{le:Loc {markup:CommandResourceKey ActivateFileExplorerCommand}}"
-                      InputGestureText="{markup:CommandKeyGesutureText ActivateFileExplorerCommand}">
+            <MenuItem Command="{x:Static views:MainWindow.ActivateExplorerCommand}"
+                      Header="{le:Loc {markup:CommandResourceKey ActivateExplorerCommand}}"
+                      InputGestureText="{markup:CommandKeyGesutureText ActivateExplorerCommand}">
                 <MenuItem.Icon>
                     <mi:Material Kind="FileTree"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Command="{x:Static views:MainWindow.ActivateGrepPanelCommand}"
-                      Header="{le:Loc {markup:CommandResourceKey ActivateGrepPanelCommand}}"
-                      InputGestureText="{markup:CommandKeyGesutureText ActivateGrepPanelCommand}">
+            <MenuItem Command="{x:Static views:MainWindow.ActivateGrepCommand}"
+                      Header="{le:Loc {markup:CommandResourceKey ActivateGrepCommand}}"
+                      InputGestureText="{markup:CommandKeyGesutureText ActivateGrepCommand}">
                 <MenuItem.Icon>
                     <mi:Material Kind="Magnify"/>
                 </MenuItem.Icon>

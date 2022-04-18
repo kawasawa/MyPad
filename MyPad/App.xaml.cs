@@ -249,9 +249,7 @@ public partial class App : PrismApplication
 
         // ファクトリ
         containerRegistry.Register<ViewModels.TextEditorViewModel>();
-        containerRegistry.Register<ViewModels.FileExplorerViewModel>();
-        containerRegistry.Register<ViewModels.FileExplorerViewModel.FileTreeNode>();
-        containerRegistry.Register<ViewModels.GrepPanelViewModel>();
+        containerRegistry.Register<ViewModels.Regions.ExplorerViewModel.FileTreeNode>();
         containerRegistry.Register<Views.MainWindow.InterTabClientWrapper>();
     }
 

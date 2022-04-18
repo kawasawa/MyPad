@@ -98,8 +98,6 @@ public class MainWindowViewModel : ViewModelBase
     public ReactiveProperty<TextEditorViewModel> ActiveTextEditor { get; }
     public ReactiveProperty<TextEditorViewModel> DiffSource { get; }
     public ReactiveProperty<TextEditorViewModel> DiffDestination { get; }
-    public ReactiveProperty<FileExplorerViewModel> FileExplorer { get; }
-    public ReactiveProperty<GrepPanelViewModel> GrepPanel { get; }
     public ReactiveProperty<FlowDocument> FlowDocument { get; }
 
     private List<IDisposable> CompositeContent { get; }
@@ -187,12 +185,7 @@ public class MainWindowViewModel : ViewModelBase
         this.ActiveTextEditor = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
         this.DiffSource = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
         this.DiffDestination = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
-        this.FileExplorer = new ReactiveProperty<FileExplorerViewModel>().AddTo(this.CompositeDisposable);
-        this.GrepPanel = new ReactiveProperty<GrepPanelViewModel>().AddTo(this.CompositeDisposable);
         this.FlowDocument = new ReactiveProperty<FlowDocument>().AddTo(this.CompositeDisposable);
-
-        this.FileExplorer.Value = this.Container.Resolve<FileExplorerViewModel>();
-        this.GrepPanel.Value = this.Container.Resolve<GrepPanelViewModel>();
 
         this.CompositeContent = new();
         this.IsOpenPrintPreviewContent = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable).AddTo(this.CompositeContent);
