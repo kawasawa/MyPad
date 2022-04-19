@@ -249,9 +249,7 @@ public partial class App : PrismApplication
 
         // ファクトリ
         containerRegistry.Register<ViewModels.TextEditorViewModel>();
-        containerRegistry.Register<ViewModels.FileExplorerViewModel>();
-        containerRegistry.Register<ViewModels.FileExplorerViewModel.FileTreeNode>();
-        containerRegistry.Register<ViewModels.GrepPanelViewModel>();
+        containerRegistry.Register<ViewModels.Regions.ExplorerViewModel.FileTreeNode>();
         containerRegistry.Register<Views.MainWindow.InterTabClientWrapper>();
     }
 
@@ -266,23 +264,35 @@ public partial class App : PrismApplication
     [LogInterceptor]
     protected override Window CreateShell()
     {
-        // バックアップ起動中のプロセスの探索する
-        var process = Process.GetCurrentProcess();
-        var getHandleTask = Task.Run(() => this.GetOtherProcessHandle(process));
+        // 多重起動の検証を行う
+        var validateMultipleLaunch = Task.Run(() =>
+        {
+            var process = Process.GetCurrentProcess();
+            var handle = this.GetOtherProcessHandle(process);
+            if (handle.IsNull == false)
+            {
+                // 起動中のプロセスが見つかった場合はコマンドライン引数を引き渡す
+                this.SendData(process, handle, this.SharedDataStore.CommandLineArgs);
+                return false;
+            }
+            return true;
+        });
 
         // 設定情報を初期化してからワークスペースを生成する
         this.Container.Resolve<Models.Settings>().Load();
         var shell = this.Container.Resolve<Views.Workspace>();
 
-        // 起動中のプロセスが見つかった場合はコマンドライン引数を引き渡し、本プロセスは終了する
-        getHandleTask.Wait();
-        if (getHandleTask.Result.IsNull == false)
+        // プロセスの探索に時間がかかっている場合はメインウィンドウも生成しておく
+        if (validateMultipleLaunch.IsCompleted == false)
+            shell.PreparedWindow = shell.CreateWindow();
+
+        // 多重起動中の場合は本プロセスを終了する
+        validateMultipleLaunch.Wait();
+        if (validateMultipleLaunch.Result == false)
         {
-            this.SendData(process, getHandleTask.Result, this.SharedDataStore.CommandLineArgs);
             this.Shutdown(0);
             return null;
         }
-
         return shell;
     }
 
@@ -438,9 +448,9 @@ public partial class App : PrismApplication
             {
                 // プロセスの情報を比較する
                 _ = User32.GetWindowThreadProcessId(_hWnd, out var _lpdwProcessId);
-                var process = Process.GetProcessById((int)_lpdwProcessId);
                 if (sourceProcess.Id == _lpdwProcessId)
                     return true;
+                var process = Process.GetProcessById((int)_lpdwProcessId);
                 if (sourceProcess.ProcessName != process.ProcessName)
                     return true;
 

@@ -35,6 +35,16 @@ public class PrismConverterTest
     public void ConvertToRegionName(string expected, Type actual)
         => Assert.That(PrismConverter.ConvertToRegionName(actual), Is.EqualTo(expected));
 
+    [TestCase(typeof(AboutContentView), "AboutContentRegion")]
+    [TestCase(typeof(OptionContentView), "OptionContentRegion")]
+    [TestCase(typeof(PrintPreviewContentView), "PrintPreviewContentRegion")]
+    [TestCase(typeof(DiffContentView), "DiffContentRegion")]
+    [TestCase(typeof(MenuBarView), "MenuBarRegion")]
+    [TestCase(typeof(ToolBarView), "ToolBarRegion")]
+    [TestCase(typeof(StatusBarView), "StatusBarRegion")]
+    public void RegionNameToRegionType(Type expected, string actual)
+        => Assert.That(PrismConverter.RegionNameToRegionType(actual), Is.EqualTo(expected));
+
     [TestCase(typeof(Workspace), typeof(WorkspaceViewModel))]
     [TestCase(typeof(MainWindow), typeof(MainWindowViewModel))]
     [TestCase(typeof(AboutContentView), typeof(AboutContentViewModel))]

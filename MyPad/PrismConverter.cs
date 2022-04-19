@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace MyPad;
 
@@ -75,6 +76,35 @@ public static class PrismConverter
     {
         var coreName = ConvertToCoreName(objectType);
         return $"{coreName}Region";
+    }
+
+    /// <summary>
+    /// 指定されたリージョンの名称をもとに型情報を推定します。
+    /// </summary>
+    /// <param name="regionName">リージョンの名称</param>
+    /// <returns>オブジェクトの型</returns>
+    /// <remarks>
+    /// 以下の順に変換を行います。
+    ///   1. リージョンの名称に対して、末尾の "Region" を "View" に置換し、これをリージョンのクラス名と仮定する。
+    ///   -> [1] の名称でクラスの型情報を取得できた場合は、それを戻り値として返す。
+    ///   2. [1] の結果の末尾から "View" を取り除く。
+    ///   -> [2] の名称でクラスの型情報を取得できた場合は、それを戻り値として返す。
+    /// </remarks>
+    public static Type RegionNameToRegionType(string regionName)
+    {
+        if (regionName?.EndsWith("Region") != true)
+            return null;
+
+        var assembly = Assembly.GetExecutingAssembly();
+        var assemblyName = assembly.FullName;
+        var viewName = $"{assembly.GetName().Name}.Views.Regions.{regionName[..^"Region".Length]}View";
+        var viewType = Type.GetType($"{viewName}, {assemblyName}");
+        if (viewType == null)
+        {
+            viewName = viewName[..^"View".Length];
+            viewType = Type.GetType($"{viewName}, {assemblyName}");
+        }
+        return viewType;
     }
 
     /// <summary>

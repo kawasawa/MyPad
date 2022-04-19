@@ -598,7 +598,7 @@
     <value>メニューバーを表示する。</value>
   </data>
   <data name="LabelText_ShowSingleTab" xml:space="preserve">
-    <value>単一タブを表示する。</value>
+    <value>タブが一つのみの場合もタブバーを表示する。</value>
   </data>
   <data name="LabelText_ShowSpaces" xml:space="preserve">
     <value>スペースを表示する。</value>
@@ -861,5 +861,17 @@
   </data>
   <data name="Label_Medium" xml:space="preserve">
     <value>ふつう</value>
+  </data>
+  <data name="Label_FontFamily" xml:space="preserve">
+    <value>フォントファミリ</value>
+  </data>
+  <data name="Label_FontStyle" xml:space="preserve">
+    <value>フォントスタイル</value>
+  </data>
+  <data name="Label_FontWeight" xml:space="preserve">
+    <value>フォントウエイト</value>
+  </data>
+  <data name="Label_FontSize" xml:space="preserve">
+    <value>フォントサイズ</value>
   </data>
 </root>

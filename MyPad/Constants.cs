@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Windows;
 using System.Windows.Media;
 
 namespace MyPad;
@@ -55,6 +56,18 @@ public static class Constants
     /// </summary>
     public static IEnumerable<FontFamily> FONT_FAMILIES { get; }
         = Fonts.SystemFontFamilies;
+
+    /// <summary>
+    /// フォントウエイト一覧
+    /// </summary>
+    public static IEnumerable<FontWeight> FONT_WEIGHTS { get; }
+        = new[] { FontWeights.Thin, FontWeights.Normal, FontWeights.Bold };
+
+    /// <summary>
+    /// フォントスタイル一覧
+    /// </summary>
+    public static IEnumerable<FontStyle> FONT_STYLES { get; }
+        = new[] { FontStyles.Normal, FontStyles.Italic };
 
     /// <summary>
     /// フォントサイズ一覧

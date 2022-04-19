@@ -37,6 +37,7 @@ public class MainWindowViewModel : ViewModelBase
     #region インジェクション
 
     // Constructor Injection
+    public IContainerExtension Container { get; set; }
     public IEventAggregator EventAggregator { get; set; }
 
     // Dependency Injection
@@ -45,8 +46,6 @@ public class MainWindowViewModel : ViewModelBase
     private Settings _settings;
     private SyntaxService _syntaxService;
     private SharedProperties _sharedProperties;
-    [Dependency]
-    public IContainerExtension Container { get; set; }
     [Dependency]
     public IDialogService DialogService { get; set; }
     [Dependency]
@@ -99,8 +98,6 @@ public class MainWindowViewModel : ViewModelBase
     public ReactiveProperty<TextEditorViewModel> ActiveTextEditor { get; }
     public ReactiveProperty<TextEditorViewModel> DiffSource { get; }
     public ReactiveProperty<TextEditorViewModel> DiffDestination { get; }
-    public ReactiveProperty<FileExplorerViewModel> FileExplorer { get; }
-    public ReactiveProperty<GrepPanelViewModel> GrepPanel { get; }
     public ReactiveProperty<FlowDocument> FlowDocument { get; }
 
     private List<IDisposable> CompositeContent { get; }
@@ -140,7 +137,6 @@ public class MainWindowViewModel : ViewModelBase
     public ReactiveCommand SwitchPomodoroTimerCommand { get; }
 
     public ReactiveCommand<DragEventArgs> DropHandler { get; }
-    public ReactiveCommand<EventArgs> ContentRenderedHandler { get; }
     public ReactiveCommand<CancelEventArgs> ClosingHandler { get; }
 
     public Func<object> TextEditorFactory =>
@@ -166,13 +162,15 @@ public class MainWindowViewModel : ViewModelBase
     /// <summary>
     /// このクラスの新しいインスタンスを生成します。
     /// </summary>
+    /// <param name="container">DI コンテナ</param>
     /// <param name="eventAggregator">イベントアグリゲーター</param>
     [InjectionConstructor]
     [LogInterceptor]
-    public MainWindowViewModel(IEventAggregator eventAggregator)
+    public MainWindowViewModel(IContainerExtension container, IEventAggregator eventAggregator)
     {
         // ----- インジェクション ------------------------------
 
+        this.Container = container;
         this.EventAggregator = eventAggregator;
 
 
@@ -187,8 +185,6 @@ public class MainWindowViewModel : ViewModelBase
         this.ActiveTextEditor = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
         this.DiffSource = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
         this.DiffDestination = new ReactiveProperty<TextEditorViewModel>().AddTo(this.CompositeDisposable);
-        this.FileExplorer = new ReactiveProperty<FileExplorerViewModel>().AddTo(this.CompositeDisposable);
-        this.GrepPanel = new ReactiveProperty<GrepPanelViewModel>().AddTo(this.CompositeDisposable);
         this.FlowDocument = new ReactiveProperty<FlowDocument>().AddTo(this.CompositeDisposable);
 
         this.CompositeContent = new();
@@ -610,15 +606,6 @@ public class MainWindowViewModel : ViewModelBase
             })
             .AddTo(this.CompositeDisposable);
 
-        this.ContentRenderedHandler = new ReactiveCommand<EventArgs>()
-            .WithSubscribe(e =>
-            {
-                this.FileExplorer.Value = this.Container.Resolve<FileExplorerViewModel>();
-                this.FileExplorer.Value.RecreateExplorer();
-                this.GrepPanel.Value = this.Container.Resolve<GrepPanelViewModel>();
-            })
-            .AddTo(this.CompositeDisposable);
-
         this.ClosingHandler = new ReactiveCommand<CancelEventArgs>()
             .WithSubscribe(async e =>
             {
@@ -642,7 +629,7 @@ public class MainWindowViewModel : ViewModelBase
     [LogInterceptor]
     public async Task InvokeLoad(string path)
     {
-        await this.Load(path, null);
+        await this.InvokeLoad(path, null);
     }
 
     /// <summary>
@@ -1150,7 +1137,7 @@ public class MainWindowViewModel : ViewModelBase
 
     #endregion
 
-    #region テキストエディターの制御
+    #region テキストエディタの制御
 
     /// <summary>
     /// <see cref="TextEditorViewModel"/> クラスの新しいインスタンスを生成します。
@@ -1223,7 +1210,7 @@ public class MainWindowViewModel : ViewModelBase
     }
 
     /// <summary>
-    /// 指定されたインスタンスをアクティブなテキストエディターに設定します。
+    /// 指定されたインスタンスをアクティブなテキストエディタに設定します。
     /// </summary>
     /// <param name="textEditor"><see cref="TextEditorViewModel"/> クラスのインスタンス</param>
     [LogInterceptor]

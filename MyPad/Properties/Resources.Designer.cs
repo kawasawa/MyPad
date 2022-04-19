@@ -1309,6 +1309,42 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   フォントファミリ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_FontFamily {
+            get {
+                return ResourceManager.GetString("Label_FontFamily", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   フォントサイズ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_FontSize {
+            get {
+                return ResourceManager.GetString("Label_FontSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   フォントスタイル に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_FontStyle {
+            get {
+                return ResourceManager.GetString("Label_FontStyle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   フォントウエイト に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_FontWeight {
+            get {
+                return ResourceManager.GetString("Label_FontWeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   形式 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Format {
@@ -1912,7 +1948,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   単一タブを表示する。 に類似しているローカライズされた文字列を検索します。
+        ///   タブが一つのみの場合もタブバーを表示する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_ShowSingleTab {
             get {

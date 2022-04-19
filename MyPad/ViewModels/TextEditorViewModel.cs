@@ -29,7 +29,7 @@ namespace MyPad.ViewModels;
 
 /// <summary>
 /// <see cref="Views.Controls.TextEditor"/> に対応する ViewModel を表します。
-/// このクラスはテキストエディターに占有されるファイルストリームとそのドキュメントモデルを保持します。
+/// このクラスはテキストエディタに占有されるファイルストリームとそのドキュメントモデルを保持します。
 /// </summary>
 public class TextEditorViewModel : ViewModelBase
 {
@@ -567,10 +567,12 @@ public class TextEditorViewModel : ViewModelBase
     [LogInterceptor]
     private void DeleteTemporary()
     {
+        if (File.Exists(this.Temporary.path) == false)
+            return;
+
         try
         {
-            if (File.Exists(this.Temporary.path))
-                File.Delete(this.Temporary.path);
+            File.Delete(this.Temporary.path);
         }
         catch (Exception e)
         {

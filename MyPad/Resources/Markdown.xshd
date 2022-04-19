@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0"?>
 <SyntaxDefinition name="Markdown" extensions="*.md;*.mkd;*.mkdn;*.mdwn;*.mdown;*.markdown;*.mdtxt;*.mdtext" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 
-  <Color name="Header"    foreground="DodgerBlue"  fontWeight="bold"/>
-  <Color name="SubHeader" foreground="DeepSkyBlue" fontWeight="bold"/>
-  <Color name="Strong"                             fontWeight="bold"/>
-  <Color name="Italic"                             fontStyle="italic"/>
-  <Color name="Code"/>
-  <Color name="Image"     foreground="Goldenrod"/>
-  <Color name="Link"      foreground="DarkGoldenrod"/>
-  <Color name="LineBreak" background="LightGray"/>
+  <Color name="Header"    foreground="DodgerBlue"    fontWeight="bold"   fontStyle="normal"/>
+  <Color name="SubHeader" foreground="DeepSkyBlue"   fontWeight="bold"   fontStyle="normal"/>
+  <Color name="Strong"                               fontWeight="bold"   fontStyle="normal"/>
+  <Color name="Italic"                               fontWeight="normal" fontStyle="italic"/>
+  <Color name="Code"                                 fontWeight="normal" fontStyle="normal"/>
+  <Color name="Image"     foreground="Goldenrod"     fontWeight="normal" fontStyle="normal"/>
+  <Color name="Link"      foreground="DarkGoldenrod" fontWeight="normal" fontStyle="normal"/>
+  <Color name="LineBreak" background="LightGray"     fontWeight="normal" fontStyle="normal"/>
 
   <RuleSet ignoreCase="true">
     <Rule color="Header">
