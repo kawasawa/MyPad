@@ -41,6 +41,9 @@ public partial class Workspace : Window
     [Dependency]
     public SharedDataStore SharedDataStore { get; set; }
 
+    // エントリーポイントにて待機時間中に生成されたウィンドウ
+    public MainWindow PreparedWindow { get; set; }
+
     #endregion
 
     #region プロパティ
@@ -81,12 +84,11 @@ public partial class Workspace : Window
     /// <summary>
     /// 新しい <see cref="MainWindow"/> のインスタンスを生成します。
     /// </summary>
-    /// <param name="regionManager">リージョンマネージャー</param>
     /// <returns>生成された <see cref="MainWindow"/> のインスタンス</returns>
     [LogInterceptor]
-    private MainWindow CreateWindow(IRegionManager regionManager = null)
+    public MainWindow CreateWindow()
     {
-        var window = this.Container.Resolve<MainWindow>((typeof(IRegionManager), regionManager ?? this.RegionManager?.CreateRegionManager()));
+        var window = this.Container.Resolve<MainWindow>((typeof(IRegionManager), this.RegionManager?.CreateRegionManager()));
         this.Logger.Log($"ウィンドウを生成しました。win#{((MainWindowViewModel)window.DataContext).Sequense}", Category.Info);
         return window;
     }
@@ -108,7 +110,8 @@ public partial class Workspace : Window
         this.Hide();
 
         // 初期ウィンドウを生成する
-        var view = this.CreateWindow(this.RegionManager);
+        var view = this.PreparedWindow ?? this.CreateWindow();
+        this.PreparedWindow = null;
         view.IsInitialWindow = true;
         if (view.ViewModel.Settings.IsDifferentVersion)
         {
