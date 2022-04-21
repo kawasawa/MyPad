@@ -242,6 +242,16 @@ public class MainWindowViewModel : ViewModelBase
             })
             .AddTo(this.CompositeDisposable);
 
+        // オプションを閉じた際に設定ファイルを更新する
+        this.IsOpenOptionContent
+            .Inverse()
+            .Where(isClose => isClose)
+            .Subscribe(_ =>
+            {
+                this.Settings?.Save();
+            })
+            .AddTo(this.CompositeDisposable);
+
         this.IsOpenMaintenanceContent
             .Where(isOpen => isOpen)
             .Subscribe(_ =>
