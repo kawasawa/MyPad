@@ -1102,6 +1102,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   アクセントカラー に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_AccentColor {
+            get {
+                return ResourceManager.GetString("Label_AccentColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   アクセス日時 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_AccessDate {

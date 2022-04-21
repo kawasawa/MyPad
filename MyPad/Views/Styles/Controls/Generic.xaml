@@ -42,11 +42,11 @@
         <Setter Property="MinWidth" Value="200"/>
         <Setter Property="ResizeBorderThickness" Value="7"/>
         <Setter Property="WindowTitleBrush" Value="{x:Null}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource CyanColorBrush}"/>
-        <Setter Property="GlowBrush" Value="{DynamicResource CyanColorBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="GlowBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
         <Setter Property="NonActiveWindowTitleBrush" Value="{x:Null}"/>
-        <Setter Property="NonActiveBorderBrush" Value="{DynamicResource DarkBlueColorBrush}"/>
-        <Setter Property="NonActiveGlowBrush" Value="{DynamicResource DarkBlueColorBrush}"/>
+        <Setter Property="NonActiveBorderBrush" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
+        <Setter Property="NonActiveGlowBrush" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
         <Setter Property="TitleForeground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
         <Setter Property="TitleCharacterCasing" Value="Normal"/>
         <Setter Property="LeftWindowCommandsOverlayBehavior" Value="Never"/>

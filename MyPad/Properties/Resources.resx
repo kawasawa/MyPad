@@ -874,4 +874,7 @@
   <data name="Label_FontSize" xml:space="preserve">
     <value>フォントサイズ</value>
   </data>
+  <data name="Label_AccentColor" xml:space="preserve">
+    <value>アクセントカラー</value>
+  </data>
 </root>

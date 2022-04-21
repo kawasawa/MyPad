@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ControlzEx.Theming;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -40,7 +41,7 @@ public static class Constants
     /// <summary>
     /// カルチャー一覧
     /// </summary>
-    public static IEnumerable<object> CULTURES { get; }
+    public static ICollection<object> CULTURES { get; }
         = new[] {
             new { Description = "日本語", Name = "ja-JP" },
             new { Description = "English", Name = "en-US" },
@@ -49,29 +50,38 @@ public static class Constants
     /// <summary>
     /// 文字コード一覧
     /// </summary>
-    public static IEnumerable<Encoding> ENCODINGS { get; private set; }
+    public static ICollection<Encoding> ENCODINGS { get; private set; }
 
     /// <summary>
     /// フォントファミリー一覧
     /// </summary>
-    public static IEnumerable<FontFamily> FONT_FAMILIES { get; }
+    public static ICollection<FontFamily> FONT_FAMILIES { get; }
         = Fonts.SystemFontFamilies;
 
     /// <summary>
     /// フォントウエイト一覧
     /// </summary>
-    public static IEnumerable<FontWeight> FONT_WEIGHTS { get; }
+    public static ICollection<FontWeight> FONT_WEIGHTS { get; }
         = new[] { FontWeights.Thin, FontWeights.Normal, FontWeights.Bold };
 
     /// <summary>
     /// フォントスタイル一覧
     /// </summary>
-    public static IEnumerable<FontStyle> FONT_STYLES { get; }
+    public static ICollection<FontStyle> FONT_STYLES { get; }
         = new[] { FontStyles.Normal, FontStyles.Italic };
 
     /// <summary>
     /// フォントサイズ一覧
     /// </summary>
-    public static IEnumerable<double> FONT_SIZES { get; }
+    public static ICollection<double> FONT_SIZES { get; }
         = new[] { 6, 7, 8, 9, 10, 10.5, 11, 12, 13, 14, 15, 16, 18, 20, 22, 24, 26, 28, 32, 36, 42, 48, 60, 72, 96 };
+
+
+    private static ICollection<Theme> _accentColors;
+
+    /// <summary>
+    /// アクセントカラー一覧
+    /// </summary>
+    public static ICollection<Theme> ACCENT_COLORS
+        => _accentColors ??= ThemeManager.Current.Themes.GroupBy(t => t.ColorScheme).OrderBy(g => g.Key).Select(g => g.First()).ToList();
 }

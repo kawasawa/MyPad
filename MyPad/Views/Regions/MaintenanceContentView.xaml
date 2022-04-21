@@ -28,7 +28,7 @@
         </i:PropertyChangedTrigger>
     </i:Interaction.Triggers>
 
-    <Grid Margin="20 0 20 20">
+    <Grid Margin="20 0 20 20" MaxWidth="{StaticResource Const.MaxPageWidth}">
         <TabControl Padding="5 10 0 0" m:HeaderedControlHelper.HeaderFontWeight="Bold">
             <TabControl.Resources>
                 <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource Common.DataGrid}">
@@ -120,9 +120,9 @@
                             <lcw:Axis MinValue="0" MaxValue="100"/>
                         </lcw:CartesianChart.AxisY>
                         <lcw:CartesianChart.Series>
-                            <lcw:LineSeries Values="{Binding SharedProperties.CpuUsage, Mode=OneWay}" Stroke="{DynamicResource BlueColorBrush}">
+                            <lcw:LineSeries Values="{Binding SharedProperties.CpuUsage, Mode=OneWay}" Stroke="{DynamicResource MahApps.Brushes.Highlight}">
                                 <lcw:LineSeries.Fill>
-                                    <SolidColorBrush Color="{DynamicResource BlueColorKey}" Opacity="0.2"/>
+                                    <SolidColorBrush Color="{DynamicResource MahApps.Colors.Highlight}" Opacity="0.2"/>
                                 </lcw:LineSeries.Fill>
                             </lcw:LineSeries>
                         </lcw:CartesianChart.Series>
@@ -138,9 +138,9 @@
                             <lcw:Axis MinValue="0"/>
                         </lcw:CartesianChart.AxisY>
                         <lcw:CartesianChart.Series>
-                            <lcw:LineSeries Values="{Binding SharedProperties.MemoryUsage, Mode=OneWay}" Stroke="{DynamicResource PurpleColorBrush}">
+                            <lcw:LineSeries Values="{Binding SharedProperties.MemoryUsage, Mode=OneWay}" Stroke="{DynamicResource MahApps.Brushes.Highlight}">
                                 <lcw:LineSeries.Fill>
-                                    <SolidColorBrush Color="{DynamicResource PurpleColorKey}" Opacity="0.2"/>
+                                    <SolidColorBrush Color="{DynamicResource MahApps.Colors.Highlight}" Opacity="0.2"/>
                                 </lcw:LineSeries.Fill>
                             </lcw:LineSeries>
                         </lcw:CartesianChart.Series>

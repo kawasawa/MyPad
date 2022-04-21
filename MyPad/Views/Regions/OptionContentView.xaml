@@ -19,7 +19,7 @@
              d:DesignHeight="450" d:DesignWidth="800"
              Cursor="{qc:Binding '$P ? Cursors.Wait : Cursors.Arrow', P={Binding IsPending.Value, Mode=TwoWay}}">
 
-    <Grid Margin="20 0 20 20">
+    <Grid Margin="20 0 20 20" MaxWidth="{StaticResource Const.MaxPageWidth}">
         <TabControl Padding="5 5 0 0" m:HeaderedControlHelper.HeaderFontWeight="Bold">
             <TabControl.Resources>
                 <Style x:Key="ComboBoxTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
@@ -63,11 +63,29 @@
                     <StackPanel>
                         <Grid ge:GridEx.ColumnDefinition="Auto, *" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto, Auto">
                             <TextBlock  Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_Theme}"/>
-                            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-                                <RadioButton Content="{le:Loc Label_SyncAppTheme}" IsChecked="{qc:Binding Convert='(int)$P == 0', ConvertBack='$value ? 0 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
-                                <RadioButton Content="{le:Loc Label_Dark}"         IsChecked="{qc:Binding Convert='(int)$P == 1', ConvertBack='$value ? 1 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
-                                <RadioButton Content="{le:Loc Label_Light}"        IsChecked="{qc:Binding Convert='(int)$P == 2', ConvertBack='$value ? 2 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
-                            </StackPanel>
+                            <Grid      Grid.Row="0" Grid.Column="1" ge:GridEx.ColumnDefinition="Auto, Auto">
+                                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                    <RadioButton Content="{le:Loc Label_SyncAppTheme}" IsChecked="{qc:Binding Convert='(int)$P == 0', ConvertBack='$value ? 0 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
+                                    <RadioButton Content="{le:Loc Label_Dark}"         IsChecked="{qc:Binding Convert='(int)$P == 1', ConvertBack='$value ? 1 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
+                                    <RadioButton Content="{le:Loc Label_Light}"        IsChecked="{qc:Binding Convert='(int)$P == 2', ConvertBack='$value ? 2 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
+                                </StackPanel>
+                                <ComboBox Grid.Column="1"
+                                          ItemsSource="{x:Static root:Constants.ACCENT_COLORS}"
+                                          SelectedValue="{Binding AccentColor, Mode=TwoWay}"
+                                          SelectedValuePath="ColorScheme"
+                                          m:TextBoxHelper.Watermark="{le:Loc Label_AccentColor}"
+                                          m:TextBoxHelper.UseFloatingWatermark="True">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Ellipse Fill="{Binding ShowcaseBrush, Mode=OneWay}" Width="16" Height="16"/>
+                                                <TextBlock Text="{Binding ColorScheme, Mode=OneWay}" Margin="5 0 0 0"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </Grid>
+
 
                             <TextBlock  Grid.Row="1" Grid.Column="0" Text="{le:Loc Label_UISize}"/>
                             <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">

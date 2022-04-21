@@ -42,6 +42,17 @@ public class SystemSettings : ModelBase
         }
     }
 
+    private string _accentColor = "Blue";
+    public string AccentColor
+    {
+        get => this._accentColor;
+        set
+        {
+            if (this.SetProperty(ref this._accentColor, value))
+                this.ApplyAccentColor();
+        }
+    }
+
     private UISizeType _uiSize = UISizeType.Small;
     public UISizeType UISize
     {
@@ -191,6 +202,7 @@ public class SystemSettings : ModelBase
     public SystemSettings()
     {
         this.ApplyTheme();
+        this.ApplyAccentColor();
         this.ApplyUISize();
         this.ApplyCulture();
     }
@@ -207,15 +219,21 @@ public class SystemSettings : ModelBase
             ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.DoNotSync;
             ThemeManager.Current.SyncTheme();
 
-            var theme = ThemeManager.Current.GetTheme(this.Theme switch
+            var theme = this.Theme switch
             {
-                ThemeType.Dark => $"{ThemeManager.BaseColorDark}.Blue",
-                ThemeType.Light => $"{ThemeManager.BaseColorLight}.Blue",
-                _ => throw new InvalidEnumArgumentException(nameof(this.Theme), (int)this.Theme, typeof(ThemeType))
-            });
-            ThemeManager.Current.ChangeTheme(Application.Current, theme);
-            Application.Current?.Windows.OfType<Window>().ForEach(w => ThemeManager.Current.ChangeTheme(w, theme));
+                ThemeType.Dark => ThemeManager.BaseColorDark,
+                ThemeType.Light => ThemeManager.BaseColorLight,
+                _ => throw new InvalidEnumArgumentException()
+            };
+            ThemeManager.Current.ChangeThemeBaseColor(Application.Current, theme);
+            Application.Current?.Windows.OfType<Window>().ForEach(w => ThemeManager.Current.ChangeThemeBaseColor(w, theme));
         }
+    }
+
+    public void ApplyAccentColor()
+    {
+        ThemeManager.Current.ChangeThemeColorScheme(Application.Current, this.AccentColor);
+        Application.Current?.Windows.OfType<Window>().ForEach(w => ThemeManager.Current.ChangeThemeColorScheme(w, this.AccentColor));
     }
 
     public void ApplyUISize()

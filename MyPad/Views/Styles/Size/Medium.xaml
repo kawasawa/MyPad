@@ -16,7 +16,7 @@
     <s:Double x:Key="MahApps.Font.Size.Menu">14</s:Double>
     <s:Double x:Key="MahApps.Font.Size.ContextMenu">14</s:Double>
     <s:Double x:Key="MahApps.Font.Size.StatusBar">14</s:Double>
-    <s:Double x:Key="MahApps.Font.Size.Dialog.Title">24</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.Dialog.Title">18</s:Double>
     <s:Double x:Key="MahApps.Font.Size.Dialog.Message">17</s:Double>
     <s:Double x:Key="MahApps.Font.Size.Dialog.Button">14</s:Double>
     <s:Double x:Key="MahApps.Font.Size.Flyout.Header">22</s:Double>
