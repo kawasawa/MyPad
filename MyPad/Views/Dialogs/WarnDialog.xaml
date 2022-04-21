@@ -15,8 +15,8 @@
 
     <p:Dialog.WindowStyle>
         <Style TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource App.Dialog}">
-            <Setter Property="BorderBrush" Value="{DynamicResource RedColorBrush}"/>
-            <Setter Property="GlowBrush" Value="{DynamicResource RedColorBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.ValidationSummary2}"/>
+            <Setter Property="GlowBrush"   Value="{DynamicResource MahApps.Brushes.ValidationSummary2}"/>
         </Style>
     </p:Dialog.WindowStyle>
 

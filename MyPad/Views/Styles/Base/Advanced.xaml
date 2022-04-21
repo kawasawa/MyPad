@@ -5,7 +5,6 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="./Sizes.xaml"/>
-        <ResourceDictionary Source="./Colors.xaml"/>
         <ResourceDictionary Source="./Common.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 

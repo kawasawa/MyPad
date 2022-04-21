@@ -834,4 +834,7 @@ Please check and delete unnecessary files.</value>
   <data name="Label_FontSize" xml:space="preserve">
     <value>Font size</value>
   </data>
+  <data name="Label_AccentColor" xml:space="preserve">
+    <value>Accent color</value>
+  </data>
 </root>

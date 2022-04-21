@@ -56,7 +56,6 @@
             </Style>
         </Style.Resources>
     </Style>
-    
 
     <Style x:Key="Common.FoldingMargin" TargetType="{x:Type aef:FoldingMargin}">
         <Setter Property="FoldingMarkerBrush"                   Value="{DynamicResource MahApps.Brushes.CheckBox}"/>

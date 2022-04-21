@@ -15,8 +15,6 @@
 
     <p:Dialog.WindowStyle>
         <Style TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource App.Dialog}">
-            <Setter Property="BorderBrush" Value="{DynamicResource OrangeColorBrush}"/>
-            <Setter Property="GlowBrush" Value="{DynamicResource OrangeColorBrush}"/>
             <Setter Property="ShowCloseButton" Value="False"/>
         </Style>
     </p:Dialog.WindowStyle>
