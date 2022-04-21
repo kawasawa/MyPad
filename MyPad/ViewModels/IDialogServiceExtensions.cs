@@ -188,7 +188,7 @@ public static class IDialogServiceExtensions
         if (self.UseOverlayDialog(out var window))
         {
             var settings = CreateDialogSettings();
-            var dialog = new CustomDialog(window, settings)
+            var dialog = new MahAppsDialog(window, settings)
             {
                 Title = Resources.Command_PomodoroTimer,
                 Content = new ChangePomodoroTimerDialog(),
@@ -241,7 +241,7 @@ public static class IDialogServiceExtensions
         if (self.UseOverlayDialog(out var window))
         {
             var settings = CreateDialogSettings();
-            var dialog = new CustomDialog(window, settings)
+            var dialog = new MahAppsDialog(window, settings)
             {
                 Title = Resources.Command_GoToLine,
                 Content = new ChangeLineDialog(),
@@ -293,7 +293,7 @@ public static class IDialogServiceExtensions
         if (self.UseOverlayDialog(out var window))
         {
             var settings = CreateDialogSettings();
-            var dialog = new CustomDialog(window, settings)
+            var dialog = new MahAppsDialog(window, settings)
             {
                 Title = Resources.Command_ChangeEncoding,
                 Content = new ChangeEncodingDialog(),
@@ -345,7 +345,7 @@ public static class IDialogServiceExtensions
         if (self.UseOverlayDialog(out var window))
         {
             var settings = CreateDialogSettings();
-            var dialog = new CustomDialog(window, settings)
+            var dialog = new MahAppsDialog(window, settings)
             {
                 Title = Resources.Command_ChangeSyntax,
                 Content = new ChangeSyntaxDialog(),
@@ -401,7 +401,7 @@ public static class IDialogServiceExtensions
         if (self.UseOverlayDialog(out var window))
         {
             var settings = CreateDialogSettings();
-            var dialog = new CustomDialog(window, settings)
+            var dialog = new MahAppsDialog(window, settings)
             {
                 Title = Resources.Command_Diff,
                 Content = new SelectDiffFilesDialog(),
@@ -579,7 +579,7 @@ public static class IDialogServiceExtensions
     private static MetroDialogSettings CreateDialogSettings()
         => new()
         {
-            DialogTitleFontSize = 16,
+            MaximumBodyHeight = 64,
             AffirmativeButtonText = Resources.Command_OK,
             DefaultButtonFocus = MessageDialogResult.Affirmative,
         };
