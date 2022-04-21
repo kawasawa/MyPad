@@ -5,7 +5,6 @@ using MyBase.Wpf.CommonDialogs;
 using Prism;
 using Prism.Ioc;
 using Prism.Mvvm;
-using Prism.Services.Dialogs;
 using Prism.Unity;
 using QuickConverter;
 using System;
@@ -236,7 +235,7 @@ public partial class App : PrismApplication
         containerRegistry.RegisterInstance(this.SharedDataStore);
 
         // ダイアログ
-        containerRegistry.RegisterDialogWindow<DialogWindowWrapper>();
+        containerRegistry.RegisterDialogWindow<Views.PrismDialogWindow>();
         containerRegistry.RegisterDialog<Views.Dialogs.NotifyDialog, ViewModels.Dialogs.NotifyDialogViewModel>();
         containerRegistry.RegisterDialog<Views.Dialogs.WarnDialog, ViewModels.Dialogs.WarnDialogViewModel>();
         containerRegistry.RegisterDialog<Views.Dialogs.ConfirmDialog, ViewModels.Dialogs.ConfirmDialogViewModel>();
@@ -535,39 +534,6 @@ public partial class App : PrismApplication
         {
             Debug.WriteLine($"ERROR: QuickConverter の初期設定に失敗しました。: Message={e.Message}");
             throw;
-        }
-    }
-
-    /// <summary>
-    /// Prism によって表示されるダイアログウィンドウの基底クラスを置き換えます。
-    /// </summary>
-    /// <remarks>
-    /// 継承元にカスタムウィンドウを指定することで、ダイアログにデザインテンプレートを適用します。
-    /// </remarks>
-    private class DialogWindowWrapper : MahApps.Metro.Controls.MetroWindow, IDialogWindow
-    {
-        IDialogResult IDialogWindow.Result { get; set; }
-
-        /// <summary>
-        /// このクラスの新しいインスタンスを生成します。
-        /// </summary>
-        [LogInterceptor]
-        public DialogWindowWrapper()
-        {
-            this.Loaded += this.Window_Loaded;
-        }
-
-        /// <summary>
-        /// ウィンドウがロードされたときに行う処理を定義します。
-        /// </summary>
-        /// <param name="sender">イベントの発生源</param>
-        /// <param name="e">イベントの情報</param>
-        [LogInterceptor]
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (this.DataContext is IDialogAware dialogAware)
-                this.Title = dialogAware.Title;
-            this.Loaded -= this.Window_Loaded;
         }
     }
 }
