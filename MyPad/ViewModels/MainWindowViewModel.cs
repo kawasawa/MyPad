@@ -479,13 +479,13 @@ public class MainWindowViewModel : ViewModelBase
                 {
                     this.Logger.Log($"差分を比較するファイルの読み込みに失敗しました。: SourcePath={diffSourcePath ?? "notset"}, DestinationPath={diffDestinationPath ?? "notset"}", Category.Error, e);
                     this.DialogService.Warn(e.Message);
+
+                    this.DiffSource.Value = null;
+                    this.DiffDestination.Value = null;
                     return;
                 }
                 finally
                 {
-                    this.DiffSource.Value = null;
-                    this.DiffDestination.Value = null;
-
                     this.IsPending.Value = false;
                 }
 
