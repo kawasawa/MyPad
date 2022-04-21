@@ -19,7 +19,7 @@
              d:DesignHeight="450" d:DesignWidth="800"
              Cursor="{qc:Binding '$P ? Cursors.Wait : Cursors.Arrow', P={Binding IsPending.Value, Mode=TwoWay}}">
 
-    <Grid Margin="20 0 20 20">
+    <Grid Margin="20 0 20 20" MaxWidth="{StaticResource Const.MaxPageWidth}">
         <TabControl Padding="5 5 0 0" m:HeaderedControlHelper.HeaderFontWeight="Bold">
             <TabControl.Resources>
                 <Style x:Key="ComboBoxTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
