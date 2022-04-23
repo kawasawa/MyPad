@@ -101,6 +101,10 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor, IDisposable
         = DependencyPropertyExtensions.Register(
             new PropertyMetadata(TextArea.EnableAutoCompletionProperty.DefaultMetadata.DefaultValue),
             TextArea.EnableAutoCompletionProperty.IsValidValue);
+    public static readonly DependencyProperty EnabledHalfWidthProperty
+        = DependencyPropertyExtensions.Register(
+            new PropertyMetadata(TextArea.EnabledHalfWidthProperty.DefaultMetadata.DefaultValue),
+            TextArea.EnabledHalfWidthProperty.IsValidValue);
     public static readonly DependencyProperty SettingsProperty
         = DependencyPropertyExtensions.Register(
             new PropertyMetadata(null, (obj, e) => ((TextEditor)obj).PopulateSettings((INotifyPropertyChanged)e.NewValue)));
@@ -314,6 +318,15 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor, IDisposable
     {
         get => (bool)this.GetValue(EnableAutoCompletionProperty);
         set => this.SetValue(EnableAutoCompletionProperty, value);
+    }
+
+    /// <summary>
+    /// 等幅半角字形が有効化どうかを示す値
+    /// </summary>
+    public bool EnabledHalfWidth
+    {
+        get => (bool)this.GetValue(EnabledHalfWidthProperty);
+        set => this.SetValue(EnabledHalfWidthProperty, value);
     }
 
     /// <summary>
@@ -594,6 +607,9 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor, IDisposable
                 break;
             case nameof(this.EnableAutoCompletion):
                 this.TextArea.EnableAutoCompletion = (bool)e.NewValue;
+                break;
+            case nameof(this.EnabledHalfWidth):
+                this.TextArea.EnabledHalfWidth = (bool)e.NewValue;
                 break;
         }
         base.OnPropertyChanged(e);

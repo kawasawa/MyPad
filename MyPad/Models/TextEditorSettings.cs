@@ -245,6 +245,13 @@ public class TextEditorSettings : ModelBase
         set => this.SetProperty(ref this._enableRectangularSelection, value);
     }
 
+    private bool _enabledHalfWidth;
+    public bool EnabledHalfWidth
+    {
+        get => this._enabledHalfWidth;
+        set => this.SetProperty(ref this._enabledHalfWidth, value);
+    }
+
     private bool _enableVirtualSpace;
     public bool EnableVirtualSpace
     {

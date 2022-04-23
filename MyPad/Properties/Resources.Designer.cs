@@ -1741,6 +1741,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   等幅半角字形を有効にする。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string LabelText_EnabledHalfWidth {
+            get {
+                return ResourceManager.GetString("LabelText_EnabledHalfWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   メールアドレスのハイパーリンクを有効にする。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableEmailHyperlinks {

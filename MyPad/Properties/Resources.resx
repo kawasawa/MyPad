@@ -877,4 +877,7 @@
   <data name="Label_AccentColor" xml:space="preserve">
     <value>アクセントカラー</value>
   </data>
+  <data name="LabelText_EnabledHalfWidth" xml:space="preserve">
+    <value>等幅半角字形を有効にする。</value>
+  </data>
 </root>

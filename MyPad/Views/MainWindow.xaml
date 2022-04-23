@@ -486,7 +486,6 @@
                                                 <pb:PushBinding TargetProperty="CharName"             Path="CharName"/>
                                                 <pb:PushBinding TargetProperty="IsAtEndOfLine"        Path="IsAtEndOfLine"/>
                                                 <pb:PushBinding TargetProperty="IsInVirtualSpace"     Path="IsInVirtualSpace"/>
-                                                <pb:PushBinding TargetProperty="EnableAutoCompletion" Path="EnableAutoCompletion"/>
                                             </pb:PushBindingCollection>
                                         </Setter.Value>
                                     </Setter>
