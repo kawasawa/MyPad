@@ -89,6 +89,9 @@
     <None Update="docs\DISCLAIMER.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="docs\HISTORY_ARCHIVE.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="docs\HISTORY.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
