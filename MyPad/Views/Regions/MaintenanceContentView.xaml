@@ -28,8 +28,8 @@
         </i:PropertyChangedTrigger>
     </i:Interaction.Triggers>
 
-    <Grid Margin="20 0 20 20" MaxWidth="{StaticResource Const.MaxPageWidth}">
-        <TabControl Padding="5 10 0 0" m:HeaderedControlHelper.HeaderFontWeight="Bold">
+    <Grid Margin="20 -25 20 10" MaxWidth="{StaticResource Const.MaxPageWidth}">
+        <TabControl Padding="10 5 5 0" m:HeaderedControlHelper.HeaderFontWeight="Bold" Background="Transparent">
             <TabControl.Resources>
                 <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource Common.DataGrid}">
                     <Setter Property="Margin" Value="5"/>
@@ -45,7 +45,7 @@
             <!-- ********** ログビューワー ********** -->
             <TabItem Header="{le:Loc Label_LogViewer}">
                 <Grid>
-                    <TabControl TabStripPlacement="Bottom" m:HeaderedControlHelper.HeaderFontWeight="Bold" m:HeaderedControlHelper.HeaderFontSize="{DynamicResource MahApps.Font.Size.FloatingWatermark}">
+                    <TabControl TabStripPlacement="Bottom" Margin="0 0 0 15" m:HeaderedControlHelper.HeaderFontWeight="Bold" m:HeaderedControlHelper.HeaderFontSize="{DynamicResource MahApps.Font.Size.FloatingWatermark}">
                         <TabControl.Resources>
                             <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource Common.DataGrid}">
                                 <Setter Property="AutoGenerateColumns" Value="False"/>
@@ -84,7 +84,7 @@
                         </TabItem>
                     </TabControl>
 
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 -40 30 0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 10 -5">
                         <Button Command="{Binding CollectLogsCommand, Mode=OneTime}" Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_Refresh}" IsTabStop="False">
                             <mi:Material Kind="Refresh"/>
                         </Button>

@@ -1723,7 +1723,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   書式を保持したコピーと切り取りを可能にする。 に類似しているローカライズされた文字列を検索します。
+        ///   書式を保持したコピーと切り取りを許可する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableCutCopyHtmlFormat {
             get {
@@ -1732,7 +1732,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   未選択状態でのコピーと切り取りを可能にする。 に類似しているローカライズされた文字列を検索します。
+        ///   未選択状態でのコピーと切り取りを許可する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableCutCopyWholeLine {
             get {
