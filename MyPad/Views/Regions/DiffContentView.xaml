@@ -31,7 +31,7 @@
                        Opacity="{qc:MultiBinding '$P0 == $P1 ? 0.2 : 1.0', P0={Binding DiffSource.Value.Document.Text, Mode=OneWay}, P1={Binding DiffDestination.Value.Document.Text, Mode=OneWay}}"/>
         
         <Grid Visibility="{qc:MultiBinding '$P0 == $P1 ? Visibility.Visible : Visibility.Collapsed', P0={Binding DiffSource.Value.Document.Text, Mode=OneWay}, P1={Binding DiffDestination.Value.Document.Text, Mode=OneWay}}">
-            <Border d:IsHidden="True" Style="{StaticResource App.Overlay}">
+            <Border d:IsHidden="True" Style="{StaticResource Common.Overlay}">
                 <StackPanel Margin="5 0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                     <TextBlock Text="{le:Loc Text_SameTexts}" HorizontalAlignment="Center" TextAlignment="Center"/>
                 </StackPanel>

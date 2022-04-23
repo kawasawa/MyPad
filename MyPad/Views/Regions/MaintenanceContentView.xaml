@@ -149,7 +149,7 @@
             </TabItem>
         </TabControl>
 
-        <Border d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
+        <Border d:IsHidden="True" Style="{StaticResource Common.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
             <StackPanel Margin="5 0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                 <TextBlock Text="{le:Loc Text_Working}" HorizontalAlignment="Center" TextAlignment="Center"/>
                 <Border Height="10"/>

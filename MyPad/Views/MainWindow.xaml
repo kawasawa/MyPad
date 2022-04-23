@@ -24,7 +24,7 @@
                d:DataContext="{d:DesignInstance {x:Type viewModels:MainWindowViewModel}}"
                mc:Ignorable="d"
                p:ViewModelLocator.AutoWireViewModel="True"
-               Style="{StaticResource App.Window}"
+               Style="{StaticResource Common.Window}"
                Title="{qc:MultiBinding '($P0 ? $P1 : Path.GetFileName($P1)) + ($P2 ? \'*\' : null) + \' \- \' + $P3',
                        P0={Binding Settings.System.ShowFullName, Mode=OneWay},
                        P1={Binding ActiveTextEditor.Value.FileName, Mode=OneWay},
@@ -671,7 +671,7 @@
         </Grid>
 
         <!-- プログレスサークル -->
-        <Border Grid.Row="0" Grid.RowSpan="4" d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
+        <Border Grid.Row="0" Grid.RowSpan="4" d:IsHidden="True" Style="{StaticResource Common.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
             <StackPanel Margin="5 0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                 <TextBlock Text="{le:Loc Text_Working}" HorizontalAlignment="Center" TextAlignment="Center"/>
                 <Border Height="10"/>

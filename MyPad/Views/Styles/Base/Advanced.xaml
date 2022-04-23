@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:p="http://prismlibrary.com/"
                     xmlns:m="http://metro.mahapps.com/winfx/xaml/controls"
                     xmlns:mi="http://metro.mahapps.com/winfx/xaml/iconpacks">
 
@@ -8,6 +9,86 @@
         <ResourceDictionary Source="./Common.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
+    <m:WindowButtonCommands x:Key="_windowButtonCommands" x:Shared="False">
+        <m:WindowButtonCommands.Style>
+            <Style TargetType="{x:Type m:WindowButtonCommands}" BasedOn="{StaticResource MahApps.Styles.WindowButtonCommands}">
+                <Style.Resources>
+                    <Style x:Key="This.Dark" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.MetroWindow.Dark}">
+                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray1}"/>
+                    </Style>
+                    <Style x:Key="This.Light" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.MetroWindow.Light}">
+                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray1}"/>
+                    </Style>
+                </Style.Resources>
+                <Setter Property="DarkCloseButtonStyle"  Value="{DynamicResource This.Dark}"/>
+                <Setter Property="DarkMaxButtonStyle"    Value="{DynamicResource This.Dark}"/>
+                <Setter Property="DarkMinButtonStyle"    Value="{DynamicResource This.Dark}"/>
+                <Setter Property="LightCloseButtonStyle" Value="{DynamicResource This.Light}"/>
+                <Setter Property="LightMaxButtonStyle"   Value="{DynamicResource This.Light}"/>
+                <Setter Property="LightMinButtonStyle"   Value="{DynamicResource This.Light}"/>
+            </Style>
+        </m:WindowButtonCommands.Style>
+    </m:WindowButtonCommands>
+
+    <!-- ウィンドウ -->
+    <Style x:Key="Common.Window" TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource {x:Type m:MetroWindow}}">
+        <Setter Property="MinHeight"                           Value="200"/>
+        <Setter Property="MinWidth"                            Value="200"/>
+        <Setter Property="ResizeBorderThickness"               Value="7"/>
+        <Setter Property="WindowTitleBrush"                    Value="{x:Null}"/>
+        <Setter Property="BorderBrush"                         Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="GlowBrush"                           Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="NonActiveWindowTitleBrush"           Value="{x:Null}"/>
+        <Setter Property="NonActiveBorderBrush"                Value="{DynamicResource MahApps.Brushes.Accent3}"/>
+        <Setter Property="NonActiveGlowBrush"                  Value="{DynamicResource MahApps.Brushes.Accent3}"/>
+        <Setter Property="TitleForeground"                     Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+        <Setter Property="TitleCharacterCasing"                Value="Normal"/>
+        <Setter Property="LeftWindowCommandsOverlayBehavior"   Value="Never"/>
+        <Setter Property="RightWindowCommandsOverlayBehavior"  Value="Never"/>
+        <Setter Property="WindowButtonCommandsOverlayBehavior" Value="Never"/>
+        <Setter Property="WindowButtonCommands">
+            <Setter.Value>
+                <StaticResource ResourceKey="_windowButtonCommands"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ダイアログ -->
+    <Style x:Key="Common.Dialog" TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource Common.Window}">
+        <Setter Property="Width"                          Value="300"/>
+        <Setter Property="MaxWidth"                       Value="500"/>
+        <Setter Property="MinHeight"                      Value="170"/>
+        <Setter Property="NonActiveBorderBrush"           Value="{DynamicResource MahApps.Brushes.Gray}"/>
+        <Setter Property="NonActiveGlowBrush"             Value="{DynamicResource MahApps.Brushes.Gray}"/>
+        <Setter Property="ShowSystemMenu"                 Value="False"/>
+        <Setter Property="ShowSystemMenuOnRightClick"     Value="False"/>
+        <Setter Property="ShowInTaskbar"                  Value="False"/>
+        <Setter Property="SizeToContent"                  Value="WidthAndHeight"/>
+        <Setter Property="ResizeMode"                     Value="NoResize"/>
+        <Setter Property="p:Dialog.WindowStartupLocation" Value="CenterScreen"/>
+        <Style.Resources>
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
+                <Setter Property="FontSize"     Value="{DynamicResource MahApps.Font.Size.Dialog.Message}"/>
+                <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+            </Style>
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Common.Button}">
+                <Setter Property="MinWidth" Value="80"/>
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <!-- オーバーレイ -->
+    <Style x:Key="Common.Overlay" TargetType="{x:Type Border}">
+        <Setter Property="Opacity"    Value="0.9"/>
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray.SemiTransparent}"/>
+        <Style.Resources>
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                <Setter Property="FontSize"   Value="{DynamicResource MahApps.Font.Size.Dialog.Title}"/>
+            </Style>
+        </Style.Resources>
+    </Style>
+    
     <!-- ボタン (ボーダーレス) -->
     <Style x:Key="Common.ChromelessButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.Chromeless}">
     </Style>

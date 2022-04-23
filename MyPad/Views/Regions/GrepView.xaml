@@ -97,7 +97,7 @@
 
         <TextBlock Grid.Row="4" HorizontalAlignment="Right" Text="{Binding Results.Count, StringFormat=Matched lines: {0}, Mode=OneWay}"/>
 
-        <Border d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
+        <Border d:IsHidden="True" Style="{StaticResource Common.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
             <m:ProgressRing/>
         </Border>
     </Grid>
