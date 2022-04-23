@@ -2,8 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:s="clr-namespace:System;assembly=System.Runtime">
 
-    <s:Double x:Key="MahApps.Font.Size.Header">40</s:Double>
-    <s:Double x:Key="MahApps.Font.Size.SubHeader">28</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.Header">34</s:Double>
+    <s:Double x:Key="MahApps.Font.Size.SubHeader">24</s:Double>
     <s:Double x:Key="MahApps.Font.Size.Window.Title">13</s:Double>
     <s:Double x:Key="MahApps.Font.Size.Default">14</s:Double>
     <s:Double x:Key="MahApps.Font.Size.Content">12</s:Double>
@@ -24,7 +24,6 @@
     <s:Double x:Key="MahApps.Font.Size.ToggleSwitch.Header">14</s:Double>
     <s:Double x:Key="MahApps.Font.Size.ColorPicker.TabItemHeader">16</s:Double>
 
-    <s:Double x:Key="Common.Size.Icon">16</s:Double>
     <s:Double x:Key="Common.Size.Tile">100</s:Double>
     <s:Double x:Key="Common.Size.TileIcon">24</s:Double>
     <s:Double x:Key="Common.Size.CircleButton">40</s:Double>
