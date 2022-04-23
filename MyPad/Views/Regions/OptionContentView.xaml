@@ -49,12 +49,6 @@
                 <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource Common.DataGrid}">
                     <Setter Property="Margin" Value="5"/>
                 </Style>
-                <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource Common.GroupBox}">
-                    <Setter Property="Margin" Value="5"/>
-                </Style>
-                <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource Common.Expander}">
-                    <Setter Property="Margin" Value="5"/>
-                </Style>
             </TabControl.Resources>
 
             <!-- ********** システム ********** -->
@@ -63,13 +57,13 @@
                     <StackPanel>
                         <Grid ge:GridEx.ColumnDefinition="Auto, *" ge:GridEx.RowDefinition="Auto, Auto, Auto, Auto, Auto, Auto">
                             <TextBlock  Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_Theme}"/>
-                            <Grid      Grid.Row="0" Grid.Column="1" ge:GridEx.ColumnDefinition="Auto, Auto">
+                            <Grid       Grid.Row="0" Grid.Column="1" ge:GridEx.ColumnDefinition="Auto, 5, Auto">
                                 <StackPanel Grid.Column="0" Orientation="Horizontal">
                                     <RadioButton Content="{le:Loc Label_SyncAppTheme}" IsChecked="{qc:Binding Convert='(int)$P == 0', ConvertBack='$value ? 0 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
                                     <RadioButton Content="{le:Loc Label_Dark}"         IsChecked="{qc:Binding Convert='(int)$P == 1', ConvertBack='$value ? 1 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
                                     <RadioButton Content="{le:Loc Label_Light}"        IsChecked="{qc:Binding Convert='(int)$P == 2', ConvertBack='$value ? 2 : DependencyProperty.UnsetValue', P={Binding Theme, Mode=TwoWay}}"/>
                                 </StackPanel>
-                                <ComboBox Grid.Column="1"
+                                <ComboBox Grid.Column="2"
                                           ItemsSource="{x:Static root:Constants.ACCENT_COLORS}"
                                           SelectedValue="{Binding AccentColor, Mode=TwoWay}"
                                           SelectedValuePath="ColorScheme"
@@ -85,7 +79,6 @@
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
                             </Grid>
-
 
                             <TextBlock  Grid.Row="1" Grid.Column="0" Text="{le:Loc Label_UISize}"/>
                             <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
@@ -216,6 +209,7 @@
                         <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
                             <CheckBox IsChecked="{Binding EnableFoldings, Mode=TwoWay}"                          Content="{le:Loc LabelText_EnableFoldings}"/>
                             <CheckBox IsChecked="{Binding EnableAutoCompletion, Mode=TwoWay}"                    Content="{le:Loc LabelText_EnableAutoCompletion}"/>
+                            <CheckBox IsChecked="{Binding EnabledHalfWidth, Mode=TwoWay}"                        Content="{le:Loc LabelText_EnabledHalfWidth}"/>
                             <CheckBox IsChecked="{Binding EnableVirtualSpace, Mode=TwoWay}"                      Content="{le:Loc LabelText_EnableVirtualSpace}"/>
                             <CheckBox IsChecked="{Binding EnableRectangularSelection, Mode=TwoWay}"              Content="{le:Loc LabelText_EnableRectangularSelection}"/>
                             <CheckBox IsChecked="{Binding EnableTextDragDrop, Mode=TwoWay}"                      Content="{le:Loc LabelText_EnableTextDragDrop}"/>
@@ -236,7 +230,7 @@
             <!-- ********** エクスプローラー ********** -->
             <TabItem DataContext="{Binding Settings.OtherTools, Mode=OneWay}" Header="{le:Loc Command_Explorer}">
                 <Grid ge:GridEx.RowDefinition="Auto, *">
-                    <TextBlock Grid.Row="0" Text="{le:Loc LabelText_SetExplorerRoot}"/>
+                    <TextBlock Grid.Row="0" Text="{le:Loc LabelText_SetExplorerRoot}" FontSize="{DynamicResource MahApps.Font.Size.Default}"/>
                     <DataGrid  Grid.Row="1" ItemsSource="{Binding ExplorerRoots, Mode=OneWay}" LoadingRow="{qc:QuickEvent '$eventArgs.Row.Header = ($eventArgs.Row.GetIndex() + 1).ToString()'}"
                                AutoGenerateColumns="False" HeadersVisibility="All" RowHeaderWidth="50" ColumnWidth="*"
                                CanUserResizeRows="False" CanUserResizeColumns="False" CanUserSortColumns="False" CanUserAddRows="True" CanUserDeleteRows="True"
@@ -322,112 +316,112 @@
             <TabItem Header="{le:Loc Label_ConfigFile}">
                 <ScrollViewer>
                     <StackPanel>
-                        <GroupBox Header="{le:Loc Label_SystemDirectory}">
-                            <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, 5" ge:GridEx.RowDefinition="Auto, Auto, Auto">
-                                <Grid.Resources>
-                                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Common.TextBox}">
-                                        <Setter Property="Margin" Value="5"/>
-                                        <Setter Property="IsTabStop" Value="False"/>
-                                        <Setter Property="IsReadOnly" Value="True"/>
-                                        <Setter Property="m:TextBoxHelper.SelectAllOnFocus" Value="True"/>
-                                        <Style.Triggers>
-                                            <Trigger Property="IsReadOnly" Value="True">
-                                                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                    <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Common.Button}">
-                                        <Setter Property="Margin" Value="0 5"/>
-                                        <Setter Property="Padding" Value="0"/>
-                                        <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
-                                    </Style>
-                                    <Style x:Key="IconDangerButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Common.DangerButton}">
-                                        <Setter Property="Margin" Value="0 5"/>
-                                        <Setter Property="Padding" Value="0"/>
-                                        <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
-                                    </Style>
-                                </Grid.Resources>
+                        <TextBlock Text="{le:Loc Label_SystemDirectory}" FontSize="{DynamicResource MahApps.Font.Size.Dialog.Message}"/>
+                        <Border Height="1" Margin="0 5 0 10" Background="{DynamicResource MahApps.Brushes.Gray2}"/>
+                        <Grid ge:GridEx.ColumnDefinition="Auto, *, 5, Auto, 5" ge:GridEx.RowDefinition="Auto, Auto, Auto">
+                            <Grid.Resources>
+                                <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource Common.TextBox}">
+                                    <Setter Property="Margin" Value="5"/>
+                                    <Setter Property="IsTabStop" Value="False"/>
+                                    <Setter Property="IsReadOnly" Value="True"/>
+                                    <Setter Property="m:TextBoxHelper.SelectAllOnFocus" Value="True"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsReadOnly" Value="True">
+                                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                                <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Common.Button}">
+                                    <Setter Property="Margin" Value="0 5"/>
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
+                                </Style>
+                                <Style x:Key="IconDangerButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Common.DangerButton}">
+                                    <Setter Property="Margin" Value="0 5"/>
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
+                                </Style>
+                            </Grid.Resources>
 
-                                <TextBlock Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_ExecutionDirectory}"/>
-                                <TextBox   Grid.Row="0" Grid.Column="1" Text="{Binding ProductInfo.Working, Mode=OneWay}"/>
-                                <Button    Grid.Row="0" Grid.Column="3" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}">
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="Click">
-                                            <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{Binding ProductInfo.Working, Mode=OneWay}" ThrowException="False"/>
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                    <mi:Modern Kind="FolderOpen"/>
-                                </Button>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{le:Loc Label_ExecutionDirectory}"/>
+                            <TextBox   Grid.Row="0" Grid.Column="1" Text="{Binding ProductInfo.Working, Mode=OneWay}"/>
+                            <Button    Grid.Row="0" Grid.Column="3" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{Binding ProductInfo.Working, Mode=OneWay}" ThrowException="False"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <mi:Modern Kind="FolderOpen"/>
+                            </Button>
 
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="{le:Loc Label_TempDirectory}"/>
-                                <TextBox   Grid.Row="1" Grid.Column="1" Text="{Binding ProductInfo.Temporary, Mode=OneWay}"/>
-                                <Button    Grid.Row="1" Grid.Column="3" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}">
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="Click">
-                                            <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{Binding ProductInfo.Temporary, Mode=OneWay}" ThrowException="False"/>
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                    <mi:Modern Kind="FolderOpen"/>
-                                </Button>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="{le:Loc Label_TempDirectory}"/>
+                            <TextBox   Grid.Row="1" Grid.Column="1" Text="{Binding ProductInfo.Temporary, Mode=OneWay}"/>
+                            <Button    Grid.Row="1" Grid.Column="3" ToolTip="{le:Loc Command_Open}" Style="{StaticResource IconButton}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{Binding ProductInfo.Temporary, Mode=OneWay}" ThrowException="False"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <mi:Modern Kind="FolderOpen"/>
+                            </Button>
 
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="{le:Loc Label_AppDataDirectory}"/>
-                                <TextBox   Grid.Row="2" Grid.Column="1" Text="{Binding ProductInfo.Roaming, Mode=OneWay}"/>
-                                <Button    Grid.Row="2" Grid.Column="3" Command="{Binding InitializeSyntaxCommand, Mode=OneTime}" ToolTip="{le:Loc Command_InitializeSyntax}" Style="{StaticResource IconDangerButton}">
-                                    <mi:Material Kind="FileRefreshOutline"/>
-                                </Button>
-                            </Grid>
-                        </GroupBox>
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="{le:Loc Label_AppDataDirectory}"/>
+                            <TextBox   Grid.Row="2" Grid.Column="1" Text="{Binding ProductInfo.Roaming, Mode=OneWay}"/>
+                            <Button    Grid.Row="2" Grid.Column="3" Command="{Binding InitializeSyntaxCommand, Mode=OneTime}" ToolTip="{le:Loc Command_InitializeSyntax}" Style="{StaticResource IconDangerButton}">
+                                <mi:Material Kind="FileRefreshOutline"/>
+                            </Button>
+                        </Grid>
 
-                        <Border Height="10"/>
+                        <Border Height="20"/>
 
-                        <GroupBox Header="{le:Loc Label_SystemSettings}">
-                            <ge:ResponsiveGrid>
-                                <ge:ResponsiveGrid.Resources>
-                                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Common.Button}">
-                                        <Setter Property="Margin" Value="5"/>
-                                        <Setter Property="ge:ResponsiveGrid.XS" Value="6"/>
-                                        <Setter Property="ge:ResponsiveGrid.SM" Value="4"/>
-                                        <Style.Resources>
-                                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
-                                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                            </Style>
-                                        </Style.Resources>
-                                    </Style>
-                                    <Style x:Key="This.DangerButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Common.DangerButton}">
-                                        <Setter Property="Margin" Value="5"/>
-                                        <Setter Property="ge:ResponsiveGrid.XS" Value="6"/>
-                                        <Setter Property="ge:ResponsiveGrid.SM" Value="4"/>
-                                        <Style.Resources>
-                                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
-                                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                            </Style>
-                                        </Style.Resources>
-                                    </Style>
-                                </ge:ResponsiveGrid.Resources>
+                        <TextBlock Text="{le:Loc Label_SystemSettings}" FontSize="{DynamicResource MahApps.Font.Size.Dialog.Message}"/>
+                        <Border Height="1" Margin="0 5 0 10" Background="{DynamicResource MahApps.Brushes.Gray2}"/>
+                        <ge:ResponsiveGrid>
+                            <ge:ResponsiveGrid.Resources>
+                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Common.Button}">
+                                    <Setter Property="Margin" Value="5"/>
+                                    <Setter Property="ge:ResponsiveGrid.XS" Value="6"/>
+                                    <Setter Property="ge:ResponsiveGrid.SM" Value="4"/>
+                                    <Style.Resources>
+                                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
+                                            <Setter Property="VerticalAlignment" Value="Center"/>
+                                        </Style>
+                                    </Style.Resources>
+                                </Style>
+                                <Style x:Key="This.DangerButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Common.DangerButton}">
+                                    <Setter Property="Margin" Value="5"/>
+                                    <Setter Property="ge:ResponsiveGrid.XS" Value="6"/>
+                                    <Setter Property="ge:ResponsiveGrid.SM" Value="4"/>
+                                    <Style.Resources>
+                                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
+                                            <Setter Property="VerticalAlignment" Value="Center"/>
+                                        </Style>
+                                    </Style.Resources>
+                                </Style>
+                            </ge:ResponsiveGrid.Resources>
 
-                                <Button Command="{Binding ImportSettingsFileCommand, Mode=OneTime}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <mi:FontAwesome Kind="FileImportSolid"/>
-                                        <Border Width="5"/>
-                                        <TextBlock Text="{le:Loc Command_ImportSettings}"/>
-                                    </StackPanel>
-                                </Button>
-                                <Button Command="{Binding ExportSettingsFileCommand, Mode=OneTime}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <mi:FontAwesome Kind="FileDownloadSolid"/>
-                                        <Border Width="5"/>
-                                        <TextBlock Text="{le:Loc Command_ExportSettings}"/>
-                                    </StackPanel>
-                                </Button>
-                                <Button Command="{Binding InitializeSettingsCommand, Mode=OneTime}" Style="{StaticResource This.DangerButton}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <mi:Material Kind="CogRefresh"/>
-                                        <Border Width="5"/>
-                                        <TextBlock Text="{le:Loc Command_InitializeSettings}"/>
-                                    </StackPanel>
-                                </Button>
-                            </ge:ResponsiveGrid>
-                        </GroupBox>
+                            <Button Command="{Binding ImportSettingsFileCommand, Mode=OneTime}">
+                                <StackPanel Orientation="Horizontal">
+                                    <mi:FontAwesome Kind="FileImportSolid"/>
+                                    <Border Width="5"/>
+                                    <TextBlock Text="{le:Loc Command_ImportSettings}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Command="{Binding ExportSettingsFileCommand, Mode=OneTime}">
+                                <StackPanel Orientation="Horizontal">
+                                    <mi:FontAwesome Kind="FileDownloadSolid"/>
+                                    <Border Width="5"/>
+                                    <TextBlock Text="{le:Loc Command_ExportSettings}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Command="{Binding InitializeSettingsCommand, Mode=OneTime}" Style="{StaticResource This.DangerButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <mi:Material Kind="CogRefresh"/>
+                                    <Border Width="5"/>
+                                    <TextBlock Text="{le:Loc Command_InitializeSettings}"/>
+                                </StackPanel>
+                            </Button>
+                        </ge:ResponsiveGrid>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
