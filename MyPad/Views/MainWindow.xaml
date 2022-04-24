@@ -348,8 +348,8 @@
                                 </MenuItem>
                             </ContextMenu>
                         </Grid.ContextMenu>
-                        <Button Grid.Column="0" Command="{x:Static dr:TabablzControl.AddItemCommand}" ToolTip="{le:Loc Command_New}" Height="20" Width="20" Padding="0" Background="Transparent" BorderBrush="Transparent" Focusable="False">
-                            <mi:PackIconMaterial Kind="Plus" Height="12" Width="12" Foreground="{DynamicResource MahApps.Brushes.Gray5}"/>
+                        <Button Grid.Column="0" Command="{x:Static dr:TabablzControl.AddItemCommand}" ToolTip="{le:Loc Command_New}" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Mode=OneWay}" Padding="0" Background="Transparent" BorderBrush="Transparent" Focusable="False">
+                            <mi:PackIconMaterial Kind="Plus" Height="{DynamicResource MahApps.Font.Size.Button}" Width="{DynamicResource MahApps.Font.Size.Button}" Foreground="{DynamicResource MahApps.Brushes.Gray5}"/>
                         </Button>
                         <Border Grid.Column="1" VerticalAlignment="Stretch" Background="Transparent"/>
                     </Grid>
@@ -357,7 +357,7 @@
                 <dr:TabablzControl.HeaderItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="{Binding FileIcon, Mode=OneWay}" Height="15" Margin="0 0 5 0" Visibility="{qc:MultiBinding '$P0 != null ## $P1 ? Visibility.Visible : Visibility.Collapsed', P0={Binding FileIcon, Mode=OneWay}, P1={Binding DataContext.Settings.System.ShowFileIcon, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}"/>
+                            <Image Source="{Binding FileIcon, Mode=OneWay}" Height="{DynamicResource MahApps.Font.Size.Button.ClearText}" Margin="0 0 5 0" Visibility="{qc:MultiBinding '$P0 != null ## $P1 ? Visibility.Visible : Visibility.Collapsed', P0={Binding FileIcon, Mode=OneWay}, P1={Binding DataContext.Settings.System.ShowFileIcon, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}}"/>
                             <TextBlock DataContext="{Binding Mode=OneWay}" Text="{qc:MultiBinding 'string.Concat(Path.GetFileName($P0), $P1 ? \'*\' : null)', P0={Binding FileName, Mode=OneWay}, P1={Binding IsModified, Mode=OneWay}}" VerticalAlignment="Center"/>
                             <mi:PackIconMaterial Kind="Lock" Margin="5 0 0 0" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsReadOnly, Mode=OneWay}}"/>
                         </StackPanel>

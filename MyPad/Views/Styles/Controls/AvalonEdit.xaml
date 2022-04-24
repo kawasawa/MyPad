@@ -116,11 +116,13 @@
                                     <Setter Property="Background"  Value="{x:Null}"/>
                                     <Setter Property="BorderBrush" Value="{x:Null}"/>
                                     <Setter Property="Padding"     Value="2"/>
+                                    <Setter Property="Width"       Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Mode=OneWay}"/>
                                 </Style>
                                 <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Common.ToggleButton}">
                                     <Setter Property="Background"  Value="{x:Null}"/>
                                     <Setter Property="BorderBrush" Value="{x:Null}"/>
                                     <Setter Property="Padding"     Value="2"/>
+                                    <Setter Property="Width"       Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Mode=OneWay}"/>
                                     <Style.Resources>
                                         <!-- チェック状態での BorderBrush を上書きする -->
                                         <SolidColorBrush x:Key="MahApps.Brushes.Gray5" Color="{DynamicResource MahApps.Colors.Gray2}" o:Freeze="True"/>
