@@ -13,6 +13,7 @@ namespace MyPad.Views.Controls;
 /// <summary>
 /// <see cref="TextArea"/> のレンダリングを処理するコントロールを表します。
 /// 
+/// OpenType フォントの機能を制御する <see cref="Rendering.OpenTypeVisualLineTransformer"/>、
 /// 対応する括弧をハイライトする <see cref="Rendering.PairBracketsHighlighter"/> を内包します。
 /// </summary>
 public class TextView : ICSharpCode.AvalonEdit.Rendering.TextView, IDisposable
@@ -33,6 +34,28 @@ public class TextView : ICSharpCode.AvalonEdit.Rendering.TextView, IDisposable
     public string VisualCharacterCRLF { get; set; } = "\u21B2";
 
     /// <summary>
+    /// 等幅半角字形が有効化どうかを示す値
+    /// </summary>
+    public bool EnabledHalfWidth
+    {
+        get => this.OpenTypeVisualLineTransformer.EnabledHalfWidth;
+        set
+        {
+            if (this.OpenTypeVisualLineTransformer != null &&
+                this.OpenTypeVisualLineTransformer.EnabledHalfWidth != value)
+            {
+                this.OpenTypeVisualLineTransformer.EnabledHalfWidth = value;
+                this.Redraw();
+            }
+        }
+    }
+
+    /// <summary>
+    /// OpenType フォントの機能を制御する変換機構
+    /// </summary>
+    public OpenTypeVisualLineTransformer OpenTypeVisualLineTransformer { get; private set; }
+
+    /// <summary>
     /// 対応する括弧をハイライトするレンダラー
     /// </summary>
     public PairBracketsHighlighter PairBracketsHighlighter { get; private set; }
@@ -47,6 +70,9 @@ public class TextView : ICSharpCode.AvalonEdit.Rendering.TextView, IDisposable
         // columnRulerRenderer は基底クラスのコンストラクタで初期化されるため、
         // Style 等で設定するとインスタンスが存在せず、Null 参照の例外になる。
         this.ColumnRulerPen = new(Brushes.Gray, 1);
+
+        this.OpenTypeVisualLineTransformer = new OpenTypeVisualLineTransformer();
+        this.LineTransformers.Add(this.OpenTypeVisualLineTransformer);
 
         this.PairBracketsHighlighter = PairBracketsHighlighter.Install(this);
     }
@@ -74,6 +100,8 @@ public class TextView : ICSharpCode.AvalonEdit.Rendering.TextView, IDisposable
     /// <param name="disposing">マネージリソースを破棄するかどうかを示す値</param>
     protected virtual void Dispose(bool disposing)
     {
+        this.LineTransformers.Remove(this.OpenTypeVisualLineTransformer);
+        this.OpenTypeVisualLineTransformer = null;
         this.PairBracketsHighlighter.Uninstall();
         this.PairBracketsHighlighter = null;
     }

@@ -14,7 +14,7 @@
              p:ViewModelLocator.AutoWireViewModel="True">
 
     <p:Dialog.WindowStyle>
-        <Style TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource App.Dialog}">
+        <Style TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource Common.Dialog}">
             <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.ValidationSummary2}"/>
             <Setter Property="GlowBrush"   Value="{DynamicResource MahApps.Brushes.ValidationSummary2}"/>
         </Style>

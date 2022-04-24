@@ -2,7 +2,6 @@
 using MyPad.Models;
 using MyPad.PubSub;
 using Prism.Events;
-using Prism.Ioc;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -11,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -31,13 +31,13 @@ public class ExplorerViewModel : ViewModelBase
 
     // Dependency Injection
     [Dependency]
-    public IContainerExtension Container { get; set; }
-    [Dependency]
     public ILoggerFacade Logger { get; set; }
     [Dependency]
     public Settings Settings { get; set; }
 
     public ReactiveCollection<FileTreeNode> FileTreeNodes { get; }
+
+    public ReactiveProperty<bool> IsPending { get; }
 
     /// <summary>
     /// このクラスの新しいインスタンスを生成します。
@@ -53,6 +53,8 @@ public class ExplorerViewModel : ViewModelBase
 
         // ----- プロパティの定義 ------------------------------
 
+        this.IsPending = new ReactiveProperty<bool>().AddTo(this.CompositeDisposable);
+
         this.FileTreeNodes = new ReactiveCollection<FileTreeNode>().AddTo(this.CompositeDisposable);
         BindingOperations.EnableCollectionSynchronization(this.FileTreeNodes, new object());
 
@@ -66,15 +68,27 @@ public class ExplorerViewModel : ViewModelBase
     /// エクスプローラーを再構築します。
     /// </summary>
     [LogInterceptor]
-    public void RecreateExplorer()
+    public async Task RecreateExplorer()
     {
-        var roots = this.Settings.OtherTools?.ExplorerRoots?.Where(i => string.IsNullOrEmpty(i.Path) == false && i.IsEnabled);
-        var rootPath = roots?.Any() == true ? roots.Select(i => i.Path) : new[] { Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) };
-        var isExpanded = rootPath.Count() == 1;
+        try
+        {
+            this.IsPending.Value = true;
 
-        this.FileTreeNodes.ClearOnScheduler();
-        this.FileTreeNodes.AddRangeOnScheduler(
-            rootPath.Select((r, i) => this.Container.Resolve<FileTreeNode>().Initialize(r, i == 0, isExpanded)));
+            var treeNodes = await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                var roots = this.Settings.OtherTools?.ExplorerRoots?.Where(i => string.IsNullOrEmpty(i.Path) == false && i.IsEnabled);
+                var rootPath = roots?.Any() == true ? roots.Select(i => i.Path) : new[] { Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) };
+                var isExpanded = rootPath.Count() == 1;
+                return rootPath.Select((r, i) => new FileTreeNode().Initialize(r, i == 0, isExpanded)).ToList();
+            });
+
+            this.FileTreeNodes.ClearOnScheduler();
+            this.FileTreeNodes.AddRangeOnScheduler(treeNodes);
+        }
+        finally
+        {
+            this.IsPending.Value = false;
+        }
     }
 
     /// <summary>
@@ -82,11 +96,6 @@ public class ExplorerViewModel : ViewModelBase
     /// </summary>
     public class FileTreeNode : ViewModelBase
     {
-        [Dependency]
-        public IContainerExtension Container { get; set; }
-        [Dependency]
-        public ILoggerFacade Logger { get; set; }
-
         private FileTreeNode _parent;
         public FileTreeNode Parent => this._parent;
 
@@ -231,7 +240,7 @@ public class ExplorerViewModel : ViewModelBase
                 var temp = Directory.EnumerateFileSystemEntries(parent.FileName, "*").Where(nodeFilter);
                 var children = temp.Where(p => Directory.Exists(p))
                     .Union(temp.Where(p => Directory.Exists(p) == false))
-                    .Select(p => this.Container.Resolve<FileTreeNode>().Initialize(p, parent));
+                    .Select(p => new FileTreeNode().Initialize(p, parent));
                 return children.Any() ? children : new[] { parent.CreateDummyChild() };
             }
 
@@ -244,7 +253,7 @@ public class ExplorerViewModel : ViewModelBase
             }
             catch (UnauthorizedAccessException e)
             {
-                this.Logger.Log($"ファイルの探索時にエラーが発生しました。: Root={this.FileName}", Category.Warn, e);
+                Console.WriteLine($"ファイルの探索時にエラーが発生しました。: Root={this.FileName}, Exception={e.Message}");
             }
             finally
             {
@@ -259,10 +268,11 @@ public class ExplorerViewModel : ViewModelBase
         [LogInterceptorIgnore]
         private FileTreeNode CreateDummyChild()
         {
-            var treeNode = this.Container.Resolve<FileTreeNode>();
-            treeNode._isDummy = true;
-            treeNode._parent = this;
-            return treeNode;
+            return new FileTreeNode
+            {
+                _isDummy = true,
+                _parent = this
+            };
         }
     }
 }

@@ -313,13 +313,6 @@ public class TextEditorViewModel : ViewModelBase
         set => this.SetProperty(ref this._isInVirtualSpace, value);
     }
 
-    private bool _enableAutoCompletion;
-    public bool EnableAutoCompletion
-    {
-        get => this._enableAutoCompletion;
-        set => this.SetProperty(ref this._enableAutoCompletion, value);
-    }
-
     #endregion
 
     /// <summary>

@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <RuntimeIdentifiers>win-x86</RuntimeIdentifiers>
     <UseWPF>true</UseWPF>
-    <Version>1.18.1</Version>
+    <Version>1.19.0</Version>
     <Authors>Kazuki Awasawa</Authors>
     <Copyright>© Kazuki Awasawa All Rights Reserved.</Copyright>
     <NeutralLanguage>ja-JP</NeutralLanguage>
@@ -46,15 +46,15 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
     <PackageReference Include="MyBase" Version="1.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="NLog" Version="4.7.14" />
+    <PackageReference Include="NLog" Version="4.7.15" />
     <PackageReference Include="Prism.Unity" Version="8.1.97" />
     <PackageReference Include="QuickConverter" Version="1.2.5" />
-    <PackageReference Include="ReactiveProperty" Version="8.0.3" />
+    <PackageReference Include="ReactiveProperty" Version="8.0.5" />
     <PackageReference Include="System.Interactive" Version="6.0.1" />
     <PackageReference Include="ToastNotifications.Messages" Version="2.5.1" />
     <PackageReference Include="Ude.NetStandard" Version="1.2.0" />
-    <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.3.15" />
-    <PackageReference Include="Vanara.PInvoke.User32" Version="3.3.15" />
+    <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.4.0" />
+    <PackageReference Include="Vanara.PInvoke.User32" Version="3.4.0" />
     <PackageReference Include="WinCopies.Util.Desktop" Version="2.17.0" />
     <PackageReference Include="WpfLocalizeExtension" Version="3.9.4" />
   </ItemGroup>
@@ -87,6 +87,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="docs\DISCLAIMER.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="docs\HISTORY_ARCHIVE.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="docs\HISTORY.md">

@@ -14,7 +14,7 @@
              p:ViewModelLocator.AutoWireViewModel="True">
 
     <p:Dialog.WindowStyle>
-        <Style TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource App.Dialog}">
+        <Style TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource Common.Dialog}">
             <Setter Property="ShowCloseButton" Value="False"/>
         </Style>
     </p:Dialog.WindowStyle>

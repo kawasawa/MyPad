@@ -79,6 +79,9 @@ public class TextArea : ICSharpCode.AvalonEdit.Editing.TextArea, IDisposable
     public static readonly DependencyProperty EnableAutoCompletionProperty
         = DependencyPropertyExtensions.Register(
             new PropertyMetadata(true));
+    public static readonly DependencyProperty EnabledHalfWidthProperty
+        = DependencyPropertyExtensions.Register(
+            new PropertyMetadata());
 
     private readonly Lazy<Func<SearchPanel, IEnumerable<TextSegment>>> _searchedTextSegments
         = new(() =>
@@ -278,6 +281,15 @@ public class TextArea : ICSharpCode.AvalonEdit.Editing.TextArea, IDisposable
     {
         get => (bool)this.GetValue(EnableAutoCompletionProperty);
         set => this.SetValue(EnableAutoCompletionProperty, value);
+    }
+
+    /// <summary>
+    /// 等幅半角字形が有効化どうかを示す値
+    /// </summary>
+    public bool EnabledHalfWidth
+    {
+        get => (bool)this.GetValue(EnabledHalfWidthProperty);
+        set => this.SetValue(EnabledHalfWidthProperty, value);
     }
 
     /// <summary>
@@ -912,11 +924,14 @@ public class TextArea : ICSharpCode.AvalonEdit.Editing.TextArea, IDisposable
                 if (e.NewValue != null)
                     ((TextDocument)e.NewValue).FileNameChanged += this.Document_FileNameChanged;
                 break;
+            case nameof(this.OverstrikeMode):
+                this.OverstrikeModeChanged?.Invoke(this, EventArgs.Empty);
+                break;
             case nameof(this.ActualFontSize):
                 this.ZoomReset();
                 break;
-            case nameof(this.OverstrikeMode):
-                this.OverstrikeModeChanged?.Invoke(this, EventArgs.Empty);
+            case nameof(this.EnabledHalfWidth):
+                this.TextView.EnabledHalfWidth = (bool)e.NewValue;
                 break;
         }
         base.OnPropertyChanged(e);

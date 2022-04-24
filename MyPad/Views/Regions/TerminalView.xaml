@@ -60,7 +60,7 @@
                 </ComboBox.InputBindings>
             </ComboBox>
         </Grid>
-        <Border Grid.RowSpan="2" d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
+        <Border Grid.RowSpan="2" d:IsHidden="True" Style="{StaticResource Common.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
             <m:ProgressRing/>
         </Border>
     </Grid>

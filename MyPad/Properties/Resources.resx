@@ -541,7 +541,7 @@
     <value>編集中のファイルを一時フォルダに自動保存する。</value>
   </data>
   <data name="LabelText_EnableCutCopyWholeLine" xml:space="preserve">
-    <value>未選択状態でのコピーと切り取りを可能にする。</value>
+    <value>未選択状態でのコピーと切り取りを許可する。</value>
   </data>
   <data name="LabelText_EnableEmailHyperlinks" xml:space="preserve">
     <value>メールアドレスのハイパーリンクを有効にする。</value>
@@ -809,7 +809,7 @@
     <value>再読み込み</value>
   </data>
   <data name="LabelText_EnableCutCopyHtmlFormat" xml:space="preserve">
-    <value>書式を保持したコピーと切り取りを可能にする。</value>
+    <value>書式を保持したコピーと切り取りを許可する。</value>
   </data>
   <data name="Command_Grep" xml:space="preserve">
     <value>Grep</value>
@@ -876,5 +876,8 @@
   </data>
   <data name="Label_AccentColor" xml:space="preserve">
     <value>アクセントカラー</value>
+  </data>
+  <data name="LabelText_EnabledHalfWidth" xml:space="preserve">
+    <value>等幅半角字形を有効にする。</value>
   </data>
 </root>

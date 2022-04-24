@@ -15,7 +15,7 @@
              p:ViewModelLocator.AutoWireViewModel="True">
 
     <p:Dialog.WindowStyle>
-        <Style TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource App.Dialog}"/>
+        <Style TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource Common.Dialog}"/>
     </p:Dialog.WindowStyle>
 
     <Grid Margin="20 10 20 15" ge:GridEx.RowDefinition="*, 10, Auto"

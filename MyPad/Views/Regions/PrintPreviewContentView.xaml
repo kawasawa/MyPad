@@ -20,7 +20,7 @@
             <controls:FlowDocumentViewer Document="{Binding FlowDocument.Value, Mode=OneWay}" ContextMenu="{x:Null}" Focusable="False"/>
         </Grid>
         <Grid Visibility="{qc:Binding '$P == 0 ? Visibility.Visible : Visibility.Collapsed', P={Binding ActiveTextEditor.Value.TextLength, Mode=OneWay}}">
-            <Border d:IsHidden="True" Style="{StaticResource App.Overlay}">
+            <Border d:IsHidden="True" Style="{StaticResource Common.Overlay}">
                 <StackPanel Margin="5 0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                     <TextBlock Text="{le:Loc Text_EmptyDocument}" HorizontalAlignment="Center" TextAlignment="Center"/>
                 </StackPanel>

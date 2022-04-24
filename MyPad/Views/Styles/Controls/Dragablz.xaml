@@ -40,18 +40,18 @@
                                    VerticalContentAlignment="Stretch"/>
                             <Button x:Name="PART_CloseButton"
                                     Grid.Column="1"
-                                    Height="15"
-                                    Width="15"
+                                    Height="{DynamicResource MahApps.Font.Size.Button.ClearText}"
+                                    Width="{DynamicResource MahApps.Font.Size.Button.ClearText}"
                                     Margin="0"
                                     Focusable="False"
                                     Background="Transparent"
                                     Command="{x:Static dr:TabablzControl.CloseItemCommand}"
                                     CommandParameter="{Binding RelativeSource={RelativeSource TemplatedParent}}">
                                 <Button.Resources>
-                                    <SolidColorBrush x:Key="CloseButtonBackgroundHighlighted" Color="#FF39ADFB" o:Freeze="True"/>
-                                    <SolidColorBrush x:Key="CloseButtonBackgroundPressed"     Color="#FF084E7D" o:Freeze="True"/>
-                                    <SolidColorBrush x:Key="CloseButtonStroke"                Color="#AAFFFFFF" o:Freeze="True"/>
-                                    <SolidColorBrush x:Key="CloseButtonStrokeHighlighted"     Color="#FFFFFFFF" o:Freeze="True"/>
+                                    <SolidColorBrush x:Key="CloseButtonBackgroundHighlighted" Color="{DynamicResource MahApps.Colors.Accent3}" o:Freeze="True"/>
+                                    <SolidColorBrush x:Key="CloseButtonBackgroundPressed"     Color="{DynamicResource MahApps.Colors.AccentBase}" o:Freeze="True"/>
+                                    <SolidColorBrush x:Key="CloseButtonStroke"                Color="{DynamicResource MahApps.Colors.Gray5}" o:Freeze="True"/>
+                                    <SolidColorBrush x:Key="CloseButtonStrokeHighlighted"     Color="{DynamicResource MahApps.Colors.Gray.MouseOver}" o:Freeze="True"/>
                                 </Button.Resources>
                                 <Button.Template>
                                     <ControlTemplate TargetType="{x:Type Button}">

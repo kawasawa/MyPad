@@ -22,8 +22,8 @@
 
     <!-- アイコン -->
     <Style x:Key="Common.PackIcon" TargetType="{x:Type mi:PackIconBase}" BasedOn="{StaticResource {x:Type mi:PackIconBase}}">
-        <Setter Property="Width" Value="{DynamicResource Common.Size.Icon}"/>
-        <Setter Property="Height" Value="{DynamicResource Common.Size.Icon}"/>
+        <Setter Property="Width" Value="{DynamicResource MahApps.Font.Size.Button.ClearText}"/>
+        <Setter Property="Height" Value="{DynamicResource MahApps.Font.Size.Button.ClearText}"/>
     </Style>
 
     <!-- テキストブロック -->

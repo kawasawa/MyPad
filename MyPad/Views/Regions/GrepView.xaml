@@ -26,11 +26,13 @@
                     <Setter Property="Background"  Value="{x:Null}"/>
                     <Setter Property="BorderBrush" Value="{x:Null}"/>
                     <Setter Property="Padding"     Value="2"/>
+                    <Setter Property="Width"       Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Mode=OneWay}"/>
                 </Style>
                 <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Common.ToggleButton}">
                     <Setter Property="Background"  Value="{x:Null}"/>
                     <Setter Property="BorderBrush" Value="{x:Null}"/>
                     <Setter Property="Padding"     Value="2"/>
+                    <Setter Property="Width"       Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Mode=OneWay}"/>
                     <Style.Resources>
                         <!-- チェック状態での BorderBrush を上書きする -->
                         <SolidColorBrush x:Key="MahApps.Brushes.Gray5" Color="{DynamicResource MahApps.Colors.Gray2}" o:Freeze="True"/>
@@ -51,13 +53,13 @@
                 </Style>
             </Grid.Resources>
 
-            <TextBox  Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="4" Text="{Binding Directory.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{le:Loc Label_Directory}" m:TextBoxHelper.UseFloatingWatermark="True" m:TextBoxHelper.ClearTextButton="True"/>
+            <TextBox  Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="4" Text="{Binding Directory.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{le:Loc Label_Directory}" m:TextBoxHelper.ClearTextButton="True"/>
             <Button   Grid.Row="0"  Grid.Column="4" Command="{Binding SelectDirectoryCommand, Mode=OneTime}" ToolTip="{le:Loc Command_Open}">
                 <mi:Modern Kind="FolderOpen"/>
             </Button>
             <CheckBox Grid.Row="2"  Grid.ColumnSpan="5" Margin="3 0 0 0" IsChecked="{Binding AllDirectories.Value, Mode=TwoWay}" Content="{le:Loc Label_AllDirectories}"/>
-            <TextBox  Grid.Row="4"  Grid.Column="0" Text="{Binding SearchText.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{le:Loc Command_Find}" m:TextBoxHelper.UseFloatingWatermark="True" m:TextBoxHelper.ClearTextButton="True"/>
-            <Button   Grid.Row="4"  Grid.Column="1" Style="{StaticResource AccentButton}" Command="{Binding GrepCommand, Mode=OneTime}" ToolTip="{le:Loc Command_Find}">
+            <TextBox  Grid.Row="4"  Grid.Column="0" Text="{Binding SearchText.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{le:Loc Command_Find}" m:TextBoxHelper.ClearTextButton="True"/>
+            <Button   Grid.Row="4"  Grid.Column="1" Style="{StaticResource AccentButton}" Command="{Binding GrepCommand, Mode=OneTime}" ToolTip="{le:Loc Command_Find}" IsDefault="True">
                 <mi:Material Kind="Magnify"/>
             </Button>
             <ToggleButton Grid.Row="4" Grid.Column="3" IsChecked="{qc:Binding Convert='!$P', ConvertBack='!$value', P={Binding IgnoreCase.Value, Mode=TwoWay}}" ToolTip="{le:Loc Label_CaseSensitive}">
@@ -97,7 +99,7 @@
 
         <TextBlock Grid.Row="4" HorizontalAlignment="Right" Text="{Binding Results.Count, StringFormat=Matched lines: {0}, Mode=OneWay}"/>
 
-        <Border d:IsHidden="True" Style="{StaticResource App.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
+        <Border d:IsHidden="True" Style="{StaticResource Common.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
             <m:ProgressRing/>
         </Border>
     </Grid>

@@ -48,9 +48,31 @@
             <Style TargetType="{x:Type aec:CompletionList}">
                 <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}"/>
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Control.Background}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type aec:CompletionList}">
+                            <!-- ItemContainerStyle, ImageSize は外から変えられないので再定義する -->
+                            <aec:CompletionListBox x:Name="PART_ListBox"
+                                                   ItemContainerStyle="{StaticResource Common.ListBoxItem}"
+                                                   Background="{TemplateBinding Background}"
+                                                   TextBlock.Foreground="{TemplateBinding Foreground}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="{Binding Image, Mode=OneWay}"
+                                                   Width="{DynamicResource MahApps.Font.Size.Button.ClearText}"
+                                                   Height="{DynamicResource MahApps.Font.Size.Button.ClearText}"
+                                                   Margin="0 0 2 0"/>
+                                            <ContentPresenter Content="{Binding Content, Mode=OneWay}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </aec:CompletionListBox>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
             <Style TargetType="{x:Type aec:CompletionListBox}" BasedOn="{StaticResource Common.ListBox}">
-                <Setter Property="ItemContainerStyle" Value="{DynamicResource Common.ListBoxItem}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.ComboBox.PopupBorder}"/>
                 <Setter Property="BorderThickness" Value="1"/>
             </Style>
@@ -94,11 +116,13 @@
                                     <Setter Property="Background"  Value="{x:Null}"/>
                                     <Setter Property="BorderBrush" Value="{x:Null}"/>
                                     <Setter Property="Padding"     Value="2"/>
+                                    <Setter Property="Width"       Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Mode=OneWay}"/>
                                 </Style>
                                 <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource Common.ToggleButton}">
                                     <Setter Property="Background"  Value="{x:Null}"/>
                                     <Setter Property="BorderBrush" Value="{x:Null}"/>
                                     <Setter Property="Padding"     Value="2"/>
+                                    <Setter Property="Width"       Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Mode=OneWay}"/>
                                     <Style.Resources>
                                         <!-- チェック状態での BorderBrush を上書きする -->
                                         <SolidColorBrush x:Key="MahApps.Brushes.Gray5" Color="{DynamicResource MahApps.Colors.Gray2}" o:Freeze="True"/>

@@ -56,7 +56,7 @@ public static class Constants
     /// フォントファミリー一覧
     /// </summary>
     public static ICollection<FontFamily> FONT_FAMILIES { get; }
-        = Fonts.SystemFontFamilies;
+        = Fonts.SystemFontFamilies.OrderBy(f => f.Source).ToList();
 
     /// <summary>
     /// フォントウエイト一覧

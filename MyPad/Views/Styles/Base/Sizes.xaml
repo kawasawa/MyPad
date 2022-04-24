@@ -6,7 +6,6 @@
     <s:Double x:Key="Const.MaxPageWidth">1200</s:Double>
 
     <!-- 変数 -->
-    <s:Double x:Key="Common.Size.Icon">16</s:Double>
     <s:Double x:Key="Common.Size.Tile">100</s:Double>
     <s:Double x:Key="Common.Size.TileIcon">24</s:Double>
     <s:Double x:Key="Common.Size.CircleButton">40</s:Double>
