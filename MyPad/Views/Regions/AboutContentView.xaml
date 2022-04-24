@@ -24,7 +24,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid ge:GridEx.RowDefinition="Auto, 15, Auto, 15, *, 20" MaxWidth="{StaticResource Const.MaxPageWidth}">
+    <Grid ge:GridEx.RowDefinition="Auto, 15, Auto, 15, *" Margin="0 -25 0 10" MaxWidth="{StaticResource Const.MaxPageWidth}">
         <ScrollViewer Grid.Row="0" Margin="40 0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
             <Grid ge:GridEx.ColumnDefinition="Auto, 15, Auto, 15, Auto, 30, Auto, 15, Auto, 15, Auto">
                 <Image     Grid.Column="0" Source="{markup:IconSource /Resources/app.ico}" Width="40" VerticalAlignment="Center"/>
@@ -76,8 +76,6 @@
             <controls:MarkdownViewer Markdown="{Binding PrivacyPolicy.Value, Mode=OneWay}" IsTabStop="False"/>
             <controls:MarkdownViewer Markdown="{Binding OssLicense.Value, Mode=OneWay}"    IsTabStop="False"/>
         </m:FlipView>
-
-        <TextBlock Grid.Row="5" Text="{qc:QuickValue 'Environment.OSVersion.ToString() + \' - CLR \' + Environment.Version.ToString()'}" TextAlignment="Right" TextTrimming="CharacterEllipsis" Margin="40 0"/>
     </Grid>
     
 </UserControl>
