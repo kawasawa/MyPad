@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.VisualBasic.Devices;
+using Microsoft.Win32;
 using MyBase;
 using MyBase.Logging;
 using MyBase.Wpf.CommonDialogs;
@@ -77,12 +78,15 @@ public partial class App : PrismApplication
                 PublisherType = typeof(ILoggerFacadeExtension),
                 ConfigurationFactory = () =>
                 {
+                    var computerInfo = new ComputerInfo();
                     var headerText = new StringBuilder();
-                    headerText.AppendLine($"# {this.ProductInfo.Product} ${{var:CTG}} Log");
-                    headerText.AppendLine($"# {Environment.OSVersion} - CLR {Environment.Version}");
-                    headerText.AppendLine("# ${environment:PROCESSOR_ARCHITECTURE} - ${environment:PROCESSOR_IDENTIFIER}");
-                    headerText.AppendLine("# ${environment:COMPUTERNAME}");
-                    headerText.Append("##");
+                    headerText.AppendLine("************************************************************");
+                    headerText.AppendLine($"{this.ProductInfo.Product} - ${{var:CTG}} Log");
+                    headerText.AppendLine($"CLR: {Environment.Version}");
+                    headerText.AppendLine($"OS : {Environment.OSVersion}");
+                    headerText.AppendLine("CPU: ${environment:PROCESSOR_IDENTIFIER}, ${environment:PROCESSOR_ARCHITECTURE}, ${environment:NUMBER_OF_PROCESSORS}-core");
+                    headerText.AppendLine($"MEM: {computerInfo.TotalPhysicalMemory / 1048576} MB");
+                    headerText.AppendLine("************************************************************");
 
                     var header = new NLog.Layouts.CsvLayout
                     {
