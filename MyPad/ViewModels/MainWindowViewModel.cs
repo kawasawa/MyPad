@@ -152,9 +152,7 @@ public class MainWindowViewModel : ViewModelBase
            // したがって TextEditor の ViewModel は View に比べ生存期間が長いためリソースの解放は ViewModel 起点に行う
            e.Cancel();
 
-           await this.TryCloseTextEditor(textEditor);
-           if (this.TextEditors.Any() == false)
-               this.WakeUpTextEditor(this.AddTextEditor());
+           await this.InvokeCloseTextEditor(textEditor);
        });
 
     #endregion
@@ -350,12 +348,7 @@ public class MainWindowViewModel : ViewModelBase
             .AddTo(this.CompositeDisposable);
 
         this.CloseCommand = this.IsEditMode.ToReactiveCommand()
-            .WithSubscribe(async () =>
-            {
-                await this.TryCloseTextEditor(this.ActiveTextEditor.Value);
-                if (this.TextEditors.Any() == false)
-                    this.WakeUpTextEditor(this.AddTextEditor());
-            })
+            .WithSubscribe(async () => await this.InvokeCloseTextEditor(this.ActiveTextEditor.Value))
             .AddTo(this.CompositeDisposable);
 
         this.CloseAllCommand = this.IsEditMode.ToReactiveCommand()
@@ -697,6 +690,19 @@ public class MainWindowViewModel : ViewModelBase
 
         this.Dispose();
         return true;
+    }
+
+    /// <summary>
+    /// テキストエディタの終了を試行します。
+    /// </summary>
+    /// <returns>正常に処理されたかどうかを示す値</returns>
+    [LogInterceptor]
+    public async Task<bool> InvokeCloseTextEditor(TextEditorViewModel textEditor)
+    {
+        var result = await this.TryCloseTextEditor(textEditor);
+        if (this.TextEditors.Any() == false)
+            this.WakeUpTextEditor(this.AddTextEditor());
+        return result;
     }
 
     #endregion

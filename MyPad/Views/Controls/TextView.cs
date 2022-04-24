@@ -41,7 +41,8 @@ public class TextView : ICSharpCode.AvalonEdit.Rendering.TextView, IDisposable
         get => this.OpenTypeVisualLineTransformer.EnabledHalfWidth;
         set
         {
-            if (this.OpenTypeVisualLineTransformer.EnabledHalfWidth != value)
+            if (this.OpenTypeVisualLineTransformer != null &&
+                this.OpenTypeVisualLineTransformer.EnabledHalfWidth != value)
             {
                 this.OpenTypeVisualLineTransformer.EnabledHalfWidth = value;
                 this.Redraw();
