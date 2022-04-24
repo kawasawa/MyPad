@@ -348,7 +348,7 @@
                                 </MenuItem>
                             </ContextMenu>
                         </Grid.ContextMenu>
-                        <Button Grid.Column="0" Command="{x:Static dr:TabablzControl.AddItemCommand}" ToolTip="{le:Loc Command_New}" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Mode=OneWay}" Padding="0" Background="Transparent" BorderBrush="Transparent" Focusable="False">
+                        <Button Grid.Column="0" Command="{x:Static dr:TabablzControl.AddItemCommand}" ToolTip="{le:Loc Command_New}" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Mode=OneWay}" Padding="0" BorderThickness="0" Background="Transparent" BorderBrush="Transparent" Focusable="False">
                             <mi:PackIconMaterial Kind="Plus" Height="{DynamicResource MahApps.Font.Size.Button}" Width="{DynamicResource MahApps.Font.Size.Button}" Foreground="{DynamicResource MahApps.Brushes.Gray5}"/>
                         </Button>
                         <Border Grid.Column="1" VerticalAlignment="Stretch" Background="Transparent"/>
