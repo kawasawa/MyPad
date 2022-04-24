@@ -17,69 +17,75 @@
              d:DesignHeight="450" d:DesignWidth="800"
              Loaded="UserControl_Loaded">
 
-    <TreeView ItemsSource="{Binding FileTreeNodes, Mode=OneWay}">
-        <TreeView.ItemContainerStyle>
-            <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource Common.TreeViewItem}">
-                <EventSetter Event="MouseRightButtonDown" Handler="FileTreeNode_MouseRightButtonDown"/>
-                <EventSetter Event="MouseDoubleClick" Handler="FileTreeNode_MouseDoubleClick"/>
-                <EventSetter Event="KeyDown" Handler="FileTreeNode_KeyDown"/>
-                <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
-                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
-                <Setter Property="ContextMenu">
-                    <Setter.Value>
-                        <ContextMenu>
-                            <MenuItem Click="{qc:QuickEvent 'Clipboard.SetText($dataContext.FileName)'}"
-                                      Header="{le:Loc Command_CopyFullPath}">
-                                <MenuItem.Icon>
-                                    <mi:Modern Kind="ClipboardVariantText"/>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                            <MenuItem Header="{le:Loc Command_OpenWithExplorer}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <behaviors:ProcessStartAction
-                                            FileName="explorer.exe"
-                                            Arguments="{qc:Binding '$P.IsDummy ? $P.Parent.FileName : ($P.IsDirectory ? $P.FileName : (\'/select, \' + $P.FileName))', P={Binding Mode=OneWay}}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <MenuItem.Icon>
-                                    <mi:Material Kind="FolderOutline"/>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                            <MenuItem Command="{Binding PropertyCommand, Mode=OneTime}"
-                                      Header="{le:Loc Command_Property}"
-                                      IsEnabled="{qc:Binding '!$P', P={Binding IsDummy, Mode=OneWay}}">
-                                <MenuItem.Icon>
-                                    <mi:FontAwesome Kind="WrenchSolid"/>
-                                </MenuItem.Icon>
-                            </MenuItem>
-                        </ContextMenu>
-                    </Setter.Value>
-                </Setter>
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsExists, Mode=OneWay}" Value="False">
-                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding IsHidden, Mode=OneWay}" Value="True">
-                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding IsDummy, Mode=OneWay}" Value="True">
-                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </TreeView.ItemContainerStyle>
-        <TreeView.ItemTemplate>
-            <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="{x:Type vmregions:ExplorerViewModel+FileTreeNode}">
-                <Border Background="Transparent" ToolTip="{qc:MultiBinding '$P0 ? $P1 : \'not exists\'', P0={Binding IsExists, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" ToolTipService.IsEnabled="{qc:Binding '!$P', P={Binding IsDummy, Mode=OneWay}}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{Binding Image, Mode=OneWay}" Opacity="{qc:Binding '$P ? 0.5 : 1.0', P={Binding IsHidden, Mode=OneWay}}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsExists, Mode=OneWay}}" Height="18"/>
-                        <mi:PackIconModern Kind="Question" Opacity="0.5" Visibility="{qc:MultiBinding '!$P0 ## !$P1 ? Visibility.Visible : Visibility.Collapsed', P0={Binding IsExists, Mode=OneWay}, P1={Binding IsDummy, Mode=OneWay}}" Height="18"/>
-                        <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsDummy, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" VerticalAlignment="Center" Margin="3 0 0 0"/>
-                    </StackPanel>
-                </Border>
-            </HierarchicalDataTemplate>
-        </TreeView.ItemTemplate>
-    </TreeView>
+    <Grid>
+        <TreeView ItemsSource="{Binding FileTreeNodes, Mode=OneWay}">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource Common.TreeViewItem}">
+                    <EventSetter Event="MouseRightButtonDown" Handler="FileTreeNode_MouseRightButtonDown"/>
+                    <EventSetter Event="MouseDoubleClick" Handler="FileTreeNode_MouseDoubleClick"/>
+                    <EventSetter Event="KeyDown" Handler="FileTreeNode_KeyDown"/>
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu>
+                                <MenuItem Click="{qc:QuickEvent 'Clipboard.SetText($dataContext.FileName)'}"
+                                          Header="{le:Loc Command_CopyFullPath}">
+                                    <MenuItem.Icon>
+                                        <mi:Modern Kind="ClipboardVariantText"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="{le:Loc Command_OpenWithExplorer}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click">
+                                            <behaviors:ProcessStartAction
+                                                FileName="explorer.exe"
+                                                Arguments="{qc:Binding '$P.IsDummy ? $P.Parent.FileName : ($P.IsDirectory ? $P.FileName : (\'/select, \' + $P.FileName))', P={Binding Mode=OneWay}}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <MenuItem.Icon>
+                                        <mi:Material Kind="FolderOutline"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Command="{Binding PropertyCommand, Mode=OneTime}"
+                                          Header="{le:Loc Command_Property}"
+                                          IsEnabled="{qc:Binding '!$P', P={Binding IsDummy, Mode=OneWay}}">
+                                    <MenuItem.Icon>
+                                        <mi:FontAwesome Kind="WrenchSolid"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsExists, Mode=OneWay}" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsHidden, Mode=OneWay}" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsDummy, Mode=OneWay}" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=OneWay}" DataType="{x:Type vmregions:ExplorerViewModel+FileTreeNode}">
+                    <Border Background="Transparent" ToolTip="{qc:MultiBinding '$P0 ? $P1 : \'not exists\'', P0={Binding IsExists, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" ToolTipService.IsEnabled="{qc:Binding '!$P', P={Binding IsDummy, Mode=OneWay}}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{Binding Image, Mode=OneWay}" Opacity="{qc:Binding '$P ? 0.5 : 1.0', P={Binding IsHidden, Mode=OneWay}}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsExists, Mode=OneWay}}" Height="{DynamicResource MahApps.Font.Size.Button.ClearText}"/>
+                            <mi:PackIconModern Kind="Question" Opacity="0.5" Visibility="{qc:MultiBinding '!$P0 ## !$P1 ? Visibility.Visible : Visibility.Collapsed', P0={Binding IsExists, Mode=OneWay}, P1={Binding IsDummy, Mode=OneWay}}" Height="{DynamicResource MahApps.Font.Size.Button.ClearText}"/>
+                            <TextBlock Text="{qc:MultiBinding '$P0 ? \'empty\' : Path.GetFileName($P1)', P0={Binding IsDummy, Mode=OneWay}, P1={Binding FileName, Mode=OneWay}}" VerticalAlignment="Center" Margin="3 0 0 0"/>
+                        </StackPanel>
+                    </Border>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        
+        <Border d:IsHidden="True" Style="{StaticResource Common.Overlay}" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding IsPending.Value, Mode=OneWay}}">
+            <m:ProgressRing/>
+        </Border>
+    </Grid>
 
 </UserControl>
