@@ -1,4 +1,5 @@
 ﻿using MahApps.Metro.Controls.Dialogs;
+using Microsoft.Toolkit.Uwp.Notifications;
 using MyPad.Models;
 using MyPad.Properties;
 using MyPad.ViewModels.Dialogs;
@@ -23,6 +24,24 @@ namespace MyPad.ViewModels;
 /// </summary>
 public static class IDialogServiceExtensions
 {
+    #region バルーン
+
+    /// <summary>
+    /// 通知用のバルーンを表示します。
+    /// </summary>
+    /// <param name="self"><see cref="IDialogService"/> を実装するインスタンス</param>
+    /// <param name="message">メッセージ</param>
+    [LogInterceptor]
+    public static void BalloonNotify(this IDialogService self, string title, string message)
+    {
+        new ToastContentBuilder()
+            .AddText(title)
+            .AddText(message)
+            .Show();
+    }
+
+    #endregion
+
     #region トースト
 
     /// <summary>

@@ -6,6 +6,7 @@ using MyPad.Models;
 using MyPad.Properties;
 using MyPad.PubSub;
 using Prism.Events;
+using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -29,6 +30,8 @@ public sealed class SharedProperties : ValidatableBase
 
     [Dependency]
     public IEventAggregator EventAggregator { get; set; }
+    [Dependency]
+    public IDialogService DialogService { get; set; }
     [Dependency]
     public ILoggerFacade Logger { get; set; }
     [Dependency]
@@ -172,13 +175,13 @@ public sealed class SharedProperties : ValidatableBase
         {
             this.IsPomodoroWorking.Value = false;
             this.PomodoroTimer.Value = TimeSpan.FromMinutes(this.Settings.OtherTools.PomodoroBreakDuration);
-            this.EventAggregator.GetEvent<RaiseBalloonEvent>().Publish((Resources.Command_PomodoroTimer, Resources.Message_NotifyPomodoroBreakTime));
+            this.DialogService.BalloonNotify(Resources.Command_PomodoroTimer, Resources.Message_NotifyPomodoroBreakTime);
         }
         else
         {
             this.IsPomodoroWorking.Value = true;
             this.PomodoroTimer.Value = TimeSpan.FromMinutes(this.Settings.OtherTools.PomodoroDuration);
-            this.EventAggregator.GetEvent<RaiseBalloonEvent>().Publish((Resources.Command_PomodoroTimer, Resources.Message_NotifyPomodoroWorkTime));
+            this.DialogService.BalloonNotify(Resources.Command_PomodoroTimer, Resources.Message_NotifyPomodoroWorkTime);
         }
     }
 

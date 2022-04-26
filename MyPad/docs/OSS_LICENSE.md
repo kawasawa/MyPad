@@ -56,6 +56,10 @@ Copyright (c) .NET Foundation and Contributors
 Copyright (c) .NET Foundation and Contributors  
 [MIT License](https://github.com/dotnet/runtime/blob/master/LICENSE.TXT)  
 
+### Microsoft.Toolkit.Uwp.Notifications
+Copyright (c) .NET Foundation and Contributors  
+[MIT License](https://github.com/CommunityToolkit/WindowsCommunityToolkit/blob/main/License.md)  
+
 ### Newtonsoft.Json
 Copyright (c) 2007 James Newton-King  
 [MIT License](https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md)  

@@ -12,7 +12,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Interop;
 using Unity;
 using Vanara.PInvoke;
@@ -65,20 +64,6 @@ public partial class Workspace : Window
 
         void createWindow() => this.CreateWindow().Show();
         this.EventAggregator.GetEvent<CreateWindowEvent>().Subscribe(createWindow);
-        void showBalloon((string title, string message) payload)
-        {
-            if (this.TaskbarIcon.IsVisible)
-            {
-                this.TaskbarIcon.ShowBalloonTip(payload.title, payload.message, BalloonIcon.Info);
-                return;
-            }
-
-            var binding = BindingOperations.GetBinding(this.TaskbarIcon, TaskbarIcon.VisibilityProperty);
-            this.TaskbarIcon.Visibility = Visibility.Visible;
-            this.TaskbarIcon.ShowBalloonTip(payload.title, payload.message, BalloonIcon.Info);
-            this.TaskbarIcon.SetBinding(TaskbarIcon.VisibilityProperty, binding);
-        };
-        this.EventAggregator.GetEvent<RaiseBalloonEvent>().Subscribe(showBalloon);
     }
 
     /// <summary>

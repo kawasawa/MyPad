@@ -8,6 +8,7 @@ using MyPad.Properties;
 using MyPad.PubSub;
 using Prism.Events;
 using Prism.Ioc;
+using Prism.Services.Dialogs;
 using System;
 using System.IO;
 using System.Linq;
@@ -41,6 +42,8 @@ public class TextEditorViewModel : ViewModelBase
     // Dependency Injection
     [Dependency]
     public IContainerExtension Container { get; set; }
+    [Dependency]
+    public IDialogService DialogService { get; set; }
     [Dependency]
     public ILoggerFacade Logger { get; set; }
     [Dependency]
@@ -657,6 +660,6 @@ public class TextEditorViewModel : ViewModelBase
 
         var result = await this.SaveToTemporary();
         if (result)
-            this.EventAggregator.GetEvent<RaiseBalloonEvent>().Publish((Resources.Message_NotifyAutoSaved, Path.GetFileName(this.FileName)));
+            this.DialogService.BalloonNotify(Resources.Message_NotifyAutoSaved, Path.GetFileName(this.FileName));
     }
 }
