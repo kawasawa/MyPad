@@ -579,7 +579,7 @@ public static class IDialogServiceExtensions
     private static MetroDialogSettings CreateDialogSettings()
         => new()
         {
-            MaximumBodyHeight = 64,
+            MaximumBodyHeight = 82,
             AffirmativeButtonText = Resources.Command_OK,
             DefaultButtonFocus = MessageDialogResult.Affirmative,
         };
