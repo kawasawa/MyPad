@@ -576,7 +576,7 @@ public partial class MainWindow : MetroWindow
         this.BottomContent.IsVisibleChanged -= this.BottomContent_IsVisibleChanged;
 
         // 表示位置を退避する
-        if (this.Settings.System.SaveWindowPlacement && this._handleSource.IsDisposed == false)
+        if (this.Settings.System.SaveWindowPlacement && this._handleSource?.IsDisposed == false)
         {
             var lpwndpl = new User32.WINDOWPLACEMENT();
             User32.GetWindowPlacement(this._handleSource.Handle, ref lpwndpl);
@@ -587,7 +587,7 @@ public partial class MainWindow : MetroWindow
         this.RegionManager.Regions.ForEach(r => r.RemoveAll());
 
         // フックメソッドを解除する
-        this._handleSource.RemoveHook(this.WndProc);
+        this._handleSource?.RemoveHook(this.WndProc);
 
         // 他のウィンドウが存在せず、タスクトレイに存在しない場合はアプリケーションを終了する
         if (MvvmHelper.GetMainWindows().Any() == false &&

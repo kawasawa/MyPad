@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using MyBase;
 using MyBase.Logging;
 using MyBase.Wpf.CommonDialogs;
+using MyPad.ViewModels;
 using Prism;
 using Prism.Ioc;
 using Prism.Mvvm;
@@ -50,6 +51,10 @@ namespace MyPad;
 /// </remarks>
 public partial class App : PrismApplication
 {
+    private string _identifier;
+    private Window _initialWindow;
+    private IEnumerable<string> _commandLineArgs = Enumerable.Empty<string>();
+
     /// <summary>
     /// ロガー
     /// </summary>
@@ -155,7 +160,8 @@ public partial class App : PrismApplication
     [LogInterceptor]
     protected override void OnStartup(StartupEventArgs e)
     {
-        this.SharedDataStore.CommandLineArgs = e.Args;
+        this._identifier = $"__{this.ProductInfo.Company}:{this.ProductInfo.Product}:{this.ProductInfo.Version}__";
+        this._commandLineArgs = e.Args;
 
         this.Logger.Log($"アプリケーションを開始しました。", Category.Info);
         this.Logger.Debug($"アプリケーションを開始しました。: Args=[{string.Join(", ", e.Args)}]");
@@ -274,15 +280,21 @@ public partial class App : PrismApplication
             if (handle.IsNull == false)
             {
                 // 起動中のプロセスが見つかった場合はコマンドライン引数を引き渡す
-                this.SendData(process, handle, this.SharedDataStore.CommandLineArgs);
+                this.SendData(process, handle, this._commandLineArgs);
                 return false;
             }
             return true;
         });
 
-        // 設定情報を初期化してからワークスペースを生成する
+        // 設定情報を初期化する
         this.Container.Resolve<Models.Settings>().Load();
+
+        // ワークスペースを生成する
         var shell = this.Container.Resolve<Views.Workspace>();
+
+        // 初期ウィンドウを生成する
+        var window = this.Container.Resolve<Views.MainWindow>();
+        window.IsInitialWindow = true;
 
         // 多重起動中の場合は本プロセスを終了する
         validateMultipleLaunch.Wait();
@@ -291,6 +303,8 @@ public partial class App : PrismApplication
             this.Shutdown(0);
             return null;
         }
+
+        this._initialWindow = window;
         return shell;
     }
 
@@ -305,11 +319,29 @@ public partial class App : PrismApplication
     [LogInterceptor]
     protected override void InitializeShell(Window shell)
     {
-        base.InitializeShell(shell);
+        var settings = this.Container.Resolve<Models.Settings>();
 
-        // 一時フォルダに関する処理を行う
+        // ワークスペースを初期化する
+        base.InitializeShell(shell);
+        shell.Title = this._identifier;
+        shell.Closed += (sender, e) => settings.Save();
+
+        // バージョンの更新状況を確認する
+        var isDifferentVersion = settings.IsDifferentVersion;
+        if (isDifferentVersion)
+        {
+            this.Logger.Debug($"アプリケーションのバージョンが更新されました。: Old={settings.Version}, New={this.ProductInfo.Version}");
+            settings.Save();
+        }
+
+        // シンタックス定義を初期化する
+        this.Container.Resolve<Models.SyntaxService>().CreateDefinitionFiles(isDifferentVersion);
+
+        // 一時フォルダを生成する
         this.SharedDataStore.CreateTempDirectory();
         this.Logger.Debug($"このプロセスが使用する一時フォルダのパスが決定しました。: Path={this.SharedDataStore.TempDirectoryPath}");
+
+        // 残存する一時フォルダに関する処理を行う
         var cachedDirectories = new DirectoryInfo(this.ProductInfo.Temporary)
             .EnumerateDirectories()
             .Where(i => i.FullName != this.SharedDataStore.TempDirectoryPath)
@@ -327,7 +359,7 @@ public partial class App : PrismApplication
                 foreach (var info in cachedDirectories.Select(t => t.info))
                     info.Attributes &= ~FileAttributes.Hidden;
 
-                // 残存する一時フォルダのうち、指定の期間を超えたものを削除する
+                // 指定の期間を超えたものを削除する
                 var basis = Process.GetCurrentProcess().StartTime.AddDays(-1 * AppSettingsReader.CacheLifetime);
                 foreach (var info in cachedDirectories
                     .Where(t => t.result == false || t.value < basis || t.info.EnumerateFileSystemInfos().Any() == false)
@@ -343,18 +375,42 @@ public partial class App : PrismApplication
             {
                 this.Logger.Log("保存期限を過ぎた一時フォルダの削除に失敗しました。", Category.Warn, ex);
             }
-            this.SharedDataStore.CachedDirectories = cachedDirectories.Select(t => t.info.FullName).ToList();
         }
 
-        // バージョンの更新状況を確認する
-        var settings = this.Container.Resolve<Models.Settings>();
-        if (settings.IsDifferentVersion)
-            this.Logger.Debug($"アプリケーションのバージョンが更新されました。: Old={settings.Version}, New={this.ProductInfo.Version}");
-        this.Container.Resolve<Models.SyntaxService>().CreateDefinitionFiles(settings.IsDifferentVersion);
+        // 初期ウィンドウの表示直後の処理を定義する
+        void window_Loaded(object sender, RoutedEventArgs e)
+        {
+            var window = (Views.MainWindow)sender;
+            window.Loaded -= window_Loaded;
 
-        // Workspace の設定を行う
-        shell.Title = this.SharedDataStore.Identifier;
-        shell.Closed += (sender, e) => settings.Save();
+            // コマンドライン引数を引き渡す
+            if (this._commandLineArgs.Any())
+                _ = window.ViewModel.InvokeLoad(this._commandLineArgs);
+        }
+        void window_ContentRendered(object sender, EventArgs e)
+        {
+            var window = (Views.MainWindow)sender;
+            window.ContentRendered -= window_ContentRendered;
+
+            // バージョンが更新された場合は通知する
+            if (isDifferentVersion)
+            {
+                window.ViewModel.AboutCommand.Execute();
+                window.ViewModel.DialogService.ToastNotify(string.Format(
+                    MyPad.Properties.Resources.Message_NotifyWelcome,
+                    this.ProductInfo.Product,
+                    $"{this.ProductInfo.Version.Major}.{this.ProductInfo.Version.Minor}.{this.ProductInfo.Version.Build}"));
+            }
+
+            // （改めて）残存する一時フォルダをチェックし、存在する場合は通知する
+            if (cachedDirectories.Any())
+            {
+                window.ViewModel.DialogService.Notify(MyPad.Properties.Resources.Message_NotifyCachedFilesRemain);
+                Process.Start("explorer.exe", this.ProductInfo.Temporary);
+            }
+        }
+        this._initialWindow.Loaded += window_Loaded;
+        this._initialWindow.ContentRendered += window_ContentRendered;
     }
 
     /// <summary>
@@ -367,8 +423,8 @@ public partial class App : PrismApplication
     [LogInterceptor]
     protected override void OnInitialized()
     {
-        // ログに記録するためオーバーライドする
         base.OnInitialized();
+        this._initialWindow?.Show();
     }
 
     /// <summary>
@@ -456,7 +512,7 @@ public partial class App : PrismApplication
                 // 本アプリケーションでは実質的に識別子として使用される
                 var lpString = new StringBuilder(256);
                 _ = User32.GetWindowText(_hWnd, lpString, lpString.Capacity);
-                if (lpString.ToString().Contains(this.SharedDataStore.Identifier) == false)
+                if (lpString.ToString().Contains(this._identifier) == false)
                     return true;
 
                 // ハンドルを保持する

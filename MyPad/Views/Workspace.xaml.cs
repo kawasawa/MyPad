@@ -1,10 +1,8 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
-using MyBase;
 using MyBase.Logging;
 using MyPad.ViewModels;
 using Prism.Ioc;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -27,10 +25,6 @@ public partial class Workspace : Window
     public IContainerExtension Container { get; set; }
     [Dependency]
     public ILoggerFacade Logger { get; set; }
-    [Dependency]
-    public IProductInfo ProductInfo { get; set; }
-    [Dependency]
-    public SharedDataStore SharedDataStore { get; set; }
 
     #endregion
 
@@ -65,45 +59,6 @@ public partial class Workspace : Window
         // このインスタンスのウィンドウは非表示にする
         // (タスクバーに常駐するだけのウィンドウ)
         this.Hide();
-
-        // 初期ウィンドウを生成する
-        var view = this.Container.Resolve<MainWindow>();
-        view.IsInitialWindow = true;
-        if (view.ViewModel.Settings.IsDifferentVersion)
-        {
-            void view_ContentRendered(object sender, EventArgs e)
-            {
-                view.ContentRendered -= view_ContentRendered;
-                view.ViewModel.AboutCommand.Execute();
-
-                var info = view.ViewModel.ProductInfo;
-                view.ViewModel.DialogService.ToastNotify(string.Format(
-                    Properties.Resources.Message_NotifyWelcome,
-                    info.Product,
-                    $"{info.Version.Major}.{info.Version.Minor}.{info.Version.Build}"));
-            }
-            view.ContentRendered += view_ContentRendered;
-        }
-
-        // 残存する一時フォルダをチェックする
-        if (this.SharedDataStore.CachedDirectories.Any())
-        {
-            void view_ContentRendered(object sender, EventArgs e)
-            {
-                view.ContentRendered -= view_ContentRendered;
-                view.ViewModel.DialogService.Notify(Properties.Resources.Message_NotifyCachedFilesRemain);
-                Process.Start("explorer.exe", this.ProductInfo.Temporary);
-            }
-            view.ContentRendered += view_ContentRendered;
-        }
-
-        // コマンドライン引数を渡す
-        var args = this.SharedDataStore.CommandLineArgs;
-        if (args.Any())
-            _ = view.ViewModel.InvokeLoad(args);
-
-        // 初期ウィンドウを表示する
-        view.Show();
     }
 
     /// <summary>

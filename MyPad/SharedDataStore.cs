@@ -1,8 +1,6 @@
 ﻿using MyBase;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 
 namespace MyPad;
 
@@ -11,11 +9,6 @@ namespace MyPad;
 /// </summary>
 public sealed class SharedDataStore
 {
-    /// <summary>
-    /// このアプリケーションの実行中のバージョンにおける固有の識別子
-    /// </summary>
-    public string Identifier { get; }
-
     /// <summary>
     /// ログフォルダのパス
     /// </summary>
@@ -27,16 +20,6 @@ public sealed class SharedDataStore
     public string TempDirectoryPath { get; }
 
     /// <summary>
-    /// コマンドライン引数
-    /// </summary>
-    public IEnumerable<string> CommandLineArgs { get; set; } = Enumerable.Empty<string>();
-
-    /// <summary>
-    /// キャッシュフォルダのパス
-    /// </summary>
-    public IEnumerable<string> CachedDirectories { get; set; } = Enumerable.Empty<string>();
-
-    /// <summary>
     /// このクラスの新しいインスタンスを生成します。
     /// </summary>
     /// <param name="productInfo">プロダクト情報</param>
@@ -44,7 +27,6 @@ public sealed class SharedDataStore
     [LogInterceptorIgnore]
     public SharedDataStore(IProductInfo productInfo, Process process)
     {
-        this.Identifier = $"__{productInfo.Company}:{productInfo.Product}:{productInfo.Version}__";
         this.LogDirectoryPath = Path.Combine(productInfo.Local, "log");
         this.TempDirectoryPath = Path.Combine(productInfo.Temporary, process.StartTime.ToString("yyyyMMddHHmmssfff"));
     }
