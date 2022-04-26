@@ -284,10 +284,6 @@ public partial class App : PrismApplication
         this.Container.Resolve<Models.Settings>().Load();
         var shell = this.Container.Resolve<Views.Workspace>();
 
-        // プロセスの探索に時間がかかっている場合はメインウィンドウも生成しておく
-        if (validateMultipleLaunch.IsCompleted == false)
-            shell.PreparedWindow = shell.CreateWindow();
-
         // 多重起動中の場合は本プロセスを終了する
         validateMultipleLaunch.Wait();
         if (validateMultipleLaunch.Result == false)

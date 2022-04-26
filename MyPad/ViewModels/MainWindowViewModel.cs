@@ -310,7 +310,7 @@ public class MainWindowViewModel : ViewModelBase
             .AddTo(this.CompositeDisposable);
 
         this.NewWindowCommand = this.IsEditMode.ToReactiveCommand()
-            .WithSubscribe(() => this.EventAggregator.GetEvent<CreateWindowEvent>().Publish())
+            .WithSubscribe(() => this.Container.Resolve<Views.MainWindow>().Show())
             .AddTo(this.CompositeDisposable);
 
         this.OpenCommand = this.IsEditMode.ToReactiveCommand()

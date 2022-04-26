@@ -3,6 +3,7 @@ using MyBase.Logging;
 using MyPad.Models;
 using MyPad.PubSub;
 using Prism.Events;
+using Prism.Ioc;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System.Linq;
@@ -44,6 +45,8 @@ public class WorkspaceViewModel : ViewModelBase
         get => this._settings;
         set => this.SetProperty(ref this._settings, value);
     }
+    [Dependency]
+    public IContainerExtension Container { get; set; }
 
     #endregion
 
@@ -68,7 +71,7 @@ public class WorkspaceViewModel : ViewModelBase
         this.EventAggregator.GetEvent<ExitApplicationEvent>().Subscribe(exitApplication);
 
         this.NewWindowCommand = new ReactiveCommand()
-            .WithSubscribe(() => this.EventAggregator.GetEvent<CreateWindowEvent>().Publish())
+            .WithSubscribe(() => this.Container.Resolve<Views.MainWindow>().Show())
             .AddTo(this.CompositeDisposable);
 
         this.ExitApplicationCommand = new ReactiveCommand()

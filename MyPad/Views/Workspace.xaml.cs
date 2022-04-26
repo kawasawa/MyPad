@@ -1,11 +1,8 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
 using MyBase;
 using MyBase.Logging;
-using MyPad.PubSub;
 using MyPad.ViewModels;
-using Prism.Events;
 using Prism.Ioc;
-using Prism.Regions;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -25,23 +22,15 @@ public partial class Workspace : Window
 {
     #region インジェクション
 
-    // Constructor Injection
-    public IEventAggregator EventAggregator { get; set; }
-
     // Dependency Injection
     [Dependency]
     public IContainerExtension Container { get; set; }
-    [Dependency]
-    public IRegionManager RegionManager { get; set; }
     [Dependency]
     public ILoggerFacade Logger { get; set; }
     [Dependency]
     public IProductInfo ProductInfo { get; set; }
     [Dependency]
     public SharedDataStore SharedDataStore { get; set; }
-
-    // エントリーポイントにて待機時間中に生成されたウィンドウ
-    public MainWindow PreparedWindow { get; set; }
 
     #endregion
 
@@ -54,28 +43,11 @@ public partial class Workspace : Window
     /// <summary>
     /// このクラスの新しいインスタンスを生成します。
     /// </summary>
-    /// <param name="eventAggregator">イベントアグリゲーター</param>
     [InjectionConstructor]
     [LogInterceptor]
-    public Workspace(IEventAggregator eventAggregator)
+    public Workspace()
     {
         this.InitializeComponent();
-        this.EventAggregator = eventAggregator;
-
-        void createWindow() => this.CreateWindow().Show();
-        this.EventAggregator.GetEvent<CreateWindowEvent>().Subscribe(createWindow);
-    }
-
-    /// <summary>
-    /// 新しい <see cref="MainWindow"/> のインスタンスを生成します。
-    /// </summary>
-    /// <returns>生成された <see cref="MainWindow"/> のインスタンス</returns>
-    [LogInterceptor]
-    public MainWindow CreateWindow()
-    {
-        var window = this.Container.Resolve<MainWindow>((typeof(IRegionManager), this.RegionManager?.CreateRegionManager()));
-        this.Logger.Log($"ウィンドウを生成しました。win#{((MainWindowViewModel)window.DataContext).Sequense}", Category.Info);
-        return window;
     }
 
     /// <summary>
@@ -95,8 +67,7 @@ public partial class Workspace : Window
         this.Hide();
 
         // 初期ウィンドウを生成する
-        var view = this.PreparedWindow ?? this.CreateWindow();
-        this.PreparedWindow = null;
+        var view = this.Container.Resolve<MainWindow>();
         view.IsInitialWindow = true;
         if (view.ViewModel.Settings.IsDifferentVersion)
         {
@@ -195,7 +166,7 @@ public partial class Workspace : Window
         if (windows.Any())
             windows.ForEach(w => w.SetForegroundWindow());
         else
-            this.CreateWindow().Show();
+            this.Container.Resolve<MainWindow>().Show();
     }
 
     /// <summary>
@@ -236,7 +207,7 @@ public partial class Workspace : Window
                             var window = MvvmHelper.GetMainWindows().FirstOrDefault();
                             if (window == null)
                             {
-                                window = this.CreateWindow();
+                                window = this.Container.Resolve<MainWindow>();
                                 window.Show();
                             }
                             _ = (window.DataContext as MainWindowViewModel)?.InvokeLoad(paths);
@@ -248,7 +219,7 @@ public partial class Workspace : Window
                             if (windows.Any())
                                 (windows.FirstOrDefault(w => w.IsActive) ?? windows.First()).SetForegroundWindow();
                             else
-                                this.CreateWindow().Show();
+                                this.Container.Resolve<MainWindow>().Show();
                         }
                         break;
                     }

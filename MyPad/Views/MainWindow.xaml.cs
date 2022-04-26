@@ -192,7 +192,7 @@ public partial class MainWindow : MetroWindow
     public MainWindow(IContainerExtension container, IRegionManager regionManager)
     {
         this.Container = container;
-        this.RegionManager = regionManager;
+        this.RegionManager = regionManager.CreateRegionManager();
 
         this.InitializeComponent();
 
@@ -543,6 +543,8 @@ public partial class MainWindow : MetroWindow
                 TabablzControl.AddItemCommand.Execute(null, this.MainContent);
             }
         }
+
+        this.Logger.Log($"ウィンドウを生成しました。win#{this.ViewModel.Sequense}", Category.Info);
     }
 
     /// <summary>
@@ -858,10 +860,6 @@ public partial class MainWindow : MetroWindow
     {
         [Dependency]
         public IContainerExtension Container { get; set; }
-        [Dependency]
-        public IRegionManager RegionManager { get; set; }
-        [Dependency]
-        public ILoggerFacade Logger { get; set; }
 
         [LogInterceptor]
         INewTabHost<Window> IInterTabClient.GetNewHost(IInterTabClient interTabClient, object partition, TabablzControl source)
@@ -873,7 +871,7 @@ public partial class MainWindow : MetroWindow
             //
             // Dragablz/Dragablz/TabablzControl.cs | 6311e72 on 16 Aug 2017 | Line 1330:
             //   _dragablzItemsControl.InstigateDrag(interTabTransfer.Item, newContainer =>
-            var view = this.Container.Resolve<MainWindow>((typeof(IRegionManager), this.RegionManager.CreateRegionManager()));
+            var view = this.Container.Resolve<MainWindow>();
             view.IsFloatingWindow = true;
             if (view.Settings.System.ShowSingleTab == false)
             {
@@ -889,10 +887,7 @@ public partial class MainWindow : MetroWindow
                 view.PreviewMouseLeftButtonUp += floatingFinished;
                 view.Closed += floatingFinished;
             }
-            var host = new NewTabHost<Window>(view, view.MainContent);
-
-            this.Logger.Log($"タブのアンドックにより新しいウィンドウが生成されました。win#{((MainWindowViewModel)view.DataContext).Sequense}", Category.Info);
-            return host;
+            return new NewTabHost<Window>(view, view.MainContent);
         }
 
         [LogInterceptor]
