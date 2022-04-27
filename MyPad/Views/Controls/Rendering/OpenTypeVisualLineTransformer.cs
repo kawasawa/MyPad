@@ -6,7 +6,7 @@ namespace MyPad.Views.Controls.Rendering;
 
 public class OpenTypeVisualLineTransformer : DocumentColorizingTransformer
 {
-    const string REGEX_PATTERN = @"[ -~]{1}";
+    const string REGEX_PATTERN = @"[ -~]+";
 
     public bool EnabledHalfWidth { get; set; }
 
