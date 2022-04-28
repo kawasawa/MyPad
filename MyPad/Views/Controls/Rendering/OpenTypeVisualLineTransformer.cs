@@ -8,11 +8,11 @@ public class OpenTypeVisualLineTransformer : DocumentColorizingTransformer
 {
     const string REGEX_PATTERN = @"[ -~]+";
 
-    public bool EnabledHalfWidth { get; set; }
+    public bool EnableHalfWidth { get; set; }
 
     protected override void ColorizeLine(DocumentLine line)
     {
-        if (this.EnabledHalfWidth)
+        if (this.EnableHalfWidth)
         {
             var text = this.CurrentContext.Document.GetText(line);
             foreach (Match m in Regex.Matches(text, REGEX_PATTERN))

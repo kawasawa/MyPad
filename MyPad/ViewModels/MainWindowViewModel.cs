@@ -43,7 +43,7 @@ public class MainWindowViewModel : ViewModelBase
     // Dependency Injection
     private ILoggerFacade _logger;
     private IProductInfo _productInfo;
-    private Settings _settings;
+    private SettingsModel _settings;
     private SyntaxService _syntaxService;
     private SharedProperties _sharedProperties;
     [Dependency]
@@ -63,7 +63,7 @@ public class MainWindowViewModel : ViewModelBase
         set => this.SetProperty(ref this._productInfo, value);
     }
     [Dependency]
-    public Settings Settings
+    public SettingsModel Settings
     {
         get => this._settings;
         set => this.SetProperty(ref this._settings, value);
@@ -581,11 +581,11 @@ public class MainWindowViewModel : ViewModelBase
                     }
                     else
                     {
-                        var (result, pomodoroDuration, pomodoroBreakDuration) = await this.DialogService.ChangePomodoroTimer(this.Settings.OtherTools);
+                        var (result, pomodoroDuration, pomodoroBreakDuration) = await this.DialogService.ChangePomodoroTimer(this.Settings.Misc);
                         if (result == false)
                             return;
-                        this.Settings.OtherTools.PomodoroDuration = pomodoroDuration;
-                        this.Settings.OtherTools.PomodoroBreakDuration = pomodoroBreakDuration;
+                        this.Settings.Misc.PomodoroDuration = pomodoroDuration;
+                        this.Settings.Misc.PomodoroBreakDuration = pomodoroBreakDuration;
                     }
 
                     this.EventAggregator.GetEvent<SwitchPomodoroTimerEvent>().Publish();

@@ -43,7 +43,7 @@ public partial class MainWindow : MetroWindow
     [Dependency]
     public ILoggerFacade Logger { get; set; }
     [Dependency]
-    public Settings Settings { get; set; }
+    public SettingsModel Settings { get; set; }
 
     #endregion
 
@@ -446,7 +446,7 @@ public partial class MainWindow : MetroWindow
     /// </summary>
     /// <param name="regionName">リージョン名</param>
     /// <returns>正常に処理されたかどうかを示す値</returns>
-    [LogInterceptor]
+    [LogInterceptorIgnore] // 本質的な処理では無くログが汚れるため
     private bool TryInjectRegion(string regionName)
     {
         if (this.RegionManager.Regions.First(r => r.Name == regionName).Views.Any())
@@ -462,7 +462,7 @@ public partial class MainWindow : MetroWindow
     /// </summary>
     /// <param name="regionType">リージョンの型</param>
     /// <returns>正常に処理されたかどうかを示す値</returns>
-    [LogInterceptor]
+    [LogInterceptorIgnore] // 本質的な処理では無くログが汚れるため
     private bool TryInjectRegion(Type regionType)
     {
         var regionName = PrismConverter.ConvertToRegionName(regionType);
@@ -665,7 +665,6 @@ public partial class MainWindow : MetroWindow
         e.Handled = true;
     }
 
-
     /// <summary>
     /// メインコンテンツの選択中の項目が変更されたときに行う処理を定義します。
     /// </summary>
@@ -803,7 +802,7 @@ public partial class MainWindow : MetroWindow
     /// <param name="lParam">メッセージの付加情報</param>
     /// <param name="handled">ハンドルされたかどうかを示す値</param>
     /// <returns>メッセージが処理された場合は 0 以外の値が返ります。</returns>
-    [LogInterceptorIgnore]
+    [LogInterceptorIgnore] // 呼び出しが頻発するため
     private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
         try

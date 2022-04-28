@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 namespace MyPad.Models;
 
 /// <summary>
-/// ツールの設定を管理するモデルを表します。
+/// アプリケーション内の細かな要素の設定を管理するモデルを表します。
 /// </summary>
-public class ToolSettings : ModelBase
+public class MiscSettings : ModelBase
 {
     private ObservableCollection<PathInfo> _explorerRoots = new();
     public ObservableCollection<PathInfo> ExplorerRoots

@@ -62,12 +62,7 @@ public partial class App : PrismApplication
     /// <summary>
     /// プロダクト情報
     /// </summary>
-    public IProductInfo ProductInfo { get; }
-
-    /// <summary>
-    /// アプリケーションの共有情報
-    /// </summary>
-    public SharedDataStore SharedDataStore { get; }
+    public AppProductInfo ProductInfo { get; }
 
     /// <summary>
     /// このクラスの新しいインスタンスを生成します。
@@ -77,7 +72,7 @@ public partial class App : PrismApplication
         // 関連するインスタンスを生成する
         this.Logger = new CompositeLogger(
             new DebugLogger(),
-            new NLogger()
+            new AppLogger()
             {
                 PublisherType = typeof(ILoggerFacadeExtension),
                 ConfigurationFactory = () =>
@@ -134,7 +129,7 @@ public partial class App : PrismApplication
                     config.AddTarget(nameof(memory), memory);
                     config.LoggingRules.Add(new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, file));
                     config.LoggingRules.Add(new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, memory));
-                    config.Variables.Add("DIR", this.SharedDataStore.LogDirectoryPath);
+                    config.Variables.Add("DIR", this.ProductInfo.LogDirectoryPath);
                     return config;
                 },
                 CreateLoggerHook = (logger, category) =>
@@ -144,8 +139,7 @@ public partial class App : PrismApplication
                     logger.Factory.ReconfigExistingLoggers();
                 },
             });
-        this.ProductInfo = new ProductInfo();
-        this.SharedDataStore = new(this.ProductInfo, Process.GetCurrentProcess());
+        this.ProductInfo = new AppProductInfo();
 
         // イベントを購読する
         UnhandledExceptionObserver.Observe(this, this.Logger, this.ProductInfo);
@@ -235,13 +229,13 @@ public partial class App : PrismApplication
     protected override void RegisterTypes(IContainerRegistry containerRegistry)
     {
         // シングルトン
-        containerRegistry.RegisterSingleton<Models.Settings>();
+        containerRegistry.RegisterSingleton<Models.SettingsModel>();
         containerRegistry.RegisterSingleton<Models.SyntaxService>();
         containerRegistry.RegisterSingleton<ViewModels.SharedProperties>();
         containerRegistry.RegisterSingleton<ICommonDialogService, CommonDialogService>();
-        containerRegistry.RegisterInstance(this.Logger);
+        containerRegistry.RegisterInstance<IProductInfo>(this.ProductInfo);
         containerRegistry.RegisterInstance(this.ProductInfo);
-        containerRegistry.RegisterInstance(this.SharedDataStore);
+        containerRegistry.RegisterInstance(this.Logger);
 
         // ダイアログ
         containerRegistry.RegisterDialogWindow<Views.PrismDialogWindow>();
@@ -286,7 +280,7 @@ public partial class App : PrismApplication
         });
 
         // 設定情報を初期化する
-        this.Container.Resolve<Models.Settings>().Load();
+        this.Container.Resolve<Models.SettingsModel>().Load();
 
         // ワークスペースを生成する
         var shell = this.Container.Resolve<Workspace>();
@@ -318,7 +312,7 @@ public partial class App : PrismApplication
     [LogInterceptor]
     protected override void InitializeShell(Window shell)
     {
-        var settings = this.Container.Resolve<Models.Settings>();
+        var settings = this.Container.Resolve<Models.SettingsModel>();
 
         // ワークスペースを初期化する
         base.InitializeShell(shell);
@@ -337,13 +331,13 @@ public partial class App : PrismApplication
         this.Container.Resolve<Models.SyntaxService>().CreateDefinitionFiles(isDifferentVersion);
 
         // 一時フォルダを生成する
-        this.SharedDataStore.CreateTempDirectory();
-        this.Logger.Debug($"このプロセスが使用する一時フォルダのパスが決定しました。: Path={this.SharedDataStore.TempDirectoryPath}");
+        this.ProductInfo.CreateTempDirectory();
+        this.Logger.Debug($"このプロセスが使用する一時フォルダのパスが決定しました。: Path={this.ProductInfo.TempDirectoryPath}");
 
         // 残存する一時フォルダに関する処理を行う
         var cachedDirectories = new DirectoryInfo(this.ProductInfo.Temporary)
             .EnumerateDirectories()
-            .Where(i => i.FullName != this.SharedDataStore.TempDirectoryPath)
+            .Where(i => i.FullName != this.ProductInfo.TempDirectoryPath)
             .Select(i =>
             {
                 var result = DateTime.TryParseExact(Path.GetFileName(i.FullName), "yyyyMMddHHmmssfff", CultureInfo.CurrentCulture, DateTimeStyles.None, out var value);
@@ -438,19 +432,19 @@ public partial class App : PrismApplication
     protected override void OnExit(ExitEventArgs e)
     {
         // 一時フォルダに関する処理を行う
-        if (Directory.Exists(this.SharedDataStore.TempDirectoryPath))
+        if (Directory.Exists(this.ProductInfo.TempDirectoryPath))
         {
             const int LOOP_DELAY = 500;
             try
             {
-                Directory.Delete(this.SharedDataStore.TempDirectoryPath, true);
-                while (Directory.Exists(this.SharedDataStore.TempDirectoryPath))
+                Directory.Delete(this.ProductInfo.TempDirectoryPath, true);
+                while (Directory.Exists(this.ProductInfo.TempDirectoryPath))
                     Thread.Sleep(LOOP_DELAY);
-                this.Logger.Debug($"一時フォルダを削除しました。: Path={this.SharedDataStore.TempDirectoryPath}");
+                this.Logger.Debug($"一時フォルダを削除しました。: Path={this.ProductInfo.TempDirectoryPath}");
             }
             catch (Exception ex)
             {
-                this.Logger.Log($"一時フォルダの削除に失敗しました。: Path={this.SharedDataStore.TempDirectoryPath}", Category.Warn, ex);
+                this.Logger.Log($"一時フォルダの削除に失敗しました。: Path={this.ProductInfo.TempDirectoryPath}", Category.Warn, ex);
             }
         }
 
@@ -547,7 +541,7 @@ public partial class App : PrismApplication
     private IntPtr SendData(Process sourceProcess, HWND destinationHandle, IEnumerable<string> data, char separator = '\t')
     {
         var lpData = data.Any() ? string.Join(separator, data) : string.Empty;
-        var structure = new COPYDATASTRUCT
+        var structure = new Win32.COPYDATASTRUCT
         {
             dwData = IntPtr.Zero,
             cbData = Encoding.UTF8.GetByteCount(lpData) + 1,

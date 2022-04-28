@@ -39,7 +39,7 @@
         </Grid>
 
         <CheckBox Grid.Row="2" HorizontalAlignment="Right"
-                  IsChecked="{Binding Settings.OtherTools.ShowInlineDiffViewer, Mode=TwoWay}" Content="{le:Loc LabelText_ShowInlineDiffViewer}"
+                  IsChecked="{Binding Settings.Misc.ShowInlineDiffViewer, Mode=TwoWay}" Content="{le:Loc LabelText_ShowInlineDiffViewer}"
                   Checked="ShowInlineDiffViewer_Checked" Unchecked="ShowInlineDiffViewer_Unchecked"/>
     </Grid>
     

@@ -19,7 +19,7 @@ public class SelectDiffFilesDialogViewModel : DialogViewModelBase
     [Dependency]
     public ICommonDialogService CommonDialogService { get; set; }
     [Dependency]
-    public Settings Settings { get; set; }
+    public SettingsModel Settings { get; set; }
     [Dependency]
     public SyntaxService SyntaxService { get; set; }
 

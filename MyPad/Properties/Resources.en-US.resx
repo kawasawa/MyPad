@@ -693,7 +693,7 @@ Please check and delete unnecessary files.</value>
   <data name="Label_ColumnRulerPosition" xml:space="preserve">
     <value>Column ruler position</value>
   </data>
-  <data name="LabelText_UseInAppToastNotifications" xml:space="preserve">
+  <data name="LabelText_UseToastNotifications" xml:space="preserve">
     <value>Use quiet notifications for low importance.</value>
   </data>
   <data name="Command_ExportSettings" xml:space="preserve">
@@ -837,7 +837,7 @@ Please check and delete unnecessary files.</value>
   <data name="Label_AccentColor" xml:space="preserve">
     <value>Accent color</value>
   </data>
-  <data name="LabelText_EnabledHalfWidth" xml:space="preserve">
+  <data name="LabelText_EnableHalfWidth" xml:space="preserve">
     <value>Enable half East Asian Widths.</value>
   </data>
 </root>

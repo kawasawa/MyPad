@@ -52,7 +52,7 @@ public static class IDialogServiceExtensions
     [LogInterceptor]
     public static void ToastNotify(this IDialogService self, string message)
     {
-        if (self.UseInAppToastNotifications(out var window))
+        if (self.UseToastNotifications(out var window))
             MvvmHelper.GetActiveMainWindow()?.Notifier.ShowInformation(message, CreateToastSettings());
     }
 
@@ -195,7 +195,7 @@ public static class IDialogServiceExtensions
     /// <param name="toolSettings">ツールの設定情報</param>
     /// <returns>処理結果を示す値とインターバル</returns>
     [LogInterceptor]
-    public async static Task<(bool result, int pomodoroDuration, int pomodoroBreakDuration)> ChangePomodoroTimer(this IDialogService self, ToolSettings toolSettings)
+    public async static Task<(bool result, int pomodoroDuration, int pomodoroBreakDuration)> ChangePomodoroTimer(this IDialogService self, MiscSettings toolSettings)
     {
         var parameters = new DialogParameters {
             { nameof(ChangePomodoroTimerDialogViewModel.Title), Resources.Command_PomodoroTimer },
@@ -483,15 +483,15 @@ public static class IDialogServiceExtensions
         => self.GetType().GetField("_containerExtension", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(self) as IContainerExtension;
 
     /// <summary>
-    /// <see cref="SystemSettings.UseInAppToastNotifications"/> プロパティの値を取得します。
+    /// <see cref="SystemSettings.UseToastNotifications"/> プロパティの値を取得します。
     /// </summary>
     /// <param name="self"><see cref="IDialogService"/> を実装するインスタンス</param>
     /// <param name="window">[戻り値] アクティブな <see cref="MainWindow"/> のインスタンス</param>
     /// <returns>
-    /// <see cref="SystemSettings.UseInAppToastNotifications"/> プロパティの値を返却します。
+    /// <see cref="SystemSettings.UseToastNotifications"/> プロパティの値を返却します。
     /// アクティブな <see cref="MainWindow"/> が取得できない場合は常に <see cref="false"/> を返します。
     /// </returns>
-    private static bool UseInAppToastNotifications(this IDialogService self, out MainWindow window)
+    private static bool UseToastNotifications(this IDialogService self, out MainWindow window)
     {
         window = MvvmHelper.GetActiveMainWindow();
         if (window == null)
@@ -501,8 +501,8 @@ public static class IDialogServiceExtensions
         if (containerExtension == null)
             return false;
 
-        var settings = containerExtension.Resolve<Settings>();
-        return settings?.System?.UseInAppToastNotifications ?? false;
+        var settings = containerExtension.Resolve<SettingsModel>();
+        return settings?.System?.UseToastNotifications ?? false;
     }
 
     /// <summary>
@@ -524,7 +524,7 @@ public static class IDialogServiceExtensions
         if (containerExtension == null)
             return false;
 
-        var settings = containerExtension.Resolve<Settings>();
+        var settings = containerExtension.Resolve<SettingsModel>();
         return settings?.System?.UseOverlayDialog ?? false;
     }
 

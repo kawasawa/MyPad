@@ -36,15 +36,15 @@ public class TextView : ICSharpCode.AvalonEdit.Rendering.TextView, IDisposable
     /// <summary>
     /// 等幅半角字形が有効化どうかを示す値
     /// </summary>
-    public bool EnabledHalfWidth
+    public bool EnableHalfWidth
     {
-        get => this.OpenTypeVisualLineTransformer.EnabledHalfWidth;
+        get => this.OpenTypeVisualLineTransformer.EnableHalfWidth;
         set
         {
             if (this.OpenTypeVisualLineTransformer != null &&
-                this.OpenTypeVisualLineTransformer.EnabledHalfWidth != value)
+                this.OpenTypeVisualLineTransformer.EnableHalfWidth != value)
             {
-                this.OpenTypeVisualLineTransformer.EnabledHalfWidth = value;
+                this.OpenTypeVisualLineTransformer.EnableHalfWidth = value;
                 this.Redraw();
             }
         }

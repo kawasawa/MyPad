@@ -12,7 +12,7 @@ namespace MyPad.Test;
 public class NLoggerTest
 {
     private string LogDirectoryPath { get; } = "./log";
-    private NLogger Logger { get; set; }
+    private AppLogger Logger { get; set; }
 
     [SetUp]
     public void Initialize()
@@ -24,7 +24,7 @@ public class NLoggerTest
 
         Directory.CreateDirectory(this.LogDirectoryPath);
 
-        this.Logger = new NLogger()
+        this.Logger = new AppLogger()
         {
             ConfigurationFactory = () =>
             {

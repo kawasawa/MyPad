@@ -1,5 +1,4 @@
-﻿using MyBase;
-using MyBase.Logging;
+﻿using MyBase.Logging;
 using MyBase.Wpf.CommonDialogs;
 using Prism.Services.Dialogs;
 using Reactive.Bindings;
@@ -27,9 +26,7 @@ public class MaintenanceContentViewModel : RegionViewModelBase
     [Dependency]
     public ILoggerFacade Logger { get; set; }
     [Dependency]
-    public IProductInfo ProductInfo { get; set; }
-    [Dependency]
-    public SharedDataStore SharedDataStore { get; set; }
+    public AppProductInfo ProductInfo { get; set; }
     [Dependency]
     public SharedProperties SharedProperties
     {
@@ -101,21 +98,21 @@ public class MaintenanceContentViewModel : RegionViewModelBase
     {
         const int LOOP_DELAY = 500;
 
-        var tempPath = Path.Combine(this.SharedDataStore.TempDirectoryPath, Path.GetFileNameWithoutExtension(path));
+        var tempPath = Path.Combine(this.ProductInfo.TempDirectoryPath, Path.GetFileNameWithoutExtension(path));
 
         try
         {
             this.IsPending.Value = true;
 
-            this.SharedDataStore.CreateTempDirectory();
+            this.ProductInfo.CreateTempDirectory();
 
             // 一時フォルダに複製する
             if (Directory.Exists(tempPath))
                 await Task.Run(() => Directory.Delete(tempPath, true));
             while (Directory.Exists(tempPath))
                 await Task.Delay(LOOP_DELAY);
-            await Task.Run(() => Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(this.SharedDataStore.LogDirectoryPath, tempPath, Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.ThrowException));
-            this.Logger.Debug($"ログファイルを一時フォルダに複製しました。: Source={this.SharedDataStore.LogDirectoryPath}, Dest={tempPath}");
+            await Task.Run(() => Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(this.ProductInfo.LogDirectoryPath, tempPath, Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.UICancelOption.ThrowException));
+            this.Logger.Debug($"ログファイルを一時フォルダに複製しました。: Source={this.ProductInfo.LogDirectoryPath}, Dest={tempPath}");
 
             // 複製したファイルを圧縮して出力する
             if (File.Exists(path))

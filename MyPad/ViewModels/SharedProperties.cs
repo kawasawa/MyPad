@@ -35,7 +35,7 @@ public sealed class SharedProperties : ValidatableBase
     [Dependency]
     public ILoggerFacade Logger { get; set; }
     [Dependency]
-    public Settings Settings { get; set; }
+    public SettingsModel Settings { get; set; }
 
     private PerformanceCounter ProcessorTimeCounter { get; set; }
     private PerformanceCounter WorkingSetPrivateCounter { get; set; }
@@ -153,7 +153,7 @@ public sealed class SharedProperties : ValidatableBase
 
         await Task.Run(() =>
         {
-            var nlogger = ((CompositeLogger)this.Logger).OfType<NLogger>().First();
+            var nlogger = ((CompositeLogger)this.Logger).OfType<AppLogger>().First();
             var logs = getLogs(nlogger.TraceCoreLogger.Value, this.TraceLogs.Count);
             this.TraceLogs.AddRangeOnScheduler(logs);
             logs = getLogs(nlogger.DebugCoreLogger.Value, this.DebugLogs.Count);
@@ -174,13 +174,13 @@ public sealed class SharedProperties : ValidatableBase
         if (this.IsPomodoroWorking.Value)
         {
             this.IsPomodoroWorking.Value = false;
-            this.PomodoroTimer.Value = TimeSpan.FromMinutes(this.Settings.OtherTools.PomodoroBreakDuration);
+            this.PomodoroTimer.Value = TimeSpan.FromMinutes(this.Settings.Misc.PomodoroBreakDuration);
             this.DialogService.BalloonNotify(Resources.Command_PomodoroTimer, Resources.Message_NotifyPomodoroBreakTime);
         }
         else
         {
             this.IsPomodoroWorking.Value = true;
-            this.PomodoroTimer.Value = TimeSpan.FromMinutes(this.Settings.OtherTools.PomodoroDuration);
+            this.PomodoroTimer.Value = TimeSpan.FromMinutes(this.Settings.Misc.PomodoroDuration);
             this.DialogService.BalloonNotify(Resources.Command_PomodoroTimer, Resources.Message_NotifyPomodoroWorkTime);
         }
     }

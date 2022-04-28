@@ -35,7 +35,7 @@ public partial class Workspace : Window
     [Dependency]
     public ILoggerFacade Logger { get; set; }
     [Dependency]
-    public Settings Settings { get; set; }
+    public SettingsModel Settings { get; set; }
 
     #endregion
 
@@ -211,7 +211,7 @@ public partial class Workspace : Window
     /// <param name="lParam">メッセージの付加情報</param>
     /// <param name="handled">ハンドルされたかどうかを示す値</param>
     /// <returns>メッセージが処理された場合は 0 以外の値が返ります。</returns>
-    [LogInterceptorIgnore]
+    [LogInterceptorIgnore] // 呼び出しが頻発するため
     private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
         try
@@ -222,7 +222,7 @@ public partial class Workspace : Window
                     {
                         this.Logger.Debug($"{nameof(User32.WindowMessage.WM_COPYDATA)} を受信しました。: {nameof(hWnd)}=0x{hWnd:X}, {nameof(wParam)}={wParam}, {nameof(lParam)}={lParam}");
 
-                        var structure = Marshal.PtrToStructure<COPYDATASTRUCT>(lParam);
+                        var structure = Marshal.PtrToStructure<Win32.COPYDATASTRUCT>(lParam);
                         if (string.IsNullOrEmpty(structure.lpData) == false)
                         {
                             var paths = structure.lpData.Split('\t');

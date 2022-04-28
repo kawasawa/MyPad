@@ -5,9 +5,9 @@ using System.IO;
 namespace MyPad;
 
 /// <summary>
-/// アプリケーション全体で共有される情報の保管庫を表します。
+/// プロダクト情報を取得するためのサービスを表します。
 /// </summary>
-public sealed class SharedDataStore
+public class AppProductInfo : ProductInfo
 {
     /// <summary>
     /// ログフォルダのパス
@@ -22,13 +22,12 @@ public sealed class SharedDataStore
     /// <summary>
     /// このクラスの新しいインスタンスを生成します。
     /// </summary>
-    /// <param name="productInfo">プロダクト情報</param>
-    /// <param name="process">プロセス情報</param>
-    [LogInterceptorIgnore]
-    public SharedDataStore(IProductInfo productInfo, Process process)
+    [LogInterceptorIgnore] // このクラスが初期化されるのはロガーの生成前のため
+    public AppProductInfo()
     {
-        this.LogDirectoryPath = Path.Combine(productInfo.Local, "log");
-        this.TempDirectoryPath = Path.Combine(productInfo.Temporary, process.StartTime.ToString("yyyyMMddHHmmssfff"));
+        var process = Process.GetCurrentProcess();
+        this.LogDirectoryPath = Path.Combine(this.Local, "log");
+        this.TempDirectoryPath = Path.Combine(this.Temporary, process.StartTime.ToString("yyyyMMddHHmmssfff"));
     }
 
     /// <summary>
