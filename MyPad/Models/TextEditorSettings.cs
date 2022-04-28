@@ -252,6 +252,13 @@ public class TextEditorSettings : ModelBase
         set => this.SetProperty(ref this._enableHalfWidth, value);
     }
 
+    private bool _enableSlashedZero = true;
+    public bool EnableSlashedZero
+    {
+        get => this._enableSlashedZero;
+        set => this.SetProperty(ref this._enableSlashedZero, value);
+    }
+
     private bool _enableVirtualSpace;
     public bool EnableVirtualSpace
     {

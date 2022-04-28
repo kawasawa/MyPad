@@ -1813,6 +1813,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   可能であればスラッシュ付きのゼロを表示する。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string LabelText_EnableSlashedZero {
+            get {
+                return ResourceManager.GetString("LabelText_EnableSlashedZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   ドラッグ アンド ドロップ 編集を有効にする。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableTextDragDrop {

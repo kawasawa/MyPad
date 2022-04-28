@@ -880,4 +880,7 @@
   <data name="LabelText_EnableHalfWidth" xml:space="preserve">
     <value>等幅半角字形を有効にする。</value>
   </data>
+  <data name="LabelText_EnableSlashedZero" xml:space="preserve">
+    <value>可能であればスラッシュ付きのゼロを表示する。</value>
+  </data>
 </root>

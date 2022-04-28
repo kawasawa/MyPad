@@ -105,6 +105,10 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor, IDisposable
         = DependencyPropertyExtensions.Register(
             new PropertyMetadata(TextArea.EnableHalfWidthProperty.DefaultMetadata.DefaultValue),
             TextArea.EnableHalfWidthProperty.IsValidValue);
+    public static readonly DependencyProperty EnableSlashedZeroProperty
+        = DependencyPropertyExtensions.Register(
+            new PropertyMetadata(TextArea.EnableSlashedZeroProperty.DefaultMetadata.DefaultValue),
+            TextArea.EnableSlashedZeroProperty.IsValidValue);
     public static readonly DependencyProperty SettingsProperty
         = DependencyPropertyExtensions.Register(
             new PropertyMetadata(null, (obj, e) => ((TextEditor)obj).PopulateSettings((INotifyPropertyChanged)e.NewValue)));
@@ -321,12 +325,21 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor, IDisposable
     }
 
     /// <summary>
-    /// 等幅半角字形が有効化どうかを示す値
+    /// 等幅半角字形を有効化するかどうかを示す値
     /// </summary>
     public bool EnableHalfWidth
     {
         get => (bool)this.GetValue(EnableHalfWidthProperty);
         set => this.SetValue(EnableHalfWidthProperty, value);
+    }
+
+    /// <summary>
+    /// スラッシュ付きのゼロを表示するかどうかを示す値
+    /// </summary>
+    public bool EnableSlashedZero
+    {
+        get => (bool)this.GetValue(EnableSlashedZeroProperty);
+        set => this.SetValue(EnableSlashedZeroProperty, value);
     }
 
     /// <summary>
@@ -610,6 +623,9 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor, IDisposable
                 break;
             case nameof(this.EnableHalfWidth):
                 this.TextArea.EnableHalfWidth = (bool)e.NewValue;
+                break;
+            case nameof(this.EnableSlashedZero):
+                this.TextArea.EnableSlashedZero = (bool)e.NewValue;
                 break;
         }
         base.OnPropertyChanged(e);

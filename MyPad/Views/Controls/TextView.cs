@@ -34,18 +34,40 @@ public class TextView : ICSharpCode.AvalonEdit.Rendering.TextView, IDisposable
     public string VisualCharacterCRLF { get; set; } = "\u21B2";
 
     /// <summary>
-    /// 等幅半角字形が有効化どうかを示す値
+    /// 等幅半角字形を有効化するかどうかを示す値
     /// </summary>
     public bool EnableHalfWidth
     {
         get => this.OpenTypeVisualLineTransformer.EnableHalfWidth;
         set
         {
-            if (this.OpenTypeVisualLineTransformer != null &&
-                this.OpenTypeVisualLineTransformer.EnableHalfWidth != value)
+            if (this.OpenTypeVisualLineTransformer == null)
+                return;
+
+            if (this.OpenTypeVisualLineTransformer.EnableHalfWidth != value)
             {
                 this.OpenTypeVisualLineTransformer.EnableHalfWidth = value;
                 this.Redraw();
+            }
+        }
+    }
+
+    /// <summary>
+    /// スラッシュ付きのゼロを表示するかどうかを示す値
+    /// </summary>
+    public bool EnableSlashedZero
+    {
+        get => this.OpenTypeVisualLineTransformer.EnableSlashedZero;
+        set
+        {
+            if (this.OpenTypeVisualLineTransformer == null)
+                return;
+
+            if (this.OpenTypeVisualLineTransformer.EnableSlashedZero != value)
+            {
+                this.OpenTypeVisualLineTransformer.EnableSlashedZero = value;
+                if (this.OpenTypeVisualLineTransformer.EnableHalfWidth)
+                    this.Redraw();
             }
         }
     }

@@ -82,6 +82,9 @@ public class TextArea : ICSharpCode.AvalonEdit.Editing.TextArea, IDisposable
     public static readonly DependencyProperty EnableHalfWidthProperty
         = DependencyPropertyExtensions.Register(
             new PropertyMetadata());
+    public static readonly DependencyProperty EnableSlashedZeroProperty
+        = DependencyPropertyExtensions.Register(
+            new PropertyMetadata());
 
     private readonly Lazy<Func<SearchPanel, IEnumerable<TextSegment>>> _searchedTextSegments
         = new(() =>
@@ -284,12 +287,21 @@ public class TextArea : ICSharpCode.AvalonEdit.Editing.TextArea, IDisposable
     }
 
     /// <summary>
-    /// 等幅半角字形が有効化どうかを示す値
+    /// 等幅半角字形を有効化するかどうかを示す値
     /// </summary>
     public bool EnableHalfWidth
     {
         get => (bool)this.GetValue(EnableHalfWidthProperty);
         set => this.SetValue(EnableHalfWidthProperty, value);
+    }
+
+    /// <summary>
+    /// スラッシュ付きのゼロを表示するかどうかを示す値
+    /// </summary>
+    public bool EnableSlashedZero
+    {
+        get => (bool)this.GetValue(EnableSlashedZeroProperty);
+        set => this.SetValue(EnableSlashedZeroProperty, value);
     }
 
     /// <summary>
@@ -932,6 +944,9 @@ public class TextArea : ICSharpCode.AvalonEdit.Editing.TextArea, IDisposable
                 break;
             case nameof(this.EnableHalfWidth):
                 this.TextView.EnableHalfWidth = (bool)e.NewValue;
+                break;
+            case nameof(this.EnableSlashedZero):
+                this.TextView.EnableSlashedZero = (bool)e.NewValue;
                 break;
         }
         base.OnPropertyChanged(e);

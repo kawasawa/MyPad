@@ -5,7 +5,7 @@ namespace MyPad.Views.Controls.Rendering;
 
 public class HalfWidthTextRunTypographyProperties : DefaultTextRunTypographyProperties
 {
-    public static readonly HalfWidthTextRunTypographyProperties Instance = new();
-
+    public bool SetSlashedZero { set; protected get; }
+    public override bool SlashedZero => this.SetSlashedZero;
     public override FontEastAsianWidths EastAsianWidths => FontEastAsianWidths.Half;
 }

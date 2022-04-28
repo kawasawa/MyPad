@@ -840,4 +840,7 @@ Please check and delete unnecessary files.</value>
   <data name="LabelText_EnableHalfWidth" xml:space="preserve">
     <value>Enable half East Asian Widths.</value>
   </data>
+  <data name="LabelText_EnableSlashedZero" xml:space="preserve">
+    <value>Enable zero fonts to be replaced with slashed zero if possible.</value>
+  </data>
 </root>

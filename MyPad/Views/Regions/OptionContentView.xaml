@@ -221,7 +221,9 @@
                         <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
                             <CheckBox IsChecked="{Binding EnableFoldings, Mode=TwoWay}"                          Content="{le:Loc LabelText_EnableFoldings}"/>
                             <CheckBox IsChecked="{Binding EnableAutoCompletion, Mode=TwoWay}"                    Content="{le:Loc LabelText_EnableAutoCompletion}"/>
-                            <CheckBox IsChecked="{Binding EnableHalfWidth, Mode=TwoWay}"                        Content="{le:Loc LabelText_EnableHalfWidth}"/>
+                            <CheckBox IsChecked="{Binding EnableHalfWidth, Mode=TwoWay}"                         Content="{le:Loc LabelText_EnableHalfWidth}"/>
+                            <CheckBox IsChecked="{Binding EnableSlashedZero, Mode=TwoWay}"                       Content="{le:Loc LabelText_EnableSlashedZero}"
+                                      IsEnabled="{Binding EnableHalfWidth, Mode=OneWay}"/>
                             <CheckBox IsChecked="{Binding EnableVirtualSpace, Mode=TwoWay}"                      Content="{le:Loc LabelText_EnableVirtualSpace}"/>
                             <CheckBox IsChecked="{Binding EnableRectangularSelection, Mode=TwoWay}"              Content="{le:Loc LabelText_EnableRectangularSelection}"/>
                             <CheckBox IsChecked="{Binding EnableTextDragDrop, Mode=TwoWay}"                      Content="{le:Loc LabelText_EnableTextDragDrop}"/>
