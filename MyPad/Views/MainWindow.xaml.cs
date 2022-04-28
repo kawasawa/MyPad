@@ -2,10 +2,12 @@
 using MahApps.Metro.Controls;
 using MyBase.Logging;
 using MyPad.Models;
+using MyPad.PubSub;
 using MyPad.ViewModels;
 using MyPad.Views.Controls;
 using MyPad.Views.Regions;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Ioc;
 using Prism.Regions;
 using System;
@@ -36,6 +38,8 @@ public partial class MainWindow : MetroWindow
     public IRegionManager RegionManager { get; set; }
 
     // Dependency Injection
+    [Dependency]
+    public IEventAggregator EventAggregator { get; set; }
     [Dependency]
     public ILoggerFacade Logger { get; set; }
     [Dependency]
@@ -591,10 +595,10 @@ public partial class MainWindow : MetroWindow
 
         // 他のウィンドウが存在せず、タスクトレイに存在しない場合はアプリケーションを終了する
         if (MvvmHelper.GetMainWindows().Any() == false &&
-            (this.Settings.System.EnableNotificationIcon == false ||
+            (this.Settings.System.EnableNotifyIcon == false ||
              this.Settings.System.EnableResident == false))
         {
-            MvvmHelper.GetWorkspace()?.Close();
+            this.EventAggregator.GetEvent<ExitApplicationEvent>().Publish();
         }
     }
 

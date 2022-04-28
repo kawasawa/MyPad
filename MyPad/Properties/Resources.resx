@@ -552,7 +552,7 @@
   <data name="LabelText_EnableImeSupport" xml:space="preserve">
     <value>IMEサポートを有効にする。</value>
   </data>
-  <data name="LabelText_EnableNotificationIcon" xml:space="preserve">
+  <data name="LabelText_EnableNotifyIcon" xml:space="preserve">
     <value>通知領域アイコンを有効にする。</value>
   </data>
   <data name="LabelText_EnableRectangularSelection" xml:space="preserve">

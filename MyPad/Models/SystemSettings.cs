@@ -142,11 +142,11 @@ public class SystemSettings : ModelBase
         set => this.SetProperty(ref this._showSingleTab, value);
     }
 
-    private bool _enableNotificationIcon = true;
-    public bool EnableNotificationIcon
+    private bool _enableNotifyIcon = true;
+    public bool EnableNotifyIcon
     {
-        get => this._enableNotificationIcon;
-        set => this.SetProperty(ref this._enableNotificationIcon, value);
+        get => this._enableNotifyIcon;
+        set => this.SetProperty(ref this._enableNotifyIcon, value);
     }
 
     private bool _enableResident = true;

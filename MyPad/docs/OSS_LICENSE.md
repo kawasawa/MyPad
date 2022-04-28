@@ -20,10 +20,6 @@ Copyright (c) James Willock,  Mulholland Software and Contributors
 Copyright (c) 2016 minami_SC  
 [MIT License](https://github.com/sourcechord/GridExtra/blob/master/LICENSE)  
 
-### Hardcodet.NotifyIcon.Wpf.NetCore
-Copyright (c) 2020 havendv  
-[MIT License](https://github.com/HavenDV/H.NotifyIcon.WPF/blob/master/LICENSE.md)  
-
 ### LiveCharts.Wpf.Core
 Copyright (c) 2016 Alberto Rodriguez & LiveCharts contributors  
 [MIT License](https://github.com/fedoaa/Live-Charts/blob/master/LICENSE.TXT)  

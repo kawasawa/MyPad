@@ -518,8 +518,8 @@ These changes will be applied on restart. Are you sure you want to continue?</va
   <data name="LabelText_EnableImeSupport" xml:space="preserve">
     <value>Enable IME support.</value>
   </data>
-  <data name="LabelText_EnableNotificationIcon" xml:space="preserve">
-    <value>Enable notification icon.</value>
+  <data name="LabelText_EnableNotifyIcon" xml:space="preserve">
+    <value>Enable notify icon.</value>
   </data>
   <data name="LabelText_EnableRectangularSelection" xml:space="preserve">
     <value>Enable rectangular selection.</value>

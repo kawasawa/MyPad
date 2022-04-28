@@ -169,8 +169,11 @@
                             </StackPanel>
 
                             <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
-                                <CheckBox IsChecked="{Binding EnableNotificationIcon, Mode=TwoWay}"     Content="{le:Loc LabelText_EnableNotificationIcon}"/>
-                                <CheckBox IsChecked="{Binding EnableResident, Mode=TwoWay}"             Content="{le:Loc LabelText_EnableResident}" IsEnabled="{Binding EnableNotificationIcon, Mode=OneWay}"/>
+                                <CheckBox IsChecked="{Binding EnableNotifyIcon, Mode=TwoWay}"           Content="{le:Loc LabelText_EnableNotifyIcon}"
+                                          Checked="EnableNotifyIcon_CheckedChanged"
+                                          Unchecked="EnableNotifyIcon_CheckedChanged"/>
+                                <CheckBox IsChecked="{Binding EnableResident, Mode=TwoWay}"             Content="{le:Loc LabelText_EnableResident}"
+                                          IsEnabled="{Binding EnableNotifyIcon, Mode=OneWay}"/>
                                 <Border Height="10"/>
                                 <CheckBox IsChecked="{Binding EnableAutoSave, Mode=TwoWay}"             Content="{le:Loc LabelText_EnableAutoSave}"/>
                                 <m:NumericUpDown Value="{Binding AutoSaveInterval, Mode=TwoWay}" Minimum="1"

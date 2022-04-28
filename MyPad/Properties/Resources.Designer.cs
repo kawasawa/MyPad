@@ -1788,9 +1788,9 @@ namespace MyPad.Properties {
         /// <summary>
         ///   通知領域アイコンを有効にする。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string LabelText_EnableNotificationIcon {
+        public static string LabelText_EnableNotifyIcon {
             get {
-                return ResourceManager.GetString("LabelText_EnableNotificationIcon", resourceCulture);
+                return ResourceManager.GetString("LabelText_EnableNotifyIcon", resourceCulture);
             }
         }
         

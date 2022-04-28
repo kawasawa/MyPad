@@ -3,7 +3,6 @@ using Microsoft.Win32;
 using MyBase;
 using MyBase.Logging;
 using MyBase.Wpf.CommonDialogs;
-using MyPad.ViewModels;
 using Prism;
 using Prism.Ioc;
 using Prism.Mvvm;
@@ -290,7 +289,7 @@ public partial class App : PrismApplication
         this.Container.Resolve<Models.Settings>().Load();
 
         // ワークスペースを生成する
-        var shell = this.Container.Resolve<Views.Workspace>();
+        var shell = this.Container.Resolve<Workspace>();
 
         // 初期ウィンドウを生成する
         var window = this.Container.Resolve<Views.MainWindow>();
@@ -396,16 +395,20 @@ public partial class App : PrismApplication
             if (isDifferentVersion)
             {
                 window.ViewModel.AboutCommand.Execute();
-                window.ViewModel.DialogService.ToastNotify(string.Format(
-                    MyPad.Properties.Resources.Message_NotifyWelcome,
-                    this.ProductInfo.Product,
-                    $"{this.ProductInfo.Version.Major}.{this.ProductInfo.Version.Minor}.{this.ProductInfo.Version.Build}"));
+                ViewModels.IDialogServiceExtensions.ToastNotify(
+                    window.ViewModel.DialogService,
+                    string.Format(
+                        MyPad.Properties.Resources.Message_NotifyWelcome,
+                        this.ProductInfo.Product,
+                        $"{this.ProductInfo.Version.Major}.{this.ProductInfo.Version.Minor}.{this.ProductInfo.Version.Build}"));
             }
 
             // （改めて）残存する一時フォルダをチェックし、存在する場合は通知する
             if (cachedDirectories.Any())
             {
-                window.ViewModel.DialogService.Notify(MyPad.Properties.Resources.Message_NotifyCachedFilesRemain);
+                ViewModels.IDialogServiceExtensions.Notify(
+                    window.ViewModel.DialogService,
+                    MyPad.Properties.Resources.Message_NotifyCachedFilesRemain);
                 Process.Start("explorer.exe", this.ProductInfo.Temporary);
             }
         }
