@@ -8,7 +8,7 @@ namespace MyPad;
 /// <summary>
 /// <see cref="NLog"/> を使用してメッセージを出力するためのロガーを表します。
 /// </summary>
-public class NLogger : ILoggerFacade
+public class AppLogger : ILoggerFacade
 {
     public readonly Lazy<ILogger> TraceCoreLogger;
     public readonly Lazy<ILogger> DebugCoreLogger;
@@ -40,7 +40,7 @@ public class NLogger : ILoggerFacade
     /// <summary>
     /// このクラスの新しいインスタンスを生成します。
     /// </summary>
-    public NLogger()
+    public AppLogger()
     {
         this.TraceCoreLogger = new(() => this.CreateLogger(Category.Trace));
         this.DebugCoreLogger = new(() => this.CreateLogger(Category.Debug));
@@ -96,7 +96,7 @@ public class NLogger : ILoggerFacade
     /// <returns>NLog.ILogger を実装したインスタンス</returns>
     protected virtual ILogger CreateLogger(Category category)
     {
-        var logger = this.CreateLogFactory().GetLogger(nameof(NLogger));
+        var logger = this.CreateLogFactory().GetLogger(nameof(AppLogger));
         this.CreateLoggerHook?.Invoke(logger, category);
         return logger;
     }

@@ -518,8 +518,8 @@ These changes will be applied on restart. Are you sure you want to continue?</va
   <data name="LabelText_EnableImeSupport" xml:space="preserve">
     <value>Enable IME support.</value>
   </data>
-  <data name="LabelText_EnableNotificationIcon" xml:space="preserve">
-    <value>Enable notification icon.</value>
+  <data name="LabelText_EnableNotifyIcon" xml:space="preserve">
+    <value>Enable notify icon.</value>
   </data>
   <data name="LabelText_EnableRectangularSelection" xml:space="preserve">
     <value>Enable rectangular selection.</value>
@@ -693,7 +693,7 @@ Please check and delete unnecessary files.</value>
   <data name="Label_ColumnRulerPosition" xml:space="preserve">
     <value>Column ruler position</value>
   </data>
-  <data name="LabelText_UseInAppToastNotifications" xml:space="preserve">
+  <data name="LabelText_UseToastNotifications" xml:space="preserve">
     <value>Use quiet notifications for low importance.</value>
   </data>
   <data name="Command_ExportSettings" xml:space="preserve">
@@ -837,7 +837,10 @@ Please check and delete unnecessary files.</value>
   <data name="Label_AccentColor" xml:space="preserve">
     <value>Accent color</value>
   </data>
-  <data name="LabelText_EnabledHalfWidth" xml:space="preserve">
+  <data name="LabelText_EnableHalfWidth" xml:space="preserve">
     <value>Enable half East Asian Widths.</value>
+  </data>
+  <data name="LabelText_EnableSlashedZero" xml:space="preserve">
+    <value>Enable zero fonts to be replaced with slashed zero if possible.</value>
   </data>
 </root>

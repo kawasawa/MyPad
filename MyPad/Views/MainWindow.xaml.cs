@@ -2,10 +2,12 @@
 using MahApps.Metro.Controls;
 using MyBase.Logging;
 using MyPad.Models;
+using MyPad.PubSub;
 using MyPad.ViewModels;
 using MyPad.Views.Controls;
 using MyPad.Views.Regions;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Ioc;
 using Prism.Regions;
 using System;
@@ -37,9 +39,11 @@ public partial class MainWindow : MetroWindow
 
     // Dependency Injection
     [Dependency]
+    public IEventAggregator EventAggregator { get; set; }
+    [Dependency]
     public ILoggerFacade Logger { get; set; }
     [Dependency]
-    public Settings Settings { get; set; }
+    public SettingsModel Settings { get; set; }
 
     #endregion
 
@@ -192,7 +196,7 @@ public partial class MainWindow : MetroWindow
     public MainWindow(IContainerExtension container, IRegionManager regionManager)
     {
         this.Container = container;
-        this.RegionManager = regionManager;
+        this.RegionManager = regionManager.CreateRegionManager();
 
         this.InitializeComponent();
 
@@ -442,7 +446,7 @@ public partial class MainWindow : MetroWindow
     /// </summary>
     /// <param name="regionName">リージョン名</param>
     /// <returns>正常に処理されたかどうかを示す値</returns>
-    [LogInterceptor]
+    [LogInterceptorIgnore] // 本質的な処理では無くログが汚れるため
     private bool TryInjectRegion(string regionName)
     {
         if (this.RegionManager.Regions.First(r => r.Name == regionName).Views.Any())
@@ -458,7 +462,7 @@ public partial class MainWindow : MetroWindow
     /// </summary>
     /// <param name="regionType">リージョンの型</param>
     /// <returns>正常に処理されたかどうかを示す値</returns>
-    [LogInterceptor]
+    [LogInterceptorIgnore] // 本質的な処理では無くログが汚れるため
     private bool TryInjectRegion(Type regionType)
     {
         var regionName = PrismConverter.ConvertToRegionName(regionType);
@@ -543,6 +547,8 @@ public partial class MainWindow : MetroWindow
                 TabablzControl.AddItemCommand.Execute(null, this.MainContent);
             }
         }
+
+        this.Logger.Log($"ウィンドウを生成しました。win#{this.ViewModel.Sequense}", Category.Info);
     }
 
     /// <summary>
@@ -574,7 +580,7 @@ public partial class MainWindow : MetroWindow
         this.BottomContent.IsVisibleChanged -= this.BottomContent_IsVisibleChanged;
 
         // 表示位置を退避する
-        if (this.Settings.System.SaveWindowPlacement && this._handleSource.IsDisposed == false)
+        if (this.Settings.System.SaveWindowPlacement && this._handleSource?.IsDisposed == false)
         {
             var lpwndpl = new User32.WINDOWPLACEMENT();
             User32.GetWindowPlacement(this._handleSource.Handle, ref lpwndpl);
@@ -585,14 +591,14 @@ public partial class MainWindow : MetroWindow
         this.RegionManager.Regions.ForEach(r => r.RemoveAll());
 
         // フックメソッドを解除する
-        this._handleSource.RemoveHook(this.WndProc);
+        this._handleSource?.RemoveHook(this.WndProc);
 
         // 他のウィンドウが存在せず、タスクトレイに存在しない場合はアプリケーションを終了する
         if (MvvmHelper.GetMainWindows().Any() == false &&
-            (this.Settings.System.EnableNotificationIcon == false ||
+            (this.Settings.System.EnableNotifyIcon == false ||
              this.Settings.System.EnableResident == false))
         {
-            MvvmHelper.GetWorkspace()?.Close();
+            this.EventAggregator.GetEvent<ExitApplicationEvent>().Publish();
         }
     }
 
@@ -658,7 +664,6 @@ public partial class MainWindow : MetroWindow
             this.PerformClickSideContent((HamburgerMenuItem)e.InvokedItem);
         e.Handled = true;
     }
-
 
     /// <summary>
     /// メインコンテンツの選択中の項目が変更されたときに行う処理を定義します。
@@ -797,7 +802,7 @@ public partial class MainWindow : MetroWindow
     /// <param name="lParam">メッセージの付加情報</param>
     /// <param name="handled">ハンドルされたかどうかを示す値</param>
     /// <returns>メッセージが処理された場合は 0 以外の値が返ります。</returns>
-    [LogInterceptorIgnore]
+    [LogInterceptorIgnore] // 呼び出しが頻発するため
     private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
         try
@@ -858,10 +863,6 @@ public partial class MainWindow : MetroWindow
     {
         [Dependency]
         public IContainerExtension Container { get; set; }
-        [Dependency]
-        public IRegionManager RegionManager { get; set; }
-        [Dependency]
-        public ILoggerFacade Logger { get; set; }
 
         [LogInterceptor]
         INewTabHost<Window> IInterTabClient.GetNewHost(IInterTabClient interTabClient, object partition, TabablzControl source)
@@ -873,7 +874,7 @@ public partial class MainWindow : MetroWindow
             //
             // Dragablz/Dragablz/TabablzControl.cs | 6311e72 on 16 Aug 2017 | Line 1330:
             //   _dragablzItemsControl.InstigateDrag(interTabTransfer.Item, newContainer =>
-            var view = this.Container.Resolve<MainWindow>((typeof(IRegionManager), this.RegionManager.CreateRegionManager()));
+            var view = this.Container.Resolve<MainWindow>();
             view.IsFloatingWindow = true;
             if (view.Settings.System.ShowSingleTab == false)
             {
@@ -889,10 +890,7 @@ public partial class MainWindow : MetroWindow
                 view.PreviewMouseLeftButtonUp += floatingFinished;
                 view.Closed += floatingFinished;
             }
-            var host = new NewTabHost<Window>(view, view.MainContent);
-
-            this.Logger.Log($"タブのアンドックにより新しいウィンドウが生成されました。win#{((MainWindowViewModel)view.DataContext).Sequense}", Category.Info);
-            return host;
+            return new NewTabHost<Window>(view, view.MainContent);
         }
 
         [LogInterceptor]

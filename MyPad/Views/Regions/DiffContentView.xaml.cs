@@ -11,7 +11,7 @@ namespace MyPad.Views.Regions;
 public partial class DiffContentView : UserControl
 {
     [Dependency]
-    public Settings Settings { get; set; }
+    public SettingsModel Settings { get; set; }
 
     [LogInterceptor]
     public DiffContentView()
@@ -24,7 +24,7 @@ public partial class DiffContentView : UserControl
     {
         if (e.NewValue is bool isVisible && isVisible)
         {
-            if (this.Settings.OtherTools?.ShowInlineDiffViewer == true)
+            if (this.Settings.Misc?.ShowInlineDiffViewer == true)
                 this.DiffViewer.ShowInline();
             else
                 this.DiffViewer.ShowSideBySide();

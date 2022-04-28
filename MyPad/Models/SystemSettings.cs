@@ -107,11 +107,11 @@ public class SystemSettings : ModelBase
         set => this.SetProperty(ref this._syntaxDefinitionName, value);
     }
 
-    private bool _useInAppToastNotifications = true;
-    public bool UseInAppToastNotifications
+    private bool _useToastNotifications = true;
+    public bool UseToastNotifications
     {
-        get => this._useInAppToastNotifications;
-        set => this.SetProperty(ref this._useInAppToastNotifications, value);
+        get => this._useToastNotifications;
+        set => this.SetProperty(ref this._useToastNotifications, value);
     }
 
     private bool _useOverlayDialog = true;
@@ -142,11 +142,11 @@ public class SystemSettings : ModelBase
         set => this.SetProperty(ref this._showSingleTab, value);
     }
 
-    private bool _enableNotificationIcon = true;
-    public bool EnableNotificationIcon
+    private bool _enableNotifyIcon = true;
+    public bool EnableNotifyIcon
     {
-        get => this._enableNotificationIcon;
-        set => this.SetProperty(ref this._enableNotificationIcon, value);
+        get => this._enableNotifyIcon;
+        set => this.SetProperty(ref this._enableNotifyIcon, value);
     }
 
     private bool _enableResident = true;

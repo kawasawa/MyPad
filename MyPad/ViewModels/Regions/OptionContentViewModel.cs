@@ -31,7 +31,7 @@ public class OptionContentViewModel : RegionViewModelBase
     [Dependency]
     public IProductInfo ProductInfo { get; set; }
     [Dependency]
-    public Settings Settings { get; set; }
+    public SettingsModel Settings { get; set; }
     [Dependency]
     public SyntaxService SyntaxService { get; set; }
 
@@ -58,7 +58,7 @@ public class OptionContentViewModel : RegionViewModelBase
             .WithSubscribe(args =>
             {
                 var parameter = new FolderBrowserDialogParameters();
-                var info = args as ToolSettings.PathInfo;
+                var info = args as MiscSettings.PathInfo;
                 if (string.IsNullOrEmpty(info?.Path) == false)
                     parameter.InitialDirectory = info.Path;
 
@@ -69,15 +69,15 @@ public class OptionContentViewModel : RegionViewModelBase
                 if (info != null)
                     info.Path = parameter.FileName;
                 else
-                    this.Settings.OtherTools.ExplorerRoots.Add(new ToolSettings.PathInfo() { Path = parameter.FileName });
+                    this.Settings.Misc.ExplorerRoots.Add(new MiscSettings.PathInfo() { Path = parameter.FileName });
             })
             .AddTo(this.CompositeDisposable);
 
         this.RemoveDirectoryCommand = this.IsPending.Inverse().ToReactiveCommand<object>()
             .WithSubscribe(args =>
             {
-                var info = (ToolSettings.PathInfo)args;
-                this.Settings.OtherTools.ExplorerRoots.Remove(info);
+                var info = (MiscSettings.PathInfo)args;
+                this.Settings.Misc.ExplorerRoots.Remove(info);
             })
             .AddTo(this.CompositeDisposable);
 

@@ -11,10 +11,8 @@ namespace MyPad.Models;
 /// <summary>
 /// 個々の設定クラスのインスタンスをまとめて保持するモデルを表します。
 /// </summary>
-public class Settings : ModelBase
+public class SettingsModel : ModelBase
 {
-    private static readonly Encoding FILE_ENCODING = new UTF8Encoding(true);
-
     [Dependency]
     [JsonIgnore]
     public ILoggerFacade Logger { get; set; }
@@ -23,39 +21,46 @@ public class Settings : ModelBase
     [JsonIgnore]
     public IProductInfo ProductInfo { get; set; }
 
-    [JsonIgnore]
-    public string FilePath => Path.Combine(this.ProductInfo.Roaming, "settings.json");
-
-    [JsonIgnore]
-    public bool IsDifferentVersion => this.Version != this.ProductInfo.Version.ToString();
-
     private string _version;
+    private SystemSettings _system;
+    private TextEditorSettings _textEditor;
+    private MiscSettings _misc;
+
+    [JsonProperty("Version")]
     public string Version
     {
         get => this._version;
         set => this.SetProperty(ref this._version, value);
     }
 
-    private SystemSettings _system;
+    [JsonProperty("System")]
     public SystemSettings System
     {
         get => this._system;
         set => this.SetProperty(ref this._system, value);
     }
 
-    private TextEditorSettings _textEditor;
+    [JsonProperty("TextEditor")]
     public TextEditorSettings TextEditor
     {
         get => this._textEditor;
         set => this.SetProperty(ref this._textEditor, value);
     }
 
-    private ToolSettings _otherTools;
-    public ToolSettings OtherTools
+    [JsonProperty("OtherTools")]
+    public MiscSettings Misc
     {
-        get => this._otherTools;
-        set => this.SetProperty(ref this._otherTools, value);
+        get => this._misc;
+        set => this.SetProperty(ref this._misc, value);
     }
+
+    [JsonIgnore]
+    public bool IsDifferentVersion => this.Version != this.ProductInfo.Version.ToString();
+
+    [JsonIgnore]
+    public string FilePath => Path.Combine(this.ProductInfo.Roaming, "settings.json");
+
+    private static readonly Encoding FILE_ENCODING = new UTF8Encoding(true);
 
     /// <summary>
     /// 初期化処理を行います。
@@ -87,13 +92,13 @@ public class Settings : ModelBase
         {
             this.System = new();
             this.TextEditor = new();
-            this.OtherTools = new();
+            this.Misc = new();
         }
         else
         {
             this.System ??= new();
             this.TextEditor ??= new();
-            this.OtherTools ??= new();
+            this.Misc ??= new();
         }
     }
 
@@ -101,7 +106,7 @@ public class Settings : ModelBase
     /// 既定の設定ファイルから設定情報を読み込みます。
     /// </summary>
     /// <returns>正常に処理されたかどうかを示す値とこのインスタンスの組</returns>
-    public (bool, Settings) Load()
+    public (bool, SettingsModel) Load()
     {
         return this.Load(this.FilePath);
     }
@@ -111,7 +116,7 @@ public class Settings : ModelBase
     /// </summary>
     /// <param name="path">ファイルパス</param>
     /// <returns>正常に処理されたかどうかを示す値とこのインスタンスの組</returns>
-    public (bool, Settings) Load(string path)
+    public (bool, SettingsModel) Load(string path)
     {
         try
         {
@@ -161,10 +166,10 @@ public class Settings : ModelBase
         {
             this.Version = this.ProductInfo.Version.ToString();
 
-            for (var i = this.OtherTools.ExplorerRoots.Count - 1; 0 <= i; i--)
+            for (var i = this.Misc.ExplorerRoots.Count - 1; 0 <= i; i--)
             {
-                if (string.IsNullOrEmpty(this.OtherTools.ExplorerRoots[i].Path))
-                    this.OtherTools.ExplorerRoots.RemoveAt(i);
+                if (string.IsNullOrEmpty(this.Misc.ExplorerRoots[i].Path))
+                    this.Misc.ExplorerRoots.RemoveAt(i);
             }
 
             var json = JsonConvert.SerializeObject(this, Formatting.Indented);

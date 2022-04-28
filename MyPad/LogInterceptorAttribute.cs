@@ -10,7 +10,7 @@ namespace MyPad;
 /// メソッドの起動時、終了時にログを出力するインターセプターを表します。
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Constructor | AttributeTargets.Assembly | AttributeTargets.Module)]
-public class LogInterceptorAttribute : Attribute, IMethodInterceptor
+public class LogInterceptorAttribute : Attribute
 {
     private static int GlobalSequence = 0;
 

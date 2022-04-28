@@ -20,7 +20,7 @@ namespace MyPad.ViewModels.Regions;
 public class GrepViewModel : ViewModelBase
 {
     // Constructor Injection
-    public Settings Settings { get; set; }
+    public SettingsModel Settings { get; set; }
 
     // Dependency Injection
     [Dependency]
@@ -57,7 +57,7 @@ public class GrepViewModel : ViewModelBase
     /// <param name="settings">システム設定</param>
     [InjectionConstructor]
     [LogInterceptor]
-    public GrepViewModel(Settings settings)
+    public GrepViewModel(SettingsModel settings)
     {
         this.Settings = settings;
 

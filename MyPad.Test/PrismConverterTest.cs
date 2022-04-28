@@ -9,7 +9,6 @@ namespace MyPad.Test;
 
 public class PrismConverterTest
 {
-    [TestCase("Workspace", typeof(WorkspaceViewModel))]
     [TestCase("MainWindow", typeof(MainWindowViewModel))]
     [TestCase("AboutContent", typeof(AboutContentViewModel))]
     [TestCase("OptionContent", typeof(OptionContentViewModel))]
@@ -45,14 +44,12 @@ public class PrismConverterTest
     public void RegionNameToRegionType(Type expected, string actual)
         => Assert.That(PrismConverter.RegionNameToRegionType(actual), Is.EqualTo(expected));
 
-    [TestCase(typeof(Workspace), typeof(WorkspaceViewModel))]
     [TestCase(typeof(MainWindow), typeof(MainWindowViewModel))]
     [TestCase(typeof(AboutContentView), typeof(AboutContentViewModel))]
     [TestCase(typeof(OptionContentView), typeof(OptionContentViewModel))]
     public void ViewModelTypeToViewType(Type expected, Type actual)
         => Assert.That(PrismConverter.ViewModelTypeToViewType(actual), Is.EqualTo(expected));
 
-    [TestCase(typeof(WorkspaceViewModel), typeof(Workspace))]
     [TestCase(typeof(MainWindowViewModel), typeof(MainWindow))]
     [TestCase(typeof(AboutContentViewModel), typeof(AboutContentView))]
     [TestCase(typeof(OptionContentViewModel), typeof(OptionContentView))]

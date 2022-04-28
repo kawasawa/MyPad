@@ -33,7 +33,7 @@ public class ExplorerViewModel : ViewModelBase
     [Dependency]
     public ILoggerFacade Logger { get; set; }
     [Dependency]
-    public Settings Settings { get; set; }
+    public SettingsModel Settings { get; set; }
 
     public ReactiveCollection<FileTreeNode> FileTreeNodes { get; }
 
@@ -76,7 +76,7 @@ public class ExplorerViewModel : ViewModelBase
 
             var treeNodes = await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                var roots = this.Settings.OtherTools?.ExplorerRoots?.Where(i => string.IsNullOrEmpty(i.Path) == false && i.IsEnabled);
+                var roots = this.Settings.Misc?.ExplorerRoots?.Where(i => string.IsNullOrEmpty(i.Path) == false && i.IsEnabled);
                 var rootPath = roots?.Any() == true ? roots.Select(i => i.Path) : new[] { Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) };
                 var isExpanded = rootPath.Count() == 1;
                 return rootPath.Select((r, i) => new FileTreeNode().Initialize(r, i == 0, isExpanded)).ToList();
@@ -150,7 +150,7 @@ public class ExplorerViewModel : ViewModelBase
         /// このクラスの新しいインスタンスを生成します。
         /// </summary>
         [InjectionConstructor]
-        [LogInterceptorIgnore]
+        [LogInterceptorIgnore] // 呼び出しが頻発するため
         public FileTreeNode()
         {
             this.Children = new ReactiveCollection<FileTreeNode>().AddTo(this.CompositeDisposable);
@@ -168,7 +168,7 @@ public class ExplorerViewModel : ViewModelBase
         /// <param name="isSelected">選択されているかどうかを示す値</param>
         /// <param name="isExpanded">展開されているかどうかを示す値</param>
         /// <returns>呼び出し元のインスタンス</returns>
-        [LogInterceptorIgnore]
+        [LogInterceptorIgnore] // 呼び出しが頻発するため
         public FileTreeNode Initialize(string fileName, bool isSelected, bool isExpanded)
         {
             this.Initialize(fileName, null);
@@ -183,7 +183,7 @@ public class ExplorerViewModel : ViewModelBase
         /// <param name="fileName">ファイルパス</param>
         /// <param name="parent">親ノード</param>
         /// <returns>呼び出し元のインスタンス</returns>
-        [LogInterceptorIgnore]
+        [LogInterceptorIgnore] // 呼び出しが頻発するため
         public FileTreeNode Initialize(string fileName, FileTreeNode parent)
         {
             this._fileName = fileName;
@@ -222,7 +222,7 @@ public class ExplorerViewModel : ViewModelBase
         /// <summary>
         /// 子ノードを一段階の深さまで探索し、このインスタンスに紐づけます。
         /// </summary>
-        [LogInterceptorIgnore]
+        [LogInterceptor]
         private void ExploreChildren()
         {
             static bool nodeFilter(string path)
@@ -265,7 +265,7 @@ public class ExplorerViewModel : ViewModelBase
         /// 空のダミーノードを生成し、このインスタンスを子ノードとして紐づけます。
         /// </summary>
         /// <returns>空の子ノード</returns>
-        [LogInterceptorIgnore]
+        [LogInterceptorIgnore] // 呼び出しが頻発するため
         private FileTreeNode CreateDummyChild()
         {
             return new FileTreeNode

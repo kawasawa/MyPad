@@ -10,7 +10,7 @@ public abstract class ViewModelBase : ValidatableBase
     /// <summary>
     /// このクラスの新しいインスタンスを生成します。
     /// </summary>
-    [LogInterceptorIgnore]
+    [LogInterceptorIgnore] // 基底クラスのコンストラクタであり、多くのクラスから呼び出されるため
     public ViewModelBase()
     {
         this.ValidateProperties();

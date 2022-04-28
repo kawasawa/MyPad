@@ -8,6 +8,7 @@ using MyPad.Properties;
 using MyPad.PubSub;
 using Prism.Events;
 using Prism.Ioc;
+using Prism.Services.Dialogs;
 using System;
 using System.IO;
 using System.Linq;
@@ -42,11 +43,13 @@ public class TextEditorViewModel : ViewModelBase
     [Dependency]
     public IContainerExtension Container { get; set; }
     [Dependency]
+    public IDialogService DialogService { get; set; }
+    [Dependency]
     public ILoggerFacade Logger { get; set; }
     [Dependency]
-    public SharedDataStore SharedDataStore { get; set; }
+    public AppProductInfo ProductInfo { get; set; }
     [Dependency]
-    public Settings Settings { get; set; }
+    public SettingsModel Settings { get; set; }
     [Dependency]
     public SyntaxService SyntaxService { get; set; }
 
@@ -535,10 +538,10 @@ public class TextEditorViewModel : ViewModelBase
         var result = false;
         await this.Interrupt(async () =>
         {
-            var path = Path.Combine(this.SharedDataStore.TempDirectoryPath, this.Sequense.ToString());
+            var path = Path.Combine(this.ProductInfo.TempDirectoryPath, this.Sequense.ToString());
             try
             {
-                this.SharedDataStore.CreateTempDirectory();
+                this.ProductInfo.CreateTempDirectory();
                 var bytes = await Application.Current.Dispatcher.InvokeAsync(() => this.Encoding.GetBytes(this.Document.Text));
                 await File.WriteAllBytesAsync(path, bytes);
                 this.Logger.Log($"一時ファイルへ保存しました。: Path={path}", Category.Info);
@@ -631,7 +634,7 @@ public class TextEditorViewModel : ViewModelBase
     /// </summary>
     /// <param name="func">割り込み処理</param>
     /// <returns>非同期タスク</returns>
-    [LogInterceptor]
+    [LogInterceptorIgnore] // 本質的な処理では無くログが汚れるため
     private async Task Interrupt(Func<Task> func)
     {
         this.AutoSaveTimer.Stop();
@@ -657,6 +660,6 @@ public class TextEditorViewModel : ViewModelBase
 
         var result = await this.SaveToTemporary();
         if (result)
-            this.EventAggregator.GetEvent<RaiseBalloonEvent>().Publish((Resources.Message_NotifyAutoSaved, Path.GetFileName(this.FileName)));
+            this.DialogService.BalloonNotify(Resources.Message_NotifyAutoSaved, Path.GetFileName(this.FileName));
     }
 }

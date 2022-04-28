@@ -1741,15 +1741,6 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   等幅半角字形を有効にする。 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string LabelText_EnabledHalfWidth {
-            get {
-                return ResourceManager.GetString("LabelText_EnabledHalfWidth", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   メールアドレスのハイパーリンクを有効にする。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_EnableEmailHyperlinks {
@@ -1764,6 +1755,15 @@ namespace MyPad.Properties {
         public static string LabelText_EnableFoldings {
             get {
                 return ResourceManager.GetString("LabelText_EnableFoldings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   等幅半角字形を有効にする。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string LabelText_EnableHalfWidth {
+            get {
+                return ResourceManager.GetString("LabelText_EnableHalfWidth", resourceCulture);
             }
         }
         
@@ -1788,9 +1788,9 @@ namespace MyPad.Properties {
         /// <summary>
         ///   通知領域アイコンを有効にする。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string LabelText_EnableNotificationIcon {
+        public static string LabelText_EnableNotifyIcon {
             get {
-                return ResourceManager.GetString("LabelText_EnableNotificationIcon", resourceCulture);
+                return ResourceManager.GetString("LabelText_EnableNotifyIcon", resourceCulture);
             }
         }
         
@@ -1809,6 +1809,15 @@ namespace MyPad.Properties {
         public static string LabelText_EnableResident {
             get {
                 return ResourceManager.GetString("LabelText_EnableResident", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   可能であればスラッシュ付きのゼロを表示する。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string LabelText_EnableSlashedZero {
+            get {
+                return ResourceManager.GetString("LabelText_EnableSlashedZero", resourceCulture);
             }
         }
         
@@ -2011,20 +2020,20 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   重要度の低い通知を目立たない形で表示する。 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string LabelText_UseInAppToastNotifications {
-            get {
-                return ResourceManager.GetString("LabelText_UseInAppToastNotifications", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   オーバーレイダイアログを使用する。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_UseOverlayDialog {
             get {
                 return ResourceManager.GetString("LabelText_UseOverlayDialog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   重要度の低い通知を目立たない形で表示する。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string LabelText_UseToastNotifications {
+            get {
+                return ResourceManager.GetString("LabelText_UseToastNotifications", resourceCulture);
             }
         }
         

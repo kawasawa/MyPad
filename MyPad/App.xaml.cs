@@ -50,6 +50,10 @@ namespace MyPad;
 /// </remarks>
 public partial class App : PrismApplication
 {
+    private string _identifier;
+    private Window _initialWindow;
+    private IEnumerable<string> _commandLineArgs = Enumerable.Empty<string>();
+
     /// <summary>
     /// ロガー
     /// </summary>
@@ -58,12 +62,7 @@ public partial class App : PrismApplication
     /// <summary>
     /// プロダクト情報
     /// </summary>
-    public IProductInfo ProductInfo { get; }
-
-    /// <summary>
-    /// アプリケーションの共有情報
-    /// </summary>
-    public SharedDataStore SharedDataStore { get; }
+    public AppProductInfo ProductInfo { get; }
 
     /// <summary>
     /// このクラスの新しいインスタンスを生成します。
@@ -73,7 +72,7 @@ public partial class App : PrismApplication
         // 関連するインスタンスを生成する
         this.Logger = new CompositeLogger(
             new DebugLogger(),
-            new NLogger()
+            new AppLogger()
             {
                 PublisherType = typeof(ILoggerFacadeExtension),
                 ConfigurationFactory = () =>
@@ -130,7 +129,7 @@ public partial class App : PrismApplication
                     config.AddTarget(nameof(memory), memory);
                     config.LoggingRules.Add(new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, file));
                     config.LoggingRules.Add(new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, memory));
-                    config.Variables.Add("DIR", this.SharedDataStore.LogDirectoryPath);
+                    config.Variables.Add("DIR", this.ProductInfo.LogDirectoryPath);
                     return config;
                 },
                 CreateLoggerHook = (logger, category) =>
@@ -140,8 +139,7 @@ public partial class App : PrismApplication
                     logger.Factory.ReconfigExistingLoggers();
                 },
             });
-        this.ProductInfo = new ProductInfo();
-        this.SharedDataStore = new(this.ProductInfo, Process.GetCurrentProcess());
+        this.ProductInfo = new AppProductInfo();
 
         // イベントを購読する
         UnhandledExceptionObserver.Observe(this, this.Logger, this.ProductInfo);
@@ -155,7 +153,8 @@ public partial class App : PrismApplication
     [LogInterceptor]
     protected override void OnStartup(StartupEventArgs e)
     {
-        this.SharedDataStore.CommandLineArgs = e.Args;
+        this._identifier = $"__{this.ProductInfo.Company}:{this.ProductInfo.Product}:{this.ProductInfo.Version}__";
+        this._commandLineArgs = e.Args;
 
         this.Logger.Log($"アプリケーションを開始しました。", Category.Info);
         this.Logger.Debug($"アプリケーションを開始しました。: Args=[{string.Join(", ", e.Args)}]");
@@ -230,13 +229,13 @@ public partial class App : PrismApplication
     protected override void RegisterTypes(IContainerRegistry containerRegistry)
     {
         // シングルトン
-        containerRegistry.RegisterSingleton<Models.Settings>();
+        containerRegistry.RegisterSingleton<Models.SettingsModel>();
         containerRegistry.RegisterSingleton<Models.SyntaxService>();
         containerRegistry.RegisterSingleton<ViewModels.SharedProperties>();
         containerRegistry.RegisterSingleton<ICommonDialogService, CommonDialogService>();
-        containerRegistry.RegisterInstance(this.Logger);
+        containerRegistry.RegisterInstance<IProductInfo>(this.ProductInfo);
         containerRegistry.RegisterInstance(this.ProductInfo);
-        containerRegistry.RegisterInstance(this.SharedDataStore);
+        containerRegistry.RegisterInstance(this.Logger);
 
         // ダイアログ
         containerRegistry.RegisterDialogWindow<Views.PrismDialogWindow>();
@@ -274,19 +273,21 @@ public partial class App : PrismApplication
             if (handle.IsNull == false)
             {
                 // 起動中のプロセスが見つかった場合はコマンドライン引数を引き渡す
-                this.SendData(process, handle, this.SharedDataStore.CommandLineArgs);
+                this.SendData(process, handle, this._commandLineArgs);
                 return false;
             }
             return true;
         });
 
-        // 設定情報を初期化してからワークスペースを生成する
-        this.Container.Resolve<Models.Settings>().Load();
-        var shell = this.Container.Resolve<Views.Workspace>();
+        // 設定情報を初期化する
+        this.Container.Resolve<Models.SettingsModel>().Load();
 
-        // プロセスの探索に時間がかかっている場合はメインウィンドウも生成しておく
-        if (validateMultipleLaunch.IsCompleted == false)
-            shell.PreparedWindow = shell.CreateWindow();
+        // ワークスペースを生成する
+        var shell = this.Container.Resolve<Workspace>();
+
+        // 初期ウィンドウを生成する
+        var window = this.Container.Resolve<Views.MainWindow>();
+        window.IsInitialWindow = true;
 
         // 多重起動中の場合は本プロセスを終了する
         validateMultipleLaunch.Wait();
@@ -295,6 +296,8 @@ public partial class App : PrismApplication
             this.Shutdown(0);
             return null;
         }
+
+        this._initialWindow = window;
         return shell;
     }
 
@@ -309,14 +312,32 @@ public partial class App : PrismApplication
     [LogInterceptor]
     protected override void InitializeShell(Window shell)
     {
-        base.InitializeShell(shell);
+        var settings = this.Container.Resolve<Models.SettingsModel>();
 
-        // 一時フォルダに関する処理を行う
-        this.SharedDataStore.CreateTempDirectory();
-        this.Logger.Debug($"このプロセスが使用する一時フォルダのパスが決定しました。: Path={this.SharedDataStore.TempDirectoryPath}");
+        // ワークスペースを初期化する
+        base.InitializeShell(shell);
+        shell.Title = this._identifier;
+        shell.Closed += (sender, e) => settings.Save();
+
+        // バージョンの更新状況を確認する
+        var isDifferentVersion = settings.IsDifferentVersion;
+        if (isDifferentVersion)
+        {
+            this.Logger.Debug($"アプリケーションのバージョンが更新されました。: Old={settings.Version}, New={this.ProductInfo.Version}");
+            settings.Save();
+        }
+
+        // シンタックス定義を初期化する
+        this.Container.Resolve<Models.SyntaxService>().CreateDefinitionFiles(isDifferentVersion);
+
+        // 一時フォルダを生成する
+        this.ProductInfo.CreateTempDirectory();
+        this.Logger.Debug($"このプロセスが使用する一時フォルダのパスが決定しました。: Path={this.ProductInfo.TempDirectoryPath}");
+
+        // 残存する一時フォルダに関する処理を行う
         var cachedDirectories = new DirectoryInfo(this.ProductInfo.Temporary)
             .EnumerateDirectories()
-            .Where(i => i.FullName != this.SharedDataStore.TempDirectoryPath)
+            .Where(i => i.FullName != this.ProductInfo.TempDirectoryPath)
             .Select(i =>
             {
                 var result = DateTime.TryParseExact(Path.GetFileName(i.FullName), "yyyyMMddHHmmssfff", CultureInfo.CurrentCulture, DateTimeStyles.None, out var value);
@@ -331,7 +352,7 @@ public partial class App : PrismApplication
                 foreach (var info in cachedDirectories.Select(t => t.info))
                     info.Attributes &= ~FileAttributes.Hidden;
 
-                // 残存する一時フォルダのうち、指定の期間を超えたものを削除する
+                // 指定の期間を超えたものを削除する
                 var basis = Process.GetCurrentProcess().StartTime.AddDays(-1 * AppSettingsReader.CacheLifetime);
                 foreach (var info in cachedDirectories
                     .Where(t => t.result == false || t.value < basis || t.info.EnumerateFileSystemInfos().Any() == false)
@@ -347,18 +368,46 @@ public partial class App : PrismApplication
             {
                 this.Logger.Log("保存期限を過ぎた一時フォルダの削除に失敗しました。", Category.Warn, ex);
             }
-            this.SharedDataStore.CachedDirectories = cachedDirectories.Select(t => t.info.FullName).ToList();
         }
 
-        // バージョンの更新状況を確認する
-        var settings = this.Container.Resolve<Models.Settings>();
-        if (settings.IsDifferentVersion)
-            this.Logger.Debug($"アプリケーションのバージョンが更新されました。: Old={settings.Version}, New={this.ProductInfo.Version}");
-        this.Container.Resolve<Models.SyntaxService>().CreateDefinitionFiles(settings.IsDifferentVersion);
+        // 初期ウィンドウの表示直後の処理を定義する
+        void window_Loaded(object sender, RoutedEventArgs e)
+        {
+            var window = (Views.MainWindow)sender;
+            window.Loaded -= window_Loaded;
 
-        // Workspace の設定を行う
-        shell.Title = this.SharedDataStore.Identifier;
-        shell.Closed += (sender, e) => settings.Save();
+            // コマンドライン引数を引き渡す
+            if (this._commandLineArgs.Any())
+                _ = window.ViewModel.InvokeLoad(this._commandLineArgs);
+        }
+        void window_ContentRendered(object sender, EventArgs e)
+        {
+            var window = (Views.MainWindow)sender;
+            window.ContentRendered -= window_ContentRendered;
+
+            // バージョンが更新された場合は通知する
+            if (isDifferentVersion)
+            {
+                window.ViewModel.AboutCommand.Execute();
+                ViewModels.IDialogServiceExtensions.ToastNotify(
+                    window.ViewModel.DialogService,
+                    string.Format(
+                        MyPad.Properties.Resources.Message_NotifyWelcome,
+                        this.ProductInfo.Product,
+                        $"{this.ProductInfo.Version.Major}.{this.ProductInfo.Version.Minor}.{this.ProductInfo.Version.Build}"));
+            }
+
+            // （改めて）残存する一時フォルダをチェックし、存在する場合は通知する
+            if (cachedDirectories.Any())
+            {
+                ViewModels.IDialogServiceExtensions.Notify(
+                    window.ViewModel.DialogService,
+                    MyPad.Properties.Resources.Message_NotifyCachedFilesRemain);
+                Process.Start("explorer.exe", this.ProductInfo.Temporary);
+            }
+        }
+        this._initialWindow.Loaded += window_Loaded;
+        this._initialWindow.ContentRendered += window_ContentRendered;
     }
 
     /// <summary>
@@ -371,8 +420,8 @@ public partial class App : PrismApplication
     [LogInterceptor]
     protected override void OnInitialized()
     {
-        // ログに記録するためオーバーライドする
         base.OnInitialized();
+        this._initialWindow?.Show();
     }
 
     /// <summary>
@@ -383,19 +432,19 @@ public partial class App : PrismApplication
     protected override void OnExit(ExitEventArgs e)
     {
         // 一時フォルダに関する処理を行う
-        if (Directory.Exists(this.SharedDataStore.TempDirectoryPath))
+        if (Directory.Exists(this.ProductInfo.TempDirectoryPath))
         {
             const int LOOP_DELAY = 500;
             try
             {
-                Directory.Delete(this.SharedDataStore.TempDirectoryPath, true);
-                while (Directory.Exists(this.SharedDataStore.TempDirectoryPath))
+                Directory.Delete(this.ProductInfo.TempDirectoryPath, true);
+                while (Directory.Exists(this.ProductInfo.TempDirectoryPath))
                     Thread.Sleep(LOOP_DELAY);
-                this.Logger.Debug($"一時フォルダを削除しました。: Path={this.SharedDataStore.TempDirectoryPath}");
+                this.Logger.Debug($"一時フォルダを削除しました。: Path={this.ProductInfo.TempDirectoryPath}");
             }
             catch (Exception ex)
             {
-                this.Logger.Log($"一時フォルダの削除に失敗しました。: Path={this.SharedDataStore.TempDirectoryPath}", Category.Warn, ex);
+                this.Logger.Log($"一時フォルダの削除に失敗しました。: Path={this.ProductInfo.TempDirectoryPath}", Category.Warn, ex);
             }
         }
 
@@ -460,7 +509,7 @@ public partial class App : PrismApplication
                 // 本アプリケーションでは実質的に識別子として使用される
                 var lpString = new StringBuilder(256);
                 _ = User32.GetWindowText(_hWnd, lpString, lpString.Capacity);
-                if (lpString.ToString().Contains(this.SharedDataStore.Identifier) == false)
+                if (lpString.ToString().Contains(this._identifier) == false)
                     return true;
 
                 // ハンドルを保持する
@@ -492,7 +541,7 @@ public partial class App : PrismApplication
     private IntPtr SendData(Process sourceProcess, HWND destinationHandle, IEnumerable<string> data, char separator = '\t')
     {
         var lpData = data.Any() ? string.Join(separator, data) : string.Empty;
-        var structure = new COPYDATASTRUCT
+        var structure = new Win32.COPYDATASTRUCT
         {
             dwData = IntPtr.Zero,
             cbData = Encoding.UTF8.GetByteCount(lpData) + 1,

@@ -245,11 +245,18 @@ public class TextEditorSettings : ModelBase
         set => this.SetProperty(ref this._enableRectangularSelection, value);
     }
 
-    private bool _enabledHalfWidth;
-    public bool EnabledHalfWidth
+    private bool _enableHalfWidth;
+    public bool EnableHalfWidth
     {
-        get => this._enabledHalfWidth;
-        set => this.SetProperty(ref this._enabledHalfWidth, value);
+        get => this._enableHalfWidth;
+        set => this.SetProperty(ref this._enableHalfWidth, value);
+    }
+
+    private bool _enableSlashedZero = true;
+    public bool EnableSlashedZero
+    {
+        get => this._enableSlashedZero;
+        set => this.SetProperty(ref this._enableSlashedZero, value);
     }
 
     private bool _enableVirtualSpace;

@@ -79,7 +79,10 @@ public class TextArea : ICSharpCode.AvalonEdit.Editing.TextArea, IDisposable
     public static readonly DependencyProperty EnableAutoCompletionProperty
         = DependencyPropertyExtensions.Register(
             new PropertyMetadata(true));
-    public static readonly DependencyProperty EnabledHalfWidthProperty
+    public static readonly DependencyProperty EnableHalfWidthProperty
+        = DependencyPropertyExtensions.Register(
+            new PropertyMetadata());
+    public static readonly DependencyProperty EnableSlashedZeroProperty
         = DependencyPropertyExtensions.Register(
             new PropertyMetadata());
 
@@ -284,12 +287,21 @@ public class TextArea : ICSharpCode.AvalonEdit.Editing.TextArea, IDisposable
     }
 
     /// <summary>
-    /// 等幅半角字形が有効化どうかを示す値
+    /// 等幅半角字形を有効化するかどうかを示す値
     /// </summary>
-    public bool EnabledHalfWidth
+    public bool EnableHalfWidth
     {
-        get => (bool)this.GetValue(EnabledHalfWidthProperty);
-        set => this.SetValue(EnabledHalfWidthProperty, value);
+        get => (bool)this.GetValue(EnableHalfWidthProperty);
+        set => this.SetValue(EnableHalfWidthProperty, value);
+    }
+
+    /// <summary>
+    /// スラッシュ付きのゼロを表示するかどうかを示す値
+    /// </summary>
+    public bool EnableSlashedZero
+    {
+        get => (bool)this.GetValue(EnableSlashedZeroProperty);
+        set => this.SetValue(EnableSlashedZeroProperty, value);
     }
 
     /// <summary>
@@ -930,8 +942,11 @@ public class TextArea : ICSharpCode.AvalonEdit.Editing.TextArea, IDisposable
             case nameof(this.ActualFontSize):
                 this.ZoomReset();
                 break;
-            case nameof(this.EnabledHalfWidth):
-                this.TextView.EnabledHalfWidth = (bool)e.NewValue;
+            case nameof(this.EnableHalfWidth):
+                this.TextView.EnableHalfWidth = (bool)e.NewValue;
+                break;
+            case nameof(this.EnableSlashedZero):
+                this.TextView.EnableSlashedZero = (bool)e.NewValue;
                 break;
         }
         base.OnPropertyChanged(e);

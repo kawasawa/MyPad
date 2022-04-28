@@ -552,7 +552,7 @@
   <data name="LabelText_EnableImeSupport" xml:space="preserve">
     <value>IMEサポートを有効にする。</value>
   </data>
-  <data name="LabelText_EnableNotificationIcon" xml:space="preserve">
+  <data name="LabelText_EnableNotifyIcon" xml:space="preserve">
     <value>通知領域アイコンを有効にする。</value>
   </data>
   <data name="LabelText_EnableRectangularSelection" xml:space="preserve">
@@ -727,7 +727,7 @@
   <data name="Label_ColumnRulerPosition" xml:space="preserve">
     <value>目安線の位置</value>
   </data>
-  <data name="LabelText_UseInAppToastNotifications" xml:space="preserve">
+  <data name="LabelText_UseToastNotifications" xml:space="preserve">
     <value>重要度の低い通知を目立たない形で表示する。</value>
   </data>
   <data name="Command_ExportSettings" xml:space="preserve">
@@ -877,7 +877,10 @@
   <data name="Label_AccentColor" xml:space="preserve">
     <value>アクセントカラー</value>
   </data>
-  <data name="LabelText_EnabledHalfWidth" xml:space="preserve">
+  <data name="LabelText_EnableHalfWidth" xml:space="preserve">
     <value>等幅半角字形を有効にする。</value>
+  </data>
+  <data name="LabelText_EnableSlashedZero" xml:space="preserve">
+    <value>可能であればスラッシュ付きのゼロを表示する。</value>
   </data>
 </root>

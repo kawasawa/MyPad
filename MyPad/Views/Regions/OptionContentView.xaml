@@ -162,15 +162,18 @@
                             <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
                                 <CheckBox IsChecked="{Binding SaveWindowPlacement, Mode=TwoWay}"        Content="{le:Loc LabelText_SaveWindowPlacement}"/>
                                 <CheckBox IsChecked="{Binding UseOverlayDialog, Mode=TwoWay}"           Content="{le:Loc LabelText_UseOverlayDialog}"/>
-                                <CheckBox IsChecked="{Binding UseInAppToastNotifications, Mode=TwoWay}" Content="{le:Loc LabelText_UseInAppToastNotifications}"/>
+                                <CheckBox IsChecked="{Binding UseToastNotifications, Mode=TwoWay}" Content="{le:Loc LabelText_UseToastNotifications}"/>
                                 <CheckBox IsChecked="{Binding ShowFullName, Mode=TwoWay}"               Content="{le:Loc LabelText_ShowFullName}"/>
                                 <CheckBox IsChecked="{Binding ShowFileIcon, Mode=TwoWay}"               Content="{le:Loc LabelText_ShowFileIcon}"/>
                                 <CheckBox IsChecked="{Binding ShowSingleTab, Mode=TwoWay}"              Content="{le:Loc LabelText_ShowSingleTab}"/>
                             </StackPanel>
 
                             <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
-                                <CheckBox IsChecked="{Binding EnableNotificationIcon, Mode=TwoWay}"     Content="{le:Loc LabelText_EnableNotificationIcon}"/>
-                                <CheckBox IsChecked="{Binding EnableResident, Mode=TwoWay}"             Content="{le:Loc LabelText_EnableResident}" IsEnabled="{Binding EnableNotificationIcon, Mode=OneWay}"/>
+                                <CheckBox IsChecked="{Binding EnableNotifyIcon, Mode=TwoWay}"           Content="{le:Loc LabelText_EnableNotifyIcon}"
+                                          Checked="EnableNotifyIcon_CheckedChanged"
+                                          Unchecked="EnableNotifyIcon_CheckedChanged"/>
+                                <CheckBox IsChecked="{Binding EnableResident, Mode=TwoWay}"             Content="{le:Loc LabelText_EnableResident}"
+                                          IsEnabled="{Binding EnableNotifyIcon, Mode=OneWay}"/>
                                 <Border Height="10"/>
                                 <CheckBox IsChecked="{Binding EnableAutoSave, Mode=TwoWay}"             Content="{le:Loc LabelText_EnableAutoSave}"/>
                                 <m:NumericUpDown Value="{Binding AutoSaveInterval, Mode=TwoWay}" Minimum="1"
@@ -218,7 +221,9 @@
                         <StackPanel ge:ResponsiveGrid.XS="12" ge:ResponsiveGrid.SM="6" Margin="5">
                             <CheckBox IsChecked="{Binding EnableFoldings, Mode=TwoWay}"                          Content="{le:Loc LabelText_EnableFoldings}"/>
                             <CheckBox IsChecked="{Binding EnableAutoCompletion, Mode=TwoWay}"                    Content="{le:Loc LabelText_EnableAutoCompletion}"/>
-                            <CheckBox IsChecked="{Binding EnabledHalfWidth, Mode=TwoWay}"                        Content="{le:Loc LabelText_EnabledHalfWidth}"/>
+                            <CheckBox IsChecked="{Binding EnableHalfWidth, Mode=TwoWay}"                         Content="{le:Loc LabelText_EnableHalfWidth}"/>
+                            <CheckBox IsChecked="{Binding EnableSlashedZero, Mode=TwoWay}"                       Content="{le:Loc LabelText_EnableSlashedZero}"
+                                      IsEnabled="{Binding EnableHalfWidth, Mode=OneWay}"/>
                             <CheckBox IsChecked="{Binding EnableVirtualSpace, Mode=TwoWay}"                      Content="{le:Loc LabelText_EnableVirtualSpace}"/>
                             <CheckBox IsChecked="{Binding EnableRectangularSelection, Mode=TwoWay}"              Content="{le:Loc LabelText_EnableRectangularSelection}"/>
                             <CheckBox IsChecked="{Binding EnableTextDragDrop, Mode=TwoWay}"                      Content="{le:Loc LabelText_EnableTextDragDrop}"/>
@@ -236,7 +241,7 @@
             </TabItem>
 
             <!-- ********** エクスプローラー ********** -->
-            <TabItem DataContext="{Binding Settings.OtherTools, Mode=OneWay}" Header="{le:Loc Command_Explorer}">
+            <TabItem DataContext="{Binding Settings.Misc, Mode=OneWay}" Header="{le:Loc Command_Explorer}">
                 <Grid ge:GridEx.RowDefinition="Auto, *">
                     <StackPanel Grid.Row="0">
                         <TextBlock Text="{le:Loc LabelText_SetExplorerRoot}" FontSize="{DynamicResource MahApps.Font.Size.Dialog.Message}"/>

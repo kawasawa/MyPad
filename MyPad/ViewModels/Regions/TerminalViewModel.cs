@@ -174,7 +174,7 @@ public class TerminalViewModel : RegionViewModelBase
     /// </summary>
     /// <param name="sender">イベントの発生源</param>
     /// <param name="e">イベントの情報</param>
-    [LogInterceptorIgnore]
+    [LogInterceptorIgnore] // 呼び出しが頻発するため
     private void Terminal_DataReceived(object sender, DataReceivedEventArgs e)
     {
         if (this.OutputLastLine.Value != null)
