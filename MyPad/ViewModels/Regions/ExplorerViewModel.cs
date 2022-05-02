@@ -61,7 +61,7 @@ public class ExplorerViewModel : ViewModelBase
         // ----- PUB/SUB メッセージ ------------------------------
 
         void recreateExplorer() => this.RecreateExplorer();
-        this.EventAggregator.GetEvent<RecreateExplorerEvent>().Subscribe(recreateExplorer);
+        this.EventAggregator.GetEvent<RefreshExplorerEvent>().Subscribe(recreateExplorer);
     }
 
     /// <summary>
