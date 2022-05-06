@@ -660,6 +660,11 @@ public class TextEditorViewModel : ViewModelBase
 
         var result = await this.SaveToTemporary();
         if (result)
-            this.DialogService.BalloonNotify(Resources.Message_NotifyAutoSaved, Path.GetFileName(this.FileName));
+            this.DialogService.BalloonNotify(
+                Resources.Message_NotifyAutoSaved,
+                Path.GetFileName(this.FileName),
+                Resources.Command_Open,
+                IDialogServiceExtensions.BalloonActionType.NotifyAutoSaved,
+                this.Temporary.path);
     }
 }
