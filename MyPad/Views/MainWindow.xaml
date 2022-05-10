@@ -472,8 +472,6 @@
                                     <Setter Property="pb:PushBindingManager.StylePushBindings">
                                         <Setter.Value>
                                             <pb:PushBindingCollection>
-                                                <pb:PushBinding TargetProperty="ActualFontSize"       Path="ActualFontSize"/>
-                                                <pb:PushBinding TargetProperty="ZoomIncrement"        Path="ZoomIncrement"/>
                                                 <pb:PushBinding TargetProperty="VisualLength"         Path="VisualLength"/>
                                                 <pb:PushBinding TargetProperty="TextLength"           Path="TextLength"/>
                                                 <pb:PushBinding TargetProperty="SelectionLength"      Path="SelectionLength"/>
