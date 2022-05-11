@@ -99,8 +99,11 @@
         <KeyBinding Command="{Binding DiffCommand,                Mode=OneTime}" Gesture="{markup:CommandKeyGesuture DiffCommand}"/>
         <KeyBinding Command="{Binding DiffUnmodifiedCommand,      Mode=OneTime}" Gesture="{markup:CommandKeyGesuture DiffUnmodifiedCommand}"/>
         <KeyBinding Command="{Binding SwitchPomodoroTimerCommand, Mode=OneTime}" Gesture="{markup:CommandKeyGesuture SwitchPomodoroTimerCommand}"/>
+
+        <!-- Mac のショートカットキーを再現する -->
         <KeyBinding Command="{Binding CloseCommand,               Mode=OneTime}" Key="W" Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding CloseAllCommand,            Mode=OneTime}" Key="W" Modifiers="Ctrl+Shift"/>
+        <KeyBinding Command="Close"                                              Key="W" Modifiers="Ctrl+Shift"/>
+        <KeyBinding Command="{Binding ExitApplicationCommand,     Mode=OneTime}" Key="Q" Modifiers="Ctrl"/>
 
         <KeyBinding Command="{x:Static views:MainWindow.ActivateTextEditorCommand}"   Gesture="{markup:CommandKeyGesuture ActivateTextEditorCommand}"/>
         <KeyBinding Command="{x:Static views:MainWindow.ActivateTerminalCommand}"     Gesture="{markup:CommandKeyGesuture ActivateTerminalCommand}"/>

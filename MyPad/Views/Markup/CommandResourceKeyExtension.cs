@@ -14,5 +14,5 @@ public class CommandResourceKeyExtension : MarkupExtension
         => this.CommandName = commandName;
 
     public override object ProvideValue(IServiceProvider serviceProvider)
-        => Commands.Definitions[this.CommandName].resourceKey;
+        => AppCommands.Definitions[this.CommandName].resourceKey;
 }
