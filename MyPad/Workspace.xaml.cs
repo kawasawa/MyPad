@@ -35,15 +35,17 @@ public partial class Workspace : Window
     [Dependency]
     public ILoggerFacade Logger { get; set; }
     [Dependency]
+    public IProductInfo ProductInfo { get; set; }
+    [Dependency]
     public SettingsModel Settings { get; set; }
 
     #endregion
 
     #region プロパティ
 
-    private readonly System.Windows.Forms.NotifyIcon _notifyIcon = new();
     private readonly SemaphoreSlim _semaphoreSingleClick = new(1);
     private readonly SemaphoreSlim _semaphoreDoubleClick = new(0);
+    private System.Windows.Forms.NotifyIcon _notifyIcon;
     private HwndSource _handleSource;
 
     #endregion
@@ -52,25 +54,16 @@ public partial class Workspace : Window
     /// このクラスの新しいインスタンスを生成します。
     /// </summary>
     /// <param name="eventAggregator">イベントアグリゲーター</param>
-    /// <param name="productInfo">プロダクト情報</param>
     [InjectionConstructor]
     [LogInterceptor]
-    public Workspace(IEventAggregator eventAggregator, IProductInfo productInfo)
+    public Workspace(IEventAggregator eventAggregator)
     {
         this.InitializeComponent();
-
-        this._notifyIcon.Text = productInfo.Title;
-        this._notifyIcon.Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri(new Views.Markup.IconSourceExtension("Resources/app.ico").Source)).Stream);
-        this._notifyIcon.ContextMenuStrip = new();
-        this._notifyIcon.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripMenuItem()); // INFO: ダミーを入れることでコンテキストメニューの初回表示がスムーズになる
-        this._notifyIcon.ContextMenuStrip.Opening += this.NotifyIcon_ContextMenuOpening;
-        this._notifyIcon.Click += this.NotifyIcon_Click;
-        this._notifyIcon.DoubleClick += this.NotifyIcon_DoubleClick;
 
         async void exitApplication() => await this.ExitApplication();
         eventAggregator.GetEvent<ExitApplicationEvent>().Subscribe(exitApplication);
 
-        void refreshNotifyIcon() => this._notifyIcon.Visible = this.Settings.System.EnableNotifyIcon;
+        void refreshNotifyIcon() => this.RefreshNotifyIcon(this.Settings.System.EnableNotifyIcon);
         eventAggregator.GetEvent<RefreshNotifyIconEvent>().Subscribe(refreshNotifyIcon);
     }
 
@@ -93,6 +86,29 @@ public partial class Workspace : Window
     }
 
     /// <summary>
+    /// 通知領域アイコンの表示状態を更新します。
+    /// </summary>
+    /// <param name="visible">通知領域アイコンを表示するかどうかを示す値</param>
+    [LogInterceptor]
+    private void RefreshNotifyIcon(bool visible)
+    {
+        if (visible && this._notifyIcon == null)
+        {
+            this._notifyIcon = new();
+            this._notifyIcon.Text = this.ProductInfo.Title;
+            this._notifyIcon.Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri(new Views.Markup.IconSourceExtension("Resources/app.ico").Source)).Stream);
+            this._notifyIcon.ContextMenuStrip = new();
+            this._notifyIcon.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripMenuItem()); // INFO: ダミーを入れることでコンテキストメニューの初回表示がスムーズになる
+            this._notifyIcon.ContextMenuStrip.Opening += this.NotifyIcon_ContextMenuOpening;
+            this._notifyIcon.Click += this.NotifyIcon_Click;
+            this._notifyIcon.DoubleClick += this.NotifyIcon_DoubleClick;
+        }
+
+        if (this._notifyIcon != null)
+            this._notifyIcon.Visible = visible;
+    }
+
+    /// <summary>
     /// ウィンドウがロードされたときに行う処理を定義します。
     /// </summary>
     /// <param name="sender">イベントの発生源</param>
@@ -109,7 +125,7 @@ public partial class Workspace : Window
         this._handleSource.AddHook(this.WndProc);
 
         // 起動時の通知領域アイコンの表示状態を決定する
-        this._notifyIcon.Visible = this.Settings.System.EnableNotifyIcon;
+        this.RefreshNotifyIcon(this.Settings.System.EnableNotifyIcon);
     }
 
     /// <summary>
@@ -121,7 +137,7 @@ public partial class Workspace : Window
     private void Window_Closed(object sender, EventArgs e)
     {
         this._handleSource?.RemoveHook(this.WndProc);
-        this._notifyIcon.Dispose();
+        this._notifyIcon?.Dispose();
     }
 
     /// <summary>
