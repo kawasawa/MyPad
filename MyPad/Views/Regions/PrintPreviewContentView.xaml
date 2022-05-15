@@ -15,7 +15,7 @@
              p:ViewModelLocator.AutoWireViewModel="True"
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <Grid Margin="20 0 20 20" MaxWidth="{StaticResource Const.MaxPageWidth}">
+    <Grid Margin="20 0 20 20" MaxWidth="{StaticResource Const.BreakPoint.XL}">
         <Grid Visibility="{qc:Binding '$P != 0 ? Visibility.Visible : Visibility.Collapsed', P={Binding ActiveTextEditor.Value.TextLength, Mode=OneWay}}">
             <controls:FlowDocumentViewer Document="{Binding FlowDocument.Value, Mode=OneWay}" ContextMenu="{x:Null}" Focusable="False"/>
         </Grid>

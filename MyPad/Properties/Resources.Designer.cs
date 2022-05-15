@@ -1147,6 +1147,15 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
+        ///   外観 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_Appearance {
+            get {
+                return ResourceManager.GetString("Label_Appearance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   属性 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Label_Attributes {
@@ -1170,6 +1179,15 @@ namespace MyPad.Properties {
         public static string Label_AutoSaveInterval {
             get {
                 return ResourceManager.GetString("Label_AutoSaveInterval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   動作 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Label_Behavior {
+            get {
+                return ResourceManager.GetString("Label_Behavior", resourceCulture);
             }
         }
         
@@ -1561,11 +1579,11 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   シンタックス に類似しているローカライズされた文字列を検索します。
+        ///   シンタックス カラーリング に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string Label_Syntax {
+        public static string Label_SyntaxColoring {
             get {
-                return ResourceManager.GetString("Label_Syntax", resourceCulture);
+                return ResourceManager.GetString("Label_SyntaxColoring", resourceCulture);
             }
         }
         
@@ -1629,15 +1647,6 @@ namespace MyPad.Properties {
         public static string Label_Type {
             get {
                 return ResourceManager.GetString("Label_Type", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   UI サイズ に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string Label_UISize {
-            get {
-                return ResourceManager.GetString("Label_UISize", resourceCulture);
             }
         }
         
@@ -2118,6 +2127,15 @@ namespace MyPad.Properties {
         public static string Message_ConfirmStopPomodoro {
             get {
                 return ResourceManager.GetString("Message_ConfirmStopPomodoro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   一部の画面要素にはこれらの設定が反映されません。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Message_NotifyAppearanceWarning {
+            get {
+                return ResourceManager.GetString("Message_NotifyAppearanceWarning", resourceCulture);
             }
         }
         

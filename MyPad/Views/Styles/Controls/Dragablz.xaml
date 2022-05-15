@@ -47,12 +47,6 @@
                                     Background="Transparent"
                                     Command="{x:Static dr:TabablzControl.CloseItemCommand}"
                                     CommandParameter="{Binding RelativeSource={RelativeSource TemplatedParent}}">
-                                <Button.Resources>
-                                    <SolidColorBrush x:Key="CloseButtonBackgroundHighlighted" Color="{DynamicResource MahApps.Colors.Accent3}" o:Freeze="True"/>
-                                    <SolidColorBrush x:Key="CloseButtonBackgroundPressed"     Color="{DynamicResource MahApps.Colors.AccentBase}" o:Freeze="True"/>
-                                    <SolidColorBrush x:Key="CloseButtonStroke"                Color="{DynamicResource MahApps.Colors.Gray5}" o:Freeze="True"/>
-                                    <SolidColorBrush x:Key="CloseButtonStrokeHighlighted"     Color="{DynamicResource MahApps.Colors.Gray.MouseOver}" o:Freeze="True"/>
-                                </Button.Resources>
                                 <Button.Template>
                                     <ControlTemplate TargetType="{x:Type Button}">
                                         <Border Background="{TemplateBinding Background}">
@@ -62,7 +56,7 @@
                                                   VerticalAlignment="Center"
                                                   Stretch="Uniform"
                                                   Data="M0,0 L1,1 M0,1 L1,0"
-                                                  Stroke="{StaticResource CloseButtonStroke}"
+                                                  Stroke="{DynamicResource MahApps.Brushes.Gray5}"
                                                   StrokeThickness="1"
                                                   StrokeEndLineCap="Flat"
                                                   StrokeStartLineCap="Flat"/>
@@ -72,20 +66,20 @@
                                                 <Setter Property="Visibility" Value="Hidden"/>
                                             </Trigger>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="{StaticResource CloseButtonBackgroundHighlighted}"/>
-                                                <Setter TargetName="ButtonPath" Property="Stroke" Value="{StaticResource CloseButtonStrokeHighlighted}"/>
+                                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
+                                                <Setter TargetName="ButtonPath" Property="Stroke" Value="{DynamicResource MahApps.Brushes.Gray.MouseOver}"/>
                                             </Trigger>
                                             <Trigger Property="IsPressed" Value="true">
-                                                <Setter Property="Background" Value="{StaticResource CloseButtonBackgroundPressed}"/>
-                                                <Setter TargetName="ButtonPath" Property="Stroke" Value="{StaticResource CloseButtonStroke}"/>
+                                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray.MouseOver}"/>
+                                                <Setter TargetName="ButtonPath" Property="Stroke" Value="{DynamicResource MahApps.Brushes.Gray5}"/>
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
                                 </Button.Template>
                                 <Button.Visibility>
                                     <MultiBinding Converter="{StaticResource ShowDefaultCloseButtonConverter}">
-                                        <Binding Path="ShowDefaultCloseButton" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type dr:TabablzControl}}"/>
-                                        <Binding Path="FixedHeaderCount" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type dr:TabablzControl}}"/>
+                                        <Binding Path="ShowDefaultCloseButton" RelativeSource="{RelativeSource AncestorType={x:Type dr:TabablzControl}}"/>
+                                        <Binding Path="FixedHeaderCount" RelativeSource="{RelativeSource AncestorType={x:Type dr:TabablzControl}}"/>
                                         <Binding Path="LogicalIndex" RelativeSource="{RelativeSource TemplatedParent}"/>
                                     </MultiBinding>
                                 </Button.Visibility>

@@ -2,7 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:m="http://metro.mahapps.com/winfx/xaml/controls"
                     xmlns:mi="http://metro.mahapps.com/winfx/xaml/iconpacks"
-                    xmlns:md="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro">
+                    xmlns:md="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+                    xmlns:views="clr-namespace:MyPad.Views"
+                    xmlns:controls="clr-namespace:MyPad.Views.Controls">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="./Sizes.xaml"/>
@@ -42,11 +44,11 @@
     <Style TargetType="{x:Type mi:PackIconWeatherIcons}"   BasedOn="{StaticResource Common.PackIcon}"/>
     <Style TargetType="{x:Type mi:PackIconZondicons}"      BasedOn="{StaticResource Common.PackIcon}"/>
 
+    <Style TargetType="{x:Type m:Badged}"                  BasedOn="{StaticResource Common.Badged}"/>
     <Style TargetType="{x:Type TextBlock}"                 BasedOn="{StaticResource Common.TextBlock}"/>
     <Style TargetType="{x:Type Label}"                     BasedOn="{StaticResource Common.Label}"/>
     <Style TargetType="{x:Type ToolTip}"                   BasedOn="{StaticResource Common.ToolTip}"/>
     <Style TargetType="{x:Type m:CustomValidationPopup}"   BasedOn="{StaticResource Common.CustomValidationPopup}"/>
-    <Style TargetType="{x:Type m:Badged}"                  BasedOn="{StaticResource Common.Badged}"/>
     <Style TargetType="{x:Type m:ProgressRing}"            BasedOn="{StaticResource Common.ProgressRing}"/>
     <Style TargetType="{x:Type ProgressBar}"               BasedOn="{StaticResource Common.ProgressBar}"/>
     <Style TargetType="{x:Type m:MetroProgressBar}"        BasedOn="{StaticResource Common.MetroProgressBar}"/>
@@ -94,6 +96,10 @@
     <Style TargetType="{x:Type m:HamburgerMenu}"           BasedOn="{StaticResource Common.HamburgerMenu}"/>
     <Style TargetType="{x:Type m:Flyout}"                  BasedOn="{StaticResource Common.Flyout}"/>
     <Style TargetType="{x:Type md:CustomDialog}"           BasedOn="{StaticResource Common.CustomDialog}"/>
+    <Style TargetType="{x:Type md:MessageDialog}"          BasedOn="{StaticResource Common.MessageDialog}"/>
+
+    <Style TargetType="{x:Type controls:NumericUpDown}"    BasedOn="{StaticResource Common.NumericUpDown}"/>
+    <Style TargetType="{x:Type views:MahAppsDialog}"       BasedOn="{StaticResource Common.CustomDialog}"/>
 
     <Style x:Key="{ComponentResourceKey ResourceId=MetroDataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
         <Setter Property="Template" Value="{DynamicResource Common.DataGridSelectAllButtonTemplate}"/>

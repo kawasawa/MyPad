@@ -16,7 +16,7 @@
              p:ViewModelLocator.AutoWireViewModel="True"
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <Grid Margin="20 0 20 20" MaxWidth="{StaticResource Const.MaxPageWidth}">
+    <Grid Margin="20 0 20 20" MaxWidth="{StaticResource Const.BreakPoint.XL}">
         <DataGrid ItemsSource="{x:Static views:AppCommands.ShortcutKeys}">
             <DataGrid.Style>
                 <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource Common.DataGrid}">

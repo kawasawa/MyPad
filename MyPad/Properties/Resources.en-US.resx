@@ -426,8 +426,8 @@
   <data name="Label_Size" xml:space="preserve">
     <value>Size</value>
   </data>
-  <data name="Label_Syntax" xml:space="preserve">
-    <value>Syntax</value>
+  <data name="Label_SyntaxColoring" xml:space="preserve">
+    <value>Syntax coloring</value>
   </data>
   <data name="Label_System" xml:space="preserve">
     <value>System</value>
@@ -816,9 +816,6 @@ Please check and delete unnecessary files.</value>
   <data name="Label_Small" xml:space="preserve">
     <value>Small</value>
   </data>
-  <data name="Label_UISize" xml:space="preserve">
-    <value>UI size</value>
-  </data>
   <data name="Label_Medium" xml:space="preserve">
     <value>Medium</value>
   </data>
@@ -842,5 +839,14 @@ Please check and delete unnecessary files.</value>
   </data>
   <data name="LabelText_EnableSlashedZero" xml:space="preserve">
     <value>Enable zero fonts to be replaced with slashed zero if possible.</value>
+  </data>
+  <data name="Label_Behavior" xml:space="preserve">
+    <value>Behavior</value>
+  </data>
+  <data name="Label_Appearance" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="Message_NotifyAppearanceWarning" xml:space="preserve">
+    <value>Some elements do not apply these settings.</value>
   </data>
 </root>

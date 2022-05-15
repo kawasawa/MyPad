@@ -24,7 +24,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid ge:GridEx.RowDefinition="Auto, 15, Auto, 15, *" Margin="0 -25 0 10" MaxWidth="{StaticResource Const.MaxPageWidth}">
+    <Grid ge:GridEx.RowDefinition="Auto, 15, Auto, 15, *" Margin="0 -25 0 10" MaxWidth="{StaticResource Const.BreakPoint.XL}">
         <ScrollViewer Grid.Row="0" Margin="40 0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
             <Grid ge:GridEx.ColumnDefinition="Auto, 15, Auto, 15, Auto, 30, Auto, 15, Auto, 15, Auto">
                 <Image     Grid.Column="0" Source="{markup:IconSource /Resources/app.ico}" Width="40" VerticalAlignment="Center"/>

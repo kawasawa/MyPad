@@ -26,24 +26,31 @@
         <Setter Property="Height" Value="{DynamicResource MahApps.Font.Size.Button.ClearText}"/>
     </Style>
 
+    <!-- バッジ -->
+    <Style x:Key="Common.Badged" TargetType="{x:Type m:Badged}" BasedOn="{StaticResource {x:Type m:Badged}}">
+        <Setter Property="FontFamily" Value="{Binding FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
+    </Style>
+
     <!-- テキストブロック -->
     <Style x:Key="Common.TextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MahApps.Styles.TextBlock}">
+        <!--
+          WARN: TextBlock のプロパティは影響範囲が大きいため、基底では原則変更しない
+          例えば FontFamily では、TextBox に内包される ClearTextButton のフォントに影響し、正常に描画されない。
+        -->
     </Style>
 
     <!-- ラベル -->
     <Style x:Key="Common.Label" TargetType="{x:Type Label}" BasedOn="{StaticResource MahApps.Styles.Label}">
+        <Setter Property="FontFamily" Value="{Binding FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
     </Style>
 
     <!-- ツールチップ -->
     <Style x:Key="Common.ToolTip" TargetType="{x:Type ToolTip}" BasedOn="{StaticResource MahApps.Styles.ToolTip}">
+        <Setter Property="FontFamily" Value="{Binding FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
     </Style>
 
     <!-- バリデーションポップアップ -->
     <Style x:Key="Common.CustomValidationPopup" TargetType="{x:Type m:CustomValidationPopup}" BasedOn="{StaticResource MahApps.Styles.CustomValidationPopup}">
-    </Style>
-
-    <!-- バッジ -->
-    <Style x:Key="Common.Badged" TargetType="{x:Type m:Badged}" BasedOn="{StaticResource {x:Type m:Badged}}">
     </Style>
 
     <!-- プログレスリング -->
@@ -69,58 +76,61 @@
         <Setter Property="Width" Value="{DynamicResource Common.Size.Tile}"/>
         <Setter Property="Height" Value="{DynamicResource Common.Size.Tile}"/>
         <Style.Resources>
-            <Style x:Key="Common.TilePackIcon" TargetType="{x:Type mi:PackIconBase}" BasedOn="{StaticResource Common.PackIcon}">
+            <Style x:Key="_tilePackIcon" TargetType="{x:Type mi:PackIconBase}" BasedOn="{StaticResource Common.PackIcon}">
                 <Setter Property="Width" Value="{DynamicResource Common.Size.TileIcon}"/>
                 <Setter Property="Height" Value="{DynamicResource Common.Size.TileIcon}"/>
             </Style>
-            <Style TargetType="{x:Type mi:PackIconBootstrapIcons}" BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconBoxIcons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconCodicons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconCoolicons}"      BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconEntypo}"         BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconEvaIcons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconFeatherIcons}"   BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconFileIcons}"      BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconFontaudio}"      BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconFontAwesome}"    BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconFontisto}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconForkAwesome}"    BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconIonicons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconJamIcons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconMaterialDesign}" BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconMaterial}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconMaterialLight}"  BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconMicrons}"        BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconModern}"         BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconOcticons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconPicolIcons}"     BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconPixelartIcons}"  BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconRadixIcons}"     BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconRemixIcon}"      BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconRPGAwesome}"     BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconSimpleIcons}"    BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconTypicons}"       BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconUnicons}"        BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconVaadinIcons}"    BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconWeatherIcons}"   BasedOn="{StaticResource Common.TilePackIcon}"/>
-            <Style TargetType="{x:Type mi:PackIconZondicons}"      BasedOn="{StaticResource Common.TilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconBootstrapIcons}" BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconBoxIcons}"       BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconCodicons}"       BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconCoolicons}"      BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconEntypo}"         BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconEvaIcons}"       BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFeatherIcons}"   BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFileIcons}"      BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFontaudio}"      BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFontAwesome}"    BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconFontisto}"       BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconForkAwesome}"    BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconIonicons}"       BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconJamIcons}"       BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconMaterialDesign}" BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconMaterial}"       BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconMaterialLight}"  BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconMicrons}"        BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconModern}"         BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconOcticons}"       BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconPicolIcons}"     BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconPixelartIcons}"  BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconRadixIcons}"     BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconRemixIcon}"      BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconRPGAwesome}"     BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconSimpleIcons}"    BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconTypicons}"       BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconUnicons}"        BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconVaadinIcons}"    BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconWeatherIcons}"   BasedOn="{StaticResource _tilePackIcon}"/>
+            <Style TargetType="{x:Type mi:PackIconZondicons}"      BasedOn="{StaticResource _tilePackIcon}"/>
         </Style.Resources>
     </Style>
 
     <!-- ボタン -->
     <Style x:Key="Common.Button" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button}">
+        <Setter Property="FontFamily" Value="{Binding FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
         <Setter Property="m:ControlsHelper.CornerRadius" Value="0"/>
         <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
     </Style>
 
     <!-- トグルボタン -->
     <Style x:Key="Common.ToggleButton" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MahApps.Styles.ToggleButton}">
+        <Setter Property="FontFamily" Value="{Binding FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
         <Setter Property="m:ControlsHelper.CornerRadius" Value="0"/>
         <Setter Property="m:ControlsHelper.ContentCharacterCasing" Value="Normal"/>
     </Style>
 
     <!-- ドロップダウンボタン -->
     <Style x:Key="Common.DropDownButton" TargetType="{x:Type m:DropDownButton}" BasedOn="{StaticResource {x:Type m:DropDownButton}}">
+        <Setter Property="FontFamily" Value="{Binding FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
         <!-- ボタンのスタイルに合わせる -->
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.TextBox.Border}"/>
@@ -130,10 +140,12 @@
 
     <!-- ラジオボタン -->
     <Style x:Key="Common.RadioButton" TargetType="{x:Type RadioButton}" BasedOn="{StaticResource MahApps.Styles.RadioButton}">
+        <Setter Property="FontFamily" Value="{Binding FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
     </Style>
 
     <!-- チェックボックス -->
     <Style x:Key="Common.CheckBox" TargetType="{x:Type CheckBox}" BasedOn="{StaticResource MahApps.Styles.CheckBox}">
+        <Setter Property="FontFamily" Value="{Binding FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
         <Style.Triggers>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
@@ -144,18 +156,22 @@
 
     <!-- テキストボックス -->
     <Style x:Key="Common.TextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource MahApps.Styles.TextBox}">
+        <Setter Property="FontFamily" Value="{Binding FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
     </Style>
 
     <!-- リッチテキストボックス -->
     <Style x:Key="Common.RichTextBox" TargetType="{x:Type RichTextBox}" BasedOn="{StaticResource MahApps.Styles.RichTextBox}">
+        <Setter Property="FontFamily" Value="{Binding FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
     </Style>
 
     <!-- パスワードボックス -->
     <Style x:Key="Common.PasswordBox" TargetType="{x:Type PasswordBox}" BasedOn="{StaticResource MahApps.Styles.PasswordBox}">
+        <Setter Property="FontFamily" Value="{Binding FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
     </Style>
 
     <!-- 数値入力 -->
     <Style x:Key="Common.NumericUpDown" TargetType="{x:Type m:NumericUpDown}" BasedOn="{StaticResource {x:Type m:NumericUpDown}}">
+        <Setter Property="FontFamily" Value="{Binding FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
         <Style.Triggers>
             <Trigger Property="IsReadOnly" Value="True">
                 <Setter Property="HideUpDownButtons" Value="True"/>
@@ -165,10 +181,12 @@
 
     <!-- カレンダー -->
     <Style x:Key="Common.Calendar" TargetType="{x:Type Calendar}" BasedOn="{StaticResource MahApps.Styles.Calendar}">
+        <Setter Property="FontFamily" Value="{Binding FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
     </Style>
 
     <!-- 日付入力-->
     <Style x:Key="Common.DatePicker" TargetType="{x:Type DatePicker}" BasedOn="{StaticResource MahApps.Styles.DatePicker}">
+        <Setter Property="FontFamily" Value="{Binding FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
         <Setter Property="m:TextBoxHelper.Watermark" Value="{x:Null}"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="CalendarStyle">
@@ -190,6 +208,8 @@
 
     <!-- コンボボックス -->
     <Style x:Key="Common.ComboBox" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MahApps.Styles.ComboBox}">
+        <!-- WaterMark にフォントの設定を適用させる -->
+        <Setter Property="FontFamily" Value="{Binding FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
     </Style>
 
     <!-- リストボックスアイテム -->
@@ -306,11 +326,13 @@
 
     <!-- タブコントロール -->
     <Style x:Key="Common.TabControl" TargetType="{x:Type TabControl}" BasedOn="{StaticResource MahApps.Styles.TabControl.Animated}">
+        <Setter Property="m:HeaderedControlHelper.HeaderFontFamily" Value="{Binding FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
         <Setter Property="m:TabControlHelper.Underlined" Value="SelectedTabItem"/>
     </Style>
 
     <!-- メニューアイテム -->
     <Style x:Key="Common.MenuItem" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MahApps.Styles.MenuItem}">
+        <Setter Property="FontFamily" Value="{Binding FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
     </Style>
 
     <!-- メニュー -->
@@ -326,6 +348,10 @@
     <Style x:Key="Common.ContextMenu" TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource MahApps.Styles.ContextMenu}">
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.ComboBox.PopupBorder}"/>
         <Style.Resources>
+            <!-- WARN: ビジュアルツリーのルート Popup であるためそのままでは Window を参照できない、ContextMenu を開いた要素を起点に探索する -->
+            <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Common.MenuItem}">
+                <Setter Property="FontFamily" Value="{Binding PlacementTarget.FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"/>
+            </Style>
             <!-- 既定のリソースを打ち消す -->
             <SolidColorBrush x:Key="MahApps.Brushes.SubMenu.Border" Color="{DynamicResource MahApps.Colors.Gray4}" o:Freeze="True"/>
         </Style.Resources>
@@ -339,7 +365,8 @@
 
     <!-- ステータスバーアイテム -->
     <Style x:Key="Common.StatusBarItem" TargetType="{x:Type StatusBarItem}" BasedOn="{StaticResource MahApps.Styles.StatusBarItem}">
-        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}, Mode=OneWay}"/>
+        <Setter Property="FontFamily" Value="{Binding FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
+        <Setter Property="Foreground" Value="{Binding Foreground, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}}"/>
     </Style>
 
     <!-- ステータスバー -->
@@ -361,15 +388,40 @@
 
     <!-- フライアウト -->
     <Style x:Key="Common.Flyout" TargetType="{x:Type m:Flyout}" BasedOn="{StaticResource {x:Type m:Flyout}}">
+        <Setter Property="m:HeaderedControlHelper.HeaderFontFamily" Value="{Binding FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
         <Setter Property="Theme" Value="Adapt"/>
         <Setter Property="AnimateOpacity" Value="True"/>
         <Setter Property="Opacity" Value="0.95"/>
     </Style>
 
-    <!-- カスタムダイアログ -->
-    <Style x:Key="Common.CustomDialog" TargetType="{x:Type md:CustomDialog}" BasedOn="{StaticResource {x:Type md:CustomDialog}}">
+    <!-- メトロダイアログ -->
+    <Style x:Key="Common.CustomDialog" TargetType="{x:Type md:CustomDialog}" BasedOn="{StaticResource {x:Type md:BaseMetroDialog}}">
         <!-- ウィンドウの状態にかかわらずダイアログはアローカーソルに設定する -->
         <Setter Property="Cursor" Value="Arrow"/>
+    </Style>
+
+    <!-- メッセージダイアログ -->
+    <Style x:Key="Common.MessageDialog" TargetType="{x:Type md:MessageDialog}" BasedOn="{StaticResource {x:Type md:BaseMetroDialog}}">
+        <Style.Resources>
+            <!--
+            INFO: MessageDialog のコンテンツへのスタイル適用
+            MessageDialog と CustomDialog は包含関係が異なる。
+            
+            CustomDialog は、呼び出し元で CustomDialog のインスタンスを生成し、UserControl をコンテンツとして内包して引き渡すため、UserControl 側でスタイルの調整が可能である。
+            一方、MessageDialog の場合は、呼び出し元は表示するメッセージを引き渡し、内部処理側で MessageDialog が生成され文字列が代入される。
+            したがって UserControl が介在しないため、直接スタイルを編集できない。
+            
+            構造としては、表示処理の間に MetroWindow が生成され、その Content が MessageDialog であり、この MetroWindow の Owner が呼び出し元のウィンドウになる。
+            MahApps.Metro.Controls.Dialogs.DialogManager.ShowModalMessageExternal(...) の実装から確認できる。
+            -->
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
+                <Setter Property="FontFamily" Value="{Binding Owner.FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
+            </Style>
+            <Style x:Key="_button" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.Dialogs}">
+                <Setter Property="FontFamily" Value="{Binding Owner.FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
+            </Style>
+            <Style x:Key="MahApps.Styles.Button.Dialogs" TargetType="{x:Type Button}" BasedOn="{StaticResource _button}"/>
+        </Style.Resources>
     </Style>
 
     <!-- フリップビュー ナビゲーションボタン -->
