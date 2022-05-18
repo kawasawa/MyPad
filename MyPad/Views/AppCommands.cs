@@ -4,6 +4,7 @@ using MyPad.Properties;
 using MyPad.ViewModels;
 using MyPad.Views.Controls;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -13,14 +14,19 @@ namespace MyPad.Views;
 /// <summary>
 /// アプリケーションで使用されるコマンドを管理します。
 /// </summary>
-public static class Commands
+public static class AppCommands
 {
     /// <summary>
     /// コマンドの名称とそれに対応するヘッダー文字列のリソースキー、キージェスチャーのマップ
     /// </summary>
     public static IReadOnlyDictionary<string, (string resourceKey, KeyGesture keyGesture)> Definitions { get; }
 
-    static Commands()
+    /// <summary>
+    /// ショートカットキーが割り当てられているコマンドのリソースとキージェスチャー
+    /// </summary>
+    public static IEnumerable<(string resourceKey, KeyGesture keyGesture)> ShortcutKeys => Definitions.Values.Where(tuple => tuple.keyGesture?.Key != Key.None);
+
+    static AppCommands()
     {
         Definitions = new Dictionary<string, (string, KeyGesture)>
         {
@@ -31,17 +37,17 @@ public static class Commands
             { nameof(MainWindowViewModel.SaveCommand), (nameof(Resources.Command_Save), new KeyGesture(Key.S, ModifierKeys.Control))},
             { nameof(MainWindowViewModel.SaveAsCommand), (nameof(Resources.Command_SaveAs), new KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift))},
             { nameof(MainWindowViewModel.SaveAllCommand), (nameof(Resources.Command_SaveAll), new KeyGesture(Key.K, ModifierKeys.Control | ModifierKeys.Shift))},
-            { nameof(MainWindowViewModel.PrintDirectCommand), (nameof(Resources.Command_Print), new KeyGesture(Key.P, ModifierKeys.Control))},
-            { nameof(MainWindowViewModel.PrintPreviewCommand), (nameof(Resources.Command_PrintPreview), new KeyGesture(Key.P, ModifierKeys.Control | ModifierKeys.Shift))},
-            { nameof(MainWindowViewModel.CloseCommand), (nameof(Resources.Command_Close), new KeyGesture(Key.F4, ModifierKeys.Control))},
-            { nameof(MainWindowViewModel.CloseAllCommand), (nameof(Resources.Command_CloseAll), new KeyGesture(Key.F4, ModifierKeys.Control | ModifierKeys.Shift))},
-            { nameof(MainWindowViewModel.CloseOtherCommand), (nameof(Resources.Command_CloseOther), new KeyGesture(Key.F4, ModifierKeys.Shift))},
-            { ApplicationCommands.Close.Name, (nameof(Resources.Command_Exit), new KeyGesture(Key.F4, ModifierKeys.Alt))},
-            { nameof(MainWindowViewModel.ExitApplicationCommand), (nameof(Resources.Command_ExitApplication), new KeyGesture(Key.F4, ModifierKeys.Control | ModifierKeys.Alt))},
+            { nameof(MainWindowViewModel.PrintDirectCommand), (nameof(Resources.Command_Print), new KeyGesture(Key.None))},
+            { nameof(MainWindowViewModel.PrintPreviewCommand), (nameof(Resources.Command_PrintPreview), new KeyGesture(Key.None))},
+            { nameof(MainWindowViewModel.CloseCommand), (nameof(Resources.Command_Close), new KeyGesture(Key.F4, ModifierKeys.Control, "Ctrl+F4 / Ctrl+W"))},
+            { nameof(MainWindowViewModel.CloseAllCommand), (nameof(Resources.Command_CloseAll), new KeyGesture(Key.None))},
+            { nameof(MainWindowViewModel.CloseOtherCommand), (nameof(Resources.Command_CloseOther), new KeyGesture(Key.None))},
+            { ApplicationCommands.Close.Name, (nameof(Resources.Command_Exit), new KeyGesture(Key.F4, ModifierKeys.Alt, "Alt+F4 / Ctrl+Shift+W"))},
+            { nameof(MainWindowViewModel.ExitApplicationCommand), (nameof(Resources.Command_ExitApplication), new KeyGesture(Key.F4, ModifierKeys.Control | ModifierKeys.Alt, "Ctrl+Alt+F4 / Ctrl+Q"))},
 
             // 編集
             { ApplicationCommands.Undo.Name, (nameof(Resources.Command_Undo), new KeyGesture(Key.Z, ModifierKeys.Control))},
-            { ApplicationCommands.Redo.Name, (nameof(Resources.Command_Redo), new KeyGesture(Key.Y, ModifierKeys.Control))},
+            { ApplicationCommands.Redo.Name, (nameof(Resources.Command_Redo), new KeyGesture(Key.Y, ModifierKeys.Control, "Ctrl+Y / Ctrl+Shift+Z"))},
             { ApplicationCommands.Cut.Name, (nameof(Resources.Command_Cut), new KeyGesture(Key.X, ModifierKeys.Control))},
             { ApplicationCommands.Copy.Name, (nameof(Resources.Command_Copy), new KeyGesture(Key.C, ModifierKeys.Control))},
             { ApplicationCommands.Paste.Name, (nameof(Resources.Command_Paste), new KeyGesture(Key.V, ModifierKeys.Control))},
@@ -109,7 +115,7 @@ public static class Commands
     }
 
     [ModuleInitializer]
-    public static void ConfigureCoreCommands()
+    public static void ConfigureCommonCommands()
     {
         SetKeyGesture(ApplicationCommands.Close);
         SetKeyGesture(ApplicationCommands.Undo);

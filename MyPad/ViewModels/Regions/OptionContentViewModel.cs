@@ -82,7 +82,7 @@ public class OptionContentViewModel : RegionViewModelBase
             .AddTo(this.CompositeDisposable);
 
         this.RecreateExplorerCommand = this.IsPending.Inverse().ToReactiveCommand()
-            .WithSubscribe(() => this.EventAggregator?.GetEvent<RecreateExplorerEvent>().Publish())
+            .WithSubscribe(() => this.EventAggregator?.GetEvent<RefreshExplorerEvent>().Publish())
             .AddTo(this.CompositeDisposable);
 
         this.InitializeSyntaxCommand = this.IsPending.Inverse().ToReactiveCommand()

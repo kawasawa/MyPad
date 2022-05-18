@@ -7,7 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using Vanara.PInvoke;
+using System.Windows.Media;
 using WPFLocalizeExtension.Engine;
 
 namespace MyPad.Models;
@@ -17,8 +17,8 @@ namespace MyPad.Models;
 /// </summary>
 public class SystemSettings : ModelBase
 {
-    private User32.WINDOWPLACEMENT? _windowPlacement;
-    public User32.WINDOWPLACEMENT? WindowPlacement
+    private Vanara.PInvoke.User32.WINDOWPLACEMENT? _windowPlacement;
+    public Vanara.PInvoke.User32.WINDOWPLACEMENT? WindowPlacement
     {
         get => this._windowPlacement;
         set => this.SetProperty(ref this._windowPlacement, value);
@@ -62,6 +62,25 @@ public class SystemSettings : ModelBase
             if (this.SetProperty(ref this._uiSize, value))
                 this.ApplyUISize();
         }
+    }
+
+    [JsonIgnore]
+    public FontFamily FontFamily
+    {
+        get => new(this.FontFamilyName);
+        set
+        {
+            if (this.SetProperty(ref this._fontFamilyName, value.Source, nameof(this.FontFamilyName)))
+                this.RaisePropertyChanged(nameof(this.FontFamily));
+        }
+    }
+
+    private string _fontFamilyName = SystemFonts.CaptionFontFamily.Source;
+    [JsonProperty(propertyName: "FontFamily")]
+    public string FontFamilyName
+    {
+        get => this._fontFamilyName;
+        set => this.SetProperty(ref this._fontFamilyName, value);
     }
 
     private string _culture = "ja-JP";

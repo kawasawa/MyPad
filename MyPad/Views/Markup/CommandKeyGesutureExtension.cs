@@ -14,5 +14,5 @@ public class CommandKeyGesutureExtension : MarkupExtension
         => this.CommandName = commandName;
 
     public override object ProvideValue(IServiceProvider serviceProvider)
-        => Commands.Definitions[this.CommandName].keyGesture;
+        => AppCommands.Definitions[this.CommandName].keyGesture;
 }

@@ -25,6 +25,7 @@
                mc:Ignorable="d"
                p:ViewModelLocator.AutoWireViewModel="True"
                Style="{StaticResource Common.Window}"
+               FontFamily="{Binding Settings.System.FontFamily, Mode=OneWay}"
                Title="{qc:MultiBinding '($P0 ? $P1 : Path.GetFileName($P1)) + ($P2 ? \'*\' : null) + \' \- \' + $P3',
                        P0={Binding Settings.System.ShowFullName, Mode=OneWay},
                        P1={Binding ActiveTextEditor.Value.FileName, Mode=OneWay},
@@ -99,8 +100,11 @@
         <KeyBinding Command="{Binding DiffCommand,                Mode=OneTime}" Gesture="{markup:CommandKeyGesuture DiffCommand}"/>
         <KeyBinding Command="{Binding DiffUnmodifiedCommand,      Mode=OneTime}" Gesture="{markup:CommandKeyGesuture DiffUnmodifiedCommand}"/>
         <KeyBinding Command="{Binding SwitchPomodoroTimerCommand, Mode=OneTime}" Gesture="{markup:CommandKeyGesuture SwitchPomodoroTimerCommand}"/>
+
+        <!-- Mac のショートカットキーを再現する -->
         <KeyBinding Command="{Binding CloseCommand,               Mode=OneTime}" Key="W" Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding CloseAllCommand,            Mode=OneTime}" Key="W" Modifiers="Ctrl+Shift"/>
+        <KeyBinding Command="Close"                                              Key="W" Modifiers="Ctrl+Shift"/>
+        <KeyBinding Command="{Binding ExitApplicationCommand,     Mode=OneTime}" Key="Q" Modifiers="Ctrl"/>
 
         <KeyBinding Command="{x:Static views:MainWindow.ActivateTextEditorCommand}"   Gesture="{markup:CommandKeyGesuture ActivateTextEditorCommand}"/>
         <KeyBinding Command="{x:Static views:MainWindow.ActivateTerminalCommand}"     Gesture="{markup:CommandKeyGesuture ActivateTerminalCommand}"/>
@@ -321,9 +325,19 @@
                 <dr:TabablzControl.InterTabController>
                     <dr:InterTabController InterTabClient="{Binding InterTabClient, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}"/>
                 </dr:TabablzControl.InterTabController>
+                <dr:TabablzControl.Resources>
+                    <!-- WARN: AncestorType=Window も ContextMenu.PlacementTarget も使えないため Proxy から取得する -->
+                    <Style TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource Common.ContextMenu}">
+                        <Style.Resources>
+                            <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MahApps.Styles.MenuItem}">
+                                <Setter Property="FontFamily" Value="{Binding Data.Settings.System.FontFamily, Source={StaticResource Proxy}, Mode=OneWay}"/>
+                            </Style>
+                        </Style.Resources>
+                    </Style>
+                </dr:TabablzControl.Resources>
                 <dr:TabablzControl.HeaderSuffixContent>
-                    <Grid ge:GridEx.ColumnDefinition="Auto, *" Margin="5 0 0 0">
-                        <Grid.ContextMenu>
+                    <DockPanel MinWidth="30">
+                        <DockPanel.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Command="{Binding NewCommand, Mode=OneTime}"
                                           Header="{le:Loc {markup:CommandResourceKey NewCommand}}"
@@ -347,12 +361,12 @@
                                     </MenuItem.Icon>
                                 </MenuItem>
                             </ContextMenu>
-                        </Grid.ContextMenu>
-                        <Button Grid.Column="0" Command="{x:Static dr:TabablzControl.AddItemCommand}" ToolTip="{le:Loc Command_New}" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Mode=OneWay}" Padding="0" BorderThickness="0" Background="Transparent" BorderBrush="Transparent" Focusable="False">
+                        </DockPanel.ContextMenu>
+                        <Button Command="{x:Static dr:TabablzControl.AddItemCommand}" ToolTip="{le:Loc Command_New}" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Mode=OneWay}" Padding="0" BorderThickness="0" Background="Transparent" BorderBrush="Transparent" Focusable="False">
                             <mi:PackIconMaterial Kind="Plus" Height="{DynamicResource MahApps.Font.Size.Button}" Width="{DynamicResource MahApps.Font.Size.Button}" Foreground="{DynamicResource MahApps.Brushes.Gray5}"/>
                         </Button>
-                        <Border Grid.Column="1" VerticalAlignment="Stretch" Background="Transparent"/>
-                    </Grid>
+                        <Border VerticalAlignment="Stretch" Background="Transparent"/>
+                    </DockPanel>
                 </dr:TabablzControl.HeaderSuffixContent>
                 <dr:TabablzControl.HeaderItemTemplate>
                     <DataTemplate>
@@ -472,8 +486,6 @@
                                     <Setter Property="pb:PushBindingManager.StylePushBindings">
                                         <Setter.Value>
                                             <pb:PushBindingCollection>
-                                                <pb:PushBinding TargetProperty="ActualFontSize"       Path="ActualFontSize"/>
-                                                <pb:PushBinding TargetProperty="ZoomIncrement"        Path="ZoomIncrement"/>
                                                 <pb:PushBinding TargetProperty="VisualLength"         Path="VisualLength"/>
                                                 <pb:PushBinding TargetProperty="TextLength"           Path="TextLength"/>
                                                 <pb:PushBinding TargetProperty="SelectionLength"      Path="SelectionLength"/>

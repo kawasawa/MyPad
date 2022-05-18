@@ -13,11 +13,9 @@
              xmlns:behaviors="clr-namespace:MyPad.Views.Behaviors"
              xmlns:controls="clr-namespace:MyPad.Views.Controls"
              mc:Ignorable="d"
-             p:ViewModelLocator.AutoWireViewModel="True">
-
-    <p:Dialog.WindowStyle>
-        <Style TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource Common.Dialog}"/>
-    </p:Dialog.WindowStyle>
+             p:ViewModelLocator.AutoWireViewModel="True"
+             p:Dialog.WindowStyle="{StaticResource Common.Dialog}"
+             Style="{StaticResource Common.DialogContent}">
 
     <Grid Margin="20 10 20 15" ge:GridEx.RowDefinition="*, 10, Auto"
           behaviors:KeyboardFocusManager.FocusedElement="{Binding ElementName=Line}">
@@ -32,7 +30,7 @@
                                     ReverseIncrement="True"/>
         </Grid>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="{le:Loc Command_OK}" Command="{Binding OKCommand, Mode=Onetime}" Style="{StaticResource Common.AccentButton}" MinWidth="80" IsDefault="True"/>
+            <Button Content="{le:Loc Command_OK}" Command="{Binding OKCommand, Mode=Onetime}" Style="{DynamicResource Common.AccentButton}" MinWidth="80" IsDefault="True"/>
             <Border Width="10"/>
             <Button Content="{le:Loc Command_Cancel}" Command="{Binding CancelCommand, Mode=Onetime}" MinWidth="80" IsCancel="True"/>
         </StackPanel>

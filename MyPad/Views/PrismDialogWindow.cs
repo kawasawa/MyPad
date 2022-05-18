@@ -31,8 +31,13 @@ public class PrismDialogWindow : MetroWindow, IDialogWindow
     [LogInterceptor]
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
+        this.Loaded -= this.Window_Loaded;
+
         if (this.DataContext is IDialogAware dialogAware)
             this.Title = dialogAware.Title;
-        this.Loaded -= this.Window_Loaded;
+
+        // オーナーウィンドウのフォントを継承する
+        if (this.Owner != null)
+            this.FontFamily = this.Owner.FontFamily;
     }
 }

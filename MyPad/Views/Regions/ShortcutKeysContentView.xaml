@@ -16,8 +16,8 @@
              p:ViewModelLocator.AutoWireViewModel="True"
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <Grid Margin="20 0 20 20" MaxWidth="{StaticResource Const.MaxPageWidth}">
-        <DataGrid ItemsSource="{x:Static views:Commands.Definitions}">
+    <Grid Margin="20 0 20 20" MaxWidth="{StaticResource Const.BreakPoint.XL}">
+        <DataGrid ItemsSource="{x:Static views:AppCommands.ShortcutKeys}">
             <DataGrid.Style>
                 <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource Common.DataGrid}">
                     <Setter Property="AutoGenerateColumns" Value="False"/>
@@ -34,11 +34,11 @@
                 <DataGridTemplateColumn IsReadOnly="True" CellStyle="{StaticResource TemplateColumnDataGridCell}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{le:Loc {qc:Binding '$P.Item1', P={Binding Value, Mode=OneWay}}}" Margin="5 0"/>
+                            <TextBlock Text="{le:Loc {qc:Binding '$P.Item1', P={Binding Mode=OneWay}}}" Margin="5 0"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{qc:Binding '$P.Item2.GetText()', P={Binding Value, Mode=OneWay}}" CellStyle="{StaticResource TemplateColumnDataGridCell}"/>
+                <DataGridTextColumn Binding="{qc:Binding '$P.Item2.GetText()', P={Binding Mode=OneWay}}" CellStyle="{StaticResource TemplateColumnDataGridCell}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

@@ -17,6 +17,8 @@ public static class KeyGestureExtensinos
     {
         if (string.IsNullOrEmpty(self.DisplayString) == false)
             return self.DisplayString;
+        if (self.Key == Key.None)
+            return string.Empty;
 
         var text = self.Key.ToString();
         if (self.Modifiers.HasFlag(ModifierKeys.Alt))

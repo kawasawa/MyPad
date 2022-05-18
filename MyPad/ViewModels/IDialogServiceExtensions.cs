@@ -9,6 +9,7 @@ using Prism.Ioc;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -24,6 +25,14 @@ namespace MyPad.ViewModels;
 /// </summary>
 public static class IDialogServiceExtensions
 {
+    /// <summary>
+    /// このクラスが初めて呼び出されるときに行われる処理を定義します。
+    /// </summary>
+    static IDialogServiceExtensions()
+    {
+        BalloonHelper.ActionList.Add(nameof(BalloonActionType.NotifyAutoSaved), argument => Process.Start("explorer.exe", $"/select, {argument}"));
+    }
+
     #region バルーン
 
     /// <summary>
@@ -37,6 +46,26 @@ public static class IDialogServiceExtensions
         new ToastContentBuilder()
             .AddText(title)
             .AddText(message)
+            .Show();
+    }
+
+    /// <summary>
+    /// 通知用のバルーンを表示します。
+    /// </summary>
+    /// <param name="self"><see cref="IDialogService"/> を実装するインスタンス</param>
+    /// <param name="message">メッセージ</param>
+    /// <param name="buttonText">ボタンに表示するテキスト</param>
+    /// <param name="actionType">ボタン押下時のアクション</param>
+    /// <param name="actionArgument">アクションに渡される引数</param>
+    [LogInterceptor]
+    public static void BalloonNotify(this IDialogService self, string title, string message, string buttonText, BalloonActionType actionType, string actionArgument)
+    {
+        new ToastContentBuilder()
+            .AddText(title)
+            .AddText(message)
+            .AddButton(new ToastButton()
+                .SetContent(buttonText)
+                .AddArgument(actionType.ToString(), actionArgument))
             .Show();
     }
 
@@ -602,6 +631,14 @@ public static class IDialogServiceExtensions
             AffirmativeButtonText = Resources.Command_OK,
             DefaultButtonFocus = MessageDialogResult.Affirmative,
         };
+
+    /// <summary>
+    /// バルーン通知内で発生するアクションを表します。
+    /// </summary>
+    public enum BalloonActionType
+    {
+        NotifyAutoSaved,
+    }
 
     #endregion
 }

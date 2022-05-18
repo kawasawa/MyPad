@@ -11,7 +11,8 @@
              xmlns:qc="http://QuickConverter.CodePlex.com/"
              xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf"
              mc:Ignorable="d"
-             p:ViewModelLocator.AutoWireViewModel="True">
+             p:ViewModelLocator.AutoWireViewModel="True"
+             Style="{StaticResource Common.DialogContent}">
 
     <p:Dialog.WindowStyle>
         <Style TargetType="{x:Type m:MetroWindow}" BasedOn="{StaticResource Common.Dialog}">

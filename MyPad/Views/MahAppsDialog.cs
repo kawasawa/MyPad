@@ -1,5 +1,6 @@
 ﻿using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using System.Windows.Controls;
 
 namespace MyPad.Views;
 
@@ -16,6 +17,10 @@ public class MahAppsDialog : CustomDialog
     [LogInterceptor]
     public MahAppsDialog(MetroWindow parentWindow, MetroDialogSettings setting) : base(parentWindow, setting)
     {
+        // オーナーウィンドウのフォントを継承する
+        this.FontFamily = parentWindow.FontFamily;
+        if (this.Content is Control control)
+            control.FontFamily = parentWindow.FontFamily;
     }
 
     /// <summary>

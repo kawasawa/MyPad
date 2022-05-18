@@ -46,6 +46,8 @@
         <Setter Property="Opacity" Value="0.9"/>
         <Style.Resources>
             <Style TargetType="{x:Type aec:CompletionList}">
+                <!-- WARN: 入力補完ウィンドウのフォントはテキストエディタに追従させる -->
+                <Setter Property="FontFamily" Value="{Binding TextArea.FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
                 <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}"/>
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Control.Background}"/>
                 <Setter Property="Template">
