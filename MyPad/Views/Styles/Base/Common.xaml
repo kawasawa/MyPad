@@ -417,10 +417,18 @@
             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Common.TextBlock}">
                 <Setter Property="FontFamily" Value="{Binding Owner.FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
             </Style>
-            <Style x:Key="_button" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.Dialogs}">
+            <Style x:Key="_button" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource MahApps.Styles.Button.Dialogs}">
+                <Setter Property="FontFamily" Value="{Binding Owner.FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
+            </Style>
+            <Style x:Key="_button.Accent" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource MahApps.Styles.Button.Dialogs.Accent}">
+                <Setter Property="FontFamily" Value="{Binding Owner.FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
+            </Style>
+            <Style x:Key="_button.AccentHighlight" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource MahApps.Styles.Button.Dialogs.AccentHighlight}">
                 <Setter Property="FontFamily" Value="{Binding Owner.FontFamily, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
             </Style>
             <Style x:Key="MahApps.Styles.Button.Dialogs" TargetType="{x:Type Button}" BasedOn="{StaticResource _button}"/>
+            <Style x:Key="MahApps.Styles.Button.Dialogs.Accent" TargetType="{x:Type Button}" BasedOn="{StaticResource _button.Accent}"/>
+            <Style x:Key="MahApps.Styles.Button.Dialogs.AccentHighlight" TargetType="{x:Type Button}" BasedOn="{StaticResource _button.AccentHighlight}"/>
         </Style.Resources>
     </Style>
 
