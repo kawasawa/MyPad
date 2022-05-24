@@ -54,6 +54,7 @@
     <PackageReference Include="System.Interactive" Version="6.0.1" />
     <PackageReference Include="ToastNotifications.Messages" Version="2.5.1" />
     <PackageReference Include="Ude.NetStandard" Version="1.2.0" />
+    <PackageReference Include="Vanara.PInvoke.Multimedia" Version="3.4.2" />
     <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.4.2" />
     <PackageReference Include="Vanara.PInvoke.User32" Version="3.4.2" />
     <PackageReference Include="WinCopies.Util.Desktop" Version="2.18.0" />
