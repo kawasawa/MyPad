@@ -6,7 +6,7 @@
     <RuntimeIdentifiers>win-x86</RuntimeIdentifiers>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
-    <Version>1.20.0</Version>
+    <Version>1.20.1</Version>
     <Authors>Kazuki Awasawa</Authors>
     <Copyright>© Kazuki Awasawa All Rights Reserved.</Copyright>
     <NeutralLanguage>ja-JP</NeutralLanguage>
@@ -54,6 +54,7 @@
     <PackageReference Include="System.Interactive" Version="6.0.1" />
     <PackageReference Include="ToastNotifications.Messages" Version="2.5.1" />
     <PackageReference Include="Ude.NetStandard" Version="1.2.0" />
+    <PackageReference Include="Vanara.PInvoke.Multimedia" Version="3.4.2" />
     <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.4.2" />
     <PackageReference Include="Vanara.PInvoke.User32" Version="3.4.2" />
     <PackageReference Include="WinCopies.Util.Desktop" Version="2.18.0" />

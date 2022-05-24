@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using ToastNotifications.Core;
 using ToastNotifications.Messages;
+using Vanara.PInvoke;
 
 namespace MyPad.ViewModels;
 
@@ -43,10 +44,19 @@ public static class IDialogServiceExtensions
     [LogInterceptor]
     public static void BalloonNotify(this IDialogService self, string title, string message)
     {
-        new ToastContentBuilder()
-            .AddText(title)
-            .AddText(message)
-            .Show();
+        try
+        {
+            new ToastContentBuilder()
+                .AddText(title)
+                .AddText(message)
+                .Show();
+        }
+        catch
+        {
+            // Computer\HKEY_CURRENT_USER\AppEvents\Schemes\Apps\.Default\Notification.Default
+            WinMm.PlaySound("Notification.Default", IntPtr.Zero, WinMm.SND.SND_ALIAS | WinMm.SND.SND_ASYNC);
+            ToastNotify(self, $"{title}{Environment.NewLine}{message}");
+        }
     }
 
     /// <summary>
@@ -60,13 +70,22 @@ public static class IDialogServiceExtensions
     [LogInterceptor]
     public static void BalloonNotify(this IDialogService self, string title, string message, string buttonText, BalloonActionType actionType, string actionArgument)
     {
-        new ToastContentBuilder()
-            .AddText(title)
-            .AddText(message)
-            .AddButton(new ToastButton()
-                .SetContent(buttonText)
-                .AddArgument(actionType.ToString(), actionArgument))
-            .Show();
+        try
+        {
+            new ToastContentBuilder()
+                .AddText(title)
+                .AddText(message)
+                .AddButton(new ToastButton()
+                    .SetContent(buttonText)
+                    .AddArgument(actionType.ToString(), actionArgument))
+                .Show();
+        }
+        catch
+        {
+            // Computer\HKEY_CURRENT_USER\AppEvents\Schemes\Apps\.Default\Notification.Default
+            WinMm.PlaySound("Notification.Default", IntPtr.Zero, WinMm.SND.SND_ALIAS | WinMm.SND.SND_ASYNC);
+            ToastNotify(self, $"{title}{Environment.NewLine}{message}");
+        }
     }
 
     #endregion

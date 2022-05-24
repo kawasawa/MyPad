@@ -88,6 +88,10 @@ Copyright (C) 2007 Free Software Foundation, Inc.
 Copyright (C) 1991, 1999 Free Software Foundation, Inc.  
 [GNU Lesser General Public License v2.1](https://github.com/yinyue200/ude/blob/master/license/lgpl-2.1.txt)  
 
+### VanaraPInvoke.Multimedia
+Copyright (c) 2017 David Hall  
+[MIT License](https://github.com/dahall/Vanara/blob/master/LICENSE)  
+
 ### VanaraPInvoke.Shell32
 Copyright (c) 2017 David Hall  
 [MIT License](https://github.com/dahall/Vanara/blob/master/LICENSE)  

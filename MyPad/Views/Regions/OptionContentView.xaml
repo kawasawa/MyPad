@@ -490,21 +490,21 @@
 
                             <Button Command="{Binding ImportSettingsFileCommand, Mode=OneTime}">
                                 <StackPanel Orientation="Horizontal">
-                                    <mi:FontAwesome Kind="FileImportSolid"/>
+                                    <mi:PackIconFontAwesome Kind="FileImportSolid" VerticalAlignment="Center"/>
                                     <Border Width="5"/>
                                     <TextBlock Text="{le:Loc Command_ImportSettings}"/>
                                 </StackPanel>
                             </Button>
                             <Button Command="{Binding ExportSettingsFileCommand, Mode=OneTime}">
                                 <StackPanel Orientation="Horizontal">
-                                    <mi:FontAwesome Kind="FileDownloadSolid"/>
+                                    <mi:PackIconFontAwesome Kind="FileDownloadSolid" VerticalAlignment="Center"/>
                                     <Border Width="5"/>
                                     <TextBlock Text="{le:Loc Command_ExportSettings}"/>
                                 </StackPanel>
                             </Button>
                             <Button Command="{Binding InitializeSettingsCommand, Mode=OneTime}" Style="{StaticResource This.DangerButton}">
                                 <StackPanel Orientation="Horizontal">
-                                    <mi:Material Kind="CogRefresh"/>
+                                    <mi:PackIconMaterial Kind="CogRefresh" VerticalAlignment="Center"/>
                                     <Border Width="5"/>
                                     <TextBlock Text="{le:Loc Command_InitializeSettings}"/>
                                 </StackPanel>

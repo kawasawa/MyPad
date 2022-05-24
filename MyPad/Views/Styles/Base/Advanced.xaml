@@ -209,6 +209,8 @@
                 <Setter Property="LightCloseButtonStyle" Value="{DynamicResource _buttonLight}"/>
                 <Setter Property="LightMaxButtonStyle"   Value="{DynamicResource _buttonLight}"/>
                 <Setter Property="LightMinButtonStyle"   Value="{DynamicResource _buttonLight}"/>
+                <Setter Property="Height"                Value="{StaticResource Const.WindowButtonCommands.Height}"/>
+                <Setter Property="VerticalAlignment"     Value="Top"/>
             </Style>
         </m:WindowButtonCommands.Style>
     </m:WindowButtonCommands>
