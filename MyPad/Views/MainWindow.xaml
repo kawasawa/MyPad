@@ -31,6 +31,10 @@
                        P1={Binding ActiveTextEditor.Value.FileName, Mode=OneWay},
                        P2={Binding ActiveTextEditor.Value.IsModified, Mode=OneWay},
                        P3={Binding ProductInfo.Product, Mode=OneWay}}"
+               TitleBarHeight="{qc:MultiBinding '$P0.CompareTo(Math.Ceiling($P1.LineSpacing * $P2) + 5) == 1 ? $P0 : Math.Ceiling($P1.LineSpacing * $P2) + 5',
+                                P0={Binding Source={StaticResource Const.WindowButtonCommands.Height}},
+                                P1={Binding Settings.System.FontFamily, Mode=OneWay},
+                                P2={Binding Source={StaticResource Const.FontDpiSize}}}"
                Cursor="{qc:Binding '$P ? Cursors.Wait : Cursors.Arrow', P={Binding IsPending.Value, Mode=OneWay}}"
                ResizeMode="{qc:Binding '$P ? ResizeMode.CanResizeWithGrip : ResizeMode.CanResize', P={Binding Settings.System.ShowStatusBar, Mode=OneWay}}" 
                Height="525" Width="850" WindowStartupLocation="CenterScreen" AllowDrop="{Binding IsEditMode.Value, Mode=OneWay}"
@@ -119,7 +123,8 @@
     <m:MetroWindow.RightWindowCommands>
         <m:WindowCommands>
             <!-- 最前面表示ボタン -->
-            <ToggleButton IsChecked="{Binding Topmost, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}" ToolTip="{le:Loc Command_Topmost}" Focusable="False">
+            <ToggleButton IsChecked="{Binding Topmost, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}" ToolTip="{le:Loc Command_Topmost}"
+                          Height="{StaticResource Const.WindowButtonCommands.Height}" VerticalAlignment="Top" Focusable="False">
                 <mi:PackIconModern Kind="Pin" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                     <mi:PackIconModern.Resources>
                         <Style TargetType="{x:Type mi:PackIconModern}">
@@ -138,7 +143,8 @@
             </ToggleButton>
             
             <!-- 全画面表示ボタン -->
-            <Button Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}" Focusable="False">
+            <Button Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}"
+                    Height="{StaticResource Const.WindowButtonCommands.Height}" VerticalAlignment="Top" Focusable="False">
                 <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                     <mi:PackIconModern.Resources>
                         <Style TargetType="{x:Type mi:PackIconModern}"/>
@@ -152,7 +158,8 @@
     <m:MetroWindow.LeftWindowCommands>
         <m:WindowCommands Margin="0 1 0 0">
             <!-- メニューバー(ウィンドウ表示時) -->
-            <regions:MenuBarView Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowMenuBar, Mode=OneWay}}"
+            <regions:MenuBarView x:Name="TitleMenuBar"
+                                 Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding Settings.System.ShowMenuBar, Mode=OneWay}}"
                                  IsEnabled="{Binding IsEditMode.Value, Mode=OneWay}"/>
         </m:WindowCommands>
     </m:MetroWindow.LeftWindowCommands>

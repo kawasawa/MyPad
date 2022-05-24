@@ -4,6 +4,8 @@
                     xmlns:ge="clr-namespace:SourceChord.GridExtra;assembly=GridExtra.Wpf">
 
     <!-- 定数 -->
+    <s:Double x:Key="Const.FontDpiSize">16</s:Double>
+    <s:Double x:Key="Const.WindowButtonCommands.Height">30</s:Double>
     <s:Double x:Key="Const.BreakPoint.XL">1200</s:Double>
     <ge:BreakPoints x:Key="Const.BreakPoints">576, 768, 992</ge:BreakPoints>
 
