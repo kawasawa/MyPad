@@ -779,7 +779,7 @@
     <value>コードを展開する</value>
   </data>
   <data name="Command_ScriptRunner" xml:space="preserve">
-    <value>C# スクリプトランナー</value>
+    <value>C# インタラクティブ</value>
   </data>
   <data name="Command_Terminal" xml:space="preserve">
     <value>ターミナル</value>
@@ -788,7 +788,7 @@
     <value>作成者</value>
   </data>
   <data name="LabelText_SetExplorerRoot" xml:space="preserve">
-    <value>エクスプローラーのルートフォルダを指定します。</value>
+    <value>エクスプローラーのルートフォルダを指定します。既定ではユーザフォルダが選択されます。</value>
   </data>
   <data name="Json" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\json.xshd;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

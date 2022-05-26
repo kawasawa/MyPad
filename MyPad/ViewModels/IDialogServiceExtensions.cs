@@ -53,8 +53,7 @@ public static class IDialogServiceExtensions
         }
         catch
         {
-            // Computer\HKEY_CURRENT_USER\AppEvents\Schemes\Apps\.Default\Notification.Default
-            WinMm.PlaySound("Notification.Default", IntPtr.Zero, WinMm.SND.SND_ALIAS | WinMm.SND.SND_ASYNC);
+            PlaySilentNotifySound();
             ToastNotify(self, $"{title}{Environment.NewLine}{message}");
         }
     }
@@ -82,8 +81,7 @@ public static class IDialogServiceExtensions
         }
         catch
         {
-            // Computer\HKEY_CURRENT_USER\AppEvents\Schemes\Apps\.Default\Notification.Default
-            WinMm.PlaySound("Notification.Default", IntPtr.Zero, WinMm.SND.SND_ALIAS | WinMm.SND.SND_ASYNC);
+            PlaySilentNotifySound();
             ToastNotify(self, $"{title}{Environment.NewLine}{message}");
         }
     }
@@ -132,6 +130,7 @@ public static class IDialogServiceExtensions
             var style = MessageDialogStyle.Affirmative;
             var settings = CreateDialogSettings();
             settings.DialogTitleFontSize = 0;
+            PlayNotifySound();
             window.ShowModalMessageExternal(string.Empty, message, style, settings);
         }
         else
@@ -140,6 +139,7 @@ public static class IDialogServiceExtensions
                 { nameof(DialogViewModelBase.Title), Resources.Label_Notify },
                 { nameof(MessageBoxViewModelBase.Message), message },
             };
+            PlayNotifySound();
             self.ShowDialog(GetDialogName(), parameters, null);
         }
     }
@@ -158,6 +158,7 @@ public static class IDialogServiceExtensions
             var settings = CreateDialogSettings();
             settings.DialogTitleFontSize = 0;
             settings.ColorScheme = MetroDialogColorScheme.Accented;
+            PlayWarnSound();
             window.ShowModalMessageExternal(string.Empty, message, style, settings);
         }
         else
@@ -166,6 +167,7 @@ public static class IDialogServiceExtensions
                 { nameof(DialogViewModelBase.Title), Resources.Label_Warn },
                 { nameof(MessageBoxViewModelBase.Message), message },
             };
+            PlayWarnSound();
             self.ShowDialog(GetDialogName(), parameters, null);
         }
     }
@@ -185,6 +187,7 @@ public static class IDialogServiceExtensions
             settings.DialogTitleFontSize = 0;
             settings.NegativeButtonText = Resources.Command_Cancel;
             settings.DialogResultOnCancel = MessageDialogResult.Canceled;
+            PlayConfirmSound();
             var result = window.ShowModalMessageExternal(string.Empty, message, style, settings);
             return result.ConvertToTernary() ?? false;
         }
@@ -194,6 +197,7 @@ public static class IDialogServiceExtensions
                 { nameof(DialogViewModelBase.Title), Resources.Label_Confirm },
                 { nameof(MessageBoxViewModelBase.Message), message },
             };
+            PlayConfirmSound();
             var result = ButtonResult.None;
             self.ShowDialog(GetDialogName(), parameters, r => result = r.Result);
             return result.ConvertToTernary() ?? false;
@@ -217,6 +221,7 @@ public static class IDialogServiceExtensions
             settings.NegativeButtonText = Resources.Command_No;
             settings.FirstAuxiliaryButtonText = Resources.Command_Cancel;
             settings.DialogResultOnCancel = MessageDialogResult.Canceled;
+            PlayConfirmSound();
             var result = window.ShowModalMessageExternal(string.Empty, message, style, settings);
             return result.ConvertToTernary();
         }
@@ -226,6 +231,7 @@ public static class IDialogServiceExtensions
                 { nameof(DialogViewModelBase.Title), Resources.Label_Confirm },
                 { nameof(MessageBoxViewModelBase.Message), message },
             };
+            PlayConfirmSound();
             var result = ButtonResult.None;
             self.ShowDialog(GetDialogName(), parameters, r => result = r.Result);
             return result.ConvertToTernary();
@@ -506,6 +512,35 @@ public static class IDialogServiceExtensions
             return result;
         }
     }
+
+    #endregion
+
+    #region サウンド
+
+    /// <summary>
+    /// 通知用のシステムサウンドを再生します。
+    /// </summary>
+    private static void PlaySilentNotifySound()
+        // Computer\HKEY_CURRENT_USER\AppEvents\Schemes\Apps\.Default\Notification.Default
+        => WinMm.PlaySound("Notification.Default", IntPtr.Zero, WinMm.SND.SND_ALIAS | WinMm.SND.SND_ASYNC);
+
+    /// <summary>
+    /// 通知用のシステムサウンドを再生します。
+    /// </summary>
+    private static void PlayNotifySound()
+       => WinMm.PlaySound("SystemAsterisk", IntPtr.Zero, WinMm.SND.SND_ALIAS | WinMm.SND.SND_ASYNC);
+
+    /// <summary>
+    /// 確認用のシステムサウンドを再生します。
+    /// </summary>
+    private static void PlayConfirmSound()
+        => WinMm.PlaySound("hoge", IntPtr.Zero, WinMm.SND.SND_ALIAS | WinMm.SND.SND_ASYNC);
+
+    /// <summary>
+    /// 警告用のシステムサウンドを再生します。
+    /// </summary>
+    private static void PlayWarnSound()
+        => WinMm.PlaySound("SystemHand", IntPtr.Zero, WinMm.SND.SND_ALIAS | WinMm.SND.SND_ASYNC);
 
     #endregion
 

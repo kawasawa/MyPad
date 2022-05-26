@@ -32,7 +32,7 @@
                                 <MenuItem Click="{qc:QuickEvent 'Clipboard.SetText($dataContext.FileName)'}"
                                           Header="{le:Loc Command_CopyFullPath}">
                                     <MenuItem.Icon>
-                                        <mi:Modern Kind="ClipboardVariantText"/>
+                                        <mi:Codicons Kind="Copy"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="{le:Loc Command_OpenWithExplorer}">
@@ -44,14 +44,14 @@
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                     <MenuItem.Icon>
-                                        <mi:Material Kind="FolderOutline"/>
+                                        <mi:Codicons Kind="FolderOpened"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Command="{Binding PropertyCommand, Mode=OneTime}"
                                           Header="{le:Loc Command_Property}"
                                           IsEnabled="{qc:Binding '!$P', P={Binding IsDummy, Mode=OneWay}}">
                                     <MenuItem.Icon>
-                                        <mi:FontAwesome Kind="WrenchSolid"/>
+                                        <mi:Codicons Kind="SymbolProperty"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
                             </ContextMenu>

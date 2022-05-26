@@ -316,7 +316,7 @@
     <value>ToolBar</value>
   </data>
   <data name="Command_SwitchFindMode" xml:space="preserve">
-    <value>Switching between find mode and replace mode.</value>
+    <value>Toggle between find and replace mode</value>
   </data>
   <data name="Command_ChangeEncoding" xml:space="preserve">
     <value>Change encoding</value>
@@ -615,7 +615,7 @@ These changes will be applied on restart. Are you sure you want to continue?</va
     <value>Welcome to ver. {1} of {0}.</value>
   </data>
   <data name="Command_SwitchFullScreenMode" xml:space="preserve">
-    <value>Switching between full screen mode and window mode.</value>
+    <value>Toggle between full screen and window view</value>
   </data>
   <data name="Message_NotifyFullScreenMode" xml:space="preserve">
     <value>Press F11 to exit full screen mode.</value>
@@ -745,7 +745,7 @@ Please check and delete unnecessary files.</value>
     <value>Unfolding</value>
   </data>
   <data name="Command_ScriptRunner" xml:space="preserve">
-    <value>C# script runner</value>
+    <value>C# Interactive</value>
   </data>
   <data name="Command_Terminal" xml:space="preserve">
     <value>Terminal</value>
@@ -754,7 +754,7 @@ Please check and delete unnecessary files.</value>
     <value>Creator</value>
   </data>
   <data name="LabelText_SetExplorerRoot" xml:space="preserve">
-    <value>Set the root directory of explorer.</value>
+    <value>Set the root directory of explorer. By default, the user directory is specified.</value>
   </data>
   <data name="Command_Maintenance" xml:space="preserve">
     <value>Maintenance</value>

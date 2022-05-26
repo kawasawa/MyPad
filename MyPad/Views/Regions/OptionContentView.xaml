@@ -73,7 +73,7 @@
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{le:Loc Label_Appearance}" Style="{StaticResource TitleTextBlock}"/>
                             <Border ToolTip="{le:Loc Message_NotifyAppearanceWarning}" ToolTipService.InitialShowDelay="0" Background="Transparent" VerticalAlignment="Center" Margin="5 0 0 0" Padding="10 5">
-                                <mi:MaterialLight Kind="Information"/>
+                                <mi:Codicons Kind="Info"/>
                             </Border>
                         </StackPanel>
                         <Border Style="{StaticResource TitleSeparator}"/>
@@ -330,8 +330,7 @@
                                             <Border Background="Transparent" ToolTip="{le:Loc Command_Apply}">
                                                 <Button Command="{Binding DataContext.RecreateExplorerCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Style="{DynamicResource Common.ChromelessButton}">
                                                     <StackPanel Orientation="Horizontal">
-                                                        <mi:Material Kind="FileTree"/>
-                                                        <Border Width="5"/>
+                                                        <mi:PackIconCodicons Kind="Files" Margin="0 0 5 0"/>
                                                         <mi:Unicons Kind="CornerUpLeftAlt"/>
                                                     </StackPanel>
                                                 </Button>
@@ -373,7 +372,7 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Command="{Binding DataContext.SelectDirectoryCommand, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding Mode=OneWay}" ToolTip="{le:Loc Command_Select}" Style="{DynamicResource Common.ChromelessButton}">
-                                            <mi:Material Kind="FolderOpen"/>
+                                            <mi:Codicons Kind="FolderOpened"/>
                                         </Button>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
@@ -437,7 +436,7 @@
                                         <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{Binding ProductInfo.Working, Mode=OneWay}" ThrowException="False"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
-                                <mi:Modern Kind="FolderOpen"/>
+                                <mi:Codicons Kind="FolderOpened"/>
                             </Button>
 
                             <TextBlock Grid.Row="1" Grid.Column="0" Text="{le:Loc Label_TempDirectory}"/>
@@ -448,13 +447,13 @@
                                         <behaviors:ProcessStartAction FileName="explorer.exe" Arguments="{Binding ProductInfo.Temporary, Mode=OneWay}" ThrowException="False"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
-                                <mi:Modern Kind="FolderOpen"/>
+                                <mi:Codicons Kind="FolderOpened"/>
                             </Button>
 
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="{le:Loc Label_AppDataDirectory}"/>
                             <TextBox   Grid.Row="2" Grid.Column="1" Text="{Binding ProductInfo.Roaming, Mode=OneWay}"/>
                             <Button    Grid.Row="2" Grid.Column="3" Command="{Binding InitializeSyntaxCommand, Mode=OneTime}" ToolTip="{le:Loc Command_InitializeSyntax}" Style="{StaticResource IconDangerButton}">
-                                <mi:Material Kind="FileRefreshOutline"/>
+                                <mi:VaadinIcons Kind="FileRefresh"/>
                             </Button>
                         </Grid>
 
@@ -490,22 +489,19 @@
 
                             <Button Command="{Binding ImportSettingsFileCommand, Mode=OneTime}">
                                 <StackPanel Orientation="Horizontal">
-                                    <mi:PackIconFontAwesome Kind="FileImportSolid" VerticalAlignment="Center"/>
-                                    <Border Width="5"/>
+                                    <mi:PackIconFontisto Kind="Import" VerticalAlignment="Center" Margin="0 0 5 0"/>
                                     <TextBlock Text="{le:Loc Command_ImportSettings}"/>
                                 </StackPanel>
                             </Button>
                             <Button Command="{Binding ExportSettingsFileCommand, Mode=OneTime}">
                                 <StackPanel Orientation="Horizontal">
-                                    <mi:PackIconFontAwesome Kind="FileDownloadSolid" VerticalAlignment="Center"/>
-                                    <Border Width="5"/>
+                                    <mi:PackIconFontisto Kind="Export" VerticalAlignment="Center" Margin="0 0 5 0"/>
                                     <TextBlock Text="{le:Loc Command_ExportSettings}"/>
                                 </StackPanel>
                             </Button>
                             <Button Command="{Binding InitializeSettingsCommand, Mode=OneTime}" Style="{StaticResource This.DangerButton}">
                                 <StackPanel Orientation="Horizontal">
-                                    <mi:PackIconMaterial Kind="CogRefresh" VerticalAlignment="Center"/>
-                                    <Border Width="5"/>
+                                    <mi:PackIconMaterial Kind="CogRefresh" VerticalAlignment="Center" Margin="0 0 5 0"/>
                                     <TextBlock Text="{le:Loc Command_InitializeSettings}"/>
                                 </StackPanel>
                             </Button>

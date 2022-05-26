@@ -12,7 +12,7 @@
   <Identity
     Name="34049KazukiAwasawa.310512F2C2269"
     Publisher="CN=FF18BBFC-17FB-4075-8AD6-0AD85AB820F9"
-    Version="1.20.1.0" />
+    Version="1.21.0.0" />
 
   <Properties>
     <DisplayName>MyPad TextEditor</DisplayName>
@@ -187,19 +187,23 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
 
-		<!-- https://docs.microsoft.com/en-us/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/toast-notifications -->
+        <!--
+          INFO: Microsoft.Toolkit.Uwp.Notifications を WAP で使用するため CLSID を設定する
+          単純な .exe であれば不要だが、パッケージ化して配布する場合はこの設定が必要になる。
+          https://docs.microsoft.com/en-us/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/toast-notifications#step-2-update-your-manifest
+        -->
         <!--Specify which CLSID to activate when toast clicked-->
         <desktop:Extension Category="windows.toastNotificationActivation">
           <desktop:ToastNotificationActivation ToastActivatorCLSID="74379A3B-2DB0-4D13-966C-09B527AE49E2" />
         </desktop:Extension>
-	    <!--Register COM CLSID LocalServer32 registry key-->
-	    <com:Extension Category="windows.comServer">
-		  <com:ComServer>
-		    <com:ExeServer Executable="MyPad\MyPad.exe" Arguments="-ToastActivated" DisplayName="Toast activator">
-			  <com:Class Id="74379A3B-2DB0-4D13-966C-09B527AE49E2" DisplayName="Toast activator"/>
-		    </com:ExeServer>
-		  </com:ComServer>
-		</com:Extension>
+        <!--Register COM CLSID LocalServer32 registry key-->
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:ExeServer Executable="MyPad\MyPad.exe" Arguments="-ToastActivated" DisplayName="Toast activator">
+              <com:Class Id="74379A3B-2DB0-4D13-966C-09B527AE49E2" DisplayName="Toast activator"/>
+            </com:ExeServer>
+          </com:ComServer>
+        </com:Extension>
       </Extensions>
     </Application>
   </Applications>

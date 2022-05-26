@@ -30,7 +30,7 @@
                     Style="{StaticResource Common.ChromelessButton}"
                     HorizontalContentAlignment="Left">
                 <StackPanel Orientation="Horizontal">
-                    <mi:Modern Kind="ClipboardVariantText"/>
+                    <mi:Codicons Kind="Copy"/>
                     <Border Width="5"/>
                     <TextBlock Text="{le:Loc Command_CopyFullPath}"/>
                 </StackPanel>

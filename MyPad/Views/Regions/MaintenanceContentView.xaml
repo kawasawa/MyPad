@@ -86,11 +86,11 @@
 
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 10 -5">
                         <Button Command="{Binding CollectLogsCommand, Mode=OneTime}" Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_Refresh}" IsTabStop="False">
-                            <mi:Material Kind="Refresh"/>
+                            <mi:Codicons Kind="Refresh"/>
                         </Button>
                         <Border Width="10"/>
                         <Button Command="{Binding ExportLogArchiveCommand, Mode=OneTime}" Style="{StaticResource Common.CircleButton}" ToolTip="{le:Loc Command_ExportLog}" IsTabStop="False">
-                            <mi:Material Kind="ArchiveArrowDown"/>
+                            <mi:Material Kind="PackageDown"/>
                         </Button>
                     </StackPanel>
                 </Grid>
@@ -110,7 +110,10 @@
                         </Style>
                     </Grid.Resources>
 
-                    <TextBlock Grid.Row="0" Text="CPU usage"/>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                        <mi:PackIconBootstrapIcons Kind="Cpu" VerticalAlignment="Center" Margin="0 0 10 0"/>
+                        <TextBlock Text="CPU usage"/>
+                    </StackPanel>
                     <lcw:CartesianChart Grid.Row="2" Hoverable="False" DataTooltip="{x:Null}">
                         <lcw:CartesianChart.AxisX>
                             <!--a small visual improvement, lets hide the first points (x = 0, x=1) to get better animations-->
@@ -127,8 +130,11 @@
                             </lcw:LineSeries>
                         </lcw:CartesianChart.Series>
                     </lcw:CartesianChart>
-
-                    <TextBlock Grid.Row="4" Text="Memory usage"/>
+                    
+                    <StackPanel Grid.Row="4" Orientation="Horizontal">
+                        <mi:PackIconFontAwesome Kind="MemorySolid" VerticalAlignment="Center" Margin="0 0 10 0"/>
+                        <TextBlock Text="Memory usage"/>
+                    </StackPanel>
                     <lcw:CartesianChart Grid.Row="6" Hoverable="False" DataTooltip="{x:Null}">
                         <lcw:CartesianChart.AxisX>
                             <!--a small visual improvement, lets hide the first points (x = 0, x=1) to get better animations-->

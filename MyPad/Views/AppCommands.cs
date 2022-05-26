@@ -31,7 +31,7 @@ public static class AppCommands
         Definitions = new Dictionary<string, (string, KeyGesture)>
         {
             // ファイル
-            { nameof(MainWindowViewModel.NewCommand), (nameof(Resources.Command_New), new KeyGesture(Key.N, ModifierKeys.Control))},
+            { nameof(MainWindowViewModel.NewCommand), (nameof(Resources.Command_New), new KeyGesture(Key.N, ModifierKeys.Control, "Ctrl+N / Ctrl+T"))},
             { nameof(MainWindowViewModel.NewWindowCommand), (nameof(Resources.Command_NewWindow), new KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Shift))},
             { nameof(MainWindowViewModel.OpenCommand), (nameof(Resources.Command_Open), new KeyGesture(Key.O, ModifierKeys.Control))},
             { nameof(MainWindowViewModel.SaveCommand), (nameof(Resources.Command_Save), new KeyGesture(Key.S, ModifierKeys.Control))},
@@ -74,8 +74,8 @@ public static class AppCommands
             { AvalonEditCommands.ConvertToLowercase.Name, (nameof(Resources.Command_ConvertToLowerCase), new KeyGesture(Key.U, ModifierKeys.Control | ModifierKeys.Shift))},
             { AvalonEditCommands.ConvertToUppercase.Name, (nameof(Resources.Command_ConvertToUpperCase), new KeyGesture(Key.U, ModifierKeys.Control))},
             { AvalonEditCommands.ConvertToTitleCase.Name, (nameof(Resources.Command_ConvertToTitleCase), new KeyGesture(Key.U, ModifierKeys.Control | ModifierKeys.Alt))},
-            { AvalonEditCommands.ConvertTabsToSpaces.Name, (nameof(Resources.Command_ConvertTabsToSpaces), new KeyGesture(Key.T, ModifierKeys.Control | ModifierKeys.Shift))},
-            { AvalonEditCommands.ConvertSpacesToTabs.Name, (nameof(Resources.Command_ConvertSpacesToTabs), new KeyGesture(Key.T, ModifierKeys.Control))},
+            { AvalonEditCommands.ConvertTabsToSpaces.Name, (nameof(Resources.Command_ConvertTabsToSpaces), new KeyGesture(Key.None))},
+            { AvalonEditCommands.ConvertSpacesToTabs.Name, (nameof(Resources.Command_ConvertSpacesToTabs), new KeyGesture(Key.None))},
             { TextArea.Commands.Completion.Name, (nameof(Resources.Command_Completion), new KeyGesture(Key.Space, ModifierKeys.Control))},
             { TextArea.Commands.Folding.Name, (nameof(Resources.Command_Folding), new KeyGesture(Key.OemOpenBrackets, ModifierKeys.Control | ModifierKeys.Shift, "Ctrl+Shift+["))},
             { TextArea.Commands.Unfolding.Name, (nameof(Resources.Command_Unfolding), new KeyGesture(Key.OemCloseBrackets, ModifierKeys.Control | ModifierKeys.Shift, "Ctrl+Shift+]"))},
@@ -174,6 +174,9 @@ public static class AppCommands
     private static void SetKeyGesture(RoutedCommand command)
     {
         command.InputGestures.Clear();
+        if (Definitions[command.Name].keyGesture.Key == Key.None)
+            return;
+
         command.InputGestures.Add(Definitions[command.Name].keyGesture);
 
         // テンキーに対応する

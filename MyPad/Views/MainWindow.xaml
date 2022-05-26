@@ -106,6 +106,7 @@
         <KeyBinding Command="{Binding SwitchPomodoroTimerCommand, Mode=OneTime}" Gesture="{markup:CommandKeyGesuture SwitchPomodoroTimerCommand}"/>
 
         <!-- Mac のショートカットキーを再現する -->
+        <KeyBinding Command="{Binding NewCommand,                 Mode=OneTime}" Key="T" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding CloseCommand,               Mode=OneTime}" Key="W" Modifiers="Ctrl"/>
         <KeyBinding Command="Close"                                              Key="W" Modifiers="Ctrl+Shift"/>
         <KeyBinding Command="{Binding ExitApplicationCommand,     Mode=OneTime}" Key="Q" Modifiers="Ctrl"/>
@@ -125,31 +126,28 @@
             <!-- 最前面表示ボタン -->
             <ToggleButton IsChecked="{Binding Topmost, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}" ToolTip="{le:Loc Command_Topmost}"
                           Height="{StaticResource Const.WindowButtonCommands.Height}" VerticalAlignment="Top" Focusable="False">
-                <mi:PackIconModern Kind="Pin" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
-                    <mi:PackIconModern.Resources>
-                        <Style TargetType="{x:Type mi:PackIconModern}">
+                <mi:PackIconBootstrapIcons Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
+                    <mi:PackIconBootstrapIcons.Resources>
+                        <Style TargetType="{x:Type mi:PackIconBootstrapIcons}">
+                            <Setter Property="Kind" Value="PinAngle"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Topmost, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneWay}" Value="True">
-                                    <Setter Property="RenderTransform">
-                                        <Setter.Value>
-                                            <RotateTransform Angle="-45" CenterX="7" CenterY="7"/>
-                                        </Setter.Value>
-                                    </Setter>
+                                    <Setter Property="Kind" Value="PinFill"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
-                    </mi:PackIconModern.Resources>
-                </mi:PackIconModern>
+                    </mi:PackIconBootstrapIcons.Resources>
+                </mi:PackIconBootstrapIcons>
             </ToggleButton>
             
             <!-- 全画面表示ボタン -->
             <Button Command="{Binding SwitchFullScreenModeCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" ToolTip="{le:Loc Command_SwitchFullScreenMode}"
                     Height="{StaticResource Const.WindowButtonCommands.Height}" VerticalAlignment="Top" Focusable="False">
-                <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
-                    <mi:PackIconModern.Resources>
-                        <Style TargetType="{x:Type mi:PackIconModern}"/>
-                    </mi:PackIconModern.Resources>
-                </mi:PackIconModern>
+                <mi:PackIconBootstrapIcons Kind="ArrowsFullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
+                    <mi:PackIconBootstrapIcons.Resources>
+                        <Style TargetType="{x:Type mi:PackIconBootstrapIcons}"/>
+                    </mi:PackIconBootstrapIcons.Resources>
+                </mi:PackIconBootstrapIcons>
             </Button>
         </m:WindowCommands>
     </m:MetroWindow.RightWindowCommands>
@@ -192,7 +190,7 @@
                              P0={Binding ShowTitleBar, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}},
                              P1={Binding Settings.System.ShowMenuBar, Mode=OneWay},
                              P2={Binding Settings.System.ShowToolBar, Mode=OneWay}}">
-            <mi:PackIconModern Kind="Fullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+            <mi:PackIconBootstrapIcons Kind="ArrowsFullscreen" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
         </Button>
 
         <!-- コンテンツグリッド -->
@@ -273,7 +271,7 @@
                         <!-- エクスプローラー -->
                         <m:HamburgerMenuIconItem x:Name="ExplorerItem" Label="{le:Loc Command_Explorer}">
                             <m:HamburgerMenuIconItem.Icon>
-                                <mi:Material Kind="FileTree"/>
+                                <mi:Codicons Kind="Files"/>
                             </m:HamburgerMenuIconItem.Icon>
                             <m:HamburgerMenuIconItem.Tag>
                                 <ContentControl x:Name="ExplorerRegion" Style="{StaticResource RegionContent}"/>
@@ -283,7 +281,7 @@
                         <!-- Grep -->
                         <m:HamburgerMenuIconItem x:Name="GrepItem" Label="{le:Loc Command_Grep}">
                             <m:HamburgerMenuIconItem.Icon>
-                                <mi:Material Kind="Magnify"/>
+                                <mi:VaadinIcons Kind="FolderSearch"/>
                             </m:HamburgerMenuIconItem.Icon>
                             <m:HamburgerMenuIconItem.Tag>
                                 <ContentControl x:Name="GrepRegion" Style="{StaticResource RegionContent}"/>
@@ -293,7 +291,7 @@
                         <!-- プロパティ -->
                         <m:HamburgerMenuIconItem x:Name="PropertyItem" Label="{le:Loc Command_Property}">
                             <m:HamburgerMenuIconItem.Icon>
-                                <mi:Material Kind="FileOutline"/>
+                                <mi:Codicons Kind="File"/>
                             </m:HamburgerMenuIconItem.Icon>
                             <m:HamburgerMenuIconItem.Tag>
                                 <ContentControl x:Name="PropertyRegion" Style="{StaticResource RegionContent}" DataContext="{Binding Data.ActiveTextEditor.Value, Source={StaticResource Proxy}, Mode=OneWay}" />
@@ -306,7 +304,7 @@
                         <!-- オプション -->
                         <m:HamburgerMenuIconItem Label="{le:Loc Command_Option}" Command="{Binding Data.OptionCommand, Source={StaticResource Proxy}, Mode=OneTime}">
                             <m:HamburgerMenuIconItem.Icon>
-                                <mi:Modern Kind="Cog"/>
+                                <mi:Codicons Kind="Gear"/>
                             </m:HamburgerMenuIconItem.Icon>
                         </m:HamburgerMenuIconItem>
                     </m:HamburgerMenuItemCollection>
@@ -350,27 +348,27 @@
                                           Header="{le:Loc {markup:CommandResourceKey NewCommand}}"
                                           InputGestureText="{markup:CommandKeyGesutureText NewCommand}">
                                     <MenuItem.Icon>
-                                        <mi:Modern Kind="PageNew"/>
+                                        <mi:Codicons Kind="NewFile"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Command="{Binding SaveAllCommand, Mode=OneTime}"
                                           Header="{le:Loc {markup:CommandResourceKey SaveAllCommand}}"
                                           InputGestureText="{markup:CommandKeyGesutureText SaveAllCommand}">
                                     <MenuItem.Icon>
-                                        <mi:Material Kind="ContentSaveAll"/>
+                                        <mi:Codicons Kind="SaveAll"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Command="{Binding CloseAllCommand, Mode=OneTime}"
                                           Header="{le:Loc {markup:CommandResourceKey CloseAllCommand}}"
                                           InputGestureText="{markup:CommandKeyGesutureText CloseAllCommand}">
                                     <MenuItem.Icon>
-                                        <mi:Material Kind="LayersOff"/>
+                                        <mi:Codicons Kind="CloseAll"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
                             </ContextMenu>
                         </DockPanel.ContextMenu>
                         <Button Command="{x:Static dr:TabablzControl.AddItemCommand}" ToolTip="{le:Loc Command_New}" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Mode=OneWay}" Padding="0" BorderThickness="0" Background="Transparent" BorderBrush="Transparent" Focusable="False">
-                            <mi:PackIconMaterial Kind="Plus" Height="{DynamicResource MahApps.Font.Size.Button}" Width="{DynamicResource MahApps.Font.Size.Button}" Foreground="{DynamicResource MahApps.Brushes.Gray5}"/>
+                            <mi:PackIconCodicons Kind="Add" Height="{DynamicResource MahApps.Font.Size.Button}" Width="{DynamicResource MahApps.Font.Size.Button}" Foreground="{DynamicResource MahApps.Brushes.Gray5}"/>
                         </Button>
                         <Border VerticalAlignment="Stretch" Background="Transparent"/>
                     </DockPanel>
@@ -413,29 +411,26 @@
                                   Header="{le:Loc {markup:CommandResourceKey CloseCommand}}"
                                   InputGestureText="{markup:CommandKeyGesutureText CloseCommand}">
                             <MenuItem.Icon>
-                                <mi:Material Kind="Close"/>
+                                <mi:JamIcons Kind="CloseRectangle"/>
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Command="{Binding CloseAllCommand, Mode=OneTime}"
                                   Header="{le:Loc {markup:CommandResourceKey CloseAllCommand}}"
                                   InputGestureText="{markup:CommandKeyGesutureText CloseAllCommand}">
                             <MenuItem.Icon>
-                                <mi:Material Kind="LayersOff"/>
+                                <mi:Codicons Kind="CloseAll"/>
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Command="{Binding CloseOtherCommand, Mode=OneTime}"
                                   Header="{le:Loc {markup:CommandResourceKey CloseOtherCommand}}"
                                   InputGestureText="{markup:CommandKeyGesutureText CloseOtherCommand}">
-                            <MenuItem.Icon>
-                                <mi:Material Kind="LayersRemove"/>
-                            </MenuItem.Icon>
                         </MenuItem>
                         <Separator/>
                         <MenuItem Command="{Binding SaveCommand, Mode=OneTime}"
                                   Header="{le:Loc {markup:CommandResourceKey SaveCommand}}"
                                   InputGestureText="{markup:CommandKeyGesutureText SaveCommand}">
                             <MenuItem.Icon>
-                                <mi:Material Kind="ContentSave"/>
+                                <mi:Codicons Kind="Save"/>
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Command="{Binding SaveAsCommand, Mode=OneTime}"
@@ -443,7 +438,7 @@
                                   HeaderStringFormat="{}{0}..."
                                   InputGestureText="{markup:CommandKeyGesutureText SaveAsCommand}">
                             <MenuItem.Icon>
-                                <mi:Material Kind="ContentSaveSettings"/>
+                                <mi:Codicons Kind="SaveAs"/>
                             </MenuItem.Icon>
                         </MenuItem>
                         <Separator/>
@@ -452,7 +447,7 @@
                                   HeaderStringFormat="{}{0}..."
                                   InputGestureText="{markup:CommandKeyGesutureText DiffUnmodifiedCommand}">
                             <MenuItem.Icon>
-                                <mi:Modern Kind="ListAdd"/>
+                                <mi:Material Kind="FileCompare"/>
                             </MenuItem.Icon>
                         </MenuItem>
                         <MenuItem Header="{le:Loc Command_OpenParentDirectory}"
@@ -463,7 +458,7 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                             <MenuItem.Icon>
-                                <mi:Material Kind="FolderOpen"/>
+                                <mi:Codicons Kind="FolderOpened"/>
                             </MenuItem.Icon>
                         </MenuItem>
                     </ContextMenu>
@@ -516,14 +511,14 @@
                                               Header="{le:Loc {markup:CommandResourceKey Undo}}"
                                               InputGestureText="{markup:CommandKeyGesutureText Undo}">
                                         <MenuItem.Icon>
-                                            <mi:Modern Kind="UndoCurve"/>
+                                            <mi:Codicons Kind="Discard"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <MenuItem Command="Redo"
                                               Header="{le:Loc {markup:CommandResourceKey Redo}}"
                                               InputGestureText="{markup:CommandKeyGesutureText Redo}">
                                         <MenuItem.Icon>
-                                            <mi:Modern Kind="RedoCurve"/>
+                                            <mi:Codicons Kind="Redo"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <Separator/>
@@ -538,28 +533,28 @@
                                               Header="{le:Loc {markup:CommandResourceKey Copy}}"
                                               InputGestureText="{markup:CommandKeyGesutureText Copy}">
                                         <MenuItem.Icon>
-                                            <mi:Modern Kind="PageCopy"/>
+                                            <mi:Codicons Kind="Copy"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <MenuItem Command="Paste"
                                               Header="{le:Loc {markup:CommandResourceKey Paste}}"
                                               InputGestureText="{markup:CommandKeyGesutureText Paste}">
                                         <MenuItem.Icon>
-                                            <mi:Modern Kind="ClipboardPaste"/>
+                                            <mi:Material Kind="ClipboardFileOutline"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <MenuItem Command="EditingCommands.Delete"
                                               Header="{le:Loc {markup:CommandResourceKey Delete}}"
                                               InputGestureText="{markup:CommandKeyGesutureText Delete}">
                                         <MenuItem.Icon>
-                                            <mi:Material Kind="Eraser"/>
+                                            <mi:Material Kind="BackspaceOutline"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <MenuItem Command="SelectAll"
                                               Header="{le:Loc {markup:CommandResourceKey SelectAll}}"
                                               InputGestureText="{markup:CommandKeyGesutureText SelectAll}">
                                         <MenuItem.Icon>
-                                            <mi:Modern Kind="CursorDefault"/>
+                                            <mi:Material Kind="CursorDefaultClickOutline"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <Separator/>
@@ -645,21 +640,21 @@
                                                   Header="{le:Loc {markup:CommandResourceKey Completion}}"
                                                   InputGestureText="{markup:CommandKeyGesutureText Completion}">
                                             <MenuItem.Icon>
-                                                <mi:Material Kind="AutoFix"/>
+                                                <mi:Codicons Kind="Wand"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem Command="controls:TextArea+Commands.Folding"
                                                   Header="{le:Loc {markup:CommandResourceKey Folding}}"
                                                   InputGestureText="{markup:CommandKeyGesutureText Folding}">
                                             <MenuItem.Icon>
-                                                <mi:Octicons Kind="Fold"/>
+                                                <mi:Codicons Kind="Fold"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem Command="controls:TextArea+Commands.Unfolding"
                                                   Header="{le:Loc {markup:CommandResourceKey Unfolding}}"
                                                   InputGestureText="{markup:CommandKeyGesutureText Unfolding}">
                                             <MenuItem.Icon>
-                                                <mi:Octicons Kind="Unfold"/>
+                                                <mi:Codicons Kind="Unfold"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                     </MenuItem>
