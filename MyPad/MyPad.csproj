@@ -6,7 +6,7 @@
     <RuntimeIdentifiers>win-x86</RuntimeIdentifiers>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
-    <Version>1.20.1</Version>
+    <Version>1.21.0</Version>
     <Authors>Kazuki Awasawa</Authors>
     <Copyright>© Kazuki Awasawa All Rights Reserved.</Copyright>
     <NeutralLanguage>ja-JP</NeutralLanguage>
