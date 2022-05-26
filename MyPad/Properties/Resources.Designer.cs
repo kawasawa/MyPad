@@ -764,7 +764,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   C# スクリプトランナー に類似しているローカライズされた文字列を検索します。
+        ///   C# インタラクティブ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Command_ScriptRunner {
             get {
@@ -1894,7 +1894,7 @@ namespace MyPad.Properties {
         }
         
         /// <summary>
-        ///   エクスプローラーのルートフォルダを指定します。 に類似しているローカライズされた文字列を検索します。
+        ///   エクスプローラーのルートフォルダを指定します。既定ではユーザフォルダが選択されます。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LabelText_SetExplorerRoot {
             get {
