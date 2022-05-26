@@ -35,26 +35,26 @@
         
         <Button Command="{Binding NewCommand, Mode=OneTime}" 
                 ToolTip="{le:Loc Command_New}">
-            <mi:Modern Kind="PageNew"/>
+            <mi:Codicons Kind="NewFile"/>
         </Button>
         <Button Command="{Binding OpenCommand, Mode=OneTime}" 
                 ToolTip="{le:Loc Command_Open}">
-            <mi:Material Kind="FolderOpen"/>
+            <mi:Codicons Kind="FolderOpened"/>
         </Button>
         <Button Command="{Binding SaveCommand, Mode=OneTime}" 
                 ToolTip="{le:Loc Command_Save}">
-            <mi:Material Kind="ContentSave"/>
+            <mi:Codicons Kind="Save"/>
         </Button>
         
         <Separator Margin="5"/>
         
         <Button Command="Undo" 
                 ToolTip="{le:Loc Command_Undo}">
-            <mi:Modern Kind="UndoCurve"/>
+            <mi:Codicons Kind="Discard"/>
         </Button>
         <Button Command="Redo" 
                 ToolTip="{le:Loc Command_Redo}">
-            <mi:Modern Kind="RedoCurve"/>
+            <mi:Codicons Kind="Redo"/>
         </Button>
         
         <Separator Margin="5"/>
@@ -65,37 +65,37 @@
         </Button>
         <Button Command="Copy" 
                 ToolTip="{le:Loc Command_Copy}">
-            <mi:Modern Kind="PageCopy"/>
+            <mi:Codicons Kind="Copy"/>
         </Button>
         <Button Command="Paste"
                 ToolTip="{le:Loc Command_Paste}">
-            <mi:Modern Kind="ClipboardPaste"/>
+            <mi:Material Kind="ClipboardFileOutline"/>
         </Button>
         <Button Command="EditingCommands.Delete" 
                 ToolTip="{le:Loc Command_Delete}">
-            <mi:Material Kind="Eraser"/>
+            <mi:Material Kind="BackspaceOutline"/>
         </Button>
         <Button Command="SelectAll"
                 ToolTip="{le:Loc Command_SelectAll}">
-            <mi:Modern Kind="CursorDefault"/>
+            <mi:Material Kind="CursorDefaultClickOutline"/>
         </Button>
         
         <Separator Margin="5"/>
 
         <Button Command="Find"
                 ToolTip="{le:Loc Command_Find}">
-            <mi:Material Kind="Magnify"/>
+            <mi:Codicons Kind="Search"/>
         </Button>
         <Button Command="Replace"
                 ToolTip="{le:Loc Command_Replace}">
-            <mi:Material Kind="FindReplace"/>
+            <mi:Codicons Kind="Replace"/>
         </Button>
         
         <Separator Margin="5"/>
         
         <m:DropDownButton ToolTip="{le:Loc Command_Formatting}">
             <m:DropDownButton.Icon>
-                <mi:Modern Kind="PageEdit"/>
+                <mi:Codicons Kind="Edit"/>
             </m:DropDownButton.Icon>
             <m:DropDownButton.Items>
                 <MenuItem Command="controls:TextArea+Commands.ConvertToNarrow"
@@ -126,28 +126,28 @@
 
         <m:DropDownButton ToolTip="{le:Loc Command_Coding}">
             <m:DropDownButton.Icon>
-                <mi:Material Kind="CodeTags"/>
+                <mi:Codicons Kind="Code"/>
             </m:DropDownButton.Icon>
             <m:DropDownButton.Items>
                 <MenuItem Command="controls:TextArea+Commands.Completion"
                           Header="{le:Loc {markup:CommandResourceKey Completion}}"
                           InputGestureText="{markup:CommandKeyGesutureText Completion}">
                     <MenuItem.Icon>
-                        <mi:Material Kind="AutoFix"/>
+                        <mi:Codicons Kind="Wand"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Command="controls:TextArea+Commands.Folding"
                           Header="{le:Loc {markup:CommandResourceKey Folding}}"
                           InputGestureText="{markup:CommandKeyGesutureText Folding}">
                     <MenuItem.Icon>
-                        <mi:Octicons Kind="Fold"/>
+                        <mi:Codicons Kind="Fold"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Command="controls:TextArea+Commands.Unfolding"
                           Header="{le:Loc {markup:CommandResourceKey Unfolding}}"
                           InputGestureText="{markup:CommandKeyGesutureText Unfolding}">
                     <MenuItem.Icon>
-                        <mi:Octicons Kind="Unfold"/>
+                        <mi:Codicons Kind="Unfold"/>
                     </MenuItem.Icon>
                 </MenuItem>
             </m:DropDownButton.Items>
@@ -157,15 +157,25 @@
 
         <ToggleButton IsChecked="{Binding Settings.TextEditor.ShowColumnRuler, Mode=TwoWay}"
                       ToolTip="{le:Loc LabelText_ShowColumnRuler}">
-            <mi:Material Kind="FlipHorizontal"/>
+            <mi:PackIconCodicons Kind="SymbolSnippet">
+                <mi:PackIconCodicons.Resources>
+                    <Style TargetType="{x:Type mi:PackIconCodicons}">
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <RotateTransform Angle="-90" CenterX="7" CenterY="9"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </mi:PackIconCodicons.Resources>
+            </mi:PackIconCodicons>
         </ToggleButton>
         <ToggleButton IsChecked="{Binding Settings.TextEditor.WordWrap, Mode=TwoWay}"
                       ToolTip="{le:Loc LabelText_EnableWordWrap}">
-            <mi:Material Kind="FormatTextWrappingWrap"/>
+            <mi:Codicons Kind="WordWrap"/>
         </ToggleButton>
         <ToggleButton IsChecked="{Binding Settings.TextEditor.ConvertTabsToSpaces, Mode=TwoWay}"
                       ToolTip="{le:Loc LabelText_ConvertTabsToSpaces}">
-            <mi:Material Kind="KeyboardSpace"/>
+            <mi:Unicons Kind="SpaceKey"/>
         </ToggleButton>
     </ToolBar>
     

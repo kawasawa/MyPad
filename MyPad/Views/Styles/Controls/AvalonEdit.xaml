@@ -135,7 +135,7 @@
                             <ToggleButton Grid.Row="0" Grid.Column="0" x:Name="ExpandButton"
                                           IsChecked="{Binding (controls:TextArea.ReplaceAreaExpanded), Mode=TwoWay}"
                                           ToolTip="{Binding Localization.SwitchFindModeText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">
-                                <mi:Material Kind="ChevronDown"/>
+                                <mi:Codicons Kind="ChevronDown"/>
                             </ToggleButton>
                             
                             <TextBox Grid.Row="0" Grid.Column="2" x:Name="PART_searchTextBox"
@@ -146,28 +146,28 @@
                             <Button Grid.Row="0" Grid.Column="4"
                                     Command="ae:SearchCommands.FindPrevious"
                                     ToolTip="{Binding Localization.FindPreviousText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">
-                                <mi:Modern Kind="MagnifyArrowUp"/>
+                                <mi:Codicons Kind="ArrowUp"/>
                             </Button>
                             <Button Grid.Row="0" Grid.Column="5"
                                     Command="ae:SearchCommands.FindNext"
                                     ToolTip="{Binding Localization.FindNextText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">
-                                <mi:Modern Kind="MagnifyArrowDown"/>
+                                <mi:Codicons Kind="ArrowDown"/>
                             </Button>
                             <ToggleButton Grid.Row="0" Grid.Column="7" 
                                           IsChecked="{Binding MatchCase, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
                                           ToolTip="{Binding Localization.MatchCaseText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">
-                                <mi:Material Kind="FormatLetterCase"/>
+                                <mi:Codicons Kind="CaseSensitive"/>
                             </ToggleButton>
                             <ToggleButton Grid.Row="0" Grid.Column="8"
                                           IsChecked="{Binding UseRegex, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
                                           ToolTip="{Binding Localization.UseRegexText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">
-                                <mi:Material Kind="Regex"/>
+                                <mi:Codicons Kind="Regex"/>
                             </ToggleButton>
                             <Button Grid.Row="0" Grid.Column="10"
                                     Command="ae:SearchCommands.CloseSearchPanel"
                                     ToolTip="{Binding Localization.CloseText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                     IsTabStop="False">
-                                <mi:Material Kind="Close"/>
+                                <mi:Codicons Kind="Close"/>
                             </Button>
 
                             <Border Grid.Row="1" Grid.Column="0" Height="3"/>
@@ -182,13 +182,13 @@
                                     Command="controls:TextArea+Commands.ReplaceNext"
                                     ToolTip="{Binding Localization.ReplaceNextText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                     Focusable="{Binding (controls:TextArea.ReplaceAreaExpanded), Mode=OneWay}">
-                                <mi:Material Kind="FindReplace"/>
+                                <mi:Codicons Kind="Replace"/>
                             </Button>
                             <Button Grid.Row="2" Grid.Column="5"
                                     Command="controls:TextArea+Commands.ReplaceAll"
                                     ToolTip="{Binding Localization.ReplaceAllText, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                     Focusable="{Binding (controls:TextArea.ReplaceAreaExpanded), Mode=OneWay}">
-                                <mi:Modern Kind="Refresh"/>
+                                <mi:Codicons Kind="ReplaceAll"/>
                             </Button>
                         </Grid>
                     </Border>
@@ -196,7 +196,7 @@
                         <Trigger Property="controls:TextArea.ReplaceAreaExpanded" Value="True">
                             <Setter TargetName="ExpandButton" Property="Content">
                                 <Setter.Value>
-                                    <mi:Material Kind="ChevronUp"/>
+                                    <mi:Codicons Kind="ChevronUp"/>
                                 </Setter.Value>
                             </Setter>
                         </Trigger>

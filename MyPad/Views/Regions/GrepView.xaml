@@ -55,18 +55,18 @@
 
             <TextBox  Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="4" Text="{Binding Directory.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{le:Loc Label_Directory}" m:TextBoxHelper.ClearTextButton="True"/>
             <Button   Grid.Row="0"  Grid.Column="4" Command="{Binding SelectDirectoryCommand, Mode=OneTime}" ToolTip="{le:Loc Command_Open}">
-                <mi:Modern Kind="FolderOpen"/>
+                <mi:Codicons Kind="FolderOpened"/>
             </Button>
             <CheckBox Grid.Row="2"  Grid.ColumnSpan="5" Margin="3 0 0 0" IsChecked="{Binding AllDirectories.Value, Mode=TwoWay}" Content="{le:Loc Label_AllDirectories}"/>
             <TextBox  Grid.Row="4"  Grid.Column="0" Text="{Binding SearchText.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{le:Loc Command_Find}" m:TextBoxHelper.ClearTextButton="True"/>
             <Button   Grid.Row="4"  Grid.Column="1" Style="{StaticResource AccentButton}" Command="{Binding GrepCommand, Mode=OneTime}" ToolTip="{le:Loc Command_Find}" IsDefault="True">
-                <mi:Material Kind="Magnify"/>
+                <mi:Codicons Kind="Search"/>
             </Button>
             <ToggleButton Grid.Row="4" Grid.Column="3" IsChecked="{qc:Binding Convert='!$P', ConvertBack='!$value', P={Binding IgnoreCase.Value, Mode=TwoWay}}" ToolTip="{le:Loc Label_CaseSensitive}">
-                <mi:Material Kind="FormatLetterCase"/>
+                <mi:Codicons Kind="CaseSensitive"/>
             </ToggleButton>
             <ToggleButton Grid.Row="4" Grid.Column="4" IsChecked="{Binding UseRegex.Value, Mode=TwoWay}" ToolTip="{le:Loc Label_UseRegex}">
-                <mi:Material Kind="Regex"/>
+                <mi:Codicons Kind="Regex"/>
             </ToggleButton>
             <TextBox  Grid.Row="6"  Grid.ColumnSpan="5" Text="{Binding SearchPattern.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" m:TextBoxHelper.Watermark="{le:Loc Label_SearchPattern}" m:TextBoxHelper.UseFloatingWatermark="True" m:TextBoxHelper.ClearTextButton="True"/>
             <ComboBox Grid.Row="8"  Grid.ColumnSpan="5" SelectedValue="{Binding Encoding.Value, Mode=TwoWay}" ItemsSource="{x:Static root:Constants.ENCODINGS}" DisplayMemberPath="EncodingName" m:TextBoxHelper.Watermark="{le:Loc Label_DefaultEncoding}" m:TextBoxHelper.UseFloatingWatermark="True"/>

@@ -139,7 +139,7 @@
                             <mi:Material Kind="Draw"/>
                         </Border>
                         <Border Grid.Column="0" Visibility="{qc:MultiBinding '$P0 ## !$P1 ? Visibility.Visible : Visibility.Collapsed', P0={Binding SharedProperties.IsInPomodoro.Value, Mode=OneWay}, P1={Binding SharedProperties.IsPomodoroWorking.Value, Mode=OneWay}}">
-                            <mi:Material Kind="CoffeeOutline"/>
+                            <mi:VaadinIcons Kind="Coffee"/>
                         </Border>
                         <Border Grid.Column="2" Visibility="{qc:Binding '$P ? Visibility.Visible : Visibility.Collapsed', P={Binding SharedProperties.IsInPomodoro.Value, Mode=OneWay}}">
                             <m:TransitioningContentControl

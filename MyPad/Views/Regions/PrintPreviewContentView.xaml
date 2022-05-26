@@ -28,7 +28,7 @@
         </Grid>
         <StackPanel Margin="10" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Button Command="{Binding PrintCommand, Mode=OneTime}" ToolTip="{le:Loc Command_Print}" Style="{StaticResource Common.CircleAccentButton}">
-                <mi:Modern Kind="PrinterText"/>
+                <mi:BootstrapIcons Kind="Printer"/>
             </Button>
             <Border Width="{x:Static SystemParameters.VerticalScrollBarWidth}"/>
         </StackPanel>

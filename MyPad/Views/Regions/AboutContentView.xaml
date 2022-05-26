@@ -48,7 +48,7 @@
                             <behaviors:ProcessStartAction FileName="cmd.exe" Arguments="{qc:Binding '\'/c start \' + $P', P={Binding Source={x:Static root:AppSettingsReader.CreatorSite}, Mode=OneWay}}" CreateNoWindow="True" ThrowException="False"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    <mi:FontAwesome Kind="AddressCardRegular"/>
+                    <mi:Material Kind="FaceManProfile"/>
                 </Button>
                 <Button Grid.Column="10" Style="{StaticResource Common.CircleButton}" ToolTipService.ShowDuration="10000" VerticalAlignment="Center" IsTabStop="False">
                     <Button.ToolTip>
@@ -63,7 +63,7 @@
                             <behaviors:ProcessStartAction FileName="cmd.exe" Arguments="{qc:Binding '\'/c start \' + $P', P={Binding Source={x:Static root:AppSettingsReader.DonationSite}, Mode=OneWay}}" CreateNoWindow="True" ThrowException="False"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    <mi:FontAwesome Kind="SmileRegular"/>
+                    <mi:Material Kind="Heart"/>
                 </Button>
             </Grid>
         </ScrollViewer>
