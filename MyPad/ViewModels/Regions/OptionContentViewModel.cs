@@ -5,7 +5,6 @@ using MyPad.Models;
 using MyPad.Properties;
 using MyPad.PubSub;
 using Prism.Events;
-using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -23,9 +22,7 @@ public class OptionContentViewModel : RegionViewModelBase
     [Dependency]
     public IEventAggregator EventAggregator { get; set; }
     [Dependency]
-    public IDialogService DialogService { get; set; }
-    [Dependency]
-    public ICommonDialogService CommonDialogService { get; set; }
+    public ICommonDialogService DialogService { get; set; }
     [Dependency]
     public ILoggerFacade Logger { get; set; }
     [Dependency]
@@ -62,7 +59,7 @@ public class OptionContentViewModel : RegionViewModelBase
                 if (string.IsNullOrEmpty(info?.Path) == false)
                     parameter.InitialDirectory = info.Path;
 
-                var ready = this.CommonDialogService.ShowDialog(parameter);
+                var ready = this.DialogService.ShowDialog(parameter);
                 if (ready == false)
                     return;
 
@@ -103,7 +100,7 @@ public class OptionContentViewModel : RegionViewModelBase
                     Filter = $"{Resources.Label_SettingFile}|*{extension}|{Resources.Label_AllFiles}|*.*",
                     DefaultExtension = extension,
                 };
-                var ready = this.CommonDialogService.ShowDialog(parameters);
+                var ready = this.DialogService.ShowDialog(parameters);
                 if (ready == false)
                     return;
 
@@ -123,7 +120,7 @@ public class OptionContentViewModel : RegionViewModelBase
                     Filter = $"{Resources.Label_SettingFile}|*{extension}|{Resources.Label_AllFiles}|*.*",
                     DefaultExtension = extension,
                 };
-                var ready = this.CommonDialogService.ShowDialog(parameters);
+                var ready = this.DialogService.ShowDialog(parameters);
                 if (ready == false)
                     return;
 

@@ -1,6 +1,5 @@
 ﻿using MyBase.Logging;
 using MyBase.Wpf.CommonDialogs;
-using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -20,9 +19,7 @@ public class MaintenanceContentViewModel : RegionViewModelBase
 {
     private SharedProperties _sharedProperties;
     [Dependency]
-    public IDialogService DialogService { get; set; }
-    [Dependency]
-    public ICommonDialogService CommonDialogService { get; set; }
+    public ICommonDialogService DialogService { get; set; }
     [Dependency]
     public ILoggerFacade Logger { get; set; }
     [Dependency]
@@ -58,7 +55,7 @@ public class MaintenanceContentViewModel : RegionViewModelBase
                    Filter = "ZIP|*.zip",
                    DefaultExtension = ".zip",
                };
-               var ready = this.CommonDialogService.ShowDialog(parameters);
+               var ready = this.DialogService.ShowDialog(parameters);
                if (ready == false)
                    return;
 

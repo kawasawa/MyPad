@@ -563,7 +563,7 @@ public static class IDialogServiceExtensions
     /// <param name="self"><see cref="IDialogService"/> を実装するインスタンス</param>
     /// <returns><see cref="IContainerExtension"/> を実装するインスタンス</returns>
     private static IContainerExtension GetContainerExtension(this IDialogService self)
-        => self.GetType().GetField("_containerExtension", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(self) as IContainerExtension;
+        => self.GetType().GetFieldRecursive("_containerExtension", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(self) as IContainerExtension;
 
     /// <summary>
     /// <see cref="SystemSettings.UseToastNotifications"/> プロパティの値を取得します。

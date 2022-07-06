@@ -2,7 +2,6 @@
 using MyBase.Wpf.CommonDialogs;
 using MyPad.Models;
 using MyPad.Properties;
-using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -26,9 +25,7 @@ public class GrepViewModel : ViewModelBase
     [Dependency]
     public ILoggerFacade Logger { get; set; }
     [Dependency]
-    public IDialogService DialogService { get; set; }
-    [Dependency]
-    public ICommonDialogService CommonDialogService { get; set; }
+    public ICommonDialogService DialogService { get; set; }
 
     public ReactiveCollection<object> Results { get; }
 
@@ -105,7 +102,7 @@ public class GrepViewModel : ViewModelBase
             this.IsPending.Value = true;
 
             var parameter = new FolderBrowserDialogParameters();
-            var ready = this.CommonDialogService.ShowDialog(parameter);
+            var ready = this.DialogService.ShowDialog(parameter);
             if (ready == false)
                 return;
             this.Directory.Value = parameter.FileName;
