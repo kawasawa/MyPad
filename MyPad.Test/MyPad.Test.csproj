@@ -8,6 +8,8 @@
     <Authors>Kazuki Awasawa</Authors>
 
     <Copyright>© Kazuki Awasawa All Rights Reserved.</Copyright>
+
+    <Platforms>AnyCPU;x86;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
