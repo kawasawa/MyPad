@@ -620,7 +620,7 @@ public class TextEditorViewModel : ViewModelBase
     /// </summary>
     /// <param name="func">割り込み処理</param>
     /// <returns>非同期タスク</returns>
-    [LogInterceptorIgnore] // 本質的な処理では無くログが汚れるため
+    [LogInterceptorIgnore("本質的な処理では無くログが汚れるため")]
     private async Task Interrupt(Func<Task> func)
     {
         this.AutoSaveTimer.Stop();

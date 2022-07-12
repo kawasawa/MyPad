@@ -47,6 +47,7 @@ public class SettingsModel : ModelBase
         set => this.SetProperty(ref this._textEditor, value);
     }
 
+    // TODO: プロパティ名も "Misk" に統一したい
     [JsonProperty("OtherTools")]
     public MiscSettings Misc
     {
