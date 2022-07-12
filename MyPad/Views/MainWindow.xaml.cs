@@ -66,20 +66,23 @@ public partial class MainWindow : MetroWindow
         {
             if (this._fullScreenMode)
             {
-                // ウィンドウモードに切り替える
                 this._fullScreenMode = false;
-                this.ShowTitleBar = true;
-                this.IgnoreTaskbarOnMaximize = false;
+
+                // ウィンドウモードに切り替える
                 this.WindowState = WindowState.Normal;
+                this.IgnoreTaskbarOnMaximize = false;
+                this.ShowTitleBar = true;
             }
             else
             {
-                // 全画面モードに切り替える
                 this._fullScreenMode = true;
+
+                // 全画面モードに切り替える
                 this.ShowTitleBar = false;
                 this.IgnoreTaskbarOnMaximize = true;
                 this.WindowState = WindowState.Maximized;
 
+                // 全画面モード用のメニューバーを注入する
                 this.TryInjectRegion(typeof(MenuBarView));
                 this.ViewModel.DialogService.ToastNotify(Properties.Resources.Message_NotifyFullScreenMode);
             }
