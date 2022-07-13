@@ -24,7 +24,7 @@ namespace MyPad.ViewModels.Regions;
 /// <summary>
 /// ファイルエクスプローラーに対応する ViewModel を表します。
 /// </summary>
-public class ExplorerViewModel : ViewModelBase
+public class ExplorerViewModel : RegionViewModelBase
 {
     // Constructor Injection
     public IEventAggregator EventAggregator { get; set; }

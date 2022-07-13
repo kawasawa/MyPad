@@ -16,7 +16,7 @@ namespace MyPad.ViewModels.Regions;
 /// <summary>
 /// Grep パネルに対応する ViewModel を表します。
 /// </summary>
-public class GrepViewModel : ViewModelBase
+public class GrepViewModel : RegionViewModelBase
 {
     // Constructor Injection
     public SettingsModel Settings { get; set; }
