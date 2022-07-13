@@ -85,7 +85,7 @@
                     <TextBlock Text="{qc:MultiBinding 'Path.GetFileName($P0) + \'(\' + $P1 + \') [\' + $P2.EncodingName + \']\'', P0={Binding path, Mode=OneWay}, P1={Binding line, Mode=OneWay}, P2={Binding encoding, Mode=OneWay}}">
                         <TextBlock.ToolTip>
                             <TextBlock>
-                                <Run Text="{qc:MultiBinding '\'Path: \' + $P1.Substring($P0.Length)', P0={Binding DataContext.Directory.Value, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=OneTime}, P1={Binding path, Mode=OneWay}}"/>
+                                <Run Text="{qc:Binding '\'Path: \' + Path.GetFileName($P)', P={Binding path, Mode=OneWay}}"/>
                                 <LineBreak/>
                                 <Run Text="{qc:Binding '\'Line: \' + $P', P={Binding line, Mode=OneWay}}"/>
                                 <LineBreak/>
