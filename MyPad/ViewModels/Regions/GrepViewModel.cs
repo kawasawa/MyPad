@@ -7,6 +7,7 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using Unity;
@@ -47,6 +48,9 @@ public class GrepViewModel : RegionViewModelBase
 
     public ReactiveCommand SelectDirectoryCommand { get; }
     public ReactiveCommand GrepCommand { get; }
+    public ReactiveCommand GrepCancelCommand { get; }
+
+    private CancellationTokenSource _grepCancellationTokenSource;
 
     /// <summary>
     /// このクラスの新しいインスタンスを生成します。
@@ -87,8 +91,38 @@ public class GrepViewModel : RegionViewModelBase
             .AddTo(this.CompositeDisposable);
 
         this.GrepCommand = this.CanGrep.ToReactiveCommand()
-            .WithSubscribe(async () => await this.Grep())
+            .WithSubscribe(async () =>
+            {
+                this._grepCancellationTokenSource ??= new();
+                try
+                {
+                    await this.Grep(this._grepCancellationTokenSource.Token);
+                }
+                catch
+                {
+                }
+
+                if (!this._grepCancellationTokenSource.TryReset())
+                {
+                    this._grepCancellationTokenSource.Dispose();
+                    this._grepCancellationTokenSource = null;
+                }
+            })
             .AddTo(this.CompositeDisposable);
+
+        this.GrepCancelCommand = this.IsPending.ToReactiveCommand()
+            .WithSubscribe(() => this._grepCancellationTokenSource?.Cancel())
+            .AddTo(this.CompositeDisposable);
+    }
+
+    /// <summary>
+    /// このインスタンスが保持するリソースを解放します。
+    /// </summary>
+    /// <param name="disposing">マネージリソースを破棄するかどうかを示す値</param>
+    protected override void Dispose(bool disposing)
+    {
+        this._grepCancellationTokenSource?.Dispose();
+        base.Dispose(disposing);
     }
 
     /// <summary>
@@ -97,28 +131,21 @@ public class GrepViewModel : RegionViewModelBase
     [LogInterceptor]
     private void SelectDirectory()
     {
-        try
-        {
-            this.IsPending.Value = true;
+        var parameter = new FolderBrowserDialogParameters();
+        var ready = this.DialogService.ShowDialog(parameter);
+        if (ready == false)
+            return;
 
-            var parameter = new FolderBrowserDialogParameters();
-            var ready = this.DialogService.ShowDialog(parameter);
-            if (ready == false)
-                return;
-            this.Directory.Value = parameter.FileName;
-        }
-        finally
-        {
-            this.IsPending.Value = false;
-        }
+        this.Directory.Value = parameter.FileName;
     }
 
     /// <summary>
     /// Grep を行います。
     /// </summary>
+    /// <param name="cancellationToken">キャンセルトークン</param>
     /// <returns>非同期タスク</returns>
     [LogInterceptor]
-    private async Task Grep()
+    private async Task Grep(CancellationToken cancellationToken = default)
     {
         if (System.IO.Directory.Exists(this.Directory.Value) == false)
         {
@@ -142,12 +169,18 @@ public class GrepViewModel : RegionViewModelBase
                 this.IgnoreCase.Value,
                 this.UseRegex.Value))
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 this.Results.AddOnScheduler(new { path, line, encoding });
                 count++;
             }
 
             this.Logger.Log($"Grep を実行しました。: MatchedLines={count}", Category.Info);
             this.DialogService.ToastNotify(Resources.Message_NotifySearchCompleted);
+        }
+        catch (OperationCanceledException)
+        {
+            this.Logger.Log($"Grep はキャンセルされました。", Category.Info);
+            throw;
         }
         catch (Exception e)
         {
