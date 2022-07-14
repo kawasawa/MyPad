@@ -14,7 +14,7 @@ public partial class SelectDiffFilesDialog : UserControl
         InitializeComponent();
     }
 
-    [LogInterceptorIgnore] // 本質的な処理では無くログが汚れるため
+    [LogInterceptorIgnore("本質的な処理では無くログが汚れるため")]
     private void Dialog_Loaded(object sender, RoutedEventArgs e)
     {
         if (this.DiffSourcePath.SelectedValue == null)

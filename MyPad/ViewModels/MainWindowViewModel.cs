@@ -10,7 +10,6 @@ using MyPad.Properties;
 using MyPad.PubSub;
 using Prism.Events;
 using Prism.Ioc;
-using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -47,9 +46,7 @@ public class MainWindowViewModel : ViewModelBase
     private SyntaxService _syntaxService;
     private SharedProperties _sharedProperties;
     [Dependency]
-    public IDialogService DialogService { get; set; }
-    [Dependency]
-    public ICommonDialogService CommonDialogService { get; set; }
+    public ICommonDialogService DialogService { get; set; }
     [Dependency]
     public ILoggerFacade Logger
     {
@@ -403,7 +400,7 @@ public class MainWindowViewModel : ViewModelBase
                     var target = this.ActiveTextEditor.Value;
                     this.Logger.Log($"印刷ダイアログを表示します。tab#{target.Sequense} win#{this.Sequense}", Category.Info);
 
-                    var result = this.CommonDialogService.ShowDialog(
+                    var result = this.DialogService.ShowDialog(
                         new PrintDialogParameters()
                         {
                             Title = this.ProductInfo.Description,
@@ -747,7 +744,7 @@ public class MainWindowViewModel : ViewModelBase
             string filter = null;
             Encoding encoding = null;
             var isReadOnly = false;
-            var ready = this.CommonDialogService.ShowDialog(
+            var ready = this.DialogService.ShowDialog(
                 new OpenFileDialogParameters()
                 {
                     InitialDirectory = root,
@@ -1018,7 +1015,7 @@ public class MainWindowViewModel : ViewModelBase
         var filterName = textEditor.SyntaxDefinition?.Name;
         var encoding = textEditor.Encoding;
 
-        var ready = this.CommonDialogService.ShowDialog(
+        var ready = this.DialogService.ShowDialog(
             new SaveFileDialogParameters()
             {
                 InitialDirectory = textEditor.IsNewFile == false ? Path.GetDirectoryName(path) : null,

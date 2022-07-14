@@ -2,11 +2,11 @@
 using LiveCharts.Defaults;
 using MyBase;
 using MyBase.Logging;
+using MyBase.Wpf.CommonDialogs;
 using MyPad.Models;
 using MyPad.Properties;
 using MyPad.PubSub;
 using Prism.Events;
-using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -31,7 +31,7 @@ public sealed class SharedProperties : ValidatableBase
     [Dependency]
     public IEventAggregator EventAggregator { get; set; }
     [Dependency]
-    public IDialogService DialogService { get; set; }
+    public ICommonDialogService DialogService { get; set; }
     [Dependency]
     public ILoggerFacade Logger { get; set; }
     [Dependency]

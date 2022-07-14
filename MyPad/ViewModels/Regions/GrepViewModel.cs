@@ -2,12 +2,12 @@
 using MyBase.Wpf.CommonDialogs;
 using MyPad.Models;
 using MyPad.Properties;
-using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using Unity;
@@ -17,7 +17,7 @@ namespace MyPad.ViewModels.Regions;
 /// <summary>
 /// Grep パネルに対応する ViewModel を表します。
 /// </summary>
-public class GrepViewModel : ViewModelBase
+public class GrepViewModel : RegionViewModelBase
 {
     // Constructor Injection
     public SettingsModel Settings { get; set; }
@@ -26,9 +26,7 @@ public class GrepViewModel : ViewModelBase
     [Dependency]
     public ILoggerFacade Logger { get; set; }
     [Dependency]
-    public IDialogService DialogService { get; set; }
-    [Dependency]
-    public ICommonDialogService CommonDialogService { get; set; }
+    public ICommonDialogService DialogService { get; set; }
 
     public ReactiveCollection<object> Results { get; }
 
@@ -50,6 +48,9 @@ public class GrepViewModel : ViewModelBase
 
     public ReactiveCommand SelectDirectoryCommand { get; }
     public ReactiveCommand GrepCommand { get; }
+    public ReactiveCommand GrepCancelCommand { get; }
+
+    private CancellationTokenSource _grepCancellationTokenSource;
 
     /// <summary>
     /// このクラスの新しいインスタンスを生成します。
@@ -90,8 +91,38 @@ public class GrepViewModel : ViewModelBase
             .AddTo(this.CompositeDisposable);
 
         this.GrepCommand = this.CanGrep.ToReactiveCommand()
-            .WithSubscribe(async () => await this.Grep())
+            .WithSubscribe(async () =>
+            {
+                this._grepCancellationTokenSource ??= new();
+                try
+                {
+                    await this.Grep(this._grepCancellationTokenSource.Token);
+                }
+                catch
+                {
+                }
+
+                if (!this._grepCancellationTokenSource.TryReset())
+                {
+                    this._grepCancellationTokenSource.Dispose();
+                    this._grepCancellationTokenSource = null;
+                }
+            })
             .AddTo(this.CompositeDisposable);
+
+        this.GrepCancelCommand = this.IsPending.ToReactiveCommand()
+            .WithSubscribe(() => this._grepCancellationTokenSource?.Cancel())
+            .AddTo(this.CompositeDisposable);
+    }
+
+    /// <summary>
+    /// このインスタンスが保持するリソースを解放します。
+    /// </summary>
+    /// <param name="disposing">マネージリソースを破棄するかどうかを示す値</param>
+    protected override void Dispose(bool disposing)
+    {
+        this._grepCancellationTokenSource?.Dispose();
+        base.Dispose(disposing);
     }
 
     /// <summary>
@@ -100,28 +131,21 @@ public class GrepViewModel : ViewModelBase
     [LogInterceptor]
     private void SelectDirectory()
     {
-        try
-        {
-            this.IsPending.Value = true;
+        var parameter = new FolderBrowserDialogParameters();
+        var ready = this.DialogService.ShowDialog(parameter);
+        if (ready == false)
+            return;
 
-            var parameter = new FolderBrowserDialogParameters();
-            var ready = this.CommonDialogService.ShowDialog(parameter);
-            if (ready == false)
-                return;
-            this.Directory.Value = parameter.FileName;
-        }
-        finally
-        {
-            this.IsPending.Value = false;
-        }
+        this.Directory.Value = parameter.FileName;
     }
 
     /// <summary>
     /// Grep を行います。
     /// </summary>
+    /// <param name="cancellationToken">キャンセルトークン</param>
     /// <returns>非同期タスク</returns>
     [LogInterceptor]
-    private async Task Grep()
+    private async Task Grep(CancellationToken cancellationToken = default)
     {
         if (System.IO.Directory.Exists(this.Directory.Value) == false)
         {
@@ -145,12 +169,18 @@ public class GrepViewModel : ViewModelBase
                 this.IgnoreCase.Value,
                 this.UseRegex.Value))
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 this.Results.AddOnScheduler(new { path, line, encoding });
                 count++;
             }
 
             this.Logger.Log($"Grep を実行しました。: MatchedLines={count}", Category.Info);
             this.DialogService.ToastNotify(Resources.Message_NotifySearchCompleted);
+        }
+        catch (OperationCanceledException)
+        {
+            this.Logger.Log($"Grep はキャンセルされました。", Category.Info);
+            throw;
         }
         catch (Exception e)
         {

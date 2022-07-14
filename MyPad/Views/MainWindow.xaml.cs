@@ -66,20 +66,23 @@ public partial class MainWindow : MetroWindow
         {
             if (this._fullScreenMode)
             {
-                // ウィンドウモードに切り替える
                 this._fullScreenMode = false;
-                this.ShowTitleBar = true;
-                this.IgnoreTaskbarOnMaximize = false;
+
+                // ウィンドウモードに切り替える
                 this.WindowState = WindowState.Normal;
+                this.IgnoreTaskbarOnMaximize = false;
+                this.ShowTitleBar = true;
             }
             else
             {
-                // 全画面モードに切り替える
                 this._fullScreenMode = true;
+
+                // 全画面モードに切り替える
                 this.ShowTitleBar = false;
                 this.IgnoreTaskbarOnMaximize = true;
                 this.WindowState = WindowState.Maximized;
 
+                // 全画面モード用のメニューバーを注入する
                 this.TryInjectRegion(typeof(MenuBarView));
                 this.ViewModel.DialogService.ToastNotify(Properties.Resources.Message_NotifyFullScreenMode);
             }
@@ -446,7 +449,7 @@ public partial class MainWindow : MetroWindow
     /// </summary>
     /// <param name="regionName">リージョン名</param>
     /// <returns>正常に処理されたかどうかを示す値</returns>
-    [LogInterceptorIgnore] // 本質的な処理では無くログが汚れるため
+    [LogInterceptorIgnore("本質的な処理では無くログが汚れるため")]
     private bool TryInjectRegion(string regionName)
     {
         if (this.RegionManager.Regions.First(r => r.Name == regionName).Views.Any())
@@ -462,7 +465,7 @@ public partial class MainWindow : MetroWindow
     /// </summary>
     /// <param name="regionType">リージョンの型</param>
     /// <returns>正常に処理されたかどうかを示す値</returns>
-    [LogInterceptorIgnore] // 本質的な処理では無くログが汚れるため
+    [LogInterceptorIgnore("本質的な処理では無くログが汚れるため")]
     private bool TryInjectRegion(Type regionType)
     {
         var regionName = PrismConverter.ConvertToRegionName(regionType);
@@ -802,7 +805,7 @@ public partial class MainWindow : MetroWindow
     /// <param name="lParam">メッセージの付加情報</param>
     /// <param name="handled">ハンドルされたかどうかを示す値</param>
     /// <returns>メッセージが処理された場合は 0 以外の値が返ります。</returns>
-    [LogInterceptorIgnore] // 呼び出しが頻発するため
+    [LogInterceptorIgnore("呼び出しが頻発するため")]
     private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
         try

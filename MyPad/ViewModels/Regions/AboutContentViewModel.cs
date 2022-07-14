@@ -1,5 +1,5 @@
 ﻿using MyBase;
-using Prism.Services.Dialogs;
+using MyBase.Wpf.CommonDialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -23,7 +23,7 @@ public class AboutContentViewModel : RegionViewModelBase
     private string PrivacyPolicyPath => Path.Combine(this.RootDirecotryPath, "PRIVACY_POLICY.md");
 
     [Dependency]
-    public IDialogService DialogService { get; set; }
+    public ICommonDialogService DialogService { get; set; }
     [Dependency]
     public IProductInfo ProductInfo { get; set; }
 

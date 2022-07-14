@@ -22,7 +22,7 @@ public class AppProductInfo : ProductInfo
     /// <summary>
     /// このクラスの新しいインスタンスを生成します。
     /// </summary>
-    [LogInterceptorIgnore] // このクラスが初期化されるのはロガーの生成前のため
+    [LogInterceptorIgnore("このクラスが初期化されるのはロガーの生成前のため")]
     public AppProductInfo()
     {
         var process = Process.GetCurrentProcess();

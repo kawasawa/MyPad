@@ -17,7 +17,7 @@ namespace MyPad.ViewModels.Dialogs;
 public class SelectDiffFilesDialogViewModel : DialogViewModelBase
 {
     [Dependency]
-    public ICommonDialogService CommonDialogService { get; set; }
+    public ICommonDialogService DialogService { get; set; }
     [Dependency]
     public SettingsModel Settings { get; set; }
     [Dependency]

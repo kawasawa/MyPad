@@ -227,7 +227,7 @@ public partial class Workspace : Window
     /// <param name="lParam">メッセージの付加情報</param>
     /// <param name="handled">ハンドルされたかどうかを示す値</param>
     /// <returns>メッセージが処理された場合は 0 以外の値が返ります。</returns>
-    [LogInterceptorIgnore] // 呼び出しが頻発するため
+    [LogInterceptorIgnore("呼び出しが頻発するため")]
     private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
         try

@@ -20,7 +20,7 @@ public partial class OptionContentView : UserControl
         InitializeComponent();
     }
 
-    [LogInterceptorIgnore] // 本質的な処理では無くログが汚れるため
+    [LogInterceptorIgnore("本質的な処理では無くログが汚れるため")]
     private void EnableNotifyIcon_CheckedChanged(object sender, RoutedEventArgs e)
     {
         if (this.IsLoaded)

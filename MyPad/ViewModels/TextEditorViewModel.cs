@@ -3,12 +3,12 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Utils;
 using MyBase.Logging;
+using MyBase.Wpf.CommonDialogs;
 using MyPad.Models;
 using MyPad.Properties;
 using MyPad.PubSub;
 using Prism.Events;
 using Prism.Ioc;
-using Prism.Services.Dialogs;
 using System;
 using System.IO;
 using System.Linq;
@@ -43,7 +43,7 @@ public class TextEditorViewModel : ViewModelBase
     [Dependency]
     public IContainerExtension Container { get; set; }
     [Dependency]
-    public IDialogService DialogService { get; set; }
+    public ICommonDialogService DialogService { get; set; }
     [Dependency]
     public ILoggerFacade Logger { get; set; }
     [Dependency]
@@ -620,7 +620,7 @@ public class TextEditorViewModel : ViewModelBase
     /// </summary>
     /// <param name="func">割り込み処理</param>
     /// <returns>非同期タスク</returns>
-    [LogInterceptorIgnore] // 本質的な処理では無くログが汚れるため
+    [LogInterceptorIgnore("本質的な処理では無くログが汚れるため")]
     private async Task Interrupt(Func<Task> func)
     {
         this.AutoSaveTimer.Stop();
