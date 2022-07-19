@@ -8,7 +8,7 @@ namespace MyPad;
 /// <summary>
 /// <see cref="ILoggerFacade"/> インターフェースの拡張メソッドを提供します。
 /// </summary>
-public static class ILoggerFacadeExtension
+public static class ILoggerFacadeExtensions
 {
     /// <summary>
     /// ログを出力します。

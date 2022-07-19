@@ -5,7 +5,7 @@ namespace MyPad;
 /// <summary>
 /// <see cref="KeyGesture"/> クラスの拡張メソッドを提供します。
 /// </summary>
-public static class KeyGestureExtensinos
+public static class KeyGestureExtensions
 {
     /// <summary>
     /// キージェスチャーに対応するテキストを取得します。

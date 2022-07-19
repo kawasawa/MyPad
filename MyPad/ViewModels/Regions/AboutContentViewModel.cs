@@ -16,11 +16,11 @@ public class AboutContentViewModel : RegionViewModelBase
 {
     private static readonly Encoding FILE_ENCODING = Encoding.UTF8;
 
-    private string RootDirecotryPath => Path.Combine(this.ProductInfo.Working, "docs");
-    private string DisclaimerPath => Path.Combine(this.RootDirecotryPath, "DISCLAIMER.md");
-    private string HistoryPath => Path.Combine(this.RootDirecotryPath, "HISTORY.md");
-    private string OssLicensePath => Path.Combine(this.RootDirecotryPath, "OSS_LICENSE.md");
-    private string PrivacyPolicyPath => Path.Combine(this.RootDirecotryPath, "PRIVACY_POLICY.md");
+    private string RootDirectoryPath => Path.Combine(this.ProductInfo.Working, "docs");
+    private string DisclaimerPath => Path.Combine(this.RootDirectoryPath, "DISCLAIMER.md");
+    private string HistoryPath => Path.Combine(this.RootDirectoryPath, "HISTORY.md");
+    private string OssLicensePath => Path.Combine(this.RootDirectoryPath, "OSS_LICENSE.md");
+    private string PrivacyPolicyPath => Path.Combine(this.RootDirectoryPath, "PRIVACY_POLICY.md");
 
     [Dependency]
     public ICommonDialogService DialogService { get; set; }

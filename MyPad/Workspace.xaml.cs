@@ -160,7 +160,7 @@ public partial class Workspace : Window
                 var window = windows.ElementAt(i);
                 windowListMenuItem.DropDownItems.Add(
                     new System.Windows.Forms.ToolStripMenuItem(
-                        $"[{window.ViewModel.Sequense}] {window.ViewModel.ActiveTextEditor.Value?.FileName}",
+                        $"[{window.ViewModel.Sequence}] {window.ViewModel.ActiveTextEditor.Value?.FileName}",
                         null,
                         (sender, _) => window.SetForegroundWindow()
                     ));

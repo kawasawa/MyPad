@@ -163,14 +163,14 @@ public class TextView : ICSharpCode.AvalonEdit.Rendering.TextView, IDisposable
     /// </summary>
     private void OverrideNewLineTexts()
     {
-        // INFO: AvalonEdito の改行マークを変更できない問題への対応
+        // INFO: AvalonEdit の改行マークを変更できない問題への対応
         // 既定の改行マークは VisualLineTextSource.CreateTextRunForNewLine() でハードコーディングされている。
         // private 関数のため変更できず、VisualLineTextSource は sealed クラスであり継承して誤魔化すこともできない。
         // AvalonEdit では、画面描画にあたりこの改行マークを TextLine に変換しており、
         // TextViewCachedElements.nonPrintableCharacterTexts の Dictionary を参照して変換先を生成する。
         // ここを突き、nonPrintableCharacterTexts を書き換えることで、生成される TextLine を制御できる。
 
-        var globalProterties = (TextRunProperties)typeof(ICSharpCode.AvalonEdit.Rendering.TextView)
+        var globalProperties = (TextRunProperties)typeof(ICSharpCode.AvalonEdit.Rendering.TextView)
             .GetMethod("CreateGlobalTextRunProperties", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod)
             .Invoke(this, null);
         var formatter = (TextFormatter)typeof(ICSharpCode.AvalonEdit.Rendering.TextView).Assembly
@@ -184,7 +184,7 @@ public class TextView : ICSharpCode.AvalonEdit.Rendering.TextView, IDisposable
             .GetField("nonPrintableCharacterTexts", BindingFlags.Instance | BindingFlags.NonPublic)
             .GetValue(cachedElements);
 
-        var elementProperties = new VisualLineElementTextRunProperties(globalProterties);
+        var elementProperties = new VisualLineElementTextRunProperties(globalProperties);
         elementProperties.SetForegroundBrush(this.NonPrintableCharacterBrush);
         var cr = FormattedTextElement.PrepareText(formatter, this.VisualCharacterCR, elementProperties);
         var lf = FormattedTextElement.PrepareText(formatter, this.VisualCharacterLF, elementProperties);

@@ -84,8 +84,8 @@ public class MainWindowViewModel : ViewModelBase
 
     private static int GlobalSequence = 0;
 
-    private int? _sequense;
-    public int Sequense => this._sequense ??= ++GlobalSequence;
+    private int? _sequence;
+    public int Sequence => this._sequence ??= ++GlobalSequence;
 
     public InteractionMessenger Messenger { get; }
 
@@ -398,7 +398,7 @@ public class MainWindowViewModel : ViewModelBase
                     this.IsPending.Value = true;
 
                     var target = this.ActiveTextEditor.Value;
-                    this.Logger.Log($"印刷ダイアログを表示します。tab#{target.Sequense} win#{this.Sequense}", Category.Info);
+                    this.Logger.Log($"印刷ダイアログを表示します。tab#{target.Sequence} win#{this.Sequence}", Category.Info);
 
                     var result = this.DialogService.ShowDialog(
                         new PrintDialogParameters()
@@ -407,9 +407,9 @@ public class MainWindowViewModel : ViewModelBase
                             FlowDocument = this.FlowDocument.Value ?? await target.CreateFlowDocument()
                         });
                     if (result)
-                        this.Logger.Log($"印刷を実行しました。(OSやハードウェアの要因で処理がキャンセルされた可能性もあります。) tab#{target.Sequense} win#{this.Sequense}", Category.Info);
+                        this.Logger.Log($"印刷を実行しました。(OSやハードウェアの要因で処理がキャンセルされた可能性もあります。) tab#{target.Sequence} win#{this.Sequence}", Category.Info);
                     else
-                        this.Logger.Log($"印刷はキャンセルされました。tab#{target.Sequense} win#{this.Sequense}", Category.Info);
+                        this.Logger.Log($"印刷はキャンセルされました。tab#{target.Sequence} win#{this.Sequence}", Category.Info);
                 }
                 finally
                 {
@@ -506,7 +506,7 @@ public class MainWindowViewModel : ViewModelBase
 
                     target.Line = line;
                     await this.Messenger.RaiseAsync(new InteractionMessage(nameof(Views.MainWindow.ScrollToCaret)));
-                    this.Logger.Log($"指定行へ移動しました。tab#{target.Sequense} win#{this.Sequense}: Line={line}", Category.Info);
+                    this.Logger.Log($"指定行へ移動しました。tab#{target.Sequence} win#{this.Sequence}: Line={line}", Category.Info);
                 }
                 finally
                 {
@@ -531,7 +531,7 @@ public class MainWindowViewModel : ViewModelBase
                         target.Encoding = encoding;
                     else
                         await this.Load(target.FileName, encoding, target.IsReadOnly);
-                    this.Logger.Log($"文字コードを変更しました。tab#{target.Sequense} win#{this.Sequense}: Encoding={encoding.EncodingName}", Category.Info);
+                    this.Logger.Log($"文字コードを変更しました。tab#{target.Sequence} win#{this.Sequence}: Encoding={encoding.EncodingName}", Category.Info);
                 }
                 finally
                 {
@@ -555,7 +555,7 @@ public class MainWindowViewModel : ViewModelBase
                     var definition = string.IsNullOrEmpty(syntax) ? null :
                         this.SyntaxService.Definitions.ContainsKey(syntax) ? this.SyntaxService.Definitions[syntax] : null;
                     target.SyntaxDefinition = definition;
-                    this.Logger.Log($"シンタックス定義を変更しました。tab#{target.Sequense} win#{this.Sequense}: Syntax={syntax}", Category.Info);
+                    this.Logger.Log($"シンタックス定義を変更しました。tab#{target.Sequence} win#{this.Sequence}: Syntax={syntax}", Category.Info);
                 }
                 finally
                 {
@@ -888,11 +888,11 @@ public class MainWindowViewModel : ViewModelBase
                 {
                     this.IsPending.Value = true;
                     await sameTextEditor.Reload(encoding);
-                    this.Logger.Log($"ファイルを再読み込みしました。tab#{sameTextEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Info);
+                    this.Logger.Log($"ファイルを再読み込みしました。tab#{sameTextEditor.Sequence} win#{this.Sequence}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Info);
                 }
                 catch (Exception e)
                 {
-                    this.Logger.Log($"ファイルの再読み込みに失敗しました。tab#{sameTextEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Error, e);
+                    this.Logger.Log($"ファイルの再読み込みに失敗しました。tab#{sameTextEditor.Sequence} win#{this.Sequence}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Error, e);
                     this.DialogService.Warn(e.Message);
                     return (false, sameTextEditor);
                 }
@@ -937,7 +937,7 @@ public class MainWindowViewModel : ViewModelBase
                 }
                 catch
                 {
-                    this.Logger.Log($"ファイルの書き込み権限を取得できませんでした。読み取り権限のみで再取得します。win#{this.Sequense}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Info);
+                    this.Logger.Log($"ファイルの書き込み権限を取得できませんでした。読み取り権限のみで再取得します。win#{this.Sequence}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Info);
                 }
             }
 
@@ -951,7 +951,7 @@ public class MainWindowViewModel : ViewModelBase
                 }
                 catch (Exception e)
                 {
-                    this.Logger.Log($"ファイルの読み取り権限の取得に失敗しました。win#{this.Sequense}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Error, e);
+                    this.Logger.Log($"ファイルの読み取り権限の取得に失敗しました。win#{this.Sequence}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}", Category.Error, e);
                     this.DialogService.Warn(e.Message);
                     return (false, null);
                 }
@@ -964,11 +964,11 @@ public class MainWindowViewModel : ViewModelBase
             {
                 this.IsPending.Value = true;
                 await textEditor.Load(stream, encoding);
-                this.Logger.Log($"ファイルを読み込みました。tab#{textEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}, IsReadOnly={textEditor.IsReadOnly}", Category.Info);
+                this.Logger.Log($"ファイルを読み込みました。tab#{textEditor.Sequence} win#{this.Sequence}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}, IsReadOnly={textEditor.IsReadOnly}", Category.Info);
             }
             catch (Exception e)
             {
-                this.Logger.Log($"ファイルの読み込みに失敗しました。tab#{textEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}, IsReadOnly={textEditor.IsReadOnly}", Category.Error, e);
+                this.Logger.Log($"ファイルの読み込みに失敗しました。tab#{textEditor.Sequence} win#{this.Sequence}: Path={path}, Encoding={encoding?.EncodingName ?? "Auto"}, IsReadOnly={textEditor.IsReadOnly}", Category.Error, e);
                 this.DialogService.Warn(e.Message);
                 return (false, textEditor);
             }
@@ -1091,11 +1091,11 @@ public class MainWindowViewModel : ViewModelBase
             {
                 this.IsPending.Value = true;
                 await sameTextEditor.Save(encoding);
-                this.Logger.Log($"ファイルを上書き保存しました。tab#{sameTextEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding.EncodingName}", Category.Info);
+                this.Logger.Log($"ファイルを上書き保存しました。tab#{sameTextEditor.Sequence} win#{this.Sequence}: Path={path}, Encoding={encoding.EncodingName}", Category.Info);
             }
             catch (Exception e)
             {
-                this.Logger.Log($"ファイルの上書き保存に失敗しました。tab#{sameTextEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding.EncodingName}", Category.Error, e);
+                this.Logger.Log($"ファイルの上書き保存に失敗しました。tab#{sameTextEditor.Sequence} win#{this.Sequence}: Path={path}, Encoding={encoding.EncodingName}", Category.Error, e);
                 this.DialogService.Warn(e.Message);
                 return false;
             }
@@ -1130,11 +1130,11 @@ public class MainWindowViewModel : ViewModelBase
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
                 stream = new(path, FileMode.Create, FileAccess.ReadWrite, FileShare.Read);
                 await textEditor.SaveAs(stream, encoding);
-                this.Logger.Log($"ファイルを新規保存しました。tab#{textEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding.EncodingName}", Category.Info);
+                this.Logger.Log($"ファイルを新規保存しました。tab#{textEditor.Sequence} win#{this.Sequence}: Path={path}, Encoding={encoding.EncodingName}", Category.Info);
             }
             catch (Exception e)
             {
-                this.Logger.Log($"ファイルの新規保存に失敗しました。tab#{textEditor.Sequense} win#{this.Sequense}: Path={path}, Encoding={encoding.EncodingName}", Category.Error, e);
+                this.Logger.Log($"ファイルの新規保存に失敗しました。tab#{textEditor.Sequence} win#{this.Sequence}: Path={path}, Encoding={encoding.EncodingName}", Category.Error, e);
                 this.DialogService.Warn(e.Message);
                 return false;
             }
@@ -1160,7 +1160,7 @@ public class MainWindowViewModel : ViewModelBase
     private TextEditorViewModel CreateTextEditor()
     {
         var textEditor = this.Container.Resolve<TextEditorViewModel>();
-        this.Logger.Log($"タブを生成しました。tab#{textEditor.Sequense} win#{this.Sequense}", Category.Info);
+        this.Logger.Log($"タブを生成しました。tab#{textEditor.Sequence} win#{this.Sequence}", Category.Info);
         return textEditor;
     }
 
@@ -1218,7 +1218,7 @@ public class MainWindowViewModel : ViewModelBase
 
         this.TextEditors.Remove(textEditor);
         textEditor.Dispose();
-        this.Logger.Log($"タブを破棄しました。tab#{textEditor.Sequense} win#{this.Sequense}", Category.Info);
+        this.Logger.Log($"タブを破棄しました。tab#{textEditor.Sequence} win#{this.Sequence}", Category.Info);
         return true;
     }
 

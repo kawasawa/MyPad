@@ -6,7 +6,7 @@ namespace MyPad;
 /// <summary>
 /// <see cref="Type"/> クラスの拡張メソッドを提供します。
 /// </summary>
-public static class TypeExtensins
+public static class TypeExtensions
 {
     /// <summary>
     /// 継承元をさかのぼり、指定されたフィールド名とバインディングフラグに合致するフィールドを取得します。
