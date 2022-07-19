@@ -50,7 +50,7 @@ public static class PrismConverter
     /// <summary>
     /// 指定された型情報をもとにリージョンの名称を推定します。
     /// </summary>
-    /// <<typeparam name="T">オブジェクトの型</typeparam>
+    /// <typeparam name="T">オブジェクトの型</typeparam>
     /// <returns>リージョンの名称</returns>
     /// <remarks>
     /// 以下の順に変換を行います。

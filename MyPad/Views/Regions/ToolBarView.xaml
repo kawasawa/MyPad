@@ -100,27 +100,27 @@
             <m:DropDownButton.Items>
                 <MenuItem Command="controls:TextArea+Commands.ConvertToNarrow"
                           Header="{le:Loc {markup:CommandResourceKey ConvertToNarrow}}"
-                          InputGestureText="{markup:CommandKeyGesutureText ConvertToNarrow}"/>
+                          InputGestureText="{markup:CommandKeyGestureText ConvertToNarrow}"/>
                 <MenuItem Command="controls:TextArea+Commands.ConvertToWide"
                           Header="{le:Loc {markup:CommandResourceKey ConvertToWide}}"
-                          InputGestureText="{markup:CommandKeyGesutureText ConvertToWide}"/>
+                          InputGestureText="{markup:CommandKeyGestureText ConvertToWide}"/>
                 <Separator/>
                 <MenuItem Command="ae:AvalonEditCommands.ConvertToLowercase"
                           Header="{le:Loc {markup:CommandResourceKey ConvertToLowercase}}"
-                          InputGestureText="{markup:CommandKeyGesutureText ConvertToLowercase}"/>
+                          InputGestureText="{markup:CommandKeyGestureText ConvertToLowercase}"/>
                 <MenuItem Command="ae:AvalonEditCommands.ConvertToUppercase"
                           Header="{le:Loc {markup:CommandResourceKey ConvertToUppercase}}"
-                          InputGestureText="{markup:CommandKeyGesutureText ConvertToUppercase}"/>
+                          InputGestureText="{markup:CommandKeyGestureText ConvertToUppercase}"/>
                 <MenuItem Command="ae:AvalonEditCommands.ConvertToTitleCase"
                           Header="{le:Loc {markup:CommandResourceKey ConvertToTitleCase}}"
-                          InputGestureText="{markup:CommandKeyGesutureText ConvertToTitleCase}"/>
+                          InputGestureText="{markup:CommandKeyGestureText ConvertToTitleCase}"/>
                 <Separator/>
                 <MenuItem Command="ae:AvalonEditCommands.ConvertTabsToSpaces"
                           Header="{le:Loc {markup:CommandResourceKey ConvertTabsToSpaces}}"
-                          InputGestureText="{markup:CommandKeyGesutureText ConvertTabsToSpaces}"/>
+                          InputGestureText="{markup:CommandKeyGestureText ConvertTabsToSpaces}"/>
                 <MenuItem Command="ae:AvalonEditCommands.ConvertSpacesToTabs"
                           Header="{le:Loc {markup:CommandResourceKey ConvertSpacesToTabs}}"
-                          InputGestureText="{markup:CommandKeyGesutureText ConvertSpacesToTabs}"/>
+                          InputGestureText="{markup:CommandKeyGestureText ConvertSpacesToTabs}"/>
             </m:DropDownButton.Items>
         </m:DropDownButton>
 
@@ -131,21 +131,21 @@
             <m:DropDownButton.Items>
                 <MenuItem Command="controls:TextArea+Commands.Completion"
                           Header="{le:Loc {markup:CommandResourceKey Completion}}"
-                          InputGestureText="{markup:CommandKeyGesutureText Completion}">
+                          InputGestureText="{markup:CommandKeyGestureText Completion}">
                     <MenuItem.Icon>
                         <mi:Codicons Kind="Wand"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Command="controls:TextArea+Commands.Folding"
                           Header="{le:Loc {markup:CommandResourceKey Folding}}"
-                          InputGestureText="{markup:CommandKeyGesutureText Folding}">
+                          InputGestureText="{markup:CommandKeyGestureText Folding}">
                     <MenuItem.Icon>
                         <mi:Codicons Kind="Fold"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Command="controls:TextArea+Commands.Unfolding"
                           Header="{le:Loc {markup:CommandResourceKey Unfolding}}"
-                          InputGestureText="{markup:CommandKeyGesutureText Unfolding}">
+                          InputGestureText="{markup:CommandKeyGestureText Unfolding}">
                     <MenuItem.Icon>
                         <mi:Codicons Kind="Unfold"/>
                     </MenuItem.Icon>

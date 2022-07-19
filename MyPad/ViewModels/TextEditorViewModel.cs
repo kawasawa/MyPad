@@ -100,19 +100,19 @@ public class TextEditorViewModel : ViewModelBase
         }
     }
 
-    private int? _sequense;
-    public int Sequense
+    private int? _sequence;
+    public int Sequence
     {
         // 初期化が完了するまで採番しない
-        get => this._isInitialized ? this._sequense ??= ++GlobalSequence : -1;
-        private set => this._sequense = value;
+        get => this._isInitialized ? this._sequence ??= ++GlobalSequence : -1;
+        private set => this._sequence = value;
     }
 
     public bool IsNewFile
         => this.FileStream == null;
 
     public string FileName
-        => this.IsNewFile ? $"NoName-{this.Sequense}{this.SyntaxDefinition?.GetExtensions().FirstOrDefault() ?? TEXT_EXTENSION}" : this.FileStream.Name;
+        => this.IsNewFile ? $"NoName-{this.Sequence}{this.SyntaxDefinition?.GetExtensions().FirstOrDefault() ?? TEXT_EXTENSION}" : this.FileStream.Name;
 
     public string ShortFileName
     {
@@ -432,7 +432,7 @@ public class TextEditorViewModel : ViewModelBase
             //
             // INFO: 非同期処理で TextDocument.Text へ代入後に ClearAll() を実行すると IsModified の変更が通知されなくなる問題への対応
             // ClearAll() で UndoStack は空になるが、未変更点が更新されていないように見える。
-            // 試行錯誤の末、下記の流れでは IsModiried は正しく発火することが判明した。
+            // 試行錯誤の末、下記の流れでは IsModified は正しく発火することが判明した。
             // 1. 事前に UndoStack をクリアしてしまい、リミットを 0 にして変更履歴が残さないようにする。
             // 2. TextDocument.Text にテキストを代入する。
             // 3. UndoStack のサイズリミットを復元する。
@@ -524,7 +524,7 @@ public class TextEditorViewModel : ViewModelBase
         var result = false;
         await this.Interrupt(async () =>
         {
-            var path = Path.Combine(this.ProductInfo.TempDirectoryPath, this.Sequense.ToString());
+            var path = Path.Combine(this.ProductInfo.TempDirectoryPath, this.Sequence.ToString());
             try
             {
                 this.ProductInfo.CreateTempDirectory();
@@ -572,7 +572,7 @@ public class TextEditorViewModel : ViewModelBase
         var clone = this.Container.Resolve<TextEditorViewModel>();
         if (this.IsNewFile)
         {
-            clone.Sequense = this.Sequense;
+            clone.Sequence = this.Sequence;
         }
         else
         {

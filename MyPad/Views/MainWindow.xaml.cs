@@ -551,7 +551,7 @@ public partial class MainWindow : MetroWindow
             }
         }
 
-        this.Logger.Log($"ウィンドウを生成しました。win#{this.ViewModel.Sequense}", Category.Info);
+        this.Logger.Log($"ウィンドウを生成しました。win#{this.ViewModel.Sequence}", Category.Info);
     }
 
     /// <summary>
@@ -576,7 +576,7 @@ public partial class MainWindow : MetroWindow
     [LogInterceptor]
     private void Window_Closed(object sender, EventArgs e)
     {
-        this.Logger.Log($"ウィンドウを破棄しました。win#{this.ViewModel.Sequense}", Category.Info);
+        this.Logger.Log($"ウィンドウを破棄しました。win#{this.ViewModel.Sequence}", Category.Info);
 
         // イベントの購読を解除する
         this.SideContent.IsVisibleChanged -= this.SideContent_IsVisibleChanged;

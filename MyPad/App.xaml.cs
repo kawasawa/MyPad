@@ -74,7 +74,7 @@ public partial class App : PrismApplication
             new DebugLogger(),
             new AppLogger()
             {
-                PublisherType = typeof(ILoggerFacadeExtension),
+                PublisherType = typeof(ILoggerFacadeExtensions),
                 ConfigurationFactory = () =>
                 {
                     var computerInfo = new ComputerInfo();
@@ -580,7 +580,7 @@ public partial class App : PrismApplication
             EquationTokenizer.AddNamespace(typeof(System.Linq.Enumerable));                  // System.Linq             : System.Linq.dll
             EquationTokenizer.AddNamespace(typeof(ControlzEx.Theming.Theme));                // ControlzEx.Theming      : ControlzEx.dll
             EquationTokenizer.AddExtensionMethods(typeof(System.Linq.Enumerable));
-            EquationTokenizer.AddExtensionMethods(typeof(MyPad.KeyGestureExtensinos));
+            EquationTokenizer.AddExtensionMethods(typeof(MyPad.KeyGestureExtensions));
 #pragma warning restore IDE0049
         }
         catch (Exception e)
