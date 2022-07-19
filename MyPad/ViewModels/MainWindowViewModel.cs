@@ -530,7 +530,7 @@ public class MainWindowViewModel : ViewModelBase
                     if (target.IsNewFile)
                         target.Encoding = encoding;
                     else
-                        await this.Load(target.FileName, encoding, target.IsReadOnly);
+                        await this.CreateInstance(target.FileName, encoding, target.IsReadOnly);
                     this.Logger.Log($"文字コードを変更しました。tab#{target.Sequence} win#{this.Sequence}: Encoding={encoding.EncodingName}", Category.Info);
                 }
                 finally
@@ -644,7 +644,13 @@ public class MainWindowViewModel : ViewModelBase
         // View 起点で呼ばれるとは限らないため ViewModel で Activate を実行する
         this.Messenger.Raise(new InteractionMessage(nameof(Views.MainWindow.Activate)));
 
-        var (result, textEditor) = await this.Load(path, encoding);
+        var definition = this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetExtensions().Contains(Path.GetExtension(path)));
+        var (result, textEditor) = await this.CreateInstance(path, encoding);
+        if (result)
+        {
+            textEditor.SyntaxDefinition = null;
+            textEditor.SyntaxDefinition = definition;
+        }
         if (textEditor != null)
             this.WakeUpTextEditor(textEditor);
     }
@@ -796,7 +802,7 @@ public class MainWindowViewModel : ViewModelBase
                 var definition = filter != null && this.SyntaxService.Definitions.ContainsKey(filter) ?
                     this.SyntaxService.Definitions[filter] :
                     this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetExtensions().Contains(Path.GetExtension(path)));
-                var (r, t) = await this.Load(path, encoding, isReadOnly);
+                var (r, t) = await this.CreateInstance(path, encoding, isReadOnly);
                 if (r)
                 {
                     t.SyntaxDefinition = null;
@@ -817,7 +823,7 @@ public class MainWindowViewModel : ViewModelBase
             {
                 var encoding = this.Settings.System.AutoDetectEncoding ? null : this.Settings.System.Encoding;
                 var definition = this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetExtensions().Contains(Path.GetExtension(path)));
-                var (r, t) = await this.Load(path, encoding);
+                var (r, t) = await this.CreateInstance(path, encoding);
                 if (r)
                 {
                     t.SyntaxDefinition = null;
@@ -835,7 +841,7 @@ public class MainWindowViewModel : ViewModelBase
                     var definition = filter != null && this.SyntaxService.Definitions.ContainsKey(filter) ?
                         this.SyntaxService.Definitions[filter] :
                         this.SyntaxService.Definitions.Values.FirstOrDefault(d => d.GetExtensions().Contains(Path.GetExtension(path)));
-                    var (r, t) = await this.Load(path, encoding, isReadOnly);
+                    var (r, t) = await this.CreateInstance(path, encoding, isReadOnly);
                     if (r)
                     {
                         t.SyntaxDefinition = null;
@@ -860,7 +866,7 @@ public class MainWindowViewModel : ViewModelBase
     /// </returns>
     /// <exception cref="ArgumentNullException"></exception>
     [LogInterceptor]
-    private async Task<(bool result, TextEditorViewModel textEditor)> Load(string path, Encoding encoding, bool isReadOnly = false)
+    private async Task<(bool result, TextEditorViewModel textEditor)> CreateInstance(string path, Encoding encoding, bool isReadOnly = false)
     {
         this.Logger.Debug($"ファイルを読み込みます。: Path={path}, Encoding={encoding?.EncodingName ?? "<null>"}, IsReadOnly={isReadOnly}");
 
