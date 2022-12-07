@@ -1,47 +1,45 @@
-name: Build and Release
-
 on:
   push:
     tags:
-      - 'v*' # "v" から始まるタグ名
+      - 'v*' # "v" から始まるタグが付与されたとき
 
 jobs:
   build:
     runs-on: windows-latest
     env:
       DOTNET_VERSION: 6.0.x
-    steps:
 
+    steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Build app
+      - name: Build Apps
         run: dotnet build MyPad/MyPad.csproj -c Release
 
-      - name: Build test
+      - name: Build Tests
         run: dotnet build MyPad.Test/MyPad.Test.csproj -c Release --no-dependencies
 
-      - name: Test
+      - name: Unit Test
         run: dotnet test MyPad.Test/MyPad.Test.csproj --no-restore
 
-      - name: Output
+      - name: Move to dist
         shell: pwsh
         run: |
           mkdir dist
           Copy-Item -Path MyPad/bin/Release/* -Destination dist -Recurse
 
-      - name: Archive
-        uses: actions/upload-artifact@v1
+      - name: Archive Apps
+        uses: actions/upload-artifact@v3
         with:
           name: dist
           path: dist
 
-      - name: Notify
+      - name: Notify Result
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
@@ -54,30 +52,30 @@ jobs:
   release:
     needs: [build]
     runs-on: windows-latest
-    steps:
 
-      - name: Download
-        uses: actions/download-artifact@v2
+    steps:
+      - name: Download Apps
+        uses: actions/download-artifact@v3
         with:
           name: dist
           path: dist
 
-      - name: Compress
+      - name: Compress Apps
         shell: pwsh
         run: |
           Compress-Archive -Path dist/* -DestinationPath release.zip
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: actions/create-release@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
 
-      - name: Upload Bin
-        uses: actions/upload-release-asset@v1
+      - name: Publish Release
+        uses: actions/upload-release-asset@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -86,7 +84,7 @@ jobs:
           asset_name: release.zip
           asset_content_type: application/zip
 
-      - name: Notify
+      - name: Notify Result
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
